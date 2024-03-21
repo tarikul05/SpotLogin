@@ -87,8 +87,11 @@
                         <a href="{{ route('updateTeacher') }}" class="nav-item nav-link text-center mr-2"><i class="fa-solid fa-user"></i> <span class="d-none d-sm-block"></span> {{ __('My Account') }}</a>
                     @endif
 
-                    @if($AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin() || $AppUI->isTeacherMinimum() || $AppUI->isTeacherMedium() || $AppUI->isTeacherAll())
+                    @if($AppUI->isTeacherAdmin() || $AppUI->isTeacherMinimum() || $AppUI->isTeacherMedium() || $AppUI->isTeacherAll())
                         <a href="{{ route('calendar.settings') }}" class="nav-item nav-link text-center mr-2"><i class="fa-solid fa-gear"></i> <span class="d-none d-sm-block"></span> {{ __('My Settings') }}</a>
+                    @endif
+                    @if($AppUI->isTeacherSchoolAdmin())
+                        <a href="{{ route('calendar.teacher.settings') }}" class="nav-item nav-link text-center mr-2"><i class="fa-solid fa-gear"></i> <span class="d-none d-sm-block"></span> {{ __('My Settings') }}</a>
                     @endif
                     @if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
                         <a href="{{ route('calendar.settings') }}" class="nav-item nav-link text-center mr-2"><i class="fa-solid fa-gear"></i> <span class="d-none d-sm-block"></span> {{ __('School Settings') }}</a>
@@ -178,14 +181,14 @@
                     @endif
 
                     @if($AppUI->isTeacherSchoolAdmin())
-                    <div class="nav-item dropdown">
+                    <!--<div class="nav-item dropdown">
                          <a href="#" class="nav-link dropdown-toggle text-center" data-bs-toggle="dropdown"><i class="fa-solid fa-file-invoice"></i> <span class="d-none d-sm-block"></span> {{ __('School Invoicing') }}</a>
                         <div class="dropdown-menu header">
                             <a href="{{ $urlInvoice.'/school' }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("Invoices generated") }}</a>
                             <a href="{{ $urlStudentInvoice.'/school' }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("To be invoiced") }}</a>
                             <a href="{{ $urlTeacherInvoice.'/school' }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("Coach's Invoice") }}</a>
                         </div>
-                    </div>
+                    </div>-->
                     @endif
 
                     <a class="nav-item nav-link d-sm-none text-center text-danger" href="/logout"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a>

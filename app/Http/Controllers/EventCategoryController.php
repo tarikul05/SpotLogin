@@ -142,6 +142,95 @@ class EventCategoryController extends Controller
         return $result;
     }
 
+    public function addEventCategoryTeacher(Request $request)
+    {
+        try{
+            $newCategoryAdded = false;
+            $newCategories = [];
+            if ($request->isMethod('post')){
+
+                $categoryData = $request->all();
+                $user = Auth::user();
+                if ($user->isSuperAdmin()) {
+                    $userSchoolId = $categoryData['school_id'];
+                }else {
+                    $userSchoolId = $user->selectedSchoolId();
+                }
+
+                //dd($categoryData['category']);
+
+                foreach($categoryData['category'] as $cat){
+                    $invoicedType = ($user->isTeacherAdmin() || $user->isTeacherSchoolAdmin() || $user->isSchoolAdmin() ) ? $cat['invoice'] : 'T';
+                        $s_thr_pay_type = !empty($cat['s_thr_pay_type']) ? $cat['s_thr_pay_type'] : 0;
+                        $s_std_pay_type = !empty($cat['s_std_pay_type']) ? $cat['s_std_pay_type'] : 0;
+                        $t_std_pay_type = !empty($cat['t_std_pay_type']) ? $cat['t_std_pay_type'] : 0;
+                        if ($invoicedType == 'T' && $s_std_pay_type == 0) {
+                            $s_thr_pay_type = $s_std_pay_type = 0;
+                        }else{
+                            $t_std_pay_type = 0;
+                        }
+
+                        if(isset($cat['id']) && !empty($cat['id'])){
+                        $answers = [
+                            'school_id' => $userSchoolId,
+                            'title' => $cat['name'],
+                            'bg_color_agenda' => $cat['bg_color_agenda'],
+                            'invoiced_type' => $invoicedType,
+                                'package_invoice' => (($invoicedType =='S') && (!empty($cat['package_invoice']))) ? 1 : 0,
+                                's_thr_pay_type' => $s_thr_pay_type,
+                                's_std_pay_type' => $s_std_pay_type,
+                                't_std_pay_type' => $t_std_pay_type
+                        ];
+                        $eventCat = EventCategory::where('id', $cat['id'])->update($answers);
+                    }else{
+                        $answers = [
+                            'school_id' => $userSchoolId,
+                            'title' => $cat['name'],
+                            'bg_color_agenda' => $cat['bg_color_agenda'],
+                            'invoiced_type' => $invoicedType,
+                                'package_invoice' => (($invoicedType =='S') && (!empty($cat['package_invoice']))) ? 1 : 0,
+                                's_thr_pay_type' => $s_thr_pay_type,
+                                's_std_pay_type' => $s_std_pay_type,
+                                't_std_pay_type' => $t_std_pay_type
+                        ];
+                        $eventCat = EventCategory::create($answers);
+                    }
+                    if (!isset($cat['id']) || empty($cat['id'])) {
+                        $newCategoryAdded = true;
+                    }
+                }
+
+                if ($newCategoryAdded) {
+                    foreach ($categoryData['category'] as $cat) {
+                        if (!isset($cat['id']) || empty($cat['id'])) {
+                            $newCategories[] = $cat;
+                        }
+                    }
+                    session(['newCategoryAdded' => $newCategories]);
+                }
+
+                $result = array(
+                    "status"     => 1,
+                    'message' => __('Successfully Registered')
+                );
+
+                if ($newCategoryAdded) {
+                    return redirect()->route('calendar.teacher.settings')->with('success', 'Paramètres des catégories enregistrés avec succès.')->with('success_new_cat', 'true');
+                }
+                return redirect()->route('calendar.teacher.settings')->with('success', 'Paramètres des catégories enregistrés avec succès.');
+
+            }
+        }catch (Exception $e) {
+            DB::rollBack();
+            $result= [
+                'status' => 0,
+                'message' =>  __('Internal server error')
+            ];
+        }
+
+        return $result;
+    }
+
     /**
      * Remove the specified resource from storage.
      *

@@ -215,6 +215,7 @@ Route::group(['middleware' => ['auth']], function () {
   Route::post('/add-school-parameters', 'SchoolsController@addParameters')->name('school_parameter.create')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
   Route::get('/parameters/category', 'EventCategoryController@index')->name('event_category.index');
   Route::post('/add-event-category', 'EventCategoryController@addEventCategory')->name('event_category.create');
+  Route::post('/teacher/add-event-category', 'EventCategoryController@addEventCategoryTeacher')->name('event_category.teacher.create');
   Route::delete('/remove-event-category/{key}', 'EventCategoryController@removeEventCategory')->name('event_category.destroy');
   Route::get('/parameters/location', 'EventLocationController@index')->name('event_location.index');
   Route::post('/add-event-location', 'EventLocationController@addLocation')->name('event_location.create');
@@ -413,6 +414,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/settings', [App\Http\Controllers\SettingsController::class, 'index'] )->name('calendar.settings');
     Route::post('/settings', [App\Http\Controllers\SettingsController::class, 'store'])->name('calendar.settings.store');
+
+    Route::get('/teacher/settings', [App\Http\Controllers\SettingsController::class, 'indexTeacher'] )->name('calendar.teacher.settings');
 
     Route::get('/account/subscription', [App\Http\Controllers\TeachersController::class, 'self_edit'])->name('profile.plan');
 

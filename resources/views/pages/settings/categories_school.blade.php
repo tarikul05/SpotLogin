@@ -11,6 +11,13 @@
                     </div>
                 @endif-->
 
+                @if($AppUI->isTeacherSchoolAdmin())
+
+                Your are connected as a Teacher administrator. You can create categories and setup prices for your school.<br>
+                If you want to create categories for yourself, <a href="{{route('calendar.teacher.settings')}}">please go to your settings</a>.
+                <br><br>
+
+                @endif
 
                     @php $count= isset($eventLastCatId->id) ? ($eventLastCatId->id) : 1; @endphp
 
