@@ -121,6 +121,7 @@ class SettingsController extends Controller
         $calendarSettings->min_time = $request['min_time'];
         $calendarSettings->max_time = $request['max_time'];
         $calendarSettings->weekends = $request['weekends'];
+        $calendarSettings->current = $request['current'];
 
         // Enregistrez les paramètres de calendrier
         $user->calendarSetting()->save($calendarSettings);

@@ -520,16 +520,16 @@
                             <!-- invoice date -->
                             <div class="form-group row">
                                 <label id="invoice_date_cap" class="col-lg-3 col-sm-3 text-right">Date of invoice</label>
-                                <div class="col-sm-2">
+                                <div class="col-sm-3">
                                     <div class="input-group" id="date_invoice1">
-                                        <input id="date_invoice" name="date_invoice" type="text" class="form-control" value="{{$invoice->date_invoice ? date('Y-m-d', strtotime(str_replace('.', '-', $invoice->date_invoice))) :''}}">
+                                        <input id="date_invoice" name="date_invoice" type="text" class="form-control" value="{{$invoice->date_invoice}}">
                                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label id="invoice_date_cap" class="col-lg-3 col-sm-3 text-right">Date due</label>
-                                <div class="col-sm-2">
+                                <div class="col-sm-3">
                                     <?php
                                       $date = $invoice->date_invoice;
                                       $new_date = date('Y-m-d', strtotime('+7 days', strtotime($date)));
@@ -1131,7 +1131,7 @@ function extractExtraCharges($inputString) {
 
 <script type="text/javascript">
     $("#date_invoice").datetimepicker({
-	format: "yyyy-mm-dd",
+	format: "yyyy-mm-dd HH:ii",
 		autoclose: true,
 		todayBtn: true,
 		minuteStep: 10,

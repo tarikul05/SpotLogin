@@ -483,7 +483,7 @@
                                             </span>
                                             <select class="form-control" id="category_select" name="category_select" @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin()) disabled @endif>
                                                 @foreach($eventCategoryList as $key => $eventcat)
-                                                    <option s_thr_pay_type="{{ $eventcat->s_thr_pay_type }}" s_std_pay_type="{{  $eventcat->s_std_pay_type }}" t_std_pay_type="{{  $eventcat->t_std_pay_type }}" value="{{ $eventcat->id }}" category_type="{{ $eventcat->invoiced_type }}" {{ session('last_cat') == $eventcat->id ? 'selected' : '' }}>{{ $eventcat->title }}</option>
+                                                    <option s_thr_pay_type="{{ $eventcat->s_thr_pay_type }}" s_std_pay_type="{{  $eventcat->s_std_pay_type }}" t_std_pay_type="{{  $eventcat->t_std_pay_type }}" value="{{ $eventcat->id }}" category_type="{{ $eventcat->invoiced_type }}" @if(session('last_cat') == $eventcat->id) selected @endif>{{ $eventcat->title }}</option>
                                                 @endforeach
                                             </select>
                                             </div>
@@ -1612,8 +1612,10 @@ $('.close-icon').on('click', function() {
                                 textAdmin = "<span class='text-danger'>("+value.invoiced_type+")</span> ";
                             }
 
-                            resultHtml+='<option data-s_thr_pay_type="'+value.s_thr_pay_type+'" data-s_std_pay_type="'+value.s_std_pay_type+'" data-t_std_pay_type="'+value.t_std_pay_type+'" value="'+value.id+'" data-invoice="'+value.invoiced_type+'">'+textAdmin+''+value.title+'</option>';
-                            
+                            var lastCat = '{{ session('last_cat') }}';
+                            resultHtml += '<option data-s_thr_pay_type="' + value.s_thr_pay_type + '" data-s_std_pay_type="' + value.s_std_pay_type + '" data-t_std_pay_type="' + value.t_std_pay_type + '" value="' + value.id + '" data-invoice="' + value.invoiced_type + '" ' + (value.prices.length !== 0 ? '' : 'disabled') + ' ' + ((lastCat && lastCat == value.id) ? 'selected' : '') + '>' + textAdmin + '' + value.title + (value.prices.length !== 0 ? '' : ' (setup prices for this category)') + '</option>';
+
+                        
                         });
                         $('#category_select').html(resultHtml);
                         $('#category_select').change();
@@ -2373,6 +2375,7 @@ $('.close-icon').on('click', function() {
         var timeFormat;
         var columnHeaderText;
         let weekends;
+        let current;
         var europeanTimezones = ['Europe/Paris', 'Europe/Berlin', 'Europe/London', 'Europe/Moscow', 'Europe/Minsk', 'Europe/Warsaw', 'Europe/Rome',  'Europe/Brussels', 'Europe/Zurich'];
         var isEuropeanTimezone = europeanTimezones.includes(myTimezone);
 
@@ -2401,6 +2404,10 @@ $('.close-icon').on('click', function() {
         //weekends = true;
         if(mySetting && mySetting.weekends !== ""){
             weekends = mySetting.weekends == "0" ? false : true;
+        }
+
+        if(mySetting && mySetting.current !== ""){
+            current = mySetting.current == "0" ? false : true;
         }
 
         afficherHeureActuelle(myTimezone);
@@ -2460,7 +2467,7 @@ $('.close-icon').on('click', function() {
 			forceEventDuration: true,
 			nextDayThreshold: '00:00',
             nowIndicator: true,
-            now: moment().tz(myTimezone).format('YYYY-MM-DDTHH:mm:00'),
+            now: current ? moment().format('YYYY-MM-DDTHH:mm:00') : moment().tz(myTimezone).format('YYYY-MM-DDTHH:mm:00'),
             // events: function (start, end, tz, callback) {
             //     callback(JSON.parse(json_events));
             // },
