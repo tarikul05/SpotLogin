@@ -369,7 +369,7 @@
 																</td>
 																@if($showPrice)
 																@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
-																	<td style="text-align:right"> {{ isset($lessonData->price_currency) && !empty($lessonData->price_currency) ? $lessonData->price_currency : '' }} {{ isset($relationData->buy_price) ? $relationData->buy_price: 0  }}</td>
+																	<td style="text-align:right"> {{ isset($lessonData->price_currency) && !empty($lessonData->price_currency) ? $lessonData->price_currency : '' }} <span class="priceByStudent">{{ isset($relationData->buy_price) ? $relationData->buy_price: 0  }}</span></td>
 																@else
 
 																@endif
@@ -1017,6 +1017,10 @@ $("#student, #teacher_select").on('change', function(event) {
                             console.log('new price',  response.newPrice);
                             var newDuration = $("#duration").val();
                             $(".priceByStudent").text(response.newPrice);
+
+							$("#sprice_amount_buy").val(response.newPrice);
+	                       $("#sprice_amount_sell").val(response.newPrice);
+
                         //}
 
 	                    }
