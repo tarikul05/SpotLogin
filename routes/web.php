@@ -491,7 +491,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/{school}/edit-event/{event}', [App\Http\Controllers\LessonsController::class, 'editEvent'])->name('event.edit');
     Route::post('/{school}/edit-event/{event}', [App\Http\Controllers\LessonsController::class, 'editEventAction'])->name('event.editAction');
     Route::get('/{school}/view-event/{event}', [App\Http\Controllers\LessonsController::class, 'viewEvent'])->name('event.view');
-    Route::get('/{school}/add-lesson-custom', [App\Http\Controllers\LessonsController::class, 'addLesson'])->name('lesson.create');
+    Route::get('/{school}/add-lesson', [App\Http\Controllers\LessonsController::class, 'addLesson'])->name('lesson.create');
     Route::match(['post'], '/{school}/add-lesson', [App\Http\Controllers\LessonsController::class, 'addLessonAction'])->name('lesson.createAction')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     Route::get('/{school}/edit-lesson/{lesson}', [App\Http\Controllers\LessonsController::class, 'editLesson'])->name('lesson.edit');
     Route::post('/{school}/edit-lesson/{lesson}', [App\Http\Controllers\LessonsController::class, 'editLessonAction'])->name('lesson.editAction');

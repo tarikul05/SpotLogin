@@ -11,14 +11,13 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
 @endsection
 
-
-
 @php
 use App\Helpers\Helper;
     //$zone = $_COOKIE['timezone_user'];
     $zone = $timezone;
-    $date_start = $lessonData->date_start;
-    $date_end = $lessonData->date_end;
+	$initDate = new Helper();
+	$date_start = $initDate->formatDateTimeZone($lessonData->date_start, 'long','UTC',$zone);
+	$date_end = $initDate->formatDateTimeZone($lessonData->date_end, 'long','UTC', $zone);
     $showPrice = ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()) && ($lessonData->eventcategory->invoiced_type == 'S') || ($AppUI->isTeacher() && ($lessonData->eventcategory->invoiced_type == 'T'));
 @endphp
 
@@ -138,7 +137,7 @@ use App\Helpers\Helper;
 										</div>
 										<div class="col-sm-4 offset-md-1">
 											<div class="input-group">
-												<input id="start_time" name="start_time" type="text" class="form-control timepicker1" value="{{!empty($lessonData->start_time) ? old('start_time', $lessonData->start_time) : old('start_time')}}">
+												<input id="start_time" name="start_time" type="text" class="form-control timepicker1" value="{{date('H:i', strtotime($date_start))}}">
 												<span class="input-group-addon">
 													<i class="fa-solid fa-clock"></i>
 												</span>
@@ -159,7 +158,7 @@ use App\Helpers\Helper;
 										</div>
 										<div class="col-sm-4 offset-md-1">
 											<div class="input-group">
-												<input id="end_time" name="end_time" type="text" class="form-control timepicker2" value="{{!empty($lessonData->end_time) ? old('end_time', $lessonData->end_time) : old('end_time')}}">
+												<input id="end_time" name="end_time" type="text" class="form-control timepicker2" value="{{date('H:i', strtotime($date_end))}}">
 												<span class="input-group-addon">
 													<i class="fa-solid fa-clock"></i>
 												</span>
@@ -229,11 +228,7 @@ use App\Helpers\Helper;
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Currency') }} :</label>
 									<div class="col-sm-4">
 										<div class="selectdiv">
-											<select class="form-control" id="sprice_currency" name="sprice_currency">
-												@foreach($currency as $key => $curr)
-													<option value="{{$curr->currency_code}}">{{$curr->currency_code}}</option>
-												@endforeach
-											</select>
+											<input type="text" class="form-control" id="sprice_currency" name="sprice_currency" value="{{$lessonData->price_currency}}" readonly>
 										</div>
 									</div>
 								</div>
@@ -255,7 +250,7 @@ use App\Helpers\Helper;
 											<span class="input-group-addon">
 												<i class="fa-solid fa-arrow-right"></i>
 											</span>
-											<input id="sprice_amount_sell" name="sprice_amount_sell" type="text" class="form-control" value="{{old('sprice_amount_sell')}}" autocomplete="off">
+											<input id="sprice_amount_sell" name="sprice_amount_sell" type="text" class="form-control" value="{{old('sprice_amount_sell')}}" autocomplete="off" readonly>
                                         </div>
 									</div>
 								</div>

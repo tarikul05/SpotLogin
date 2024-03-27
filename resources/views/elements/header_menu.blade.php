@@ -123,14 +123,21 @@
                          <a href="#" class="nav-link dropdown-toggle text-center mr-2" data-bs-toggle="dropdown"><i class="fa-solid fa-file-invoice-dollar"></i> <span class="d-none d-sm-block"></span> {{ __('Invoicing') }}</a>
                         <div class="dropdown-menu header">
                         @if(!$AppUI->isStudent() && !$AppUI->isParent())
+
+                        @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin())
+                        <a href="{{ $urlInvoice.'/school' }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("Invoices generated") }}</a>
+                        @else
                             <a href="{{ $urlInvoice }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("Invoices generated") }}</a>
-
-
+                        @endif
 
 
                             <?php if(($is_subscribed && ($plan->stripe_status == 'active' || $plan->stripe_status == 'trialing')) || (!empty($user->trial_ends_at) && ($today_date <= $ends_at))){   ?>
                                 @if(!$AppUI->isTeacherReadOnly())
-                                    <a href="{{ $urlStudentInvoice }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("To be invoiced") }}</a>
+                                    @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin())
+                                    <a href="{{ $urlTeacherInvoice.'/school' }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("To be invoiced") }}</a>
+                                    @else
+                                        <a href="{{ $urlStudentInvoice }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("To be invoiced") }}</a>
+                                    @endif
                                 @endif
                             <?php } else { ?>
                                 <span class="mt-2 badge bg-danger w-100">Only with Premium Access</span>
