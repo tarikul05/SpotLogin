@@ -18,6 +18,7 @@ use App\Models\Currency;
 use App\Models\EventDetails;
 use App\Models\SchoolTeacher;
 use App\Models\ParentStudent;
+use App\Models\User;
 use App\Models\SchoolStudent;
 use App\Models\AttachedFile;
 use Illuminate\Support\Facades\Auth;
