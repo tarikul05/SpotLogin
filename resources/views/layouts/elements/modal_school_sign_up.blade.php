@@ -19,6 +19,9 @@
 
 
                     <div class="form-group custom-selection">
+                        <div class="form-group">
+                            <small class="pb-2 light-blue-txt">{{ __('Choose an account type') }}</small>
+                        </div>
                         <select class="selectpicker" id="school_type" name="school_type" required onchange="changePlaceholder()">
                             <option value="COACH">{{ __('I am a Single coach') }}</option>
                             <option value="SCHOOL">{{ __('School') }}</option>
@@ -40,6 +43,10 @@
                     <div class="card bg-tertiary p-2 mb-3">
                         <small class="pb-2 light-blue-txt">{{ __('Personnal information') }}</small>
 
+                    <div class="form-group" style="display:none;" id="school_name_div">
+                        <label for="email">{{ __('School name') }}</label>
+                        <input type="text" class="form-control" placeholder="{{ __('School name') }}" id="school_name" name="school_name" required>
+                    </div>
                     <div class="form-group">
                         <label for="email">{{ __('Firstname') }}</label>
                         <input type="text" class="form-control" placeholder="{{ __('Firstname') }}" id="firstname" name="firstname" required>
@@ -48,6 +55,7 @@
                         <label for="email">{{ __('Lastname') }}</label>
                         <input type="text" class="form-control" placeholder="{{ __('Lastname') }}" id="lastname" name="lastname" required>
                     </div>
+
                     <div id="welcome-message"></div>
 
                     <div class="form-group">
@@ -279,11 +287,14 @@ document.getElementById('email_confirm').onpaste = function(){
       var selectElement = document.getElementById("school_type");
       var fullNameInput = document.getElementById("fullname");
       var emailInput = document.getElementById("email");
+      var school_name_div = document.getElementById("school_name_div");
 
       if (selectElement.value === "COACH") {
+        school_name_div.style.display = "none";
         fullNameInput.placeholder = "{{ __('Coach Name') }}";
         emailInput.placeholder = "{{ __('Coach Email Address') }}";
       } else if (selectElement.value === "SCHOOL") {
+        school_name_div.style.display = "block";
         fullNameInput.placeholder = "{{ __('School Name') }}";
         emailInput.placeholder = "{{ __('School Email Address') }}";
       }

@@ -23,7 +23,7 @@ class SubscriptionController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
+        $this->stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
     }
 
     public function index()

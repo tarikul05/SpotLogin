@@ -43,7 +43,7 @@ class SchoolsController extends Controller
     function __construct()
     {
         parent::__construct();
-        $this->stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
+        $this->stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
         $this->middleware('permission:schools-list|schools-udpate|schools-user-udpate|schools-delete', ['only' => ['index']]);
         $this->middleware('permission:schools-udpate', ['only' => ['edit','update','logoUpdate','logoDelete']]);
         $this->middleware('permission:schools-user-udpate', ['only' => ['schoolEmailSend','userUpdate']]);
