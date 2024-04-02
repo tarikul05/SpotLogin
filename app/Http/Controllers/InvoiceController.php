@@ -2034,10 +2034,11 @@ class InvoiceController extends Controller
             if (!empty($userIS->profileImage->path_name)) {
                 $path_name =  $userIS->profileImage->path_name;
                 $file = str_replace(URL::to('').'/uploads/','',$path_name);
-                $invoice_data['logo'] = public_path($file); // Chemin absolu vers l'image
+                $invoice_data['logo'] = 'uploads/'.$file;
             } else {
                 $invoice_data['logo'] = null;
             }
+
 
             $InvoicesTaxData = InvoicesTaxes::active()->where(['invoice_id'=> $invoice_data->id])->get();
             $InvoicesExpData = InvoicesExpenses::active()->where(['invoice_id'=> $invoice_data->id])->get();
