@@ -2028,19 +2028,18 @@ class InvoiceController extends Controller
                 $items[$d->event_type][] = $d;
             }
 
-            $userProfile = AttachedFile::active()->where('created_by', $invoice_data->seller_id)->first();
-            $invoice_data['logo_url'] = $userProfile->path_name;
-
+            $userIS = User::where('id', $invoice_data->seller_id)->first();
             //Add user photo as Logo to Invoice
-            if (!empty($request->user()->profileImage->path_name)) {
-                $path_name =  $request->user()->profileImage->path_name;
+            if (!empty($userIS->profileImage->path_name)) {
+                $path_name =  $userIS->profileImage->path_name;
                 $file = str_replace(URL::to('').'/uploads/','',$path_name);
                 $invoice_data['logo'] = 'uploads/'.$file;
-                //$invoice_data['logo'] = $request->user()->profileImage->path_name;
+                //$invoice_data['logo'] = $userIS->profileImage->path_name;
             } else {
                 $invoice_data['logo'] = null;
             }
 
+            //dd($invoice_data['logo_url']);
 
             $InvoicesTaxData = InvoicesTaxes::active()->where(['invoice_id'=> $invoice_data->id])->get();
             $InvoicesExpData = InvoicesExpenses::active()->where(['invoice_id'=> $invoice_data->id])->get();
