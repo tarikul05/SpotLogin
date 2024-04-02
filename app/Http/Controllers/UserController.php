@@ -69,9 +69,15 @@ class UserController extends Controller
                 $discipline = trim($selectedDiscipline);
             }
 
+            if($school_type == 'COACH') {
+                $school_name = trim($data['fullname']);
+            } else {
+                $school_name = strtolower($data['school_name']);
+            }
+
             $schoolData = [
                 'school_code' => $school_code,
-                'school_name' => trim($data['fullname']),
+                'school_name' => $school_name,
                 'incorporation_date'=> now(),
                 'country_code' => $data['country_code'],
                 'email'=>trim($data['email']),
