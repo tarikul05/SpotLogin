@@ -2029,11 +2029,13 @@ class InvoiceController extends Controller
             }
 
             //Add user photo as Logo to Invoice
-            if (!empty($request->user()->profileImage->path_name)) {
-                $path_name =  $request->user()->profileImage->path_name;
+            $userProfile = AttachedFile::active()->where('created_by', $invoice_data->seller_id)->first();
+
+            if (!empty($userProfile)) {
+                $path_name =  $userProfile->profileImage->path_name;
                 $file = str_replace(URL::to('').'/uploads/','',$path_name);
                 $invoice_data['logo'] = 'uploads/'.$file;
-                $invoice_data['logo_url'] = $file;
+                $invoice_data['logo_url'] = $userProfile->path_name;
                 //$invoice_data['logo'] = $request->user()->profileImage->path_name;
             } else {
                 $invoice_data['logo'] = null;
