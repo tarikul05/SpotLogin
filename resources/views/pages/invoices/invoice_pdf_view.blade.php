@@ -242,7 +242,7 @@
 <body>
     <header>
         <div class="logo_area">
-            <div class="left_part">
+            <div class="left_part"> {{$invoice_data->logo}}
                 <?php if ($invoice_data->logo !== null): ?>
                 <img class="img_logo" src="{{ $invoice_data->logo }}" alt="" style="height: 50px;">
                 <?php endif; ?>
