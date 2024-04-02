@@ -244,7 +244,7 @@
         <div class="logo_area">
             <div class="left_part">
                 <?php if ($invoice_data->logo !== null): ?>
-                <img class="img_logo" src="{{ public_path($invoice_data->logo_url) }}" alt="" style="height: 50px;">
+                <img class="img_logo" src="{{ public_path($invoice_data->logo) }}" alt="" style="height: 50px;">
                 <?php endif; ?>
             </div>
             <div class="right_part">
