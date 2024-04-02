@@ -18,6 +18,7 @@ use App\Models\Currency;
 use App\Models\EventDetails;
 use App\Models\SchoolTeacher;
 use App\Models\ParentStudent;
+use App\Models\User;
 use App\Models\SchoolStudent;
 use App\Models\AttachedFile;
 use Illuminate\Support\Facades\Auth;
@@ -378,6 +379,16 @@ class InvoiceController extends Controller
                 $pdf->set_option('isHtml5ParserEnabled', true);
                 $pdf->set_option('isRemoteEnabled', true);
                 $pdf->set_option('DOMPDF_ENABLE_CSS_FLOAT', true);
+                $pdf->setHttpContext(
+                    stream_context_create([
+                        'ssl' => [
+                            'allow_self_signed'=> TRUE,
+                            'verify_peer' => FALSE,
+                            'verify_peer_name' => FALSE,
+                        ]
+                    ])
+                  );
+                $pdf->render();
                 // save invoice name if invoice_filename is empty
                 $file_upload = Storage::put('pdf/'. $invoice_name, $pdf->output());
                 if($file_upload){
@@ -2028,15 +2039,19 @@ class InvoiceController extends Controller
                 $items[$d->event_type][] = $d;
             }
 
+            $userIS = User::where('person_id', $invoice_data->seller_id)->first();
             //Add user photo as Logo to Invoice
-            if (!empty($request->user()->profileImage->path_name)) {
-                $path_name =  $request->user()->profileImage->path_name;
+            if (!empty($userIS->profileImage->path_name)) {
+                $path_name =  $userIS->profileImage->path_name;
                 $file = str_replace(URL::to('').'/uploads/','',$path_name);
                 $invoice_data['logo'] = 'uploads/'.$file;
-                //$invoice_data['logo'] = $request->user()->profileImage->path_name;
+                //$logo_url = AttachedFile::where('created_by', $userIS->id)->latest()->first();
+                //$invoice_data['logo'] = $logo_url->path_name;
             } else {
                 $invoice_data['logo'] = null;
             }
+
+            //dd($invoice_data['logo_url']);
 
             $InvoicesTaxData = InvoicesTaxes::active()->where(['invoice_id'=> $invoice_data->id])->get();
             $InvoicesExpData = InvoicesExpenses::active()->where(['invoice_id'=> $invoice_data->id])->get();
@@ -2047,10 +2062,20 @@ class InvoiceController extends Controller
             $invoice_items = $items;
             $date_from = strtolower(date('F.Y', strtotime($invoice_data->date_invoice)));
             $invoice_name = 'invoice-'.$invoice_data->id.'-'.strtolower($invoice_data->client_firstname).'.'.strtolower($invoice_data->client_lastname).'.'.$date_from.'.pdf';
-        $pdf = PDF::loadView('pages.invoices.invoice_pdf_view', ['school' => $school, 'invoice_data'=> $invoice_data,'invoice_items'=> $invoice_items, 'invoice_name' => $invoice_name, 'InvoicesTaxData' => $InvoicesTaxData, 'InvoicesExpData' => $InvoicesExpData]);
+            $pdf = PDF::loadView('pages.invoices.invoice_pdf_view', ['school' => $school, 'invoice_data'=> $invoice_data,'invoice_items'=> $invoice_items, 'invoice_name' => $invoice_name, 'InvoicesTaxData' => $InvoicesTaxData, 'InvoicesExpData' => $InvoicesExpData]);
             $pdf->set_option('isHtml5ParserEnabled', true);
             $pdf->set_option('isRemoteEnabled', true);
             $pdf->set_option('DOMPDF_ENABLE_CSS_FLOAT', true);
+            $pdf->setHttpContext(
+                stream_context_create([
+                    'ssl' => [
+                        'allow_self_signed'=> TRUE,
+                        'verify_peer' => FALSE,
+                        'verify_peer_name' => FALSE,
+                    ]
+                ])
+              );
+            $pdf->render();
             // print and save data
             if ($type == 'stream') {
                 // save invoice name if invoice_filename is empty
