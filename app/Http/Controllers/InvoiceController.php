@@ -2035,7 +2035,7 @@ class InvoiceController extends Controller
                 $path_name =  $userIS->profileImage->path_name;
                 $file = str_replace(URL::to('').'/uploads/','',$path_name);
                 $invoice_data['logo'] = 'uploads/'.$file;
-                $logo_url = AttachedFile::where('created_by', $invoice_data->seller_id)->latest()->first();
+                $logo_url = AttachedFile::where('created_by', $userIS->id)->latest()->first();
                 $invoice_data['logo'] = $logo_url->path_name;
             } else {
                 $invoice_data['logo'] = null;
