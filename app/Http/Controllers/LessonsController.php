@@ -542,7 +542,11 @@ class LessonsController extends Controller
             if($user->isSchoolAdmin() || $user->isTeacherSchoolAdmin()) {
                 $eventCategory = EventCategory::active()->where('school_id',$schoolId)->get();
             } else {
-                $eventCategory = EventCategory::find($lessonData->eventcategory);
+                if($user->isTeacherAdmin()) {
+                    $eventCategory = EventCategory::active()->where('school_id',$schoolId)->where('created_by',$user->id)->get();
+                } else {
+                    $eventCategory = EventCategory::find($lessonData->eventcategory);
+                }
             }
         } else {
             $eventCategory = EventCategory::active()->where('school_id',$schoolId)->where('created_by',$user->id)->get();

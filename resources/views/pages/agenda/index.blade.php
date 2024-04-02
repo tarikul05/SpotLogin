@@ -673,7 +673,7 @@
                                                         <div class="row">
                                                             <hr class="col-lg-12 col-sm-12 text-left" style="font-size:10px; color:#EEE;">
                                                         </div>
-                                                        <div class="form-group row">
+                                                        <!--<div class="form-group row">
                                                             <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Currency') }} :</label>
                                                             <div class="col-sm-6">
                                                                 <div class="selectdiv">
@@ -684,7 +684,8 @@
                                                                     </select>
                                                                 </div>
                                                             </div>
-                                                        </div>
+                                                        </div>-->
+                                                        <input type="hidden" value ="{{$school->default_currency_code}}" id="sprice_currency" name="sprice_currency">
                                                         <div class="form-group row not_teacher">
                                                             <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price') }} <span class="lesson-text">({{__('class/hour') }})</span><span class="event-text">(per event)</span> :</label>
                                                             <div class="col-sm-6">
