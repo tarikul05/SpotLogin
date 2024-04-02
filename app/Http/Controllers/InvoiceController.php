@@ -379,6 +379,16 @@ class InvoiceController extends Controller
                 $pdf->set_option('isHtml5ParserEnabled', true);
                 $pdf->set_option('isRemoteEnabled', true);
                 $pdf->set_option('DOMPDF_ENABLE_CSS_FLOAT', true);
+                $pdf->setHttpContext(
+                    stream_context_create([
+                        'ssl' => [
+                            'allow_self_signed'=> TRUE,
+                            'verify_peer' => FALSE,
+                            'verify_peer_name' => FALSE,
+                        ]
+                    ])
+                  );
+                $pdf->render();
                 // save invoice name if invoice_filename is empty
                 $file_upload = Storage::put('pdf/'. $invoice_name, $pdf->output());
                 if($file_upload){
