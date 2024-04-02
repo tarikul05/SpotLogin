@@ -2040,6 +2040,7 @@ class InvoiceController extends Controller
             }
 
 
+
             $InvoicesTaxData = InvoicesTaxes::active()->where(['invoice_id'=> $invoice_data->id])->get();
             $InvoicesExpData = InvoicesExpenses::active()->where(['invoice_id'=> $invoice_data->id])->get();
 
