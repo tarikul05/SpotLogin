@@ -2029,7 +2029,7 @@ class InvoiceController extends Controller
                 $items[$d->event_type][] = $d;
             }
 
-            $userIS = User::where('id', $invoice_data->seller_id)->first();
+            $userIS = User::where('person_id', $invoice_data->seller_id)->first();
             //Add user photo as Logo to Invoice
             if (!empty($userIS->profileImage->path_name)) {
                 $path_name =  $userIS->profileImage->path_name;
