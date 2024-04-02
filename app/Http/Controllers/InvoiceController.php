@@ -2034,7 +2034,7 @@ class InvoiceController extends Controller
             if (!empty($userIS->profileImage->path_name)) {
                 $path_name =  $userIS->profileImage->path_name;
                 $file = str_replace(URL::to('').'/uploads/','',$path_name);
-                $invoice_data['logo'] = public_path('uploads/'.$file); // Chemin absolu vers l'image
+                $invoice_data['logo'] = public_path($file); // Chemin absolu vers l'image
             } else {
                 $invoice_data['logo'] = null;
             }
