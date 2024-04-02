@@ -46,7 +46,7 @@ class TeachersController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->stripe = new \Stripe\StripeClient(config('services.stripe.key'));
+        $this->stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
 
         $this->middleware('permission:teachers-list|teachers-create|teachers-update|teachers-view|teachers-users-update|teachers-delete', ['only' => ['index']]);
         $this->middleware('permission:teachers-create', ['only' => ['create','AddTeacher']]);
