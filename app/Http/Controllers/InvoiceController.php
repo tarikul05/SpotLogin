@@ -2060,7 +2060,7 @@ class InvoiceController extends Controller
             // print and save data
             if ($type == 'stream') {
                 // save invoice name if invoice_filename is empty
-                $file_upload = Storage::put('pdf/'. $invoice_name, $pdf);
+                $file_upload = Storage::put('pdf/'. $invoice_name, $pdf->get_output());
                 if($file_upload){
                     $invoice_pdf_path = URL::to("").'/uploads/pdf/'.$invoice_name;
                     $invoice_data->invoice_filename = $invoice_pdf_path;
