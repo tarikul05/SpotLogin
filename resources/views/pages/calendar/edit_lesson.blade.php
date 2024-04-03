@@ -554,21 +554,22 @@ $( document ).ready(function() {
 		$('#price_per_student').show();
 	}
 
-	var start_time = moment("{{$date_start}}").format("HH:mm")
-	var end_time = moment("{{$date_end}}").format("HH:mm")
+	var start_time = moment("{{$date_start}}").format("HH:mm");
+	var end_time = moment("{{$date_end}}").format("HH:mm");
+	var step_minutes = "{{$lessonData->duration_minutes}}";
 
 	$('.timepicker1').timepicker({
 		timeFormat: 'HH:mm',
-		interval: 15,
+		interval: step_minutes,
 		minTime: '0',
 		maxTime: '23:59',
 		defaultTime: start_time,
-		startTime: '00:00',
+		startTime: "{{date('H:i', strtotime($date_start))}}",
 		dynamic: false,
 		dropdown: true,
 		scrollbar: true,
 		change:function(time){
-			$('#end_time').val(recalculate_end_time(moment(time).format('HH:mm'),15));
+			$('#end_time').val(recalculate_end_time(moment(time).format('HH:mm'),step_minutes));
 			CalcDuration();
 		}
 	});
@@ -579,7 +580,7 @@ $( document ).ready(function() {
 		minTime: '0',
 		maxTime: '23:59',
 		defaultTime: end_time,
-		startTime: '00:00',
+		startTime: "{{date('H:i', strtotime($date_end))}}",
 		dynamic: false,
 		dropdown: true,
 		scrollbar: true,
