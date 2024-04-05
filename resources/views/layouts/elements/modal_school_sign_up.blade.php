@@ -419,7 +419,7 @@ $(document).ready(function () {
                             Swal.fire({
                             title: "Congratulations!",
                             html: data.message,
-                            timer: 2000,
+                            timer: 3200,
                             timerProgressBar: true,
                             didOpen: () => {
                                 Swal.showLoading();

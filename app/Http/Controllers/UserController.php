@@ -246,6 +246,9 @@ class UserController extends Controller
      */
     public function resendCode(Request $request) {
         $data = $request->all();
+        if(!isset($data['username'])){
+            $data['username'] = session('emailVerification');
+        }
         $user = User::where('username', $data['username'])->first();
         if ($user) {
             $data = [];
