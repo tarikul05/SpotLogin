@@ -129,8 +129,29 @@ inputs.forEach(input => {
         encode: true,
         success: function(data) {
           status = data.status;
-          //redirect to /agenda
-          window.location.href = BASE_URL + '/agenda';
+          $('#pageloader').hide();
+          let timerInterval;
+          Swal.fire({
+          title: "Congratulations!",
+          html: 'Your account is verified successfully.',
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: () => {
+              Swal.showLoading();
+              const timer = Swal.getPopup().querySelector("b");
+              timerInterval = setInterval(() => {
+              timer.textContent = `${Swal.getTimerLeft()}`;
+              }, 100);
+          },
+          willClose: () => {
+              clearInterval(timerInterval);
+          }
+          }).then((result) => {
+          /* Read more about handling dismissals below */
+          if (result.dismiss === Swal.DismissReason.timer) {
+              window.location.href = BASE_URL + '/permission-check';
+          }
+          });
         }, // sucess
         error: function(ts) {
           $('#pageloader').hide();
@@ -168,7 +189,7 @@ inputs.forEach(input => {
             icon:'success',
             title: 'Code has been sent to your email.',
             showConfirmButton: false,
-            timer: 1500
+            timer: 3000
           });
         }, // sucess
         error: function(ts) {
