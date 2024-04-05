@@ -221,7 +221,7 @@
 											<div class="selectdiv">
 											<select class="form-control select_two_defult_class" {{ $exTeacher ? 'disabled' : '' }} id="country_code" name="country_code">
 												@foreach($countries as $country)
-								                    <option {{ $exTeacher && ($exTeacher->country_code == $country->code) ? 'selected' : '' }} value="{{ $country->code }}"> {{ $country->name }} ({{ $country->code }})</option>
+								                    <option {{ $school && ($school->country_code == $country->code) ? 'selected' : '' }} value="{{ $country->code }}"> {{ $country->name }} ({{ $country->code }})</option>
 								                @endforeach
 											</select>
 											</div>
@@ -510,6 +510,7 @@ $('#save_btn').click(function (e) {
 			success: function(response) {
 					if(response.data.length > 0){
 						var html = '';
+						html += '<option value="">Select a province</option>';
 						$.each(response.data, function(i, item) {
 							html += '<option value="'+ item.id +'">' + item.province_name + '</option>';
 						});

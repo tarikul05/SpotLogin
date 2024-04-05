@@ -79,6 +79,7 @@ class School extends BaseModel
         'invoice_opt_activated',
         'discipline',
         'is_active',
+        'number_of_coaches',
         'created_by',
         'modified_by'
     ];

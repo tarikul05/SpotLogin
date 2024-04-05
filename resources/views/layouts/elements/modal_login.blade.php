@@ -1,7 +1,7 @@
 <!-- Modal -->
 <div class="modal fade login-signup-modal" id="loginModal" tabindex="-1" aria-hidden="true" aria-labelledby="loginModalLabel">
   <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
+    <div class="modal-content modal-body-mobile">
       <div class="modal-header d-block text-center border-0">
         <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> -->
 
@@ -10,9 +10,26 @@
             <i class="fa-solid fa-circle-xmark fa-lg" style="color:#0075bf;"></i>
         </a>
 
-        <p class="mb-0">{{ __('Welcome back!') }}</p>
+        <p class="mb-0">{{ __('Welcome to SportLogin!') }}</p>
+        <p class="mb-0 text-danger" id="error_msg"></p>
+        <div class="text-center" id="otp_div" style="display: none;">
+          <p>{{ __('Enter the verification code you receive by email') }}</p>
+          <form id="code_form" name="code_form" method="POST" action="{{ route('verify.code') }}">
+          <input type="text" class="digit" id="digit1" maxlength="1">
+          <input type="text" class="digit" id="digit2" maxlength="1"> 
+          <input type="text" class="digit" id="digit3" maxlength="1">
+          <input type="text" class="digit" id="digit4" maxlength="1">
+          <input type="text" class="digit" id="digit5" maxlength="1">
+          <input type="text" class="digit" id="digit6" maxlength="1">
+          <div style="display:block; margin: 20px;">
+            <button type="submit" class="btn btn-success" id="validate_code">{{ __('Validate my account') }}</button>
+          </div>
+          </form>
+          <p><a href="#" style="color: #0075bf;" id="resend_code_form">{{ __('Re-send the code') }}</a></p>
+        </div>
+
       </div>
-      <div class="modal-body text-center" style="max-width: 375px; margin: 0 auto;padding-top: 0;">
+      <div class="modal-body text-center" style="max-width: 375px; width:100%; margin: 0 auto;padding-top: 0;">
         <form id="login_form" name="login_form" method="POST" action="{{ route('login.submit') }}">
 
           <div class="form-group">
@@ -26,7 +43,12 @@
               </div>
             </div>
           </div>
-          <div style="margin-bottom:10px;"><small><a class="forgot_password_btn"  data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">{{ __('Forgot password?') }}</a> | <a class="forgot_password_btn"  data-bs-toggle="modal" data-bs-target="#forgotUsernameModal">{{ __('Forgot username?') }}</a></small></div>
+          <div style="margin-bottom:10px;">
+            <small><a class="forgot_password_btn"  data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">{{ __('Forgot password?') }}</a> 
+              <span style="font-size:18px; margin-left:5px; margin-right:5px;">|</span> 
+              <a class="forgot_password_btn"  data-bs-toggle="modal" data-bs-target="#forgotUsernameModal">{{ __('Forgot username?') }}</a>
+            </small>
+          </div>
           <button type="submit" class="btn btn-lg btn-primary btn-block">{{ __('Sign in') }}</button>
         </form>
 
@@ -41,6 +63,20 @@
 
 <script>
 $(document).ready(function() {
+
+const inputs = document.querySelectorAll('input[id^="digit"]');
+let emailVerification = null;
+
+inputs.forEach(input => {
+  input.addEventListener('keyup', () => {
+    if(input.value.length === 1) {
+      const index = parseInt(input.id.slice(-1))
+      if(index < 6) {
+        inputs[index].focus();  
+      }
+    }
+  });
+});
 
   $("#pageloader").fadeOut();
 
@@ -59,6 +95,88 @@ $(document).ready(function() {
       $('#show_hide_password i').removeClass("fa-eye-slash");
       $('#show_hide_password i').addClass("fa-eye");
     }
+  });
+
+
+
+  $("#code_form").submit(function(e) {
+    e.preventDefault();
+      $('#pageloader').show();
+      var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+
+      var formdata = $("#code_form").serializeArray();
+      var code = $('#digit1').val() + $('#digit2').val() + $('#digit3').val() + $('#digit4').val() + $('#digit5').val() + $('#digit6').val();
+
+      formdata.push({
+        "name": "username",
+        "value": emailVerification
+      });
+      formdata.push({
+        "name": "code",
+        "value": code
+      });
+      formdata.push({
+        "name": "_token",
+        "value": csrfToken
+      });
+
+      $.ajax({
+        url: BASE_URL + '/verify-account-code',
+        data: formdata,
+        type: 'POST',
+        dataType: 'json',
+        async: false,
+        encode: true,
+        success: function(data) {
+          status = data.status;
+          //redirect to /agenda
+          window.location.href = BASE_URL + '/agenda';
+        }, // sucess
+        error: function(ts) {
+          $('#pageloader').hide();
+          errorModalCall('This code is not valid. Please check your email and try again.');
+        }
+      });
+      
+  });
+
+  $("#resend_code_form").click(function(e) {
+    e.preventDefault();
+      $('#pageloader').show();
+      var formdata = [];
+      var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+      formdata.push({
+        "name": "username",
+        "value": emailVerification
+      });
+      formdata.push({
+        "name": "_token",
+        "value": csrfToken
+      });
+      $.ajax({
+        url: BASE_URL + '/resend-account-code',
+        data: formdata,
+        type: 'POST',
+        dataType: 'json',
+        async: false,
+        encode: true,
+        success: function(data) {
+          $('#pageloader').hide();
+          status = data.status;
+          Swal.fire({
+            position: 'center',
+            icon:'success',
+            title: 'Code has been sent to your email.',
+            showConfirmButton: false,
+            timer: 1500
+          });
+        }, // sucess
+        error: function(ts) {
+          $('#pageloader').hide();
+         console.log(ts);
+          errorModalCall('This code is not valid. Please check your email and try again.');
+        }
+      });
   });
 
 
@@ -131,7 +249,7 @@ $(document).ready(function() {
     },
 
     submitHandler: function(form) {
-      $("#loginModal").modal('hide');
+      //$("#loginModal").modal('hide');
       let loader = $('#pageloader');
       //loader.show("fast");
       if (FirstLoginAfterResetPass()) {
@@ -156,6 +274,7 @@ $(document).ready(function() {
         "name": "_token",
         "value": csrfToken
       });
+   
       $.ajax({
         url: BASE_URL + '/login',
         data: formdata,
@@ -167,36 +286,36 @@ $(document).ready(function() {
           loader.fadeIn("fast");
         },
         success: function(data) {
-
           if (data.status == 0) {
+            $("#otp_div").hide();
             var username = $("#login_username").val();
-
-
-
             $("#loginModal").modal('hide');
-            //successModalCall("{{ __('Logged In Successfully') }}");
-
             setTimeout(function() {
               window.location.href = data.login_url;
             }, 1000);
-
-
-
           } else {
-
-            setTimeout(() => {
+            if (data.status == 2) {
+              setTimeout(() => {
               loader.fadeOut("fast");
-              errorModalCall('Information', "{{ __('Invalid username or password') }}");
+              emailVerification = data.username;
+              $("#error_msg").html('<br>Please check your email for verification link');
+              $("#otp_div").show();
+             // errorModalCall('Information', "{{ __('Please check your email for verification link') }}");
             }, "900")
-
-
+            } else {
+              setTimeout(() => {
+              loader.fadeOut("fast");
+              $("#error_msg").html('Invalid username or password');
+             // errorModalCall('Information', "{{ __('Invalid username or password') }}");
+            }, "900")
+            }
           }
-
         }, // sucess
         error: function(ts) {
           setTimeout(() => {
             loader.fadeOut("fast");
-            errorModalCall('Information', "{{ __('Invalid username or password') }}");
+            $("#error_msg").html('Invalid username or password');
+           // errorModalCall('Information', "{{ __('Invalid username or password') }}");
           }, "900")
 
         },

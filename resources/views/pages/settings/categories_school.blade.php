@@ -25,7 +25,6 @@
                         <table class="table table-bordered table-hover">
                             <thead>
                                 <th style="width:150px;"> {{ __('Name')}}</th>
-                                <th width="60" class="text-center"> {{ __('Color')}}</th>
                                 <th>{{ __('Invoice type')}}</th>
                                 <th>{{ __('Billing')}}</th>
                                 <th width="40" class="text-center">Action</th>
@@ -39,11 +38,7 @@
                                                 <input style="width:180px;" type="text" class="form-control" name="category[{{$count}}][name]" value="{{ $cat->title }}">
                                             </div>
                                         </td>
-                                        <td class="text-center align-middle">
-                                            <div class="form-group">
-                                                <input type="text" name="category[{{$count}}][bg_color_agenda]" value="{{!empty($cat->bg_color_agenda) ? $cat->bg_color_agenda : old('bg_color_agenda')}}"  class="colorpicker dot category_bg_color_agenda" />
-                                            </div>
-                                        </td>
+                                        <input type="hidden" name="category[{{$count}}][bg_color_agenda]" value="{{!empty($cat->bg_color_agenda) ? $cat->bg_color_agenda : old('bg_color_agenda')}}"  class="colorpicker dot category_bg_color_agenda" />
                                         <td class="text-left align-middle">
                                             <div>
                                                 <input type="radio" class="form-check-input invcat_name" name="category[{{$count}}][invoice]" value="S" <?php if($cat->invoiced_type == 'S'){ echo 'checked'; }  ?>> <label> {{ __('School Invoiced') }}</label>
@@ -130,8 +125,7 @@
 
                         <table class="table table-bordered bg-tertiary" id="add_more_event_category_div" style="display: none;">
                             <thead>
-                                <th width="150">Name <span class="badge bg-info">new</span></th>
-                                <th width="60" class="text-center">Color</th>
+                                <th style="width:200px;">Name <span class="badge bg-info">new</span></th>
                                 <th>Invoice type</th>
                                 <th>Billing</th>
                                 <th width="40" class="text-center">Action</th>
