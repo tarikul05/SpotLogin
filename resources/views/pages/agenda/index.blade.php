@@ -4716,7 +4716,7 @@ $("body").on('change', '#category_select, #teacher_select', function(event) {
     //console.log('No teacher found with ID ', teacherSelect, '.');
     }
 
-    var isSchoolAdmin = +"{{$AppUI->isSchoolAdmin()}}";
+    var isSchoolAdmin = +"{{$AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin()}}";
     var isTeacherAdmin = +"{{$AppUI->isTeacherAdmin()}}";
     var isTeacher = +"{{$AppUI->isTeacher()}}";
 
@@ -4947,9 +4947,10 @@ $('#agenda_select').on('change', function() {
             $('.lesson.hide_on_off').hide();
             $("form.form-horizontal").attr("action", page_action);
             $('.hide_coach_off').show();
-            $('.show_coach_off.hide_on_off').show();
+          //  $('.show_coach_off.hide_on_off').show();
              $("#std-check-div").css('display', 'none');
-            $(".lesson-text").hide()
+            $(".lesson-text").hide();
+            $('.show_coach_off.hide_on_off').hide();
             $(".event-text").show()
             // $('#event_invoice_type').trigger('change');
         }else if(this.value == 3){
@@ -5021,13 +5022,13 @@ $('#agenda_select').on('change', function() {
         }
     }
 
-    var isSchoolAdmin = +"{{$AppUI->isSchoolAdmin()}}";
+    var isSchoolAdmin = +"{{$AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin()}}";
     var isTeacherAdmin = +"{{$AppUI->isTeacherAdmin()}}";
     var isTeacher = +"{{$AppUI->isTeacher()}}";
     var datainvoiced = $("#category_select option:selected").data('invoice');
     var event_invoice_type = "";
 
-    @if($AppUI->isSchoolAdmin())
+    @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin())
     event_invoice_type = $("#event_invoice_type option:selected").val();
     @endif
     @if($AppUI->isTeacherAdmin())
@@ -5071,7 +5072,7 @@ $('#teacher_select').on('change', function() {
 
 $('#event_invoice_type').on('change', function() {
 
-    var isSchoolAdmin = +"{{$AppUI->isSchoolAdmin()}}";
+    var isSchoolAdmin = +"{{$AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin()}}";
     var isTeacherAdmin = +"{{$AppUI->isTeacherAdmin()}}";
     var isTeacherSchoolAdmin = +"{{$AppUI->isTeacherSchoolAdmin()}}";
     var isTeacher = +"{{$AppUI->isTeacher()}}";
@@ -5079,7 +5080,7 @@ $('#event_invoice_type').on('change', function() {
     var teacher =  $("#teacher_select option:selected").val();
 
 
-    @if($AppUI->isSchoolAdmin())
+    @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin())
     event_invoice_type = $("#event_invoice_type option:selected").val();
     @endif
     @if($AppUI->isTeacherAdmin())
@@ -5131,7 +5132,7 @@ if (school_id !=null) {
                 resultHtml+='<option data-s_thr_pay_type="0" data-s_std_pay_type="0" data-t_std_pay_type="0" data-invoice="T" value="0">Select Category</option>';
                 var i='0';
                 $.each(data, function(key,value){
-                    var isAdmin = "{{ $AppUI->isSchoolAdmin() }}";
+                    var isAdmin = "{{ $AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() }}";
                     let textAdmin = "";
                     if(isAdmin) {
                         textAdmin = "<span class='text-danger'>("+value.invoiced_type+")</span> ";
