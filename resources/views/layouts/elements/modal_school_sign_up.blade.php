@@ -1,7 +1,7 @@
 <!-- Modal -->
 <div class="modal fade login-signup-modal" id="schoolsignupModal" tabindex="-1" aria-hidden="true" aria-labelledby="schoolsignupModalLabel">
   <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-      <div class="modal-content">
+      <div class="modal-content modal-body-mobile">
           <div class="modal-header d-block text-center border-0">
               <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> -->
               <h3 class="modal-title light-blue-txt gilroy-bold" id="signupModalLabel">{{ __('Sign up') }}</h3>
@@ -15,12 +15,12 @@
 
             <div class="row">
 
-                <div class="col-lg-6 p-3">
+                <div class="col-lg-6 p-2">
 
 
                     <div class="form-group custom-selection">
                         <div class="form-group">
-                            <small class="pb-2 light-blue-txt">{{ __('Choose an account type') }}</small>
+                            <small class="pb-2 light-blue-txt"><b>{{ __('Choose an account type') }}</b></small>
                         </div>
                         <select class="selectpicker" id="school_type" name="school_type" required onchange="changePlaceholder()">
                             <option value="COACH">{{ __('I am a Single coach') }}</option>
@@ -40,8 +40,10 @@
 
 
 
-                    <div class="card bg-tertiary p-2 mb-3">
-                        <small class="pb-2 light-blue-txt">{{ __('Personnal information') }}</small>
+                    <div class="card2 bg-tertiary mb-2">
+                        <div class="form-group"><br>
+                            <small class="pb-2 light-blue-txt"><b>{{ __('Personnal information') }}</b></small>
+                        </div>
 
                     <div class="form-group" style="display:none;" id="school_name_div">
                         <label for="email">{{ __('School name') }}</label>
@@ -75,30 +77,14 @@
                     </div>
 
 
-                    <div class="card bg-tertiary p-2 mb-3">
-                        <small class="pb-2 light-blue-txt">{{ __('Login credentials') }}</small>
-                        <div class="form-group">
-                            <small>{{ __('Choose an username as your login ID') }}</small>
-                            <input type="text" class="form-control" placeholder="{{ __('Username') }}" id="username" name="username" required onkeyup="checkUsername(this.value)">
-                            <small class="text-danger" style="display: block;" id="username_feedback"></small>
-                            <small class="text-success" id="username_available"></small>
-                            <small class="text-danger" id="username_already_exist"></small>
+                   
+
+
+
+                    <div class="card2 bg-tertiary mb-2">
+                        <div class="form-group"><br>
+                        <small class="pb-2 light-blue-txt"><b>Localisation</b></small>
                         </div>
-                        <div class="form-group">
-                            <div class="input-group" id="show_hide_password">
-                                    <input class="form-control" autocomplete="on" type="password" id="password" placeholder="{{ __('password') }}" name="password">
-                                    <div class="input-group-addon">
-                                        <a href=""><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
-                                    </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-
-
-                    <div class="card bg-tertiary p-2 mb-3">
-                        <small class="pb-2 light-blue-txt">Localisation</small>
                         <div class="form-group custom-selection">
                             <select class="selectpicker" data-live-search="true" id="country_code" name="country_code" required>
                                 <option value="">{{ __('Select Country')}}</option>
@@ -126,19 +112,41 @@
 
 
                 </div>
-                <div class="col-lg-6 bg-tertiary text-center p-3">
+                <div class="col-lg-6 bg-tertiary p-3">
                 <div class="d-none d-sm-block"><br><br></div>
-                <h5 class="d-none d-sm-block">{{ __('Free Trial') }}</h5>
-                <h5 class="d-none d-sm-block light-blue-txt">{{ __('Sign up now and take advantage of a 30-free-day trial period') }}</h5>
+                <!--<h6 class="d-none d-sm-block">{{ __('Free Trial') }}</h6>-->
+                <div class="text-center">
+                    <h6 class="d-none d-sm-block light-blue-txt">{{ __('Sign up now and take advantage of a 30-free-day trial period') }}</h6>
+                </div>
                 <div class="d-none d-sm-block"><br><br></div>
-                    <small id="" class="password_hint bg-tartiary card pt-1 mt-2 pb-2">
-                        <strong>{{ __('Password Must') }}:</strong>
-                        > {{ __('Be more than 7 Characters') }}</br>
-                        > {{ __('A Lowercase Character') }}</br>
-                        > {{ __('A Number') }}</br>
-                    </small>
 
-                    <div class="alert alert-warning">{{ __('This sign-up form is only for Coachs and Schools. If you are a') }} <b>{{ __('student') }}</b> {{ __('invited by your school or your teacher, please') }}
+                 <div class="card bg-tertiary p-2 mb-4" style="border:1px solid #0075bf;">
+                        <small class="pb-2 light-blue-txt"><b>{{ __('Login credentials') }}</b></small>
+                        <div class="form-group">
+                            <small>{{ __('Choose an username as your login ID') }}</small>
+                            <input type="text" class="form-control" placeholder="{{ __('Username') }}" id="username" name="username" required onkeyup="checkUsername(this.value)">
+                            <small class="text-danger" style="display: block;" id="username_feedback"></small>
+                            <small class="text-success" id="username_available"></small>
+                            <small class="text-danger" id="username_already_exist"></small>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group" id="show_hide_password">
+                                    <input class="form-control" autocomplete="on" type="password" id="password" placeholder="{{ __('password') }}" name="password">
+                                    <div class="input-group-addon">
+                                        <a href=""><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
+                                    </div>
+                            </div>
+                            <span style="font-size:11px;">
+                            At least 7 char.
+                            | A Lowercase Char.
+                            | A Number
+                            </span>
+                        </div>
+                    </div>
+
+                   
+
+                    <div class="alert alert-warning text-center">{{ __('This sign-up form is only for Coachs and Schools. If you are a') }} <b>{{ __('student') }}</b> {{ __('invited by your school or your teacher, please') }}
                         <a class="login_btn" href="#modalStudent" data-bs-toggle="modal" data-bs-target="#modalStudent">{{ __('click here') }}</a>
                     </div>
 
@@ -190,6 +198,9 @@ var lastnameInput = document.getElementById('lastname');
 var fullnameInput = document.getElementById('fullname');
 var username = document.getElementById('username');
 var welcomeMessage = document.getElementById('welcome-message');
+
+//detect if is mobile with agent median or gonative
+var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
 // Ajoutez un gestionnaire d'événements "input" aux champs "firstname" et "lastname"
 firstnameInput.addEventListener('input', updateFullName);
@@ -380,6 +391,11 @@ $(document).ready(function () {
                     "value": "signup_submit"
                 });
 
+                formdata.push({
+                    "name": "ismobile",
+                    "value": isMobile
+                });
+
                 $.ajax({
                     url: BASE_URL + '/signup',
                     data: formdata,
@@ -398,13 +414,31 @@ $(document).ready(function () {
                             $("#schoolsignupModal").modal('hide');
                             //$("#successModal").modal('show');
                             //successModalCall(data.message);
-                            Swal.fire(
-                            'Congratulations!',
-                            data.message,
-                            'success'
-                            )
 
-                            //$("#loginModal").modal('show');
+                            let timerInterval;
+                            Swal.fire({
+                            title: "Congratulations!",
+                            html: data.message,
+                            timer: 3200,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading();
+                                const timer = Swal.getPopup().querySelector("b");
+                                timerInterval = setInterval(() => {
+                                timer.textContent = `${Swal.getTimerLeft()}`;
+                                }, 100);
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval);
+                            }
+                            }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                $("#loginModal").modal('show');
+                                $("#otp_div").show();
+                            }
+                            });
+
                         } else {
                             //errorModalCall(GetAppMessage('error_message_text'));
                             Swal.fire(

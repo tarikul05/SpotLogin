@@ -164,6 +164,7 @@ class AuthController extends Controller
                 $user = User::getUserData($field, $username);
 
                 if ($user) {
+                    if ($user->is_active) {
                     if(Auth::attempt(['username' => $data['login_username'], 'password' => $data['login_password']], $request->filled('remember'))){
 
                         // Auth::login($user);
@@ -197,6 +198,13 @@ class AuthController extends Controller
                         }
                         return response()->json($result);
                     }
+                } else {
+                    $result = array(
+                        'status' => 2,
+                        'username' => $user['username'],
+                        'message' => __('Please check your email to activate your account'),
+                    );
+                }
                 }
 
             }

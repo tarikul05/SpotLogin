@@ -33,6 +33,9 @@ class SportloginEmail extends Mailable
                 $data['body_text'] = str_replace("[~~USER_NAME~~]", $data['username'], $data['body_text']);
                 $data['body_text'] = str_replace("[~~ USER_NAME ~~]", $data['username'], $data['body_text']);
             }
+            if (isset($data['code_verification'])) {
+                $data['body_text'] = str_replace("[~~CODE~~]", $data['code_verification'], $data['body_text']);
+            }
             if (isset($data['url'])) {
                 $data['body_text'] = str_replace("[~~URL~~]", $data['url'], $data['body_text']);
                 $data['body_text'] = str_replace("[~~ URL ~~]", $data['url'], $data['body_text']);

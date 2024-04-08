@@ -74,9 +74,10 @@
             <input type="text" class="form-control table-name-width" name="category[`+lst_id+`][name]" value="">
         </div>
         </td>
-        <td class="text-center align-middle">
+        <input type="hidden" name="category[`+lst_id+`][bg_color_agenda]" value="#EEE" class="colorpicker dot category_bg_color_agenda" />
+        <!--<td class="text-center align-middle">
             <input type="text" name="category[`+lst_id+`][bg_color_agenda]"  class="colorpicker dot category_bg_color_agenda" />
-        </td>
+        </td>-->
         <td class="align-middle">
             @if($AppUI->isTeacherAdmin())
                 <input class="form-check-input invcat_name" name="category[`+lst_id+`][invoice]" type="hidden" value="S" checked>
@@ -102,7 +103,7 @@
                 </div>-->
                 <div class="form-check">
                     <label class="form-check-label" for="radio`+lst_id+`">
-                        <input type="radio" class="form-check-input" id="radio`+lst_id+`" name="category[`+lst_id+`][s_thr_pay_type]" value="1">Fixed price <span style="font-size:11px;" class="d-none d-sm-inline-block">(per student /hour)</span>
+                        <input type="radio" class="form-check-input" id="radio`+lst_id+`" name="category[`+lst_id+`][s_thr_pay_type]" value="1" checked>Fixed price <span style="font-size:11px;" class="d-none d-sm-inline-block">(per student /hour)</span>
                     </label>
                 </div>
             </div>
@@ -124,7 +125,7 @@
                 @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin())
                 <div class="form-check">
                     <label class="form-check-label" for="sradio3`+lst_id+`">
-                        <input type="radio" class="form-check-input" id="sradio3`+lst_id+`" name="category[`+lst_id+`][s_std_pay_type]" value="2">Packaged
+                        <input type="radio" class="form-check-input" id="sradio3`+lst_id+`" name="category[`+lst_id+`][s_std_pay_type]" value="2" checked>Packaged
                     </label>
                 </div>
                 @endif

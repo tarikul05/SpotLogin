@@ -49,6 +49,7 @@ class User extends Authenticatable
         'is_firstlogin',
         'created_by',
         'modified_by',
+        'code_verification',
         'trial_ends_at',
     ];
 
@@ -396,7 +397,7 @@ class User extends Authenticatable
             return $user = self::where([
                 [$field, $username],
                 ['deleted_at', null],
-                ['is_active', 1]
+                /*['is_active', 1]*/
             ])->first();
 
     }

@@ -1268,7 +1268,7 @@ class AgendaController extends Controller
         if ($type == 'T') {
             $eventCat = EventCategory::TeacherInvoiced()->where('school_id', $schoolId)->where('created_by', $teacherDetail->id)->get();
         }else{
-            $eventCat = EventCategory::active()->where('school_id', $schoolId)->where('invoiced_type', $type)->where('created_by', $user->id)->get();
+            $eventCat = EventCategory::active()->where('school_id', $schoolId)->where('invoiced_type', $type)->get(); //where('created_by', $user->id)
         }
 
         return $eventCategory =json_encode($eventCat);

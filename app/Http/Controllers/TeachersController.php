@@ -109,7 +109,7 @@ class TeachersController extends Controller
             $teachersCount = $school->teachers()->where('role_type', '!=', 'school_admin')->count();
             if($number_of_coaches > 0 || $teachersCount > 0) {
             if ($teachersCount >= $number_of_coaches) {
-                return redirect()->back()->with('error', __('You have reached the maximum number of teachers.'));
+                return redirect()->back()->with('error', __('You have reached the maximum number of teachers. You need a Premium Account for add more teachers.'));
             }
             } else {
                 $number_of_coaches = 1;

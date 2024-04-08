@@ -263,6 +263,7 @@
 											<div class="selectdiv">
 											<select class="form-control select_two_defult_class" id="country_code" name="country_code">
 												@foreach($countries as $country)
+												<option value="">Select Country</option>
 								                    <option value="{{ $country->code }}" {{!empty($teacher->country_code) ? (old('country_code', $teacher->country_code) == $country->code ? 'selected' : '') : (old('country_code') == $country->code ? 'selected' : '')}}>{{ $country->name }} ({{ $country->code }})</option>
 								                @endforeach
 											</select>
@@ -1520,6 +1521,7 @@ function get_province_lists(country_code, set_province){
 		success: function(response) {
 				if(response.data.length > 0){
 					var html = '';
+					html += '<option value="">Select a province</option>';
 					$.each(response.data, function(i, item) {
 						if(item.id == set_province){
 							var select = 'selected';

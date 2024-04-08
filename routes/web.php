@@ -31,8 +31,10 @@ Route::get('/reset-password/{token}', [App\Http\Controllers\AuthController::clas
 Route::post('/reset-password', [App\Http\Controllers\AuthController::class, 'resetPasswordSubmit'])->name('reset_password.submit');
 Route::post('/signup', [App\Http\Controllers\UserController::class, 'create'])->name('signup.submit');
 Route::get('/verify-account/{token}', 'UserController@verify_user')->name('verify.email');
+Route::post('/verify-account-code', 'UserController@verify_user_code')->name('verify.code');
 Route::post('/change_first_password', [App\Http\Controllers\AuthController::class, 'changeFirstPassword'])->name('change_password.first');
 
+Route::post('/resend-account-code', 'UserController@resendCode')->name('resend.code');
 
 // after user add verify it
 Route::get('/verify-user-account/{token}', 'UserController@verify_user_added')->name('add.verify.email');

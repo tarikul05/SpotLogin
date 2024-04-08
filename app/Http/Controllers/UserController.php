@@ -62,6 +62,7 @@ class UserController extends Controller
             $scType = ($school_type=='COACH') ? 'C' : 'S';
             $school_code = strtolower($data['username']);
             $selectedDiscipline = trim($data['discipline']);
+            $isMobile = $data['ismobile'] ? 1 : 0;
 
             if ($selectedDiscipline === "other-discipline") {
                 $discipline = trim($data['discipline2']);
@@ -78,6 +79,8 @@ class UserController extends Controller
             $schoolData = [
                 'school_code' => $school_code,
                 'school_name' => $school_name,
+                'contact_firstname'=>trim($data['firstname']),
+                'contact_lastname'=>trim($data['lastname']),
                 'incorporation_date'=> now(),
                 'country_code' => $data['country_code'],
                 'email'=>trim($data['email']),
@@ -87,7 +90,8 @@ class UserController extends Controller
                 'max_students'=>0,
                 'max_teachers'=>0,
                 'is_active'=>1,
-                'timezone'=>$data['timezone']
+                'timezone'=>$data['timezone'],
+                'number_of_coaches'=>3,
             ];
 
             $schoolData['default_currency_code'] = 'USD';
@@ -121,6 +125,9 @@ class UserController extends Controller
             $trialDays = 30;
             $trialEndsAt = now()->addDays($trialDays);
 
+            //6 digits random number
+            $random = mt_rand(100000, 999999);
+
             $usersData = [
                 'person_id' => $teacher->id,
                 'person_type' =>'App\Models\Teacher',
@@ -132,8 +139,9 @@ class UserController extends Controller
                 'email'=> trim($data['email']),
                 'password'=> trim($data['password']),
                 'is_mail_sent'=> 0,
-                'is_active'=> 1,
+                'is_active'=> 0,
                 'is_firstlogin'=> 0,
+                'code_verification' => $random,
                 'trial_ends_at' => $trialEndsAt,
             ];
             $strip_userdata = [
@@ -156,7 +164,7 @@ class UserController extends Controller
         }
 
 
-        session(['firstConnexion' => true]);
+        session(['firstConnexion' => true, 'emailVerification' => trim($data['username'])]);
 
         //sending activation email after successful signed up
         if (config('global.email_send') == 1) {
@@ -172,8 +180,8 @@ class UserController extends Controller
                     'person_id' => $teacher->id,
                     'person_type' => 'App\Models\Teacher',
                     'token_type' => 'VERIFY_SIGNUP',
-                    'token' => Str::random(10),
-                    'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
+                    'token' => Str::random(25),
+                    'expire_date' => Carbon::now()->addDays(1)->format("Y-m-d")
                 ];
 
 
@@ -181,6 +189,8 @@ class UserController extends Controller
 
                 $data['token'] = $verifyUser->token;
                 $data['username'] = $user->username;
+                $data['code_verification'] = $random;
+                $data['ismobile'] = $isMobile;
 
                 // $data['subject']=__('www.sportogin.ch: Welcome! Activate account.');
                 $data['url'] = route('verify.email',$data['token']);
@@ -207,13 +217,13 @@ class UserController extends Controller
                     'status' => 1,
                     'message' => __('We sent you an activation code. Check your email and click on the link to verify.'),
                 );
-                $user->is_active = 1;
-                $user->save();
+                //$user->is_active = 1;
+                //$user->save();
                 return response()->json($result);
             }
         } else {
-            $user->is_active = 1;
-            $user->save();
+            //$user->is_active = 1;
+            //$user->save();
         }
         return response()->json($result);
     }
@@ -226,6 +236,30 @@ class UserController extends Controller
         }
 
         return response()->json(['available' => true]);
+    }
+
+
+     /**
+     * Resend confirmation code
+     *
+     * @return json
+     */
+    public function resendCode(Request $request) {
+        $data = $request->all();
+        if(!isset($data['username'])){
+            $data['username'] = session('emailVerification');
+        }
+        $user = User::where('username', $data['username'])->first();
+        if ($user) {
+            $data = [];
+            $data['email'] = $user->email;
+            $data['name'] = $user->firstname.''. $user->lastname;
+            $data['username'] = $user->username;
+            $data['code_verification'] = $user->code_verification;
+            $this->emailSend($data,'resend_code');
+            return response()->json(['status' => 'success']);
+        }
+        return response()->json(['status' => 'error']);
     }
 
 
@@ -309,8 +343,31 @@ class UserController extends Controller
     }
 
 
-
-
+    /**
+     * signup verification code
+     *
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-02-11
+    */
+    public function verify_user_code (Request $request) {
+        $data = $request->all();
+        if(!isset($data['code'])){
+            return response()->json(['status' => 'error'], 404);
+        }
+        if(!isset($data['username'])){
+            $data['username'] = session('emailVerification');
+        }
+        $user = User::where('code_verification', $data['code'])->where('username', $data['username'])->first();
+        if($user){
+            $user->is_active = 1;
+            $user->save();
+            Auth::login($user);
+            return response()->json(['status' => 'success'], 200);
+        } else {
+            return response()->json(['status' => 'error'], 404);
+        }
+    }
 
 
     /**
@@ -337,7 +394,8 @@ class UserController extends Controller
                                     ])->first();
 
             if(isset($verifyUser) ){
-                $user = $verifyUser->user;
+                $user = $verifyUser->personable;
+            
                 if ($verifyUser->person_type =='App\Models\Student') {
                     $exist = SchoolStudent::where(['student_id'=>$verifyUser->person_id, 'school_id'=>$verifyUser->school_id])->first();
 
@@ -350,23 +408,24 @@ class UserController extends Controller
                     $exist->has_user_account = 1;
                     $exist->save();
                 }
-                if(!$user->is_active) {
-                    $verifyUser->user->is_active = 1;
-                    $verifyUser->user->save();
-                    echo '<h1>Account Activated Successfully..please login into your account</h1>';
-                    header( "refresh:2;url=/" );
+                //dd($user);
+                    $user->user->is_active = 1;
+                    $user->user->save();
+                    echo '<center><br><br><br><b>Account Activated Successfully!</b><br>Please wait few seconds to redirect you to the login page.</center>';
+                    header( "refresh:2;url=/#login" );
                     //exit();
                     $status = "Your e-mail is verified. You can now login.";
-                }else{
-                    echo $status = "Your e-mail is already verified. You can now login.";
-                    header( "refresh:2;url=/" );
-                }
+            
             }else{
-                echo '<h1>Invalid activation Link.</h1>'; die;
+                echo '<center><br><br><br><b>Invalid activation Link.</b></center>'; 
+                header( "refresh:2;url=/#login" );
+                die;
             }
         } catch (Exception $e) {
             //return error message
-            echo '<h1>Invalid activation Link.</h1>'; die;
+            echo '<center><br><br><br><b>Invalid activation Link.</b></center>'; 
+            header( "refresh:2;url=/#login" );
+            die;
         }
     }
 
