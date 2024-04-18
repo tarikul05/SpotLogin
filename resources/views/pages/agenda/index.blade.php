@@ -4526,7 +4526,7 @@ $('#add_lesson').on('submit', function(e) {
                 'X-CSRF-TOKEN': $('input[name="_token"]').val()
             }
         });
-        // console.log("hello");
+       //return console.log("hello", formData);
         $.ajax({
             url: page_action,
             async: false,
@@ -4811,7 +4811,7 @@ function getLatestPrice() {
             dataType: 'json',
             success: function(response){
                 if(response.status == 1){
-                    if (response.data) {
+                    if (response.data) { 
                         $("#sprice_amount_buy").val(response.data.price_buy)
                         $("#sprice_amount_sell").val(response.data.price_sell)
                     }

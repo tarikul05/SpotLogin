@@ -337,9 +337,11 @@
 																		<label id="row_hdr_buy" name="row_hdr_buy">{{ __('Teacher') }}</label>
 																	</th>
 																@endif
+																@if(!$AppUI->isTeacherSchoolAdmin() && !$AppUI->isSchoolAdmin())
 																	<th width="15%" style="text-align:right">
 																		<label id="row_hdr_sale" name="row_hdr_sale">{{ __('Student') }}</label>
 																	</th>
+																@endif
 																@endif
 															</tr>
 
@@ -370,10 +372,10 @@
 																@if($showPrice)
 																@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
 																	<td style="text-align:right"> {{ isset($lessonData->price_currency) && !empty($lessonData->price_currency) ? $lessonData->price_currency : '' }} <span class="priceByStudent">{{ isset($relationData->buy_price) ? $relationData->buy_price: 0  }}</span></td>
-																@else
-
 																@endif
+																@if(!$AppUI->isTeacherSchoolAdmin() && !$AppUI->isSchoolAdmin())
 																	<td style="text-align:right">{{ isset($lessonData->price_currency) && !empty($lessonData->price_currency) ? $lessonData->price_currency : '' }} <span class="priceByStudent">{{ isset($relationData->sell_price) ? $relationData->sell_price : 0 }}</span></td>
+																@endif
 																@endif
 															</tr>
 															@endforeach
@@ -949,7 +951,7 @@ $('#edit_lesson').on('submit', function() {
         getLatestPrice();
 	});
 
-$("#student, #teacher_select").on('change', function(event) {
+$("#student, #teacher_select, #duration").on('change', function(event) {
     getLatestPrice()
 });
 
@@ -966,7 +968,7 @@ $("#student, #teacher_select").on('change', function(event) {
 	        "name": "_token",
 	        "value": csrfToken,
 	    });
-
+ 
 	    formData.push({
 	        "name": "event_category_id",
 	        "value": categoryId,
@@ -1006,13 +1008,15 @@ $("#student, #teacher_select").on('change', function(event) {
 	                }*/
                     if (response.status == 1) {
 
-                        //if(response.lessonPriceTeacher['lesson_price_student'] == 'price_fix') {
-                        //    $("#sprice_amount_buy").val(response.lessonPriceTeacher['price_buy'])
-	                    //    $("#sprice_amount_sell").val(response.lessonPriceTeacher['price_buy'])
-                        //    console.log('new price',  response.lessonPriceTeacher['price_buy']);
-                        //    var newDuration = $("#duration").val();
-                        //    $(".priceByStudent").text(response.lessonPriceTeacher['price_buy']);
-                        //} else {
+						const isSchoolorTeacherAdmin = "{{$AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin()}}";
+
+                        if(response.lessonPriceTeacher['price_buy'] > 0) {
+                            $("#sprice_amount_buy").val(response.lessonPriceTeacher['price_buy'])
+	                        $("#sprice_amount_sell").val(response.lessonPriceTeacher['price_buy'])
+                            console.log('new price',  response.lessonPriceTeacher['price_buy']);
+                    	    var newDuration = $("#duration").val();
+                            $(".priceByStudent").text(response.lessonPriceTeacher['price_buy']);
+                        } else {
 	                        $("#sprice_amount_buy").val(response.newPrice)
 	                        $("#sprice_amount_sell").val(response.newPrice)
                             console.log('new price',  response.newPrice);
@@ -1022,7 +1026,7 @@ $("#student, #teacher_select").on('change', function(event) {
 							$("#sprice_amount_buy").val(response.newPrice);
 	                       $("#sprice_amount_sell").val(response.newPrice);
 
-                        //}
+						}
 
 	                    }
 	            }

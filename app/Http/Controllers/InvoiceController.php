@@ -891,7 +891,7 @@ class InvoiceController extends Controller
             if ($user->isTeacherSchoolAdmin()) {
                 $invoice_type = ($inv_type == 'school') ? 'S' : 'T';
             }
-
+            $data['event_discount_description'] = "Discount";
             $dataMap = new InvoiceDataMapper();
             $invoiceData = $dataMap->setInvoiceData($data,$school,$invoice_type,$user,2);
             $invoiceData['invoice_header'] = 'From '.$invoiceData['period_starts'].' to '.$invoiceData['period_ends'].' - '.$invoiceData['seller_name'].' "'.$school->school_name.'" from '.$invoiceData['date_invoice'];
@@ -1128,7 +1128,7 @@ class InvoiceController extends Controller
             return response()->json($result);
         } catch (Exception $e) {
             //return error message
-            $result['message'] = __('Internal server error');
+            $result['message'] = $e->getMessage();
             return response()->json($result);
         }
     }

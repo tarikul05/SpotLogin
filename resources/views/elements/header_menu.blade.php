@@ -220,7 +220,58 @@
                 <div class="navbar-nav ms-auto user-area d-none d-sm-block">
 
                     <?php if (!empty($AppUI['id'])): ?>
-                    <div class="d-flex align-items-center">
+                    <div class="d-flex align-items-center position-relative">
+
+                           
+
+
+                            @if($AppUI->isSchoolAdmin())
+                                <span class="admin_name">
+                                    <b style="position:absolute; top:-8px; left:10px; font-size:12px;">{{ $AppUI->schools()->first()->school_name }}</b>
+                                </span>
+                            @endif
+                            @if($AppUI->isTeacherSchoolAdmin())
+                                <span class="admin_name">
+                                    <b style="position:absolute; top:-8px; left:10px; font-size:12px;">{{$AppUI->schools()->first()->school_name}}</b>
+                                </span>
+                            @endif
+                            @if($AppUI->isSchoolAdmin())
+                            <span class="admin_name custom-dropdown-toggle" style="right:0; padding-top:8px; padding-right:0; font-size:15px;">
+                                {{ $AppUI->schools()->first()->contact_firstname }} {{ $AppUI->schools()->first()->contact_lastname }}
+                                @if( $is_subscribed )
+                                @if($plan->stripe_status == 'active' || $plan->stripe_status == 'trialing')
+                                    <span class="badge bg-success d-sm-none">premium</span>
+                                    @else
+                                    <span class="badge bg-info d-sm-none">basic</span>
+                                    @endif
+                                @endif
+                                @if( !$is_subscribed )
+                                    <?php if( !empty($user->trial_ends_at) && ($today_date <= $ends_at) ){ ?>
+                                        <span class="badge bg-info d-sm-none">basic</span>
+                                    <?php } else { ?>
+                                        <span class="badge bg-warning d-sm-none">basic</span>
+                                    <?php } ?>
+                                @endif
+                            </span>
+                            @else 
+                            <span class="admin_name custom-dropdown-toggle" style="right:0; padding-top:8px; padding-right:0; font-size:15px;">
+                                <?php echo !empty($AppUI['firstname']) ? $AppUI['firstname'] . ' ' . $AppUI['lastname'] : $AppUI['nickname'];?>
+                                @if( $is_subscribed )
+                                @if($plan->stripe_status == 'active' || $plan->stripe_status == 'trialing')
+                                    <span class="badge bg-success d-sm-none">premium</span>
+                                    @else
+                                    <span class="badge bg-info d-sm-none">basic</span>
+                                    @endif
+                                @endif
+                                @if( !$is_subscribed )
+                                    <?php if( !empty($user->trial_ends_at) && ($today_date <= $ends_at) ){ ?>
+                                        <span class="badge bg-info d-sm-none">basic</span>
+                                    <?php } else { ?>
+                                        <span class="badge bg-warning d-sm-none">basic</span>
+                                    <?php } ?>
+                                @endif
+                            </span>
+                            @endif
 
                             <div style="position: relative; width:58px; font-size:10px; display:inline;" class="custom-dropdown-toggle">
                                 @if(!$AppUI->isStudent() && !$AppUI->isParent())
@@ -247,27 +298,9 @@
                             </div>
 
 
-                            <span class="admin_name custom-dropdown-toggle" style="padding-left:2px; font-size:15px;"><?php echo !empty($AppUI['firstname']) ? $AppUI['firstname'] . ' ' . $AppUI['lastname'] : $AppUI['nickname'];?>
-                                @if( $is_subscribed )
-                                @if($plan->stripe_status == 'active' || $plan->stripe_status == 'trialing')
-                                    <span class="badge bg-success d-sm-none">premium</span>
-                                    @else
-                                    <span class="badge bg-info d-sm-none">basic</span>
-                                    @endif
-                                @endif
-                                @if( !$is_subscribed )
-                                    <?php if( !empty($user->trial_ends_at) && ($today_date <= $ends_at) ){ ?>
-                                        <span class="badge bg-info d-sm-none">basic</span>
-                                    <?php } else { ?>
-                                        <span class="badge bg-warning d-sm-none">basic</span>
-                                    <?php } ?>
-                                @endif
-                            </span>
-
-
 
                         <div class="dropdown">
-                            <a href="#" id="custom-dropdown-toggle" class="dropdown-toggle custom-dropdown-toggle text-white" data-bs-toggle="dropdown"><i class="fa-solid fa-ellipsis-vertical fa-lg"></i></a>
+                            <a href="#" id="custom-dropdown-toggle" class="dropdown-toggle custom-dropdown-toggle text-white" data-bs-toggle="dropdown"></a>
                             <div class="dropdown-menu header" style="margin-top:22px!important;">
                                 @if($AppUI['person_type'] == 'SUPER_ADMIN')
                                 <a class="dropdown-item" href="/admin/email-template">

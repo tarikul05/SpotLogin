@@ -56,10 +56,26 @@ class SettingsController extends Controller
         }
 
         $lessonPrices = LessonPrice::active()->orderBy('divider', 'asc')->get();
+
+        if($user->isSchoolAdmin()) {
         $lessonPriceTeachers = LessonPriceTeacher::active()
-                              //->where(['teacher_id' => $teacher->id])
+                              ->where(['teacher_id' => $teacher->id])
                               ->whereIn('event_category_id',$eventCategory->pluck('id'))
                               ->get();
+        }
+        if($user->isTeacherSchoolAdmin()) {
+            $lessonPriceTeachers = LessonPriceTeacher::active()
+                                  ->where(['teacher_id' => $schoolId])
+                                  ->whereIn('event_category_id',$eventCategory->pluck('id'))
+                                  ->get();
+        }
+        if(!$user->isSchoolAdmin() && !$user->isTeacherSchoolAdmin()) {
+            $lessonPriceTeachers = LessonPriceTeacher::active()
+                                  //->where(['teacher_id' => $schoolId])
+                                  ->whereIn('event_category_id',$eventCategory->pluck('id'))
+                                  ->get();
+        }
+
         $ltprice =[];
         foreach ($lessonPriceTeachers as $lkey => $lpt) {
           $ltprice[$lpt->event_category_id][$lpt->lesson_price_student] = $lpt->toArray();
@@ -90,9 +106,26 @@ class SettingsController extends Controller
         $isInEurope = in_array($timezone, $europeanTimezones);
         $allTimezones = config('global.timezones');
 
+
+        if($user->isSchoolAdmin()) {
+            $teachers = $school->teachers->where('id', '!=', $teacher->id)->sortBy('lastname');
+            $number_of_coaches = ($school->teachers->where('id', '!=', $teacher->id)->count());
+        } 
+        if($user->isTeacherSchoolAdmin()) {
+            $teachers = $school->teachers->where('id', '!=', $schoolId)->sortBy('lastname');
+            $number_of_coaches = ($school->teachers->where('id', '!=', $schoolId)->count());
+        }
+        if(!$user->isSchoolAdmin() && !$user->isTeacherSchoolAdmin()) {
+            $teachers = [];
+            $number_of_coaches = 0;
+        }
+
+
         // dd($relationalData);
         return view('pages.calendar.settings')->with(compact('levels',
         'eventLastLevelId',
+        'teachers',
+        'number_of_coaches',
         'allTimezones',
         'locations',
         'school',
@@ -163,10 +196,15 @@ class SettingsController extends Controller
         $isInEurope = in_array($timezone, $europeanTimezones);
         $allTimezones = config('global.timezones');
 
+        $teachers = [];
+        $number_of_coaches = 0;
+
         // dd($relationalData);
         return view('pages.calendar.settings_teacher')->with(compact('levels',
         'eventLastLevelId',
         'allTimezones',
+        'teachers',
+        'number_of_coaches',
         'locations',
         'school',
         'eventLastLocaId',
