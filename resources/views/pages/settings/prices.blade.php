@@ -30,7 +30,11 @@
                                         <tr>
                                             <th>{{__('Type of course')}}</th>
                                             <th>{{__('Type of billing')}}</th>
+                                            @if(($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin()) && $category->s_std_pay_type == 2)
+                                            <th class="sell" style="text-align: right; font-size:12px;"><span>({{__('price for teacher /hour')}})</span></th>
+                                            @else
                                             <th class="sell" style="text-align: right; font-size:12px;"><span>({{__('per student /hour')}})</span></th>
+                                            @endif
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -95,6 +99,24 @@
                                         @endforeach
                                     </tbody>
                                 </table>
+
+                                <?php if($number_of_coaches > 0 && ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin())) { ?>
+                                    <table class="table table-bordered table-hover table-striped" id="table_prices_teacher" style="width: 100%;">
+                                        <tr>
+                                            <td class="text-right" style="text-align:right; width: 100%;">
+                                                Setup this category to the {{ $number_of_coaches }} teachers settings
+                                                <select name="number_of_coaches" id="number_of_coaches" style="text-align:right; width: 100%; max-width: 200px;">
+                                                    <option value="0">Select a teacher</option>
+                                                    @foreach ($teachers as $teacher)
+                                                        <option value="{{ $teacher->id }}">{{ $teacher->firstname }} {{ $teacher->lastname }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                <?php } ?>
+
+                         
                                 @if($category->s_std_pay_type == 0)
                                     <div class="pull-right">
                                         <a href="#" class="btn btn-theme-primary see_more_prices" id="add_new_price"><i class="fa fa-plus"></i> {{ __('See more') }}</a>

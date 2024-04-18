@@ -61,7 +61,7 @@
 
 
 						@php
-							$invoiceId = DB::table('invoice_items')->where('event_id', $lessonlId)->value('invoice_id');
+							$invoiceId = DB::table('invoice_items')->where('event_id', $lessonlId)->where('deleted_at', null)->value('invoice_id');
                             $invoiceExists = DB::table('invoices')->where('id', $invoiceId)->whereNull('invoices.deleted_at')->exists();
 						@endphp
 
@@ -150,16 +150,18 @@
 										{{ !empty($lessonData->fullday_flag) ? 'Yes' : 'No' }}
 									</div>
 								</div>
+								@if(!empty($lessonData->billing_method))
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left">{{__('Type of billing') }} :</label>
 									<div class="col-sm-7">
 										{{ !empty($lessonData->billing_method) ? $lessonData->billing_method : '' }}
 									</div>
 								</div>
+								@endif
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left">{{__('Number of students') }} :</label>
 									<div class="col-sm-7">
-										{{ !empty($lessonData->price_amount_buy) ? 'Group lessons for '.$lessonData->no_of_students.' students' : '' }}
+										{{ $lessonData->no_of_students }}
 									</div>
 								</div>
 							</div>
@@ -169,6 +171,7 @@
 							<div class="section_header_class">
 								<label id="teacher_personal_data_caption">{{ __('Attendance') }}</label>
 							</div>
+							
 							<div class="card">
 								<div class="card-body bg-tertiary">
 							<div class="row">
@@ -182,27 +185,27 @@
 													<table id="attn_tbl" class="table">
 														<tbody>
 															<tr>
-																<th width="5%" style="text-align:left"></th>
 																<th width="15%" style="text-align:left">
 																<span>{{ __('Student') }}</span>
 																</th>
 																<th width="15%" style="text-align:left"></th>
 																@if($showPrice)
+																@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
 																	<th width="10%" style="text-align:left;">
-																	@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
 																	<label id="row_hdr_buy" name="row_hdr_buy">{{ __('Teacher') }}</label>
 																	<label>{{ !empty($eventData->price_currency) ? '(' + $eventData->price_currency + ')' : '' }}</label>
-																	@endif
 																	</th>
+																	@endif
+																	@if(!$AppUI->isTeacherSchoolAdmin() && !$AppUI->isSchoolAdmin())
 																	<th width="10%" style="text-align:center">
 																	<label id="row_hdr_sale" name="row_hdr_sale">{{ __('Student') }}</label>
 																	<label>{{ !empty($eventData->price_currency) ? '(' + $eventData->price_currency + ')' : '' }}</label>
 																	</th>
+																	@endif
 																@endif
 															</tr>
 															@foreach($studentOffList as $student)
 															<tr>
-																<td>{{ $student->student_id }}</td>
 																<td>
 																<img src="{{ asset('img/photo_blank.jpg') }}" width="18" height="18" class="img-circle account-img-small">
 																@php
@@ -214,14 +217,20 @@
                                                                 Student not found (deleted)
                                                                 @endif
 																</td>
-																<td><?php if(!empty($student->participation_id)){ if($student->participation_id == 0 ){ echo 'scheduled'; }elseif($student->participation_id == 199 ){ echo 'Absent'; }elseif($student->participation_id == 200 ){ echo 'Present'; } }  ?></td>
+																<td>
+																	<?php if(!empty($student->participation_id)){ if($student->participation_id == 0 ){ echo 'scheduled'; }elseif($student->participation_id == 199 ){ echo 'Absent'; }elseif($student->participation_id == 200 ){ echo 'Present'; } }  ?>
+																</td>
 																@if($showPrice)
-																	<td>
-																		@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
-																		{{ $student->buy_price }}
-																		@endif
+																@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
+																	<td>	
+																		{{ $student->price_amount_buy }} {{ $student->price_currency }}
 																	</td>
-																	<td style="text-align:center">{{ $student->sell_price }}</td>
+																@endif
+																@if(!$AppUI->isTeacherSchoolAdmin() && !$AppUI->isSchoolAdmin())
+																	<td style="text-align:center">								
+																			{{ $student->sell_price }}	{{ $student->price_currency }}	 
+																	</td>
+																@endif
 																@endif
 															</tr>
 															@endforeach

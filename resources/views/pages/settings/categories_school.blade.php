@@ -3,7 +3,7 @@
         <form method="POST" action="{{ route('event_category.create') }}">
             @csrf
         <div class="card">
-            <div class="card-header">School categories</div>
+            <div class="card-header">{{__('School categories')}}</div>
             <div class="card-body">
                 <!--@if (session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -13,8 +13,8 @@
 
                 @if($AppUI->isTeacherSchoolAdmin())
 
-                Your are connected as a Teacher administrator. You can create categories and setup prices for your school.<br>
-                If you want to create categories for yourself, <a href="{{route('calendar.teacher.settings')}}">please go to your settings</a>.
+                {{__('Your are connected as a Teacher administrator. You can create categories and setup prices for your school')}}.<br>
+                {{__('If you want to create categories for yourself')}}, <a href="{{route('calendar.teacher.settings')}}">{{__('please go to your settings')}}</a>.
                 <br><br>
 
                 @endif
@@ -84,6 +84,11 @@
                                                     <div class="form-check">
                                                         <label class="form-check-label" for="sradio3{{$count}}">
                                                             <input type="radio" class="form-check-input" id="sradio3{{$count}}" name="category[{{$count}}][s_std_pay_type]" value="2" <?php if($cat->s_std_pay_type == 2){ echo 'checked'; }  ?>>Packaged
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" for="sradio{{$count}}">
+                                                            <input type="radio" class="form-check-input" id="tradio{{$count}}" name="category[{{$count}}][s_std_pay_type]" value="1" <?php if($cat->s_std_pay_type == 1){ echo 'checked'; }  ?>>Fixed price <span class="d-none d-sm-inline-block" style="font-size:11px;">(per student /hour)</span>
                                                         </label>
                                                     </div>
                                                     @endif

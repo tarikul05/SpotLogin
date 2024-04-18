@@ -398,7 +398,12 @@ class LessonsController extends Controller
                     $lessonData['category_select'] = 0;
                 }
                 $eventInit = new Event();
-                $eventPrice = $eventInit->priceCalculations(['event_category_id'=>$lessonData['category_select'],'teacher_id'=>$teacher_id,'student_count'=>$studentCount]);
+                if($user->isSchoolAdmin() || $user->isTeacherSchoolAdmin()) {
+                    $eventPrice = $eventInit->priceCalculationsSchool(['event_category_id'=>$lessonData['category_select'],'teacher_id'=>$teacher_id,'student_count'=>$studentCount]);
+                } else {
+                    $eventPrice = $eventInit->priceCalculations(['event_category_id'=>$lessonData['category_select'],'teacher_id'=>$teacher_id,'student_count'=>$studentCount]);
+                }
+
                 if(!empty($studentCount)){
                     $buyPriceCal = ($eventPrice['price_buy']*($lessonData['duration']/60))/$studentCount;
                 }else{
@@ -549,7 +554,11 @@ class LessonsController extends Controller
                 }
             }
         } else {
-            $eventCategory = EventCategory::active()->where('school_id',$schoolId)->where('created_by',$user->id)->get();
+            if($user->isSchoolAdmin() || $user->isTeacherSchoolAdmin()) {
+                $eventCategory = EventCategory::active()->where('school_id',$schoolId)->get();
+            } else {
+                $eventCategory = EventCategory::active()->where('school_id',$schoolId)->where('created_by',$user->id)->get();
+            }
         }
 
         $locations = Location::active()->where('school_id',$schoolId)->get();
@@ -1280,7 +1289,7 @@ class LessonsController extends Controller
             $studentCount = $lessonData['no_of_students'];
             $initEventPrice = new Event();
             $eventPrice = $initEventPrice->priceCalculations(['event_category_id'=>$lessonData['event_category_id'],'teacher_id'=>$lessonData['teacher_select'],'student_count'=>$lessonData['no_of_students']]);
-            $lessonPriceTeacher = LessonPriceTeacher::active()->where(['event_category_id'=>$lessonData['event_category_id']])->first();
+            $lessonPriceTeacher = LessonPriceTeacher::active()->where(['event_category_id'=>$lessonData['event_category_id'],'teacher_id'=>$lessonData['teacher_select']])->first();
             $duration = $lessonData['duration'];
 
             if(!empty($studentCount)){

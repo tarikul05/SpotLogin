@@ -1014,6 +1014,27 @@ class Event extends BaseModel
 
 
 
+    public function priceCalculationsSchool($data=[])
+    {
+      $priceKey = isset($data['student_count']) && !empty($data['student_count']) ? ( $data['student_count'] > 10 ? 'price_su' : 'price_'.$data['student_count'] ) : '' ;
+
+      $evtCategory = EventCategory::find($data['event_category_id']);
+      $priceFixed = LessonPriceTeacher::active()->where(['event_category_id'=>$data['event_category_id'],'lesson_price_student'=>'price_fix'])->first();
+
+      $prices = LessonPriceTeacher::active()->where(['event_category_id'=>$data['event_category_id'],'lesson_price_student'=>$priceKey])->first();
+      //dd($priceKey,$prices);
+
+      $buyPrice = $sellPrice = 0;
+    
+      $buyPrice = isset($prices->price_buy)? $prices->price_buy : 0;
+      $sellPrice = isset($prices->price_sell)? $prices->price_sell : 0;
+
+
+      // dd($buyPrice, $sellPrice);
+
+      return ['price_buy'=>$buyPrice ,'price_sell'=>$sellPrice];
+    }
+
     public function priceCalculations($data=[])
     {
       $priceKey = isset($data['student_count']) && !empty($data['student_count']) ? ( $data['student_count'] > 10 ? 'price_su' : 'price_'.$data['student_count'] ) : '' ;
@@ -1022,7 +1043,7 @@ class Event extends BaseModel
       $priceFixed = LessonPriceTeacher::active()->where(['event_category_id'=>$data['event_category_id'],'teacher_id'=>$data['teacher_id'],'lesson_price_student'=>'price_fix'])->first();
 
       $prices = LessonPriceTeacher::active()->where(['event_category_id'=>$data['event_category_id'],'teacher_id'=>$data['teacher_id'],'lesson_price_student'=>$priceKey])->first();
- // dd($priceKey,$prices);
+      //dd($priceKey,$prices);
 
       $buyPrice = $sellPrice = 0;
       if ($evtCategory && $evtCategory->invoiced_type == 'S') {
@@ -1087,7 +1108,7 @@ class Event extends BaseModel
         if ($eventData['student_sis_paying'] == 1) {
             $attendSellPrice = ($eventPrice['price_sell']*($eventData->duration_minutes/60));
         }
- // dd($eventData);
+        //dd($eventData);
         if (isset($eventData->eventcategory->t_std_pay_type) && $eventData->eventcategory->t_std_pay_type == 1) {
              $attendSellPrice = $eventData->price_amount_sell*($eventData->duration_minutes/60);
         }

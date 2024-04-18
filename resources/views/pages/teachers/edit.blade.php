@@ -1032,8 +1032,9 @@ $(document).ready(function(){
 		var inv_type=getUrlVarsO()["inv_type"]
 
 	    var p_discount_perc = document.getElementById('discount_perc').value;
+		var lesson_discount_description = "Discount"; //document.getElementById('lesson_discount_description').value;
 
-	    data = 'type=generate_teacher_invoice&school_id=' + school_id + '&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_month=' + p_month + '&p_year=' + p_year + '&p_discount_perc=' + p_discount_perc+'&p_billing_period_start_date='+from_date+'&p_billing_period_end_date='+to_date+ '&p_event_ids=' + p_event_ids +'&inv_type=' + inv_type;
+	    data = 'type=generate_teacher_invoice&school_id=' + school_id + '&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_month=' + p_month + '&p_year=' + p_year + '&p_discount_perc=' + p_discount_perc+'&p_billing_period_start_date='+from_date+'&p_billing_period_end_date='+to_date+ '&p_event_ids=' + p_event_ids +'&inv_type=' + inv_type + '&lesson_discount_description=' + lesson_discount_description;
 
 		$.ajax({
 			url: BASE_URL + '/generate_teacher_invoice',
@@ -1044,7 +1045,7 @@ $(document).ready(function(){
 			dataType: 'json',
 			async: false,
 			success: function(result) {
-
+				console.log(result);
 				if (result.status == 'success') {
 					auto_id = result.auto_id;
 
@@ -1059,6 +1060,7 @@ $(document).ready(function(){
 				//location.reload();
 			}, // success
 			error: function(ts) {
+			console.log(ts);
 				errorModalCall(GetAppMessage('error_message_text'));
 				// alert(ts.responseText + ' Generate Invoice')
 			}
@@ -1094,6 +1096,9 @@ $(function() {
 		document.getElementById("delete_btn").style.display="none";
 		document.getElementById("save_btn").style.display="none";
 		activaTab('tab_3');
+	}
+	if (vtab == 'tab_2') {
+		activaTab('tab_2');
 	}
 
 });
