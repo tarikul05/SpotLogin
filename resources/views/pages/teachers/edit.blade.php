@@ -593,19 +593,19 @@
 							<tr>
 								<th>#</th>
 								<th>{{__('Category Type')}}</th>
-								<th>{{__('Type of billing')}}</th>
+								<th><!--{{__('Type of billing')}}--></th>
 								<th class="buy" style="text-align: right;"><span>{{__('Teacher price') }}</span></th>
 								<th class="sell" style="text-align: right;"><span>{{__('Student price') }}</span></th>
 							</tr>
 						</thead>
 						<tbody>
 							@foreach($eventCategory as $key => $category)
-							<tr style="background:lightblue;">
+							<tr style="background: #EEE;">
 								<td></td>
-								<td><input class="form-control disable_input" disabled="" id="category_name12" type="hidden" style="text-align:left" value="Soccer-School2"><label><strong>{{$category->title}}</strong></label></td>
+								<td><input class="form-control disable_input" disabled="" id="category_name12" type="hidden" style="text-align:left" value="Soccer-School2"><h6 style="color:#3b75bf;"><small>{{$category->title}}</small></strong></h6></td>
 								<td class="pc_only">&nbsp;</td>
-								<td style="text-align: right;">Total price/hour</td>
-								<td align="right" colspan="1">price/student/hour</td>
+								<td style="text-align: right;">Total price /teacher/hour</td>
+								<td align="right" colspan="1">Price /student/hour</td>
 							</tr>
 								@foreach($lessonPrices as $key => $lessionPrice)
 
@@ -644,8 +644,8 @@
 										<input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_student]" value="{{$lessionPrice->lesson_price_student}}">
 										<input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_id]" value="{{$lessionPrice->id}}">
 									</td>
-									<td>{{__('Lessons/Events..')}}</td>
-									<td>{{ __($textForTypeBilling) }}</td>
+									<td>{{__('Lessons/Events')}}</td>
+									<td><!--{{ __($textForTypeBilling) }}--></td>
 									<td>
 										<input type="text"
 										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_buy]"
@@ -1066,7 +1066,7 @@ $(document).ready(function(){
 			}
 	    }); // Ajax
 	    if (auto_id > 0) {
-	      	var url = "/admin/"+document.getElementById("school_id").value+"/modification-invoice/"+auto_id;
+	      	var url = "/"+document.getElementById("school_id").value+"/modification-invoice/"+auto_id;
 			setTimeout(function(){
 				window.location = BASE_URL+ url;
 				}, 3000);
