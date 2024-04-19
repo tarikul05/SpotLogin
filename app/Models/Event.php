@@ -1016,23 +1016,50 @@ class Event extends BaseModel
 
     public function priceCalculationsSchool($data=[])
     {
-      $priceKey = isset($data['student_count']) && !empty($data['student_count']) ? ( $data['student_count'] > 10 ? 'price_su' : 'price_'.$data['student_count'] ) : '' ;
+        $priceKey = isset($data['student_count']) && !empty($data['student_count']) ? ( $data['student_count'] > 10 ? 'price_su' : 'price_'.$data['student_count'] ) : '' ;
 
-      $evtCategory = EventCategory::find($data['event_category_id']);
-      $priceFixed = LessonPriceTeacher::active()->where(['event_category_id'=>$data['event_category_id'],'lesson_price_student'=>'price_fix'])->first();
-
-      $prices = LessonPriceTeacher::active()->where(['event_category_id'=>$data['event_category_id'],'lesson_price_student'=>$priceKey])->first();
-      //dd($priceKey,$prices);
-
-      $buyPrice = $sellPrice = 0;
-    
-      $buyPrice = isset($prices->price_buy)? $prices->price_buy : 0;
-      $sellPrice = isset($prices->price_sell)? $prices->price_sell : 0;
-
-
-      // dd($buyPrice, $sellPrice);
-
-      return ['price_buy'=>$buyPrice ,'price_sell'=>$sellPrice];
+        $evtCategory = EventCategory::find($data['event_category_id']);
+        $priceFixed = LessonPriceTeacher::active()->where(['event_category_id'=>$data['event_category_id'],'lesson_price_student'=>$priceKey])->first();
+  
+        $prices = LessonPriceTeacher::active()->where(['event_category_id'=>$data['event_category_id'],'lesson_price_student'=>$priceKey])->first();
+        //dd($priceKey,$prices);
+  
+        $buyPrice = $sellPrice = 0;
+        if ($evtCategory && $evtCategory->invoiced_type == 'S') {
+          if (($evtCategory->s_thr_pay_type == 1) && ($evtCategory->s_std_pay_type == 1) ) {
+            $buyPrice = isset($priceFixed->price_buy) ? $priceFixed->price_buy : 0;
+            $sellPrice = isset($priceFixed->price_sell) ? $priceFixed->price_sell : 0;
+          }elseif (($evtCategory->s_thr_pay_type == 1) && ($evtCategory->s_std_pay_type == 0) ) {
+            $buyPrice = isset($priceFixed->price_buy) ? $priceFixed->price_buy : 0;
+            $sellPrice = isset($prices->price_sell)? $prices->price_sell : 0;
+          }elseif (($evtCategory->s_thr_pay_type == 0) && ($evtCategory->s_std_pay_type == 1) ) {
+            $buyPrice = isset($prices->price_buy)? $prices->price_buy : 0;
+            $sellPrice = isset($priceFixed->price_sell) ? $priceFixed->price_sell : 0;
+          }elseif (($evtCategory->s_thr_pay_type == 1) && ($evtCategory->s_std_pay_type == 2) ) {
+            $buyPrice = isset($priceFixed->price_buy) ? $priceFixed->price_buy : 0;
+            $sellPrice = 0;
+          }else{
+            $buyPrice = isset($prices->price_buy)? $prices->price_buy : 0;
+            $sellPrice = isset($prices->price_sell)? $prices->price_sell : 0;
+          }
+          if ($evtCategory->s_std_pay_type == 2) {
+            $sellPrice = 0;
+          }
+  
+        }else if ($evtCategory && $evtCategory->invoiced_type == 'T') {
+          if ($evtCategory->t_thr_pay_type == 1) {
+            $sellPrice = isset($priceFixed->price_sell)? $priceFixed->price_sell : 0;
+          }elseif ( $evtCategory->t_thr_pay_type == 0 ) {
+            $sellPrice = isset($prices->price_sell)? $prices->price_sell : 0;
+          }
+        } else {
+          $buyPrice = 0;
+          $sellPrice = 0;
+        }
+  
+        // dd($buyPrice, $sellPrice);
+  
+        return ['price_buy'=>$buyPrice ,'price_sell'=>$sellPrice, 'prices'=>$prices, 'priceFixed'=> $priceFixed];
     }
 
     public function priceCalculations($data=[])

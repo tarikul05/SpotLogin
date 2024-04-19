@@ -1286,13 +1286,38 @@ class LessonsController extends Controller
     {
         if ($request->isMethod('post')){
             $lessonData = $request->all();
-            $studentCount = $lessonData['no_of_students'];
+            $studentCount = $lessonData['no_of_students'] || 0;
+
             $initEventPrice = new Event();
-            $eventPrice = $initEventPrice->priceCalculations(['event_category_id'=>$lessonData['event_category_id'],'student_count'=>$lessonData['no_of_students']]);
+            $user = Auth::user();
+            if($user->isSchoolAdmin() || $user->isTeacherSchoolAdmin()) {
+                $eventPrice = $initEventPrice->priceCalculationsSchool(['event_category_id'=>$lessonData['event_category_id'],'teacher_id'=>$lessonData['teacher_select'],'student_count'=>$lessonData['no_of_students']]);
+            } else {
+                $eventPrice = $initEventPrice->priceCalculations(['event_category_id'=>$lessonData['event_category_id'],'teacher_id'=>$lessonData['teacher_select'],'student_count'=>$lessonData['no_of_students']]);
+            }
+            
             $lessonPriceTeacher = LessonPriceTeacher::active()->where(['event_category_id'=>$lessonData['event_category_id'],'teacher_id'=>$lessonData['teacher_select']])->first();
             $duration = $lessonData['duration'];
+            $eventCat = [];
+
+        if($user->isSchoolAdmin() || $user->isTeacherSchoolAdmin()) {
+
+            $eventCat = EventCategory::find($lessonData['event_category_id']);
+            $isfixprice = $eventCat->s_std_pay_type;
 
             if(!empty($studentCount)){
+                if($lessonPriceTeacher && $lessonPriceTeacher['lesson_price_student'] === "price_fix" && $isfixprice == 2) {
+                    $buyPriceCal = (($lessonPriceTeacher['price_buy']/$studentCount)*($duration/60));
+                } else {
+                    $buyPriceCal = ($eventPrice['price_buy']*($duration/60));
+                }
+            }else{
+                $buyPriceCal = ($lessonPriceTeacher['price_buy']*($duration/60));
+            }
+
+        } else {
+
+              if(!empty($studentCount)){
                 if($lessonPriceTeacher['lesson_price_student'] === "price_fix") {
                     $buyPriceCal = ($lessonPriceTeacher['price_buy']*($duration/60));
                 } else {
@@ -1302,9 +1327,12 @@ class LessonsController extends Controller
                 $buyPriceCal = ($eventPrice['price_buy']*($duration/60));
             }
 
+        }
+
             if (!empty($lessonPriceTeacher)) {
                 return [
                     'status' => 1,
+                    'eventCat' => $eventCat,
                     'lessonPriceTeacher' => $lessonPriceTeacher,
                     'newPrice' => $buyPriceCal,
                     'message' =>  __('Successfully get price for this teacher')

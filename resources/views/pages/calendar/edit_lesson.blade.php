@@ -299,6 +299,7 @@
 										</div>
 									</div>
 								</div>
+								@if(!$AppUI->isTeacherSchoolAdmin() && !$AppUI->isSchoolAdmin())
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student price (student/hour)') }} :</label>
 									<div class="col-sm-4">
@@ -310,6 +311,7 @@
 										</div>
 									</div>
 								</div>
+								@endif
 								</div>
 							</div>
 							<div class="section_header_class">
@@ -985,6 +987,10 @@ $("#student, #teacher_select, #duration").on('change', function(event) {
 	        "name": "duration",
 	        "value": duration,
 	    });
+		formData.push({
+	        "name": "event_id",
+	        "value": "{{$lessonData->id}}",
+	    });
 
         console.log(formData)
 
@@ -1010,16 +1016,29 @@ $("#student, #teacher_select, #duration").on('change', function(event) {
 
 						const isSchoolorTeacherAdmin = "{{$AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin()}}";
 
-                        if(response.lessonPriceTeacher['price_buy'] > 0) {
+					if(isSchoolorTeacherAdmin) {
+
+						if(response.lessonPriceTeacher['price_buy'] > 0) {
                             $("#sprice_amount_buy").val(response.lessonPriceTeacher['price_buy'])
-	                        $("#sprice_amount_sell").val(response.lessonPriceTeacher['price_buy'])
-                            console.log('new price',  response.lessonPriceTeacher['price_buy']);
                     	    var newDuration = $("#duration").val();
-                            $(".priceByStudent").text(response.lessonPriceTeacher['price_buy']);
+                            $(".priceByStudent").text(response['newPrice']);
+                        } else {
+							$("#sprice_amount_sell").val(response.lessonPriceTeacher['price_sell'])
+                    	    var newDuration = $("#duration").val();
+                            $(".priceByStudent").text(response['newPrice']);
+
+						}
+
+					} else {
+
+                        if(response.lessonPriceTeacher['price_buy'] > 0) {
+                            $("#sprice_amount_buy").val(response['newPrice'])
+	                        $("#sprice_amount_sell").val(response['newPrice'])
+                    	    var newDuration = $("#duration").val();
+                            $(".priceByStudent").text(response['newPrice']);
                         } else {
 	                        $("#sprice_amount_buy").val(response.newPrice)
 	                        $("#sprice_amount_sell").val(response.newPrice)
-                            console.log('new price',  response.newPrice);
                             var newDuration = $("#duration").val();
                             $(".priceByStudent").text(response.newPrice);
 
@@ -1027,6 +1046,8 @@ $("#student, #teacher_select, #duration").on('change', function(event) {
 	                       $("#sprice_amount_sell").val(response.newPrice);
 
 						}
+
+					}
 
 	                    }
 	            }
