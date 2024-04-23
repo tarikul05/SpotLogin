@@ -1018,7 +1018,7 @@ class Event extends BaseModel
     {
 
         $evtCategory = EventCategory::find($data['event_category_id']);
-        $priceFixed = LessonPriceTeacher::active()->where(['event_category_id'=>$data['event_category_id'],'lesson_price_student'=>'price_fix'])->first();
+        $priceFixed = LessonPriceTeacher::active()->where(['event_category_id'=>$data['event_category_id'],'teacher_id'=>$data['teacher_id'],'lesson_price_student'=>'price_fix'])->first();
   
         $prices = LessonPriceTeacher::active()->where(['event_category_id'=>$data['event_category_id'],'lesson_price_student'=>'price_fix','teacher_id'=>$data['teacher_id']])->first();
         $catDetails = eventcategory::find($data['event_category_id']);
