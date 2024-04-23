@@ -1024,7 +1024,7 @@ $("#student, #teacher_select, #duration").on('change', function(event) {
 							if(response.eventPrice['isFixed'] === 2) {
 								$(".priceByStudent").text(response.eventPrice['price_buy']);
 							} else {
-                            	$(".priceByStudent").text(response.lessonPriceTeacher['price_buy']);
+                            	$(".priceByStudent").text(response.eventPrice['price_buy']);
 							}
                         } else {
 							$("#sprice_amount_sell").val(response.lessonPriceTeacher['price_sell'])
