@@ -1018,7 +1018,7 @@ $("#student, #teacher_select, #duration").on('change', function(event) {
 
 					if(isSchoolorTeacherAdmin) {
 
-						if(response.eventPrice['isFixed'] === 2) {
+						if(response.eventPrice['isFixed'] === 1) {
                             $("#sprice_amount_buy").val(response.eventPrice['price_buy'])
                     	    var newDuration = $("#duration").val();
 							if(response.eventPrice['isFixed'] === 2) {
