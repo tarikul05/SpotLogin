@@ -1016,13 +1016,13 @@ class Event extends BaseModel
 
     public function priceCalculationsSchool($data=[])
     {
-        $priceKey = isset($data['student_count']) && !empty($data['student_count']) ? ( $data['student_count'] > 10 ? 'price_su' : 'price_'.$data['student_count'] ) : '' ;
 
         $evtCategory = EventCategory::find($data['event_category_id']);
-        $priceFixed = LessonPriceTeacher::active()->where(['event_category_id'=>$data['event_category_id'],'lesson_price_student'=>$priceKey])->first();
+        $priceFixed = LessonPriceTeacher::active()->where(['event_category_id'=>$data['event_category_id'],'lesson_price_student'=>'price_fix'])->first();
   
-        $prices = LessonPriceTeacher::active()->where(['event_category_id'=>$data['event_category_id'],'lesson_price_student'=>$priceKey])->first();
-        //dd($priceKey,$prices);
+        $prices = LessonPriceTeacher::active()->where(['event_category_id'=>$data['event_category_id'],'lesson_price_student'=>'price_fix','teacher_id'=>$data['teacher_id']])->first();
+        $catDetails = eventcategory::find($data['event_category_id']);
+        $isFixed = $catDetails->s_std_pay_type;
   
         $buyPrice = $sellPrice = 0;
         if ($evtCategory && $evtCategory->invoiced_type == 'S') {
@@ -1043,7 +1043,8 @@ class Event extends BaseModel
             $sellPrice = isset($prices->price_sell)? $prices->price_sell : 0;
           }
           if ($evtCategory->s_std_pay_type == 2) {
-            $sellPrice = 0;
+            $buyPrice = isset($prices->price_buy)? $prices->price_buy : 0;
+            $sellPrice = isset($prices->price_sell)? $prices->price_sell : 0;
           }
   
         }else if ($evtCategory && $evtCategory->invoiced_type == 'T') {
@@ -1059,7 +1060,7 @@ class Event extends BaseModel
   
         // dd($buyPrice, $sellPrice);
   
-        return ['price_buy'=>$buyPrice ,'price_sell'=>$sellPrice, 'prices'=>$prices, 'priceFixed'=> $priceFixed];
+        return ['price_buy'=>$buyPrice ,'price_sell'=>$sellPrice, 'isFixed'=>$isFixed, 'eventPrice'=>$catDetails];
     }
 
     public function priceCalculations($data=[])
