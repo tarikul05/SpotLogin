@@ -1021,11 +1021,15 @@ $("#student, #teacher_select, #duration").on('change', function(event) {
 						if(response.lessonPriceTeacher['price_buy'] > 0) {
                             $("#sprice_amount_buy").val(response.lessonPriceTeacher['price_buy'])
                     	    var newDuration = $("#duration").val();
-                            $(".priceByStudent").text(response['newPrice']);
+							if(response.eventPrice['isFixed'] === 2) {
+								$(".priceByStudent").text(response.eventPrice['price_buy']);
+							} else {
+                            	$(".priceByStudent").text(response.lessonPriceTeacher['price_buy']);
+							}
                         } else {
 							$("#sprice_amount_sell").val(response.lessonPriceTeacher['price_sell'])
                     	    var newDuration = $("#duration").val();
-                            $(".priceByStudent").text(response['newPrice']);
+                            $(".priceByStudent").text(response.lessonPriceTeacher['price_sell']);
 
 						}
 
