@@ -1019,12 +1019,12 @@ $("#student, #teacher_select, #duration").on('change', function(event) {
 					if(isSchoolorTeacherAdmin) {
 
 						if(response.lessonPriceTeacher['price_buy'] > 0) {
-                            $("#sprice_amount_buy").val(response.lessonPriceTeacher['price_buy'])
+                            $("#sprice_amount_buy").val(response.eventPrice['price_buy'])
                     	    var newDuration = $("#duration").val();
 							if(response.eventPrice['isFixed'] === 2) {
-								$(".priceByStudent").text(response.eventPrice['price_buy']);
+								$(".priceByStudent").text(response.eventPrice['price_sell']);
 							} else {
-                            	$(".priceByStudent").text(response.eventPrice['price_buy']);
+                            	$(".priceByStudent").text(response.eventPrice['price_sell']);
 							}
                         } else {
 							$("#sprice_amount_sell").val(response.eventPrice['price_buy'])
