@@ -1027,9 +1027,9 @@ $("#student, #teacher_select, #duration").on('change', function(event) {
                             	$(".priceByStudent").text(response.eventPrice['price_buy']);
 							}
                         } else {
-							$("#sprice_amount_sell").val(response.lessonPriceTeacher['price_sell'])
+							$("#sprice_amount_sell").val(response.eventPrice['price_buy'])
                     	    var newDuration = $("#duration").val();
-                            $(".priceByStudent").text(response.lessonPriceTeacher['price_sell']);
+                            $(".priceByStudent").text(response.eventPrice['price_buy']);
 
 						}
 
