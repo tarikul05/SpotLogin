@@ -108,7 +108,9 @@ public function index(Request $request, $schoolId = null)
                     $parentMembers = [];
                     foreach ($allOthersMembers as $member) {
                     $student2 = Student::where('id', $member->student_id)->first();
-                    $parentMembers[] = $student2->firstname . ' ' . $student2->lastname;
+                    if($student) {
+                        $parentMembers[] = $student2->firstname . ' ' . $student2->lastname;
+                    }
                     }
                     $parent->members = $parentMembers;
                     $memberFamily[] = $parent;
