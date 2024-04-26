@@ -806,9 +806,11 @@ class TeachersController extends Controller
     public function priceUpdate(Request $request, Teacher $teacher)
     {
       $alldata = $request->all();
+      $user = Auth::user();
 
       // dd($alldata);
       DB::beginTransaction();
+
         try{
              foreach ($alldata['data'] as $key => $catPrices) {
               // dd($catPrices);
