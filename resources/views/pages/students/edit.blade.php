@@ -2388,7 +2388,11 @@ $('#save_btn').click(function (e) {
 						var subTotalWithDiscount = document.getElementById('grand_total_amount');
 						var TotalWithDiscount = parseFloat(subTotalWithDiscount.textContent);
 						var subTotalExtra = document.getElementById('extras');
+						if(subTotalExtra){
 						var TotalExtra = parseFloat(subTotalExtra.textContent);
+						} else {
+						var	TotalExtra = 0;
+						}
 
 						var subtotalAl = parseFloat(document.getElementById('stotal_amount_with_discount').textContent);
 
