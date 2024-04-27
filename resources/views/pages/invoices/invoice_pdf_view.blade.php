@@ -271,7 +271,7 @@
             </div>
         </div>
         <div class="invoice_table">
-            <table class="table table-bordered">
+            <table class="table table-stripped">
                 <thead>
                     <tr>
                         <th class="col_date">{{ __('invoice_column_date') }}</th>
@@ -304,7 +304,12 @@
                         <tr>
                             <td>{{ !empty($item->item_date) ? Carbon\Carbon::parse($item->item_date)->format('d.m.Y') : ''; }}</td>
                             <td>
-                            <?php echo htmlspecialchars_decode(!empty($item->caption) ? $item->caption : ''); ?>
+                            <?php /*echo htmlspecialchars_decode(!empty($item->caption) ? $item->caption : '');*/ ?>
+                            @if ($event_type == 10)
+                            {!! !empty($item->caption) ? $item->caption : ''; !!}
+                            @else
+                            Event {{!empty($item->title) ? ': ' . $item->title : ''; }}
+                            @endif
                             <?php
                             $event = \App\Models\Event::find($item->event_id);
                             if ($event) {
