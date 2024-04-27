@@ -2005,7 +2005,7 @@ $('#save_btn').click(function (e) {
 
 					if(subTotalEvents > 0) {
 						resultHtml += '<tr style="background-color:#EEE; height:80px;"><td colspan="4" style="text-align:right;"></td><td style="text-align:left;"></td><td colspan="4" style="text-align:right;"><br><b>Total Events</b> <i class="fa-solid fa-arrow-right"></i> '+currencyTotal+' <b><span id="stotal_amount_with_discount_event">'+subTotalEvents.toFixed(2)+'</span></b></td><td style="text-align:right;"><br>+<span id="extra_2_display">'+subTotalEventsExtraCount.toFixed(2)+'</span></td></tr>';
-					} else { resultHtml += '<span style="display:none;" id="stotal_amount_with_discount_event">0</span>'; }
+					} else { resultHtml += '<span style="display:none;" id="stotal_amount_with_discount_event">0</span><span style="display:none;" id="extra_2_display">0</span>'; }
 
 
 			}, // success
@@ -2058,7 +2058,7 @@ $('#save_btn').click(function (e) {
                     }
 
 				if (no_of_teachers == 1){
-				resultHtml += '<td style="text-align:right"></td>';
+						resultHtml += '<td style="text-align:right"></td>';
 				}else {
 					if (!isTeacher) {
 						resultHtml += '<td style="text-align:right; font-weight: bold;"><br>' + total_buy.toFixed(2) + '</td>';
@@ -2066,7 +2066,7 @@ $('#save_btn').click(function (e) {
 				}
 
                 if($(window).width() < 768){
-			    resultHtml += ''+currencyTotal+' <span style="font-weight: bold;" id="stotal_amount_with_discount">' + (subTotalLessons + subTotalEvents).toFixed(2) + '</span><br><br></td>';
+			    	resultHtml += ''+currencyTotal+' <span style="font-weight: bold;" id="stotal_amount_with_discount">' + (subTotalLessons + subTotalEvents).toFixed(2) + '</span><br><br></td>';
                 } else {
                     resultHtml += '<td style="text-align:right"><br>'+currencyTotal+' <span style="font-weight: bold;" id="stotal_amount_with_discount">' + (subTotalLessons + subTotalEvents).toFixed(2) + '</span></td>';
                 }
@@ -2247,7 +2247,7 @@ $('#save_btn').click(function (e) {
 				}
 
                 if($(window).width() < 768){
-		    resultHtml += '<tr><td colspan="8" style="text-align:right;"><hr><b>Total taxe: '+currencyTotal+' <b><span id="total-taxes">'+(totalTaxAmount).toFixed(2)+'</span></b></td><td></td></tr>';
+		    		resultHtml += '<tr><td colspan="8" style="text-align:right;"><hr><b>Total taxe: '+currencyTotal+' <b><span id="total-taxes">'+(totalTaxAmount).toFixed(2)+'</span></b></td><td></td></tr>';
                 } else {
                     resultHtml += '<tr><td colspan="8" style="text-align:right;"><b>Total taxes</td><td colspan="1" style="text-align:right;">'+currencyTotal+' <b><span id="total-taxes">'+(totalTaxAmount).toFixed(2)+'</span></b></td><td></td></tr>';
                 }
@@ -2280,7 +2280,7 @@ $('#save_btn').click(function (e) {
 
 					if(subTotalEventsExtra > 0) {
 					resultHtml += '<tr style="background-color:#EEE;"><td colspan="8" style="text-align:right;">Total Extra Charges</td><td colspan="1" style="text-align:right;">'+currencyTotal+' <b><span id="extras" data-amount="'+subTotalEventsExtra.toFixed(2)+'">'+subTotalEventsExtra.toFixed(2)+'</span></b></td><td></td></tr>';
-					} else { resultHtml += '<span id="extras" style="display:none;">0</span>'; }
+					} else { resultHtml += ''; /*'<span id="extras" style="display:none;">0</span>';*/ }
 
 					resultHtml += '<tr><td colspan="10"><br></td></tr>';
 
@@ -3016,6 +3016,8 @@ $('#save_btn').click(function (e) {
 		var contenuValeurNumerique = parseFloat(spanElement.dataset.amount);
 		totalExtraSupp = contenuValeurNumerique
 		console.log(contenuValeurNumerique);
+		} else {
+			totalExtraSupp = 0;
 		}
 
         if(subtotal_amount_all > 0) {
