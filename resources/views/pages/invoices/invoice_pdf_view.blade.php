@@ -305,7 +305,7 @@
                             <td>{{ !empty($item->item_date) ? Carbon\Carbon::parse($item->item_date)->format('d.m.Y') : ''; }}</td>
                             <td>
                             <?php /*echo htmlspecialchars_decode(!empty($item->caption) ? $item->caption : '');*/ ?>
-                            @if ($event_type == 10)
+                            @if ($event_key == 10)
                             {!! !empty($item->caption) ? $item->caption : ''; !!}
                             @else
                             Event {{!empty($item->title) ? ': ' . $item->title : ''; }}
