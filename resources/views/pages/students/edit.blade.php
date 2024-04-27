@@ -2278,9 +2278,9 @@ $('#save_btn').click(function (e) {
 					resultHtml += '</tr>';
 
 
-					//if(subTotalEventsExtra > 0) {
+					if(subTotalEventsExtra > 0) {
 					resultHtml += '<tr style="background-color:#EEE;"><td colspan="8" style="text-align:right;">Total Extra Charges</td><td colspan="1" style="text-align:right;">'+currencyTotal+' <b><span id="extras" data-amount="'+subTotalEventsExtra.toFixed(2)+'">'+subTotalEventsExtra.toFixed(2)+'</span></b></td><td></td></tr>';
-					//} else { resultHtml += '<span id="extras" style="display:none;" data-amount="0">0</span>'; }
+					} else { resultHtml += '<span id="extras" style="opacity:0;" data-amount="0">0</span>'; }
 
 					resultHtml += '<tr><td colspan="10"><br></td></tr>';
 
