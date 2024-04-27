@@ -2071,6 +2071,8 @@ $('#save_btn').click(function (e) {
                     resultHtml += '<td style="text-align:right"><br>'+currencyTotal+' <span style="font-weight: bold;" id="stotal_amount_with_discount">' + (subTotalLessons + subTotalEvents).toFixed(2) + '</span></td>';
                 }
 
+				resultHtml += '<td style="text-align:right"></td>';
+
 				resultHtml += '</tr>'
 
 
