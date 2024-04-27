@@ -477,9 +477,9 @@
                             </div>-->
                         <?php } ?>
                         <tr class="extra_col">
-                            <td colspan="2" style="text-align:right">Sub-total Events</td>
+                            <td colspan="2" style="text-align:right; font-size:12px;">Sub-total Events</td>
                             <td style="text-align:right"></td>
-                            <td style="text-align:right">{{ number_format($sub_total_event,'2') }}</td>
+                            <td style="text-align:right; font-size:12px;">{{ number_format($sub_total_event,'2') }}</td>
                             <td></td>
                         </tr>
                         <tr class="extra_col">
