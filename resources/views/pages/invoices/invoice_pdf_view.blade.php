@@ -97,7 +97,7 @@
 
         .table-bordered thead tr th,
         .table-bordered tbody tr td {
-            border: 1px solid #B3D6EC;
+            border-bottom: 1px solid #B3D6EC;
         }
 
         .table-bordered thead tr th {
@@ -271,7 +271,7 @@
             </div>
         </div>
         <div class="invoice_table">
-            <table class="table table-stripped">
+            <table class="table table-bordered">
                 <thead>
                     <tr>
                         <th class="col_date">{{ __('invoice_column_date') }}</th>
