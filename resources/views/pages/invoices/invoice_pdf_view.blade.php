@@ -355,7 +355,9 @@
                             @endif
                             </td>
                             <td>
-                                <?php $invoice_data->extra_expenses > 0 ? echo '+' . number_format($invoice_data->extra_expenses, '2') : ''; ?>
+                                <?php if($invoice_data->extra_expenses > 0) {
+                                    echo '+' . number_format($invoice_data->extra_expenses, '2') 
+                                } ?>
                             </td>
                         </tr>
                         <?php
