@@ -320,6 +320,9 @@
                                 }
                             }
                            ?>
+                           <?php
+                            $cost1 = extractExtraCharges($item->caption);
+                            ?>
                            <br>
                             @if ($invoice_data->invoice_type > 0)
                                 <?php
@@ -347,16 +350,16 @@
                             @else
                                 <?php
                                     if($invoice_data->invoice_type == 1 || $invoice_data->invoice_type == 2 ){
-                                        echo number_format($item->price_unit-$item->extra_expenses, '2');
+                                        echo number_format($item->price_unit-$cost1, '2');
                                     }else{
-                                        echo number_format($item->total_item-$item->extra_expenses, '2');
+                                        echo number_format($item->total_item-$cost1, '2');
                                     }
                                 ?>
                             @endif
                             </td>
                             <td>
-                                <?php if($item->extra_expenses > 0) {
-                                    echo '+' . number_format($item->extra_expenses, '2') 
+                                <?php if($invoice_data->extra_expenses > 0) {
+                                    echo '+' . number_format($cost1, '2');
                                 } ?>
                             </td>
                         </tr>
@@ -706,3 +709,21 @@
 </body>
 
 </html>
+
+<?php
+function extractExtraCharges($inputString) {
+    // Utilisation d'une expression régulière pour rechercher le motif "Extra charges" suivi d'un espace et d'un ou plusieurs chiffres
+    $pattern = '/Extra charges (\d+)/';
+
+    // Utilisation de la fonction preg_match pour chercher le motif dans le string $inputString
+    if (preg_match($pattern, $inputString, $matches)) {
+        // $matches[0] contient la chaîne correspondant au motif entier (par exemple, "Extra charges 50")
+        // $matches[1] contient le premier groupe capturé par les parenthèses dans l'expression régulière (dans ce cas, le chiffre)
+        // On retourne le chiffre extrait
+        return $matches[1];
+    } else {
+        // Si le motif n'a pas été trouvé, on peut retourner false ou une valeur par défaut selon les besoins
+        return false;
+    }
+}
+?>
