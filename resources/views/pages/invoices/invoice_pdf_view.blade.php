@@ -559,9 +559,9 @@
                         <td colspan="2" style="text-align:right"><b>Sub-Total:</b></td>
                         <td></td>
                         <td style="text-align:right;">
-                            {{ number_format($sub_total_lesson+($sub_total_event-$invoice_data->extra_expenses),'2') }}
+                            {{ number_format(($sub_total_lesson-$invoice_data->amount_discount_1)+(($sub_total_event-$invoice_data->amount_discount_2)-$invoice_data->extra_expenses),'2') }}
                         </td>
-                        <td></td>
+                        <td></td> 
                     </tr>
 
                     <?php if($invoice_data->extra_expenses > 0){ ?>
