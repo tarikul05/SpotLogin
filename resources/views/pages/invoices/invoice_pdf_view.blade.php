@@ -419,7 +419,7 @@
                                         ?>
                                     </td>
                                     <td style="text-align:right"><span style="font-size:12px;"><b>{{ $invoice_data->discount_percent_1 .' %' }}</b></span></td>
-                                    <td class="price" style="text-align:right">- <b>{{ number_format(round(($sub_total_lesson*$invoice_data->discount_percent_1)/100),'2') }}</b></td>
+                                    <td class="price" style="text-align:right">- <b>{{ number_format(round(($sub_total_lesson * $invoice_data->discount_percent_1) / 100, 2), 2) }}</b></td>
                                     <?php $totalDiscount = number_format(($sub_total_lesson*$invoice_data->discount_percent_1)/100,'2'); ?>
                                     <td></td>
                                 </tr>
