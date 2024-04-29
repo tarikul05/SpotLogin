@@ -461,7 +461,6 @@
                 <?php } ?>
                 <tfoot>
 
-                    
                     <tr class="extra_col">
                         <td colspan="2" style="text-align:right; font-size:12px;"><b>Sub-total Events</b></td>
                         <td style="text-align:right"></td>
@@ -505,7 +504,7 @@
 
                         <?php } else { $totalDiscountEvent = 0; }?>
 
-                        <?php if($sub_total_event !== 0){ ?>
+                  
                             <tr class="extra_col">
                             <td colspan="3" style="text-align:right; font-size:12px;"><b>Total Event:</b></td>
                             <td style="text-align:right" class="text">
@@ -518,7 +517,7 @@
                                 </td>
                                 <td style="text-align:right; font-size:12px;">@if($invoice_data->extra_expenses > 0)+{{ number_format(($invoice_data->extra_expenses),'2')}}@endif</td>
                             </tr>
-                        <?php } ?>
+                     
 
                         <tr class="extra_col">
                             <td colspan="4" style="text-align:right; font-size:12px;"></td>
