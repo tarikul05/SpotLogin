@@ -206,7 +206,7 @@
                                                         <?php
                                                         $disc1_amt = $invoice->total_amount_discount ? $invoice->total_amount_discount :0;
                                                         ?>
-                                                        <?php $discount = $invoice->discount_percent_1 > 0 ? round($sub_total_lesson*$invoice->discount_percent_1/100) : 0; ?>
+                                                        <?php $discount = $invoice->discount_percent_1 > 0 ? number_format($sub_total_lesson*$invoice->discount_percent_1/100,'2') : 0; ?>
                                                         <?php $totalWithDiscount = $sub_total_lesson-$discount; ?>
                                                         <!-- <p id="samount_discount_1" class="form-control-static numeric"
                                                                                                 style="text-align:right;">0.00</p> -->
