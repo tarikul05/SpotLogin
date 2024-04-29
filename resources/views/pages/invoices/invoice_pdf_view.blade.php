@@ -539,7 +539,7 @@
                     <?php } ?>
 
                     <?php if($invoice_data->extra_1 > 0){ ?>
-                        <tr  style="text-decoration: none!important; font-size:12px;">
+                        <tr class="extra_col" style="font-size:12px;">
                             <td colspan="2" style="text-align:right"><b>Extras:</b>
                             <br><span>{{ $invoice_data->extra_1_description }}</span>
                             </td>
