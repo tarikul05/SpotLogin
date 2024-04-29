@@ -461,6 +461,14 @@
                 <?php } ?>
                 <tfoot>
 
+                    <?php if($sub_total_event != 0){ ?>
+                    <tr class="extra_col">
+                        <td colspan="2" style="text-align:right; font-size:12px;"><b>Sub-total Events</b></td>
+                        <td style="text-align:right"></td>
+                        <td style="text-align:right; font-size:12px;">{{ number_format($sub_total_event-$invoice_data->extra_expenses,'2') }}</td>
+                        <td style="text-align:right; font-size:12px;">@if($invoice_data->extra_expenses > 0)+{{ number_format(($invoice_data->extra_expenses),'2')}}@endif</td>
+                    </tr>
+                    <?php } ?>
 
                     <?php if($invoice_data->amount_discount_2 != 0){ ?>
                         <?php if($invoice_data->lesson_discount_description || $invoice_data->event_discount_description){ ?>
@@ -472,12 +480,7 @@
                                 ?>
                             </div>-->
                         <?php } ?>
-                        <tr class="extra_col">
-                            <td colspan="2" style="text-align:right; font-size:12px;"><b>Sub-total Events</b></td>
-                            <td style="text-align:right"></td>
-                            <td style="text-align:right; font-size:12px;">{{ number_format($sub_total_event-$invoice_data->extra_expenses,'2') }}</td>
-                            <td style="text-align:right; font-size:12px;">@if($invoice_data->extra_expenses > 0)+{{ number_format(($invoice_data->extra_expenses),'2')}}@endif</td>
-                        </tr>
+                        
                         <tr class="extra_col">
                             <td colspan="2" style="text-align:right; font-size:12px;" class="text">
                                 <?php
@@ -503,7 +506,7 @@
 
                         <?php } else { $totalDiscountEvent = 0; }?>
 
-                        <?php if($invoice_data->amount_discount_2 != 0){ ?>
+                        <?php if($sub_total_event != 0){ ?>
                             <tr class="extra_col">
                             <td colspan="3" style="text-align:right; font-size:12px;"><b>Total Event:</b></td>
                             <td style="text-align:right" class="text">
