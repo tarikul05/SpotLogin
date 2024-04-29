@@ -544,7 +544,7 @@
                             <br><span>{{ $invoice_data->extra_1_description }}</span>
                             </td>
                             <td></td>
-                            <td style="text-align:left;" class="small">
+                            <td style="text-align:right;">
                                 + {{number_format($invoice_data->extra_1, '2')}}
                             </td>
                             
