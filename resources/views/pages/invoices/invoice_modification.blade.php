@@ -301,9 +301,9 @@
                                     <td style="text-align:right"></td>
                                     <td style="text-align:right">
                                         @if ($invoice->invoice_type == 1)
-                                        <b><?php echo  $totaux = number_format((((($sub_total_event-$invoice->extra_expenses)) - number_format((($sub_total_event-$invoice->extra_expenses) * $invoice->discount_percent_2/100, '2')))+$totalWithDiscount),2); ?></b>
+                                        <b><?php echo $totaux = number_format((($sub_total_event - $invoice->extra_expenses) - number_format(($sub_total_event - $invoice->extra_expenses) * $invoice->discount_percent_2 / 100, 2)) + $totalWithDiscount, 2); ?></b>
                                         @else
-                                        <b><?php echo  $totaux = number_format((($sub_total_event)+$totalWithDiscount),2); ?></b>
+                                        <b><?php echo  $totaux = number_format((($sub_total_event)+$totalWithDiscount),'2'); ?></b>
                                         @endif
                                     </td>
                                     <td></td>
