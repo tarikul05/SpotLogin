@@ -177,6 +177,11 @@ class Invoice extends BaseModel
                 $join->on('users.person_id', '=', 'event_details.student_id')
                     ->where('users.person_type', '=' , 'App\Models\Student');
              })
+             ->leftJoin('invoice_items', function ($join) { 
+                $join->on('invoice_items.event_id', '=', 'event_details.event_id')
+                     ->on('invoice_items.student_id', '=', 'event_details.student_id')
+                     ->whereNull('invoice_items.deleted_at'); 
+            })
             ->select(
                 'events.id as event_id',
                 'event_details.student_id as person_id',
@@ -219,7 +224,7 @@ class Invoice extends BaseModel
 
         $studentEvents->where('events.date_start', '<=', $dateActuelle);
 
-
+        $studentEvents->whereNull('invoice_items.event_id');
         $studentEvents->distinct('events.id');
         //$studentEvents->groupBy('event_details.student_id');
         //dd($studentEvents->toSql());
