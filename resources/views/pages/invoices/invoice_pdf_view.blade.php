@@ -459,7 +459,7 @@
                             <td colspan="2" style="text-align:right; font-size:12px;"><b>Sub-total Events</b></td>
                             <td style="text-align:right"></td>
                             <td style="text-align:right; font-size:12px;">{{ number_format($sub_total_event-$invoice_data->extra_expenses,'2') }}</td>
-                            <td>+{{ number_format(($invoice->extra_expenses))}}</td>
+                            <td>+{{ number_format(($invoice_data->extra_expenses))}}</td>
                         </tr>
                         <tr class="extra_col">
                             <td colspan="2" style="text-align:right; font-size:12px;" class="text">
