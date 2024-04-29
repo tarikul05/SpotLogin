@@ -509,7 +509,7 @@
                             <td colspan="3" style="text-align:right; font-size:12px;"><b>Total Event:</b></td>
                             <td style="text-align:right" class="text">
                                     <?php
-                                        $sub_total_event = $sub_total_event - $EventDiscountAmout;
+                                        $sub_total_event = $sub_total_event - $totalDiscountEvent;
                                     ?>
                                     <span id="stotal_amount_with_discount_event"
                                     class="form-control-static numeric"
