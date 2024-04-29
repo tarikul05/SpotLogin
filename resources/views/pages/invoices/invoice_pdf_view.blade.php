@@ -512,9 +512,9 @@
                                     ?>
                                     <span id="stotal_amount_with_discount_event"
                                     class="form-control-static numeric"
-                                    style="text-align:right; font-size:12px;">{{number_format($sub_total_event,'2')}}</span>
+                                    style="text-align:right; font-size:12px;">{{number_format($sub_total_event-$invoice_data->extra_expenses,'2')}}</span>
                                 </td>
-                                <td></td>
+                                <td>{{number_format($invoice_data->extra_expenses,'2')}}</td>
                             </tr>
                         <?php } ?>
 
