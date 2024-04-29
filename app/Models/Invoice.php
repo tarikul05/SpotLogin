@@ -333,6 +333,11 @@ class Invoice extends BaseModel
                 ->leftJoin('teachers', 'teachers.id', '=', 'event_details.teacher_id')
                 ->leftJoin('students', 'students.id', '=', 'event_details.student_id')
                 ->leftJoin('users', 'users.person_id', '=', 'event_details.teacher_id')
+                ->leftJoin('invoice_items', function ($join) { 
+                    $join->on('invoice_items.event_id', '=', 'event_details.event_id')
+                         ->on('invoice_items.student_id', '=', 'event_details.student_id')
+                         ->whereNull('invoice_items.deleted_at'); 
+                })
                 ->select(
                     'events.id as event_id',
                     'event_categories.invoiced_type as cat_invoice_type',
@@ -413,7 +418,7 @@ class Invoice extends BaseModel
             $qq = "events.date_start BETWEEN '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $p_billing_period_end_date))) ."'";
             $studentEvents->whereRaw($qq);
 
-
+            $studentEvents->whereNull('invoice_items.event_id');
             //$studentEvents->where('events.date_start', '>=', $dateS);
 
             $studentEvents->whereNull('events.deleted_at');

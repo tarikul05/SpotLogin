@@ -41,9 +41,9 @@
                         <select id="max_time" name="max_time" class="form-control">
                             @for ($hour = 23; $hour >= 0; $hour--)
                                 @php
-                                    $formattedHour = str_pad($hour, 2, '0', STR_PAD_LEFT) . ':59:00';
+                                    $formattedHour = str_pad($hour, 2, '0', STR_PAD_LEFT) . ':00:00';
                                 @endphp
-                                <option value="{{ $formattedHour }}" @if($calendarSettings->max_time === $formattedHour) selected @endif>{{ $hour }}:59</option>
+                                <option value="{{ $formattedHour }}" @if($calendarSettings->max_time === $formattedHour) selected @endif>{{ $hour }}:00</option>
                             @endfor
                         </select>
                     </div>
