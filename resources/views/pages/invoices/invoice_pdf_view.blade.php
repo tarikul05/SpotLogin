@@ -543,10 +543,11 @@
                             <td colspan="2" style="text-align:right"><b>Extras:</b>
                             <br><span>{{ $invoice_data->extra_1_description }}</span>
                             </td>
+                            <td></td>
                             <td style="text-align:right;" class="small">
                                 + {{number_format($invoice_data->extra_1, '2')}}
                             </td>
-                            <td></td>
+                            
                             <td></td>
                         </tr>
                     <?php } ?>
