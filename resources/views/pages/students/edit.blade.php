@@ -1382,6 +1382,7 @@ $('#save_btn').click(function (e) {
 		var subTotalLessons = 0;
 		var subTotalEvents = 0;
 		var subTotalEventsExtra = 0;
+		let subTotalEventsExtraCount = 0;
 		var totalMinutesLessons = 0;
 		var currencyTotal = "{{$school->default_currency_code}}";
 
@@ -1669,7 +1670,7 @@ $('#save_btn').click(function (e) {
 						resultHtml += '<tr style="background-color:#EEE; height:80px;"><td colspan="5" style="text-align:right;"><br><b>{{ __('Total Lessons duration') }} <i class="fa-solid fa-arrow-right"></i></b> <b>'+totalMinutesLessons+' minutes</b></td><td colspan="4" style="text-align:right;"><br><b>{{ __('Sub-Total Lessons') }} </b> <i class="fa-solid fa-arrow-right"></i> '+currencyTotal+' <b id="ssubtotal_amount_with_discount_lesson">'+subTotalLessons.toFixed(2)+'</b><br><br></td><td></td></tr>';
 
 					//Lesson Discount
-                    resultHtml += '<tr>';
+                    /*resultHtml += '<tr>';
 					resultHtml += '<td colspan="7" style="text-align:right">{{ __('Extras Charges') }}:</td>';
 					resultHtml += '<td style="text-align:right"></td>';
 					resultHtml += '<td style="text-align:right">';
@@ -1681,7 +1682,7 @@ $('#save_btn').click(function (e) {
 					resultHtml += '<td colspan="7" style="text-align:right">Description:</td>';
                     resultHtml += '<td style="text-align:right"></td>';
                     resultHtml += '<td colspan="2"><textarea type="text" class="form-control" id="extra_1_description" name="extra_1_description" placeholder="Description"></textarea></td>';
-					resultHtml += '</tr>';
+					resultHtml += '</tr>';*/
 
 					resultHtml += '<tr>';
 					resultHtml += '<td colspan="7" style="text-align:right">{{ __('Discount(%) on Lessons') }}:</td>';
@@ -1703,9 +1704,10 @@ $('#save_btn').click(function (e) {
                     resultHtml += '<tr>';
 					resultHtml += '<td colspan="7" style="text-align:right">Description:</td>';
 					resultHtml += '<td style="text-align:right"></td>';
-					resultHtml += '<td style="text-align:right" colspan="2">';
+					resultHtml += '<td style="text-align:right">';
 					resultHtml += '<textarea type="text" class="form-control" id="lesson_discount_description" name="lesson_discount_description" placeholder="Description"></textarea>';
 					resultHtml += '</td>';
+					resultHtml += '<td></td>';
 					//resultHtml += '<td></td>';
 					resultHtml += '</tr>';
 
@@ -1713,6 +1715,9 @@ $('#save_btn').click(function (e) {
 
 
 				    resultHtml += '<tr style="background-color:#EEE; height:80px;"><td colspan="4" style="text-align:right;"></td><td style="text-align:left;"></td><td colspan="4" style="text-align:right;"><br><b>{{ __('Total Lessons') }}</b> <i class="fa-solid fa-arrow-right"></i> '+currencyTotal+' <b><span id="ssubtotal_amount_with_discount">'+subTotalLessons.toFixed(2)+'</span></b></td><td style="text-align:right;"><br><span id="extra_1_display"></span></td></tr>';
+
+					//add empty line
+					resultHtml += '<tr><td colspan="10"><br><br></td></tr>';
 
 					} else { resultHtml += '<span style="display:none;" id="ssubtotal_amount_with_discount_lesson">0</span>' }
 
@@ -1919,6 +1924,7 @@ $('#save_btn').click(function (e) {
 								total_sell += value.sell_price + value.extra_charges;
 								subTotalEvents = subTotalEvents + value.buy_price;
 								subTotalEventsExtra = subTotalEventsExtra + value.extra_charges;
+								subTotalEventsExtraCount = subTotalEventsExtraCount + value.extra_charges;
 
 								week_total_buy += value.buy_price;
 								week_total_sell += value.sell_price + value.extra_charges;
@@ -1955,14 +1961,18 @@ $('#save_btn').click(function (e) {
                     if(subTotalEvents > 0) {
 					resultHtml += '<tr style="background-color:#EEE; height:80px;"><td colspan="4" style="text-align:right;"></td><td style="text-align:left;"></td><td colspan="4" style="text-align:right;"><br><b>Sub-Total Events</b> <i class="fa-solid fa-arrow-right"></i> '+currencyTotal+' <b><span id="stotal_amount_before_discount_event">'+subTotalEvents.toFixed(2)+'</span></b></td><td></td></tr>';
 
-                    resultHtml += '<tr>';
+                    /*resultHtml += '<tr>';
 					resultHtml += '<td colspan="7" style="text-align:right">{{ __('Extras Charges') }}:</td>';
 					resultHtml += '<td style="text-align:right"></td>';
 					resultHtml += '<td style="text-align:right">';
 					resultHtml += '<input type="text" class="form-control numeric" id="extra_2" name="extra_2" style="text-align:right; padding-right: 5px;" value="0" placeholder="">';
 					resultHtml += '</td>';
 					resultHtml += '<td><textarea type="text" class="form-control" id="extra_2_description" name="extra_2_description" placeholder="Description"></textarea></td>';
-					resultHtml += '</tr>';
+					resultHtml += '</tr>';*/
+					resultHtml += '<input type="hidden" class="form-control numeric" id="extra_2" name="extra_2" style="text-align:right; padding-right: 5px;" value="0" placeholder="">';
+					resultHtml += '<input type="hidden" class="form-control numeric" id="extra_2_description" name="extra_2_description" style="text-align:right; padding-right: 5px;" value="" placeholder="">';
+
+
 
 					resultHtml += '<tr>';
 					resultHtml += '<td colspan="7" style="text-align:right">{{ __('Discount(%) on Events') }}:</td>';
@@ -1994,8 +2004,8 @@ $('#save_btn').click(function (e) {
 
 
 					if(subTotalEvents > 0) {
-						resultHtml += '<tr style="background-color:#EEE; height:80px;"><td colspan="4" style="text-align:right;"></td><td style="text-align:left;"></td><td colspan="4" style="text-align:right;"><br><b>Total Events</b> <i class="fa-solid fa-arrow-right"></i> '+currencyTotal+' <b><span id="stotal_amount_with_discount_event">'+subTotalEvents.toFixed(2)+'</span></b></td><td style="text-align:right;"><br><span id="extra_2_display"></span></td></tr>';
-					} else { resultHtml += '<span style="display:none;" id="stotal_amount_with_discount_event">0</span>'; }
+						resultHtml += '<tr style="background-color:#EEE; height:80px;"><td colspan="4" style="text-align:right;"></td><td style="text-align:left;"></td><td colspan="4" style="text-align:right;"><br><b>Total Events</b> <i class="fa-solid fa-arrow-right"></i> '+currencyTotal+' <b><span id="stotal_amount_with_discount_event">'+subTotalEvents.toFixed(2)+'</span></b></td><td style="text-align:right;"><br>+<span id="extra_2_display">'+subTotalEventsExtraCount.toFixed(2)+'</span></td></tr>';
+					} else { resultHtml += '<span style="display:none;" id="stotal_amount_with_discount_event">0</span><span style="display:none;" id="extra_2_display">0</span>'; }
 
 
 			}, // success
@@ -2048,7 +2058,7 @@ $('#save_btn').click(function (e) {
                     }
 
 				if (no_of_teachers == 1){
-				resultHtml += '<td style="text-align:right"></td>';
+						resultHtml += '<td style="text-align:right"></td>';
 				}else {
 					if (!isTeacher) {
 						resultHtml += '<td style="text-align:right; font-weight: bold;"><br>' + total_buy.toFixed(2) + '</td>';
@@ -2056,10 +2066,12 @@ $('#save_btn').click(function (e) {
 				}
 
                 if($(window).width() < 768){
-			    resultHtml += ''+currencyTotal+' <span style="font-weight: bold;" id="stotal_amount_with_discount">' + (subTotalLessons + subTotalEvents).toFixed(2) + '</span><br><br></td>';
+			    	resultHtml += ''+currencyTotal+' <span style="font-weight: bold;" id="stotal_amount_with_discount">' + (subTotalLessons + subTotalEvents).toFixed(2) + '</span><br><br></td>';
                 } else {
                     resultHtml += '<td style="text-align:right"><br>'+currencyTotal+' <span style="font-weight: bold;" id="stotal_amount_with_discount">' + (subTotalLessons + subTotalEvents).toFixed(2) + '</span></td>';
                 }
+
+				resultHtml += '<td style="text-align:right"></td>';
 
 				resultHtml += '</tr>'
 
@@ -2237,7 +2249,7 @@ $('#save_btn').click(function (e) {
 				}
 
                 if($(window).width() < 768){
-		    resultHtml += '<tr><td colspan="8" style="text-align:right;"><hr><b>Total taxe: '+currencyTotal+' <b><span id="total-taxes">'+(totalTaxAmount).toFixed(2)+'</span></b></td><td></td></tr>';
+		    		resultHtml += '<tr><td colspan="8" style="text-align:right;"><hr><b>Total taxe: '+currencyTotal+' <b><span id="total-taxes">'+(totalTaxAmount).toFixed(2)+'</span></b></td><td></td></tr>';
                 } else {
                     resultHtml += '<tr><td colspan="8" style="text-align:right;"><b>Total taxes</td><td colspan="1" style="text-align:right;">'+currencyTotal+' <b><span id="total-taxes">'+(totalTaxAmount).toFixed(2)+'</span></b></td><td></td></tr>';
                 }
@@ -2248,9 +2260,31 @@ $('#save_btn').click(function (e) {
                     resultHtml += '<tr><td colspan="8" style="text-align:right;"><br><b>'+sub_total_caption+'</td><td colspan="1" style="text-align:right;"><br>'+currencyTotal+' <b><span id="sub-total-before-charges">'+(subTotalLessons + subTotalEvents + totalTaxAmount).toFixed(2)+'</span></b></td><td></td></tr>';
                 }
 
-				if(subTotalEventsExtra > 0) {
-					resultHtml += '<tr style="background-color:#EEE;"><td colspan="8" style="text-align:right;">Total Extra Charges</td><td colspan="1" style="text-align:right;">'+currencyTotal+' <b><span id="extras">'+subTotalEventsExtra.toFixed(2)+'</span></b></td><td></td></tr>';
-				} else { resultHtml += '<span id="extras" style="display:none;">0</span>'; }
+				
+
+
+					resultHtml += '<tr>';
+					resultHtml += '<td colspan="7" style="text-align:right">{{ __('Extras Charges') }}:</td>';
+					resultHtml += '<td style="text-align:right"></td>';
+					resultHtml += '<td style="text-align:right">';
+					resultHtml += '<input type="text" class="form-control numeric" id="extra_1" name="extra_1" style="text-align:right; padding-right: 5px;" value="0" placeholder="">';
+					resultHtml += '</td>';
+					resultHtml += '<td style="text-align:right"></td>';
+                    resultHtml += '</tr>';
+
+                    resultHtml += '<tr>';
+					resultHtml += '<td colspan="7" style="text-align:right">Description:</td>';
+                    resultHtml += '<td style="text-align:right"></td>';
+                    resultHtml += '<td><textarea type="text" class="form-control" id="extra_1_description" name="extra_1_description" placeholder="Description"></textarea></td>';
+					resultHtml += '<td style="text-align:right"></td>';
+					resultHtml += '</tr>';
+
+
+					if(subTotalEventsExtra > 0) {
+					resultHtml += '<tr style="background-color:#EEE;"><td colspan="8" style="text-align:right;">Total Extra Charges</td><td colspan="1" style="text-align:right;">'+currencyTotal+' <b><span id="extras" data-amount="'+subTotalEventsExtra.toFixed(2)+'">'+subTotalEventsExtra.toFixed(2)+'</span></b></td><td></td></tr>';
+					} else { resultHtml += '<span id="extras" style="opacity:0;" data-amount="0">0</span>'; }
+
+					resultHtml += '<tr><td colspan="10"><br></td></tr>';
 
 				// display grand total
 				resultHtml += '<tr><td style="font-weight: bold;" colspan="6">';
@@ -2258,7 +2292,7 @@ $('#save_btn').click(function (e) {
                 if($(window).width() < 768){
 				    resultHtml += '<td style="text-align:right; font-weight: bold;" colspan="2" class="pt-3"><b>TOTAL:</b> ';
                 } else {
-                    resultHtml += '<td style="text-align:right; font-weight: bold;" colspan="2" class="pt-3">TOTAL</td>';
+                    resultHtml += '<td style="text-align:right; font-weight: bold; font-size:20px;" colspan="2" class="pt-3">TOTAL</td>';
                 }
 
 				if (no_of_teachers == 1){
@@ -2281,7 +2315,7 @@ $('#save_btn').click(function (e) {
                 if($(window).width() < 768){
 				    resultHtml += ''+currencyTotal+' <span style="font-weight: bold;" id="grand_total_amount">' + (total_sell).toFixed(2) + '</span></td><td></td>';
                 } else {
-                    resultHtml += '<td style="text-align:right" class="pt-3">'+currencyTotal+' <span style="font-weight: bold;" id="grand_total_amount">' + (total_sell).toFixed(2) + '</span></td><td></td>';
+                    resultHtml += '<td style="text-align:right" class="pt-3">'+currencyTotal+' <span style="font-weight: bold; font-size:20px;" id="grand_total_amount">' + (total_sell).toFixed(2) + '</span></td><td></td>';
                 }
 				resultHtml += '</tr>'
 
@@ -2356,7 +2390,11 @@ $('#save_btn').click(function (e) {
 						var subTotalWithDiscount = document.getElementById('grand_total_amount');
 						var TotalWithDiscount = parseFloat(subTotalWithDiscount.textContent);
 						var subTotalExtra = document.getElementById('extras');
+						if(subTotalExtra){
 						var TotalExtra = parseFloat(subTotalExtra.textContent);
+						} else {
+						var	TotalExtra = 0;
+						}
 
 						var subtotalAl = parseFloat(document.getElementById('stotal_amount_with_discount').textContent);
 
@@ -2804,7 +2842,14 @@ $('#save_btn').click(function (e) {
                 $("#extra_1").keyup(function () {
                     //get extra_1 value and display it in html in extra_1_display
                     var extra_1 = $("#extra_1").val();
-                    $("#extra_1_display").text('+ ' + parseFloat(extra_1).toFixed(2));
+                    //$("#extra_1_display").text('+ ' + parseFloat(extra_1).toFixed(2));
+					var spanElement = subTotalEventsExtraCount
+					if (spanElement) {
+					var contenuValeurNumerique = parseFloat(spanElement);
+					totalExtraSupp = contenuValeurNumerique + parseFloat(extra_1)
+					$("#extras").text(parseFloat(totalExtraSupp).toFixed(2));
+					}
+
                 });
 
                 $("#extra_2").keyup(function () {
@@ -2974,9 +3019,11 @@ $('#save_btn').click(function (e) {
 		var totalExtraSupp = 0;
 		var spanElement = document.getElementById('extras');
 		if (spanElement) {
-		var contenuValeurNumerique = parseFloat(spanElement.textContent);
+		var contenuValeurNumerique = parseFloat(spanElement.dataset.amount);
 		totalExtraSupp = contenuValeurNumerique
 		console.log(contenuValeurNumerique);
+		} else {
+			totalExtraSupp = 0;
 		}
 
         if(subtotal_amount_all > 0) {

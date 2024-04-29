@@ -71,10 +71,11 @@
 
                                     <tbody>
                                         <tr class="header_tbl">
-                                            <th width="30%"><span id="row_hdr_date" name="row_hdr_date">{{ __('invoice_column_date') }}</span></th>
-                                            <th width="40%" style="text-align:right"><span id="item_particular_caption" name="item_particular_caption">{{ __('invoice_column_details') }}</span></th>
-                                            <th width="15%" style="text-align:right"><?php if($invoice->invoice_type > 0) { ?><span id="item_unit_caption" name="item_unit_caption">{{ __('Unit') }}<?php } ?></span></th>
+                                            <th width="10%"><span id="row_hdr_date" name="row_hdr_date">{{ __('invoice_column_date') }}</span></th>
+                                            <th width="50%" style="text-align:left"><span id="item_particular_caption" name="item_particular_caption">{{ __('invoice_column_details') }}</span></th>
+                                            <th width="15%" style="text-align:right"><?php if($invoice->invoice_type > 0) { ?><span id="item_unit_caption" name="item_unit_caption">{{ __('Duration') }}<?php } ?></span></th>
                                             <th width="15%" style="text-align:right"><span id="row_hdr_amount" name="row_hdr_amount">{{ __('invoice_column_amount') }}</span></th>
+                                            <th width="15%" style="text-align:right"><span id="row_hdr_amount" name="row_hdr_amount">{{ __('Extra') }}</span></th>
                                         </tr>
                                     @if (!empty($invoice->invoice_items))
                                         @foreach($invoice->invoice_items as $event_type => $group)
@@ -89,8 +90,12 @@
                                                 @endphp
                                                 <tr>
                                                     <td>{{ !empty($item->item_date) ? Carbon\Carbon::parse($item->item_date)->format('d.m.Y') : ''; }}</td>
-                                                    <td style="text-align:right">
+                                                    <td style="text-align:left">
+                                                        @if ($event_type == 10)
                                                         {!! !empty($item->caption) ? $item->caption : ''; !!}
+                                                        @else
+                                                        Event {{!empty($item->title) ? ': ' . $item->title : ''; }}
+                                                        @endif
                                                         <?php
                                                             $cost1 = extractExtraCharges($item->caption);
                                                         ?>
@@ -99,7 +104,11 @@
                                                         @if ($invoice->invoice_type > 0)
                                                         <?php
                                                         if($item->no_of_students == 1) {
+                                                            if($event_type == 10) {
                                                             echo 'Private Lesson';
+                                                        } else {
+                                                            echo 'Private';
+                                                        }
                                                         } else {
                                                             //echo 'Group of ' . $item->no_of_students . ' students';
                                                         } ?>
@@ -121,6 +130,7 @@
                                                         <?php } ?>
                                                         </td>
                                                     @endif
+                                                    <td style="text-align:right">@if($cost1)+{{$cost1}}@endif</td>
                                                 </tr>
                                                 @php
                                                 if ($event_type == 10){
@@ -160,6 +170,7 @@
                                                     <td style="text-align:right">
                                                         {{ number_format($sub_total_lesson,'2') }}
                                                     </td>
+                                                    <td></td>
                                                 </tr>
 
                                                 <p style="display: none;" id="ssubtotal_amount_with_discount_lesson">{{ number_format($sub_total_lesson,'2') }}</p>
@@ -179,6 +190,7 @@
                                                         <!--<input type="text" class="form-control numeric" id="sdiscount_percent_1" name="sdiscount_percent_1" style="text-align: right; padding-right: 5px;" value="{{$invoice->discount_percent_1 ? $invoice->discount_percent_1 :0}}" placeholder="" {{ $invoiceIssued ? "disabled='disabled'" : "" }}>-->
                                                         <span><b>-{{$invoice->discount_percent_1 ? $invoice->discount_percent_1 :0}}%</b></span>
                                                     </td>
+                                                    <td></td>
                                                 </tr>
 
                                                 <tr style="background-color: #EEE;">
@@ -194,13 +206,14 @@
                                                         <?php
                                                         $disc1_amt = $invoice->total_amount_discount ? $invoice->total_amount_discount :0;
                                                         ?>
-                                                        <?php $discount = $invoice->discount_percent_1 > 0 ? round($sub_total_lesson*$invoice->discount_percent_1/100) : 0; ?>
+                                                        <?php $discount = $invoice->discount_percent_1 > 0 ? number_format($sub_total_lesson*$invoice->discount_percent_1/100,'2') : 0; ?>
                                                         <?php $totalWithDiscount = $sub_total_lesson-$discount; ?>
                                                         <!-- <p id="samount_discount_1" class="form-control-static numeric"
                                                                                                 style="text-align:right;">0.00</p> -->
                                                         <!--<input type="text" class="form-control numeric_amount" id="samount_discount_1" name="samount_discount_1" style="text-align: right; padding-right: 5px;" value="{{number_format($discount,'2')}}" placeholder="" {{ $invoiceIssued ? "disabled='disabled'" : "" }}>-->
                                                         <span><b>-{{number_format($discount,'2')}}</span>
                                                     </td>
+                                                    <td></td>
                                                 </tr>
                                                 <tr>
                                                     <td colspan="2" style="text-align:right"><b>Total Lesson:</b></td>
@@ -219,6 +232,10 @@
                                                         style="text-align:right;">{{number_format($totalWithDiscount,'2')}}</>
 
                                                     </td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="10" style="text-align:right"><br><br></td>
                                                 </tr>
                                                 <!-- <div class="input-group"><span class="input-group-addon">%</span>
                                                     <input type="text" class="form-control numeric" id="sdiscount_percent_1" name="sdiscount_percent_1" value="{{$invoice->discount_percent_1 ? $invoice->discount_percent_1 :0}}" placeholder="">
@@ -227,29 +244,51 @@
                                                 <p style="display: none;" id="stotal_amount_with_discount_event">{{ number_format($sub_total_event,'2') }}</p>
 
 
-
-
-                                                @if($invoice->discount_percent_2 > 0)
                                                 <tr>
-                                                <td colspan="2" style="text-align:right">Discount(%) on Event: {{ $invoice->discount_percent_2 }}%
+                                                    <td colspan="2" style="text-align:right"><b>Sub-Total Events</b></td>
+                                                    <td style="text-align:right"></td>
+                                                    <td style="text-align:right">
+                                                        {{ number_format($sub_total_event-$invoice->extra_expenses,'2') }}
+                                                    </td>
+                                                    <td style="text-align:right">+{{ number_format(($invoice->extra_expenses))}}</td>
+                                                </tr>
+
+                                                @if($invoice->discount_percent_2 > 0)@endif
+                                                <tr style="background-color: #EEE;">
+                                                <td colspan="2" style="text-align:right">Discount(%) on Event
                                                     <br>{{$invoice->event_discount_description ? $invoice->event_discount_description : ''}}</td>
                                                     <td style="text-align:right"><!--{{$sub_total_min_event}} minutes--></td>
                                                     @if ($invoice->invoice_type == 1)
-                                                    <td style="text-align:right"><b>-{{ number_format((($sub_total_event-$invoice->extra_expenses) * $invoice->discount_percent_2/100),'2') }}</b></td>
+                                                    <td style="text-align:right"><b>-{{ $invoice->discount_percent_2 }}%</b></td>
                                                     @else
                                                     <td style="text-align:right"></td>
                                                     @endif
+                                                    <td></td>
                                                 </tr>
-                                                @endif
-
+                                                <tr style="background-color: #EEE;">
+                                                    <td colspan="2" style="text-align:right">Discount Amount:</td>
+                                                        <td style="text-align:right"><!--{{$sub_total_min_event}} minutes--></td>
+                                                        @if ($invoice->invoice_type == 1)
+                                                        <td style="text-align:right"><b>-{{ number_format((($sub_total_event-$invoice->extra_expenses) * $invoice->discount_percent_2/100),'2') }}</b></td>
+                                                        @else
+                                                        <td style="text-align:right"></td>
+                                                        @endif
+                                                        <td></td>
+                                                    </tr>
+                                                
+                                                <?php $EventDiscountAmout = number_format((($sub_total_event-$invoice->extra_expenses)*$invoice->discount_percent_2)/100,'2'); ?>
                                                 <tr>
-                                                    <td colspan="2" style="text-align:right">Total events: </td>
+                                                    <td colspan="2" style="text-align:right"><b>Total events:</b></td>
                                                     <td style="text-align:right"></td>
                                                     @if ($invoice->invoice_type == 1)
-                                                    <td style="text-align:right">{{ number_format((($sub_total_event-$invoice->extra_expenses)) - number_format((($sub_total_event-$invoice->extra_expenses) * $invoice->discount_percent_2/100)),'2') }}</td>
+                                                    <td style="text-align:right">{{ number_format((($sub_total_event-$invoice->extra_expenses)- $EventDiscountAmout),'2') }}</td>
                                                     @else
                                                     <td style="text-align:right">{{ number_format($sub_total_event,'2') }}</td>
                                                     @endif
+                                                    <td style="text-align:right">+{{ number_format(($invoice->extra_expenses))}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="10" style="text-align:right"><br><br></td>
                                                 </tr>
                                             @endif
 
@@ -262,11 +301,12 @@
                                     <td style="text-align:right"></td>
                                     <td style="text-align:right">
                                         @if ($invoice->invoice_type == 1)
-                                        <b><?php echo  $totaux = number_format((((($sub_total_event-$invoice->extra_expenses)) - number_format((($sub_total_event-$invoice->extra_expenses) * $invoice->discount_percent_2/100)))+$totalWithDiscount),2); ?></b>
+                                        <b><?php echo $totaux = number_format((($sub_total_event - $invoice->extra_expenses) - number_format(($sub_total_event - $invoice->extra_expenses) * $invoice->discount_percent_2 / 100, 2)) + $totalWithDiscount, 2); ?></b>
                                         @else
-                                        <b><?php echo  $totaux = number_format((($sub_total_event)+$totalWithDiscount),2); ?></b>
+                                        <b><?php echo  $totaux = number_format((($sub_total_event)+$totalWithDiscount),'2'); ?></b>
                                         @endif
                                     </td>
+                                    <td></td>
                                 </tr>
 
                                 <tbody>
@@ -276,6 +316,7 @@
                                             <td></td>
                                             <td style="text-align:right">- {{number_format($invoice->total_amount_discount,'2')}}</td>
                                             <input type="hidden" class="form-control numeric_amount" id="total_commission" name="total_commission" value="{{$invoice->total_amount_discount ? number_format($invoice->total_amount_discount,'2') :0.00}}" placeholder="" readonly="">
+                                            <td></td>
                                         </tr>
                                     @endif
 
@@ -316,25 +357,29 @@
                                             <span>+{{ $item->tax_amount ? number_format($totaux*$item->tax_percentage/100, 2) : '0' }}</span>
                                             <?php $totaltaxAmount = $item->tax_amount ? ( $totaltaxAmount + number_format($totaux*$item->tax_percentage/100, 2)) : 0; ?>
                                         </td>
+                                        <td></td>
                                     </tr>
-                                    @endforeach
+                                    @endforeach             
 
 
                                     <tr>
                                         <td colspan="2" style="text-align:right"><b>Sub-Total:</b></td>
                                         <td style="text-align:right"><!--{{$sub_total_min_event}} minutes--></td>
                                         <td style="text-align:right"><b>{{ $invoice->invoice_type == 0 ? number_format((($sub_total_event)+$totalWithDiscount+$totaltaxAmount),2) : number_format(((($sub_total_event-$invoice->extra_expenses))-number_format((($sub_total_event-$invoice->extra_expenses) * $invoice->discount_percent_2/100))+$totalWithDiscount+$totaltaxAmount),2) }}</b></td>
+                                        <td></td>
                                     </tr>
+
+                                    @endif
 
 
                                     @if ($invoice->extra_expenses > 0)
 
-                                        <tr>
+                                        <!--<tr>
                                             <td></td>
                                             <td colspan="2"></td>
                                             <td class="text-left small">Charges and Additional Expenses</td>
 
-                                        </tr>
+                                        </tr>-->
 
                                         @foreach(DB::table('invoices_expenses')->where('invoice_id', $invoice->id)->get() as $item)
                                         <tr>
@@ -353,10 +398,11 @@
 
                                     @if ($invoice->extra_expenses > 0)
                                     <tr>
-                                        <td colspan="2" style="text-align:right"><b>Total Extra Charges:</b></td>
+                                        <td colspan="2" style="text-align:right"><b>Charges events:</b></td>
                                         <td style="text-align:right"><!--{{$sub_total_min_event}} minutes--></td>
-                                        <td style="text-align:right"><b>{{ number_format($invoice->extra_expenses,'2') }}</b></td>
+                                        <td style="text-align:right">+<b>{{ number_format($invoice->extra_expenses,'2') }}</b></td>
                                         <input style="display:none;" type="text" class="form-control numeric" id="sextra_expenses" name="sextra_expenses" value="{{ number_format($invoice->extra_expenses,'2') }}" placeholder="" style="text-align: right; padding-right: 5px;">
+                                        <td></td>
                                     </tr>
                                     @endif
 
@@ -368,13 +414,14 @@
                                             <input type="text" class="form-control numeric" id="taxes" name="taxes" value="{{$invoice->tax_amount ? $invoice->tax_amount :0}}" placeholder="" style="margin-left: 0px;" disabled='disabled'>
                                         </td>
                                     </tr>-->
-                                    @endif
+                                   
 
                                     @if ($invoice->extra_1 > 0)
                                     <tr>
-                                        <td colspan="2" style="text-align:right"><b>Extra Lesson:</b><br><span class="small">{{ $invoice->extra_1_description }}</span></td>
+                                        <td colspan="2" style="text-align:right"><b>Extra:</b><br><span class="small">{{ $invoice->extra_1_description }}</span></td>
                                         <td style="text-align:right"></td>
-                                        <td style="text-align:right"><b>{{ number_format($invoice->extra_1,'2') }}</b></td>
+                                        <td style="text-align:right">+<b>{{ number_format($invoice->extra_1,'2') }}</b></td>
+                                        <td></td>
                                     </tr>
                                     @endif
                                     @if ($invoice->extra_2 > 0)
@@ -382,17 +429,19 @@
                                         <td colspan="2" style="text-align:right"><b>Extra Event:</b><br><span class="small">{{ $invoice->extra_2_description }}</span></td>
                                         <td style="text-align:right"></td>
                                         <td style="text-align:right"><b>{{ number_format($invoice->extra_2,'2') }}</b></td>
+                                        <td></td>
                                     </tr>
                                     @endif
 
                                     @php
                                         $grand_total = $sub_total_event +$sub_total_lesson + $invoice->extra_expenses-$invoice->total_amount_discount + $invoice->tax_amount;
                                     @endphp
-                                    <tr class="alert alert-info">
+                                    <tr style="font-weight:bold; font-size:20px; background-color:#f2f2f2;">
                                         <td colspan="2" style="text-align:right"><b>Total</b></td>
                                         <td></td>
                                         <?php $grandTotalFinal = $totaux + $countAllTaxes + $invoice->extra_1 + $invoice->extra_2 + $invoice->extra_expenses; ?>
                                         <td style="text-align: right"><span id="grand_total_cap"><b>{{ number_format($grandTotalFinal,'2') }}</b></span></td>
+                                        <td></td>
                                     </tr>
                                 </tbody>
                             </table>
