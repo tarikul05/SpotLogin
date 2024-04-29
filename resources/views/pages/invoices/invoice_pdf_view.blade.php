@@ -476,7 +476,7 @@
                             <td colspan="2" style="text-align:right; font-size:12px;"><b>Sub-total Events</b></td>
                             <td style="text-align:right"></td>
                             <td style="text-align:right; font-size:12px;">{{ number_format($sub_total_event-$invoice_data->extra_expenses,'2') }}</td>
-                            <td style="text-align:right; font-size:12px;">+{{ number_format(($invoice_data->extra_expenses))}}</td>
+                            <td style="text-align:right; font-size:12px;">@if($invoice_data->extra_expenses > 0)+{{ number_format(($invoice_data->extra_expenses))}}@endif</td>
                         </tr>
                         <tr class="extra_col">
                             <td colspan="2" style="text-align:right; font-size:12px;" class="text">
@@ -514,7 +514,7 @@
                                     class="form-control-static numeric"
                                     style="text-align:right; font-size:12px;">{{number_format($sub_total_event-$invoice_data->extra_expenses,'2')}}</span>
                                 </td>
-                                <td>{{number_format($invoice_data->extra_expenses,'2')}}</td>
+                                <td style="text-align:right; font-size:12px;">@if($invoice_data->extra_expenses > 0)+{{ number_format(($invoice_data->extra_expenses))}}@endif</td>
                             </tr>
                         <?php } ?>
 
