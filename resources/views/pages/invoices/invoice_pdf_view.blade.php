@@ -430,7 +430,7 @@
                                 <td colspan="3" style="text-align:right">Total Lesson:</td>
                                 <td style="text-align:right">
                                     <?php
-                                        $total_lesson = $sub_total_lesson - round($totalDiscount);
+                                        $total_lesson = number_format($sub_total_lesson - $totalDiscount, "2");
                                     ?>
                                     <span id="stotal_amount_with_discount_lesson"
                                     class="form-control-static numeric"
