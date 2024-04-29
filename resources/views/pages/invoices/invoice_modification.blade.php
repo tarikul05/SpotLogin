@@ -281,7 +281,7 @@
                                                     <td colspan="2" style="text-align:right"><b>Total events:</b></td>
                                                     <td style="text-align:right"></td>
                                                     @if ($invoice->invoice_type == 1)
-                                                    <td style="text-align:right">{{ number_format((($sub_total_event-$invoice->extra_expenses)) - $EventDiscountAmout) }}</td>
+                                                    <td style="text-align:right">{{ number_format((($sub_total_event-$invoice->extra_expenses)- $EventDiscountAmout),'2') }}</td>
                                                     @else
                                                     <td style="text-align:right">{{ number_format($sub_total_event,'2') }}</td>
                                                     @endif
