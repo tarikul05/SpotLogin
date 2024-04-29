@@ -54,23 +54,45 @@
 						</div>
 						@if((($AppUI->person_id == $lessonData->teacher_id) || (($lessonData->eventcategory->invoiced_type == 'S') && ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()))) && ($lessonData->is_locked ==1))
 							<div class="alert alert-warning">
-								<label>This lesson is blocked, but it can still be modified by first clicking the unlock button.</label>
+								<label>{{ __('This lesson is blocked, but it can still be modified by first clicking the unlock button') }}.</label>
 								<!--<button class="btn btn-sm btn-warning" onclick="confirm_event(true)"><i class="fa-solid fa-lock-open"></i> Unlock</button>-->
 							</div>
 						@endif
 
-
 						@php
 							$invoiceId = DB::table('invoice_items')->where('event_id', $lessonlId)->where('deleted_at', null)->value('invoice_id');
-                            $invoiceExists = DB::table('invoices')->where('id', $invoiceId)->whereNull('invoices.deleted_at')->exists();
+                            //$invoiceExists = DB::table('invoices')->where('id', $invoiceId)->whereNull('invoices.deleted_at')->exists();
 						@endphp
 
-						@if ($invoiceExists)
+						@php
+						$invoiceIds = DB::table('invoice_items')
+										->where('event_id', $lessonlId)
+										->whereNull('deleted_at')
+										->pluck('invoice_id');
+
+						$invoices = DB::table('invoices')
+									->whereIn('id', $invoiceIds)
+									->whereNull('invoices.deleted_at')
+									->get();
+						@endphp
+
+						@if ($invoices->isNotEmpty())
 						<div class="alert alert-warning">
-							<label>This lessons have an invoice attached to it. <a href="{{ route('adminmodificationInvoice',[$schoolId,$invoiceId]) }}">See invoice #{{$invoiceId}}</a></label>
+							<label>{{ __('This lesson has invoices attached to it') }}:</label>
+							<ul>
+								@foreach ($invoices as $invoice)
+									@php
+										$studentName = DB::table('students')
+														->where('id', DB::table('invoice_items')
+																		->where('invoice_id', $invoice->id)
+																		->value('student_id'))
+														->value(DB::raw("CONCAT_WS(' ', firstname, lastname) AS student_name"));
+									@endphp
+									<li>{{ $studentName }} {{ __('is billed for this event') }}. <a href="{{ route('adminmodificationInvoice', [$schoolId, $invoice->id]) }}">See invoice #{{ $invoice->id }}</a></li>
+								@endforeach
+							</ul>
 						</div>
 						@endif
-
 
 
 						<div class="card">
@@ -292,7 +314,7 @@
 
 					@if((($AppUI->person_id == $lessonData->teacher_id) || (($lessonData->eventcategory->invoiced_type == 'S') && ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()))) && ($lessonData->is_locked ==1))
 
-						<button class="btn btn-sm btn-warning w-100" onclick="confirm_event(true)"><i class="fa-solid fa-lock-open"></i> Unlock</button>
+						<button class="btn btn-sm btn-warning w-100" onclick="confirm_event(true)"><i class="fa-solid fa-lock-open"></i> {{__('Unlock')}}</button>
 						<input type="hidden" name="confirm_event_id" id="confirm_event_id" value="{{ !empty($eventId) ? $eventId : ''; }}">
 
 					@endif

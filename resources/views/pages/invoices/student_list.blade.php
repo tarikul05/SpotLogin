@@ -60,14 +60,14 @@
                                 <img src="{{ asset('img/photo_blank.jpg') }}" class="admin_logo" id="admin_logo" alt="globe">
                             <?php endif; ?>
                         {{ $event->student_full_name; }}</td>
-                        <td>{{ $event->invoice_items; }}</td>
+                        <td align="center">{{ $event->invoice_items; }}</td>
 
                         <td align="center">
                             <a id="inv_butt_tobe_charged" name="inv_butt_tobe_charged"
                             href="{{ auth()->user()->isSuperAdmin() ?
                                     route('adminEditStudent',['school'=> $schoolId,'student'=> $event->person_id]) :
                                     route('editStudent',['student' => $event->person_id]) }}?action=edit&tab=tab_3&inv_type={{$type}}"
-                            class="btn btn-sm btn-theme-success inv_butt_tobe_charged_cls">
+                            class="btn btn-sm btn-primary inv_butt_tobe_charged_cls">
                             {{ __('View items to be invoiced') }}</a>
                         </td>
                     </tr>
