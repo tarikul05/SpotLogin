@@ -555,6 +555,17 @@
                     ?>
                     <?php } ?>
 
+                    <?php if($invoice_data->extra_expenses > 0){ ?>
+                        <tr class="extra_col" style="font-size:12px;">
+                            <td colspan="2" style="text-align:right"><b>Charges Events:</b></td>
+                            <td></td>
+                            <td style="text-align:right;">
+                                + {{number_format($invoice_data->extra_expenses, '2')}}
+                            </td>
+                            <td></td>
+                        </tr>
+                    <?php } ?>
+
                     <?php if($invoice_data->extra_1 > 0){ ?>
                         <tr class="extra_col" style="font-size:12px;">
                             <td colspan="2" style="text-align:right"><b>Extras:</b>
