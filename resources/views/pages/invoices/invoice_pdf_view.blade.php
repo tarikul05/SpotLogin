@@ -461,7 +461,7 @@
                 <?php } ?>
                 <tfoot>
 
-                    <?php if($sub_total_event != 0){ ?>
+                    <?php if($sub_total_event > 0){ ?>
                     <tr class="extra_col">
                         <td colspan="2" style="text-align:right; font-size:12px;"><b>Sub-total Events</b></td>
                         <td style="text-align:right"></td>
@@ -506,7 +506,7 @@
 
                         <?php } else { $totalDiscountEvent = 0; }?>
 
-                        <?php if($sub_total_event != 0){ ?>
+                        <?php if($sub_total_event > 0){ ?>
                             <tr class="extra_col">
                             <td colspan="3" style="text-align:right; font-size:12px;"><b>Total Event:</b></td>
                             <td style="text-align:right" class="text">
