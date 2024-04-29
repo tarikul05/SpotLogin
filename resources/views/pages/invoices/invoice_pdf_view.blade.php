@@ -422,28 +422,7 @@
                                 <td></td>
                             </tr>
 
-                            <?php if($invoice_data->extra_1 > 0){ ?>
-                                <tr class="extra_col_sub2" style="text-decoration: none!important;">
-                                    <td colspan="3" style="text-align:right"><b>Extra Lesson:</b>
-                                    <br><span>{{ $invoice_data->extra_1_description }}</span>
-                                    </td>
-                                    <td style="text-align:right;" class="small">
-                                        + {{number_format($invoice_data->extra_1, '2')}}
-                                    </td>
-                                    <td></td>
-                                </tr>
-                            <?php } ?>
-                            <?php if($invoice_data->extra_2 > 0){ ?>
-                                <tr class="extra_col_sub2" style="text-decoration: none!important;">
-                                    <td colspan="3" style="text-align:right"><b>Extra Event:</b>
-                                    <br><span>{{ $invoice_data->extra_2_description }}</span>
-                                    </td>
-                                    <td style="text-align:right;" class="small">
-                                        + {{number_format($invoice_data->extra_2, '2')}}
-                                    </td>
-                                    <td></td>
-                                </tr>
-                            <?php } ?>
+                            
 
                             <tr class="extra_col_sub extra_col_h">
                                 <td colspan="4"></td>
@@ -557,6 +536,29 @@
                                     }
                         }
                     ?>
+                    <?php } ?>
+
+                    <?php if($invoice_data->extra_1 > 0){ ?>
+                        <tr class="extra_col_sub2" style="text-decoration: none!important;">
+                            <td colspan="3" style="text-align:right"><b>Extra Lesson:</b>
+                            <br><span>{{ $invoice_data->extra_1_description }}</span>
+                            </td>
+                            <td style="text-align:right;" class="small">
+                                + {{number_format($invoice_data->extra_1, '2')}}
+                            </td>
+                            <td></td>
+                        </tr>
+                    <?php } ?>
+                    <?php if($invoice_data->extra_2 > 0){ ?>
+                        <tr class="extra_col_sub2" style="text-decoration: none!important;">
+                            <td colspan="3" style="text-align:right"><b>Extra Event:</b>
+                            <br><span>{{ $invoice_data->extra_2_description }}</span>
+                            </td>
+                            <td style="text-align:right;" class="small">
+                                + {{number_format($invoice_data->extra_2, '2')}}
+                            </td>
+                            <td></td>
+                        </tr>
                     <?php } ?>
 
                     <?php if($invoice_data->extra_expenses > 0){ ?>
