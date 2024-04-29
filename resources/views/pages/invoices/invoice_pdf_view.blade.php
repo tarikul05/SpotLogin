@@ -357,8 +357,8 @@
                                 ?>
                             @endif
                             </td>
-                            <td>
-                                <?php if($invoice_data->extra_expenses > 0) {
+                            <td style="text-align: right;">
+                                <?php if($cost1 > 0) {
                                     echo '+' . number_format($cost1, '2');
                                 } ?>
                             </td>
