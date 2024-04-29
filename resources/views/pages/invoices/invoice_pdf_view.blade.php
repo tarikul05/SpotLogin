@@ -547,11 +547,12 @@
                                 + {{number_format($invoice_data->extra_1, '2')}}
                             </td>
                             <td></td>
+                            <td></td>
                         </tr>
                     <?php } ?>
                     <?php if($invoice_data->extra_2 > 0){ ?>
                         <tr  style="text-decoration: none!important;">
-                            <td colspan="3" style="text-align:right; font-size:12px;"><b>Extra Event:</b>
+                            <td style="text-align:right" colspan="2" style="text-align:right; font-size:12px;"><b>Extra Event:</b>
                             <br><span>{{ $invoice_data->extra_2_description }}</span>
                             </td>
                             <td style="text-align:right;" class="small">
