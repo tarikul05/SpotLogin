@@ -336,15 +336,27 @@
                             </td>
                             <td style="text-align: left;"><?php if($item->unit){ echo $item->unit.' minutes';} ?> </td>
                             <td style="text-align: right;">
-                            <?php
-                                if($invoice_data->invoice_type == 1 || $invoice_data->invoice_type == 2 ){
-                                    echo number_format($item->price_unit, '2');
-                                }else{
-                                    echo number_format($item->total_item, '2');
-                                }
-                            ?>
+                            @if ($event_key == 10)
+                                <?php
+                                    if($invoice_data->invoice_type == 1 || $invoice_data->invoice_type == 2 ){
+                                        echo number_format($item->price_unit, '2');
+                                    }else{
+                                        echo number_format($item->total_item, '2');
+                                    }
+                                ?>
+                            @else
+                                <?php
+                                    if($invoice_data->invoice_type == 1 || $invoice_data->invoice_type == 2 ){
+                                        echo number_format($item->price_unit-$invoice_data->extra_expenses, '2');
+                                    }else{
+                                        echo number_format($item->total_item-$invoice_data->extra_expenses, '2');
+                                    }
+                                ?>
+                            @endif
                             </td>
-                            <td>tttest</td>
+                            <td>
+                                <?php $invoice_data->extra_expenses > 0 ? echo '+' . number_format($invoice_data->extra_expenses, '2') : ''; ?>
+                            </td>
                         </tr>
                         <?php
                             if($event_key == 10){
