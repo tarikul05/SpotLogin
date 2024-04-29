@@ -555,14 +555,7 @@
                     ?>
                     <?php } ?>
 
-                    <tr class="extra_col" style="font-size:12px;">
-                        <td colspan="2" style="text-align:right"><b>Sub-Total:</b></td>
-                        <td></td>
-                        <td style="text-align:right;">
-                            {{ number_format((($sub_total_lesson+$sub_total_event)-(($totalDiscount+$totalDiscountEvent))-$invoice_data->extra_expenses),'2') }}
-                        </td>
-                        <td></td> 
-                    </tr>
+    
 
                     <?php if($invoice_data->extra_expenses > 0){ ?>
                         <tr class="extra_col" style="font-size:12px;">
