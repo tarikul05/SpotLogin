@@ -50,7 +50,7 @@
 		<input type="hidden" id="active_tab" name="active_tab" value="">
 
 		@csrf
-		<div class="tab-content" id="ex1-content">
+		<div class="tab-content" id="ex1-content" style="padding-bottom:0px!important;">
 				<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 					<fieldset>
 						<div class="section_header_class">
@@ -570,10 +570,10 @@
 						<input type="text" style="display:none;" name="finaltotaltaxes" value="0" id="finaltotaltaxes">
 
 
-						<div class="alert alert-default" id="lesson_footer_div" style="display: none;">
+						<div class="h1" id="lesson_footer_div" style="display: none;">
 								<label id="verify_label_id">{{ __('Please check all entries before you can convert these items into invoices.') }}</label>
 								<br><br>
-								<button style="position: absolute;right: 0px;top: 20px;" class="btn btn-primary pull-right" id="btn_convert_invoice">{{ __('Draft invoice') }}</button>
+								<button style="position: absolute;right: 0px;top: 30px;" class="btn btn-primary pull-right" id="btn_convert_invoice">{{ __('Draft invoice') }}</button>
 						</div>
 						<!-- <div class="alert alert-danger" id="lesson_footer_div" style="display: block;">
 							<label id="verify_label_id" style="display: block;">{{ __('Please check all entries before you can convert these items into invoices.') }}</label>
@@ -1686,25 +1686,24 @@ $('#save_btn').click(function (e) {
 
 					resultHtml += '<tr>';
 					resultHtml += '<td colspan="7" style="text-align:right">{{ __('Discount(%) on Lessons') }}:</td>';
-					resultHtml += '<td style="text-align:right"></td>';
+					resultHtml += '<td style="text-align:right"><input type="text" class="form-control numeric" id="sdiscount_percent_1" name="sdiscount_percent_1" style="text-align:right; padding-right: 5px;" value="0" placeholder=""><span style="font-size:11px;">Percentage</span></td>';
 					resultHtml += '<td style="text-align:right">';
-					resultHtml += '<input type="text" class="form-control numeric" id="sdiscount_percent_1" name="sdiscount_percent_1" style="text-align:right; padding-right: 5px;" value="0" placeholder="">';
+					resultHtml += '<input type="text" class="form-control numeric_amount" id="samount_discount_1" name="samount_discount_1" style="text-align:right; padding-right: 5px;" value="0" placeholder=""><span style="font-size:11px;">Amount</span>';
 					resultHtml += '</td>';
 					resultHtml += '<td></td>';
 					resultHtml += '</tr>';
-					resultHtml += '<tr>';
+					/*resultHtml += '<tr>';
 					resultHtml += '<td colspan="7" style="text-align:right">{{ __('Discount Amount') }}:</td>';
 					resultHtml += '<td style="text-align:right"></td>';
 					resultHtml += '<td style="text-align:right">';
 					resultHtml += '<input type="text" class="form-control numeric_amount" id="samount_discount_1" name="samount_discount_1" style="text-align:right; padding-right: 5px;" value="0" placeholder="">';
 					resultHtml += '</td>';
 					resultHtml += '<td></td>';
-					resultHtml += '</tr>';
+					resultHtml += '</tr>';*/
 
                     resultHtml += '<tr>';
 					resultHtml += '<td colspan="7" style="text-align:right">Description:</td>';
-					resultHtml += '<td style="text-align:right"></td>';
-					resultHtml += '<td style="text-align:right">';
+					resultHtml += '<td colspan="2" style="text-align:right">';
 					resultHtml += '<textarea type="text" class="form-control" id="lesson_discount_description" name="lesson_discount_description" placeholder="Description"></textarea>';
 					resultHtml += '</td>';
 					resultHtml += '<td></td>';
@@ -1976,25 +1975,24 @@ $('#save_btn').click(function (e) {
 
 					resultHtml += '<tr>';
 					resultHtml += '<td colspan="7" style="text-align:right">{{ __('Discount(%) on Events') }}:</td>';
-					resultHtml += '<td style="text-align:right"></td>';
+					resultHtml += '<td style="text-align:right"><input type="text" class="form-control numeric2" id="sdiscount_percent_2" name="sdiscount_percent_2" style="text-align:right; padding-right: 5px;" value="0" placeholder=""><span style="font-size:11px;">Percentage</span></td>';
 					resultHtml += '<td style="text-align:right">';
-					resultHtml += '<input type="text" class="form-control numeric2" id="sdiscount_percent_2" name="sdiscount_percent_2" style="text-align:right; padding-right: 5px;" value="0" placeholder="">';
+					resultHtml += '<input type="text" class="form-control numeric_amount2" id="samount_discount_2" name="samount_discount_2" style="text-align:right; padding-right: 5px;" value="0" placeholder=""><span style="font-size:11px;">Amount</span>';
 					resultHtml += '</td>';
 					resultHtml += '<td></td>';
 					resultHtml += '</tr>';
-					resultHtml += '<tr>';
+					/*resultHtml += '<tr>';
 					resultHtml += '<td colspan="7" style="text-align:right">{{ __('Discount Amount') }}:</td>';
 					resultHtml += '<td style="text-align:right"></td>';
 					resultHtml += '<td style="text-align:right">';
 					resultHtml += '<input type="text" class="form-control numeric_amount2" id="samount_discount_2" name="samount_discount_2" style="text-align:right; padding-right: 5px;" value="0" placeholder="">';
 					resultHtml += '</td>';
 					resultHtml += '<td></td>';
-					resultHtml += '</tr>';
+					resultHtml += '</tr>';*/
 
                     resultHtml += '<tr>';
 					resultHtml += '<td colspan="7" style="text-align:right">Description:</td>';
-					resultHtml += '<td style="text-align:right"></td>';
-					resultHtml += '<td style="text-align:right">';
+					resultHtml += '<td colspan="2" style="text-align:right">';
 					resultHtml += '<textarea type="text" class="form-control" id="lesson_event_description" name="lesson_event_description" placeholder="Description"></textarea>';
 					resultHtml += '</td>';
 					resultHtml += '<td></td>';
@@ -2051,24 +2049,24 @@ $('#save_btn').click(function (e) {
 				// display grand total
 				resultHtml += '<tr><td colspan="6">';
                     if($(window).width() < 768){
-                        resultHtml += '<td colspan="2" style="text-align:right; font-weight: bold;"><br>' + sub_total_caption + ': ';
+                        resultHtml += '<td colspan="2" style="text-align:right; font-weight: bold;"><br><br>' + sub_total_caption + ': ';
                     }
                     else {
-                        resultHtml += '<td colspan="2" style="text-align:right; font-weight: bold;"><br>' + sub_total_caption + ':</td>';
+                        resultHtml += '<td colspan="2" style="text-align:right; font-weight: bold;"><br><br>' + sub_total_caption + ':</td>';
                     }
 
 				if (no_of_teachers == 1){
 						resultHtml += '<td style="text-align:right"></td>';
 				}else {
 					if (!isTeacher) {
-						resultHtml += '<td style="text-align:right; font-weight: bold;"><br>' + total_buy.toFixed(2) + '</td>';
+						resultHtml += '<td style="text-align:right; font-weight: bold;"><br><br>' + total_buy.toFixed(2) + '</td>';
 					}
 				}
 
                 if($(window).width() < 768){
 			    	resultHtml += ''+currencyTotal+' <span style="font-weight: bold;" id="stotal_amount_with_discount">' + (subTotalLessons + subTotalEvents).toFixed(2) + '</span><br><br></td>';
                 } else {
-                    resultHtml += '<td style="text-align:right"><br>'+currencyTotal+' <span style="font-weight: bold;" id="stotal_amount_with_discount">' + (subTotalLessons + subTotalEvents).toFixed(2) + '</span></td>';
+                    resultHtml += '<td style="text-align:right"><br><br>'+currencyTotal+' <span style="font-weight: bold;" id="stotal_amount_with_discount">' + (subTotalLessons + subTotalEvents).toFixed(2) + '</span></td>';
                 }
 
 				resultHtml += '<td style="text-align:right"></td>';
@@ -2091,14 +2089,14 @@ $('#save_btn').click(function (e) {
 
 				RegisterTaxData.forEach(function(tax) {
                     if($(window).width() < 768){
-						resultHtml += '<tr style="background-color:#EEE;">' +
+						resultHtml += '<tr>' +
 					'<td><input id="checkbox-'+tax.id+'" class="taxe_class" type="checkbox" data-amount="' + (sub_total_lesson * parseFloat(tax.tax_percentage) / 100).toFixed(2) + '" data-percentage="' + tax.tax_percentage + '" data-id="' + tax.id + '" checked> ' +
 				'tax ' + tax.tax_name + ' (' + tax.tax_percentage + '%)' +
 					' => <b>+<span id="cap_tax_' + tax.id + '">' + (sub_total_lesson * parseFloat(tax.tax_percentage) / 100).toFixed(2) + '</span></b><br></td>' +
 					'<td></td>' +
 					'</tr>';
                         } else {
-                            resultHtml += '<tr style="background-color:#EEE;">' +
+                            resultHtml += '<tr>' +
 					'<td><input id="checkbox-'+tax.id+'" class="taxe_class" type="checkbox" data-amount="' + (sub_total_lesson * parseFloat(tax.tax_percentage) / 100).toFixed(2) + '" data-percentage="' + tax.tax_percentage + '" data-id="' + tax.id + '" checked></td>' +
 					'<td colspan="7" style="text-align:right">tax ' + tax.tax_name + ' (' + tax.tax_percentage + '%)</td>' +
 					'<td colspan="1" style="text-align:right"><b>+<span id="cap_tax_' + tax.id + '">' + (sub_total_lesson * parseFloat(tax.tax_percentage) / 100).toFixed(2) + '</span></b></td>' +
@@ -2281,13 +2279,13 @@ $('#save_btn').click(function (e) {
 
 
 					if(subTotalEventsExtra > 0) {
-					resultHtml += '<tr style="background-color:#EEE;"><td colspan="8" style="text-align:right;">Total Extra Charges</td><td colspan="1" style="text-align:right;">'+currencyTotal+' <b><span id="extras" data-amount="'+subTotalEventsExtra.toFixed(2)+'">'+subTotalEventsExtra.toFixed(2)+'</span></b></td><td></td></tr>';
+					resultHtml += '<tr><td colspan="8" style="text-align:right;">Total Extra Charges</td><td colspan="1" style="text-align:right;">'+currencyTotal+' <b><span id="extras" data-amount="'+subTotalEventsExtra.toFixed(2)+'">'+subTotalEventsExtra.toFixed(2)+'</span></b></td><td></td></tr>';
 					} else { resultHtml += '<span id="extras" style="opacity:0;" data-amount="0">0</span>'; }
 
-					resultHtml += '<tr><td colspan="10"><br></td></tr>';
+					//resultHtml += '<tr><td colspan="10"><br></td></tr>';
 
 				// display grand total
-				resultHtml += '<tr><td style="font-weight: bold;" colspan="6">';
+				resultHtml += '<tr style="background-color:#EEE;"><td style="font-weight: bold;" colspan="6">';
 
                 if($(window).width() < 768){
 				    resultHtml += '<td style="text-align:right; font-weight: bold;" colspan="2" class="pt-3"><b>TOTAL:</b> ';
