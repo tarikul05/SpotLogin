@@ -77,10 +77,12 @@ public function index(Request $request, $schoolId = null)
             $parentMembers = [];
             foreach ($familyMembers as $member) {
                 $student2 = Student::where('id', $member->student_id)->first();
-                $parentMembers[] = [
-                    'id' => $student2->id,
-                    'firstname' => $student2->firstname . ' ' . $student2->lastname,
-                ];
+                if(!empty($student2)) {
+                    $parentMembers[] = [
+                        'id' => $student2->id,
+                        'firstname' => $student2->firstname . ' ' . $student2->lastname,
+                    ];
+                }
             }
             $family->students = $parentMembers;
 
