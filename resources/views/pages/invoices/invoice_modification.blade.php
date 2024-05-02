@@ -175,6 +175,7 @@
 
                                                 <p style="display: none;" id="ssubtotal_amount_with_discount_lesson">{{ number_format($sub_total_lesson,'2') }}</p>
 
+                                                @if($invoice->discount_percent_1 > 0)
                                                 <tr>
                                                     @if ($invoice->invoice_type == 1)
                                                     <td colspan="2" style="text-align:right">Discount(%) on Lessons:<br>
@@ -200,6 +201,7 @@
                                                     </td>
                                                     <td></td>
                                                 </tr>
+                                                @endif
 
                                                 <!--<tr style="background-color: #EEE;">
                                                     @if ($invoice->invoice_type == 1)
@@ -258,7 +260,7 @@
                                                     <td style="text-align:right">+{{ number_format(($invoice->extra_expenses))}}</td>
                                                 </tr>
 
-                                                @if($invoice->discount_percent_2 > 0)@endif
+                                                @if($invoice->discount_percent_2 > 0)
                                                 <tr>
                                                 <td colspan="2" style="text-align:right">Discount(%) on Event
                                                     <br><span style="font-size:11px;">{{$invoice->event_discount_description ? $invoice->event_discount_description : ''}}</span></td>
@@ -270,6 +272,7 @@
                                                     @endif
                                                     <td></td>
                                                 </tr>
+                                                @endif
                                                 <!--<tr>
                                                     <td colspan="2" style="text-align:right">Discount Amount:</td>
                                                         <td style="text-align:right"></td>
