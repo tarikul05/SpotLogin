@@ -627,6 +627,7 @@
                 </tfoot>
             </table>
         </div>
+        <?php /*
         <div class="course-duration">
             <?php
                 $hours = floor($total_min / 60);
@@ -636,6 +637,7 @@
                 <p>{{ __('invoice_time') }} {{ str_pad($hours, 2 ,'0', STR_PAD_LEFT) }} {{ __('invoice_duration_hours') }} {{ $minutes }} {{ __('invoice_duration_minutes') }}.</p>
             <?php } ?>
         </div>
+         */ ?>
     </main>
     <footer>
         <div class="title-top">{{ __('Payment Preference') }}</div>
