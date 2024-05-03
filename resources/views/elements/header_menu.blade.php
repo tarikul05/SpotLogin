@@ -353,6 +353,14 @@
     </nav>
 </div>
 
+@if ($message = Session::get('maintenance'))
+
+<div style="background-color: #eed285; text-align: center; padding: 10px; border-radius: 0px; bottom:0px; width: 100%; position:fixed; z-index:9999;">
+    <strong>{{ $message }}</strong>
+</div>
+
+@endif
+
 <script>
     $(document).ready(function(){
         $('.custom-dropdown-toggle').on('mouseenter', function() {

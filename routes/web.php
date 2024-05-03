@@ -86,7 +86,9 @@ Route::get('/faqs-tutos/show/{faq}', [App\Http\Controllers\FaqController::class,
 Route::get('/admin/subscriptions', [App\Http\Controllers\SubscriptionController::class, 'getSubscription'])->name('subscriptions.getSubscription')->middleware('permission:superadmin'); //for users
 Route::get('/admin/revenues', [App\Http\Controllers\SubscriptionController::class, 'getActiveSubscriptions'])->name('subscriptions.getActiveSubscriptions')->middleware('permission:superadmin'); //for users
 
-
+//Maintenance
+Route::get('/admin/setting', [App\Http\Controllers\AdminController::class, 'setting'])->name('admin.setting');
+Route::post('/admin/setting', [App\Http\Controllers\AdminController::class, 'update'])->name('admin.maintenance.update');
 
 
 //for admins
@@ -297,6 +299,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/add-event-location', 'EventLocationController@addLocation')->name('admin_event_location.create');
     Route::get('/{school}/parameters/level', 'EventLevelController@index')->name('admin_event_level.index');
     Route::post('/add-event-level', 'EventLevelController@addLevel')->name('admin_event_level.create');
+  
 
     // Teachers
     Route::get('/{school}/teachers', [App\Http\Controllers\TeachersController::class, 'index'])->name('adminTeachers');

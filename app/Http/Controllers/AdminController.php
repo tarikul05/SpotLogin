@@ -9,6 +9,8 @@ use App\Models\User;
 use App\Models\ContactForm;
 use App\Models\Event;
 use App\Models\School;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class AdminController extends Controller
 {
@@ -86,5 +88,38 @@ class AdminController extends Controller
         echo $e->getMessage(); exit;
     }
 }
+
+    public function setting(Request $request)
+    {
+        $users = User::all();
+
+        $maintenance = DB::table('maintenance')->first();
+
+        return response()->view('pages.admin.setting', compact('users','maintenance'));
+
+    }
+
+    public function update(Request $request)
+    {
+        $request->validate([
+            'message' => 'required|string',
+            'start_date' => 'required|date',
+            'active' => 'required|boolean',
+        ]);
+
+        DB::table('maintenance')->update([
+            'message' => $request->input('message'),
+            'start_date' => $request->input('start_date'),
+            'active' => $request->input('active'),
+        ]);
+
+        if($request->input('active') == true){
+            $request->session()->flash('maintenance', 'Maintenance activée le '. Carbon::now()->format('d/m/Y à H:i') . ' ' . date_default_timezone_get() );
+        } else {
+            $request->session()->flash('maintenance', 'Maintenance terminée le '. Carbon::now()->format('d/m/Y à H:i') . ' ' . date_default_timezone_get() );
+        }
+
+        return redirect()->back()->with('success', 'Les paramètres de maintenance ont été mis à jour avec succès.');
+    }
 
 }

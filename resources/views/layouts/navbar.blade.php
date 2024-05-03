@@ -97,6 +97,9 @@
           <li class="nav-item @if(request()->is('admin/roles')) active @endif">
             <a class="nav-link" href="/admin/roles">Roles</a>
           </li>
+          <li class="nav-item @if(request()->is('admin/setting')) active @endif">
+            <a class="nav-link" href="/admin/setting">Maintenance</a>
+          </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">
           <!--<input class="form-control mr-sm-2" type="text" placeholder="Search on app" aria-label="Search">
@@ -110,6 +113,12 @@
         @include('elements/flash-message')
         @yield('content')
     </main>
+
+    @if ($message = Session::get('maintenance'))
+      <div style="background-color: #eed285; text-align: center; padding: 10px; border-radius: 0px; bottom:0px; width: 100%; position:fixed; z-index:9999;">
+          <strong>{{ $message }}</strong>
+      </div>
+    @endif
 
     @section('footer_js')
     @show
