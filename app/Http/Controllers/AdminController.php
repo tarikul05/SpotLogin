@@ -95,6 +95,13 @@ class AdminController extends Controller
 
         $maintenance = DB::table('maintenance')->first();
 
+        if($maintenance == null){
+            $maintenance = new \stdClass();
+            $maintenance->message = '';
+            $maintenance->start_date = '';
+            $maintenance->active = false;
+        }
+
         return response()->view('pages.admin.setting', compact('users','maintenance'));
 
     }
