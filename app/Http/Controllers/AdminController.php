@@ -114,10 +114,12 @@ class AdminController extends Controller
             'active' => 'required|boolean',
         ]);
 
-        DB::table('maintenance')->update([
+        $maintenance = DB::table('maintenance')->updateOrInsert([], [
             'message' => $request->input('message'),
             'start_date' => $request->input('start_date'),
             'active' => $request->input('active'),
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
         ]);
 
         if($request->input('active') == true){
