@@ -1730,8 +1730,16 @@ class InvoiceController extends Controller
             if (!empty($school->timezone)) {
                 $timeZone = $school->timezone;
             }
-            $dataParam['p_date_invoice'] = $this->formatDateTimeZone($dataParam['p_date_invoice'], 'long', $timeZone,'UTC',);
 
+            $dateTime = \DateTime::createFromFormat('Y-m-d H:i:s', $dataParam['p_date_invoice'], new \DateTimeZone($timeZone));
+            if ($dateTime !== false) {
+                $carbonTime = Carbon::now($timeZone);
+                $dateTime->setTime($carbonTime->format('H'), $carbonTime->format('i'), $carbonTime->format('s'));
+                $dataParam['p_date_invoice'] = $this->formatDateTimeZone($dateTime->format('Y-m-d H:i:s'), 'long', $timeZone, $timeZone);
+            } else {
+                // Gérer le cas où la chaîne de date n'est pas dans le bon format
+                $dataParam['p_date_invoice'] = $this->formatDateTimeZone(Carbon::now($timeZone)->format('Y-m-d H:i:s'), 'long', $timeZone, $timeZone);
+            }
 
             $data = [
                 'school_id' => $schoolId,
@@ -2092,7 +2100,7 @@ class InvoiceController extends Controller
                 return $pdf->stream( $invoice_name );
             }
         }catch( Exception $e){
-            // throw error
+            
         }
     }
 
