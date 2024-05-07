@@ -112,21 +112,18 @@
 
 @endif
 
+</div>
+
 
 @if ($errors->any())
     @foreach ($errors->all() as $error)
-    <div class="alert alert-dismissible alert-danger alert-block" style="position:fixed; top:0; z-index:99999; font-size:18px; text-align:center; width:100%; height:66px; border-radius: 0;">
-
-
-        {{ $error }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-
-
+    <div style="background-color: #eed285; text-align: center; padding: 10px; border-radius: 0px; padding-top:15px; width: 100%; z-index:9999; border-radius:0 0 15px 15px;">
+        <strong>{{ $error }}</strong>
     </div>
     @endforeach
 @endif
 
-</div>
+
 
 <script>
     setTimeout(function() {

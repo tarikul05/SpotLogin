@@ -299,10 +299,11 @@
                             foreach($invoice_item as $key => $item){
                                 $total_min += $item->unit;
                         ?>
-                        @php
-                        $item->item_date = Helper::formatDateTimeZone($item->item_date, 'long','UTC',$school->timezone);
-                        @endphp
-                        <tr>
+                            @php
+                            $helper = new App\Helpers\Helper();
+                            $item->item_date = $helper->formatDateTimeZone($item->item_date, 'long', 'UTC', $school->timezone);
+                            @endphp
+                            <tr>
                             <td>{{ !empty($item->item_date) ? Carbon\Carbon::parse($item->item_date)->format('d.m.Y') : ''; }}</td>
                             <td>
                             <?php /*echo htmlspecialchars_decode(!empty($item->caption) ? $item->caption : '');*/ ?>

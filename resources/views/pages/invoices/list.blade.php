@@ -261,11 +261,11 @@
                                 @endphp
 
                                 @if($existingEntry)
-                                <span style="font-size:11px;">{{ __('sent') }} <span class="text-success"> {{ \Carbon\Carbon::parse($existingEntry->created_at)->timezone($school->timezone)->format('d M, Y  H:i') }}</span></span><br>
-                                <button id="approved_btn" target="" href="" class="btn btn-link" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><i class="fa-solid fa-envelope-open-text"></i> <span class="d-none d-sm-inline" style="font-size:12px;">{{__('Re-Send by email')}}</span></button>
+                                <i class="fa-solid fa-envelope-open-text"></i> <span style="font-size:11px;"><!--{{ __('sent') }}--><span class="text-success" style="font-size:10px;"> {{ \Carbon\Carbon::parse($existingEntry->created_at)->timezone($school->timezone)->format('d M, Y  H:i') }}</span></span><br>
+                                <button id="approved_btn" target="" href="" class="btn btn-link" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><span class="d-none d-sm-inline" style="font-size:10px;">{{__('Re-Send by email')}}</span></button>
                                 @else
                                 <span style="font-size:11px;">{{ __('Invoice not sent') }}</span>
-                                <button id="approved_btn" target="" href="" class="btn btn-link" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><i class="fa-solid fa-envelope-open-text"></i> <span class="d-none d-sm-inline" style="font-size:12px;">{{__('Send by email')}}</span></button>
+                                <button id="approved_btn" target="" href="" class="btn btn-link" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><span class="d-none d-sm-inline" style="font-size:10px;">{{__('Send by email')}}</span></button>
                                 @endif
                             </td>
                             @else
@@ -416,7 +416,7 @@
         info: false, // Disable information display
         order: [[0, 'desc']], // Set default sorting column
         columnDefs: [
-        { targets: [0,5], orderable: true }, // Autoriser le tri pour les colonnes 0 et 4
+        { targets: [0,6], orderable: true }, // Autoriser le tri pour les colonnes 0 et 4
         { targets: '_all', orderable: false } // Désactiver le tri pour toutes les autres colonnes
     ]
     });

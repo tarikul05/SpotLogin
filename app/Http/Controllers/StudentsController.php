@@ -1365,9 +1365,9 @@ public function index(Request $request, $schoolId = null)
                     'mother_phone' => $alldata['mother_phone'],
                     'mother_email' => $alldata['mother_email'],
                     'mother_notify' => isset($alldata['mother_notify']) && !empty($alldata['mother_notify']) ? 1 : 0 ,
-                    'mobile' => $alldata['mobile'],
+                    /*'mobile' => $alldata['mobile'],*/
                     'email' => $alldata['email'],
-                    'email2' => $alldata['email2'],
+                    /*'email2' => $alldata['email2'],*/
                     'student_notify' => isset($alldata['student_notify']) && !empty($alldata['student_notify']) ? 1 : 0 ,
             ];
 
@@ -1447,6 +1447,7 @@ public function index(Request $request, $schoolId = null)
             // dd($e);
             DB::rollBack();
             //return error message
+            dd($e);
             return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
         }
     }

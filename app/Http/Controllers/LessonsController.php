@@ -713,7 +713,8 @@ class LessonsController extends Controller
                         // Si redirect_url n'est pas vide, effectuez une redirection vers cette URL
                         return redirect($redirectUrl);
                     } else {
-                        return Redirect::to($schoolId.'/view-lesson/'.$lessonlId);
+                        return redirect()->route('agenda',['school'=> $schoolId])->with('success', __('Successfully Updated !'));
+                        //return Redirect::to($schoolId.'/view-lesson/'.$lessonlId);
                     }
 
 
