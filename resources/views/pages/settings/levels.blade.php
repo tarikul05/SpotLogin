@@ -1,5 +1,7 @@
 <div class="row justify-content-center pt-3">
     <div class="col-md-12">
+        <form method="POST" action="{{ route('event_level.create') }}">
+            @csrf
         <div class="card">
             <div class="card-header">{{__('Levels')}}</div>
             <div class="card-body">
@@ -9,16 +11,19 @@
                     </div>
                 @endif-->
 
-                <form method="POST" action="{{ route('event_level.create') }}">
-                    @csrf
+                
                     @php $countLevel= isset($eventLastLevelId->id) ? ($eventLastLevelId->id) : 1; @endphp
 
                     <table class="table table-bordered table-hover">
+                        @if($levels->count() > 0)
                         <thead>
                             <th width="30%">{{__('Name')}}</th>
                             <th></th>
                             <th width="40" class="text-center">{{__('Action')}}</th>
                         </thead>
+                        @else
+                        <i class="fa-solid fa-circle-info"></i> Please create your first level<br>
+                        @endif
                         <tbody>
                             @foreach($levels as $lvl)
                                 <tr class="add_more_level_row">
@@ -54,10 +59,15 @@
                         </button>
                       </div>
 
-                    <br>
-                    <button type="submit" class="btn btn-success">{{ __('Save levels') }}</button>
-                </form>
+                   
             </div>
         </div>
+        <br>
+        @if($levels->count() > 0)
+        <button type="submit" class="btn btn-primary" id="btnSaveLevels">{{ __('Save Levels') }}</button>
+        @else
+        <button type="submit" class="btn btn-primary" id="btnSaveLevels" style="display:none;">{{ __('Save Levels') }}</button>
+        @endif
+    </form>
     </div>
 </div>

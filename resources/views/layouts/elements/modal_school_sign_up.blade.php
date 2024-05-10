@@ -28,14 +28,8 @@
                         </select>
                     </div>
                     <div class="form-group custom-selection">
-                        <select class="selectpicker selectDiscipline" id="disciplineSelect" name="discipline" onchange="changeInputVisibility()">
-                            <option value="">{{ __('Choose an activity') }}</option>
-                            <option value="ice-skating">Ice-skating</option>
-                            <option value="hockey">Hockey</option>
-                            <option value="soccer">Soccer</option>
-                            <option value="other-discipline">{{ __('Other') }} ?</option>
-                        </select>
-                        <input type="text" class="form-control inputDiscipline" placeholder="Enter a discipline" name="discipline2" id="disciplineInput" style="display: none;">
+                        <input type="hidden" class="form-control inputDiscipline" value="other-discipline" name="discipline" id="discipline">
+                        <input type="text" class="form-control inputDiscipline" placeholder="Enter a discipline" name="discipline2" id="disciplineInput">
                     </div>
 
 

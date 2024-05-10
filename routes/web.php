@@ -100,12 +100,7 @@ Route::post('/admin/faqs/create', [App\Http\Controllers\FaqController::class, 'c
 Route::put('/admin/faqs/update/{faq}', [App\Http\Controllers\FaqController::class, 'update'])->name('faqs.update')->middleware('permission:superadmin');
 Route::delete('/admin/faqs/remove/{faq}', [App\Http\Controllers\FaqController::class, 'destroy'])->name('faqs.remove')->middleware('permission:superadmin');
 
-Route::get('contact-form', [ContactFormController::class, 'showForm'])->name('contact.form');
-Route::get('contact-staff', [ContactFormController::class, 'showFormStaff'])->name('contact.staff');
-Route::post('contact-form', [ContactFormController::class, 'submitForm'])->name('contact.form.submit');
-Route::post('contact-answer', [ContactFormController::class, 'submitAnswer'])->name('contact.form.answer');
 
-Route::get('contact-answer/{id}', [ContactFormController::class, 'showAnswerForm'])->name('contact.answer');
 
 
 //email-send school AJAX
@@ -200,6 +195,12 @@ Route::get('setlang/{locale}', function ($locale) {
 
 // auth
 Route::group(['middleware' => ['auth']], function () {
+
+  Route::get('contact-form', [ContactFormController::class, 'showForm'])->name('contact.form');
+  Route::get('contact-staff', [ContactFormController::class, 'showFormStaff'])->name('contact.staff');
+  Route::post('contact-form', [ContactFormController::class, 'submitForm'])->name('contact.form.submit');
+  Route::post('contact-answer', [ContactFormController::class, 'submitAnswer'])->name('contact.form.answer');
+  Route::get('contact-answer/{id}', [ContactFormController::class, 'showAnswerForm'])->name('contact.answer');
 
   Route::get('/dashboard', [App\Http\Controllers\UserController::class, 'welcome'])->name('Home');
   Route::get('/logout', [App\Http\Controllers\AuthController::class, 'logout']);

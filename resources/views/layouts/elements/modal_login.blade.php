@@ -11,6 +11,11 @@
         </a>
 
         <p class="mb-0">{{ __('Welcome to SportLogin!') }}</p>
+        @if(session('error'))
+            <div class="mt-1 alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
         <p class="mb-0 text-danger" id="error_msg"></p>
         <div class="text-center" id="otp_div" style="display: none;">
           <p>{{ __('Enter the verification code you receive by email') }}</p>

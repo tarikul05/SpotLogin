@@ -21,7 +21,7 @@ class RouteServiceProvider extends ServiceProvider
     public const HOME = '/agenda';
     public const SUPERADMIN = '/admin/dashboard';
     public const ROOT = '/';
-    public const LOGIN = '/';
+    public const LOGIN = '/#login';
 
     /**
      * The controller namespace for the application.

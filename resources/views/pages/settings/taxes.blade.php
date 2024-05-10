@@ -1,5 +1,7 @@
 <div class="row justify-content-center pt-3">
     <div class="col-md-12">
+        <form method="POST" action="{{ route('selfUpdateTaxeAction') }}">
+            @csrf
         <div class="card">
             <div class="card-header">{{__('Taxes')}}</div>
             <div class="card-body">
@@ -9,15 +11,18 @@
                     </div>
                 @endif-->
 
-                <form method="POST" action="{{ route('selfUpdateTaxeAction') }}">
-                    @csrf
+                
                     <table class="table table-bordered table-hover">
+                        @if($InvoicesTaxData->count() > 0)
                         <thead>
                             <th width="30%">{{__('Name')}}</th>
                             <th>{{__('Purcentage')}}</th>
                             <th>{{__('Number')}}</th>
                             <th width="40" class="text-center">{{__('Action')}}</th>
                         </thead>
+                        @else
+                        <i class="fa-solid fa-circle-info"></i> Please create your first taxe<br>
+                        @endif
                         <tbody>
                             @foreach($InvoicesTaxData as $tax)
                                 <tr class="add_more_tax_row">
@@ -58,10 +63,15 @@
                         </button>
                       </div>
 
-                    <br>
-                    <button type="submit" class="btn btn-success">{{ __('Save taxes') }}</button>
-                </form>
+                   
             </div>
         </div>
+        <br>
+        @if($InvoicesTaxData->count() > 0)
+        <button type="submit" class="btn btn-primary" id="btnSaveTaxes">{{ __('Save Taxes') }}</button>
+        @else
+        <button type="submit" class="btn btn-primary" id="btnSaveTaxes" style="display:none;">{{ __('Save Taxes') }}</button>
+        @endif
+    </form>
     </div>
 </div>

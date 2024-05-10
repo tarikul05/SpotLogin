@@ -1,5 +1,6 @@
 <div class="row justify-content-center pt-3">
     <div class="col-md-12">
+        <form method="POST" action="{{ route('event_location.create') }}">
         <div class="card">
             <div class="card-header">{{__('Locations')}}</div>
             <div class="card-body">
@@ -9,16 +10,20 @@
                     </div>
                 @endif-->
 
-                <form method="POST" action="{{ route('event_location.create') }}">
+              
                     @csrf
                     @php $countLocation= isset($eventLastLocaId->id) ? ($eventLastLocaId->id) : 1; @endphp
 
                     <table class="table table-bordered table-hover">
+                        @if($locations->count() > 0)
                         <thead>
                             <th width="30%">{{__('Name')}}</th>
                             <th></th>
                             <th width="40" class="text-center">{{__('Action')}}</th>
                         </thead>
+                        @else
+                        <i class="fa-solid fa-circle-info"></i> Please create your first location<br>
+                        @endif
                         <tbody>
                             @foreach($locations as $loca)
                                 <tr class="add_more_location_row">
@@ -37,7 +42,6 @@
                             @endforeach
                         </tbody>
                     </table>
-
                         <table class="table table-bordered" id="add_more_location_div" style="display: none;">
                             <thead>
                                 <th width="30%">{{__('Name')}}</th>
@@ -46,18 +50,19 @@
                             </thead>
                             <tbody>
                         </table>
-
-
                     <div class="d-flex justify-content-end">
                         <button id="add_more_location_btn" data-last_location_id="{{$countLocation}}" type="button" class="btn btn-outline-primary">
                           <i class="fa fa-plus" aria-hidden="true"></i> {{ __('Add location') }}
                         </button>
-                      </div>
-
-                    <br>
-                    <button type="submit" class="btn btn-success">{{ __('Save Locations') }}</button>
-                </form>
+                    </div>
             </div>
         </div>
+        <br>
+        @if($locations->count() > 0)
+        <button type="submit" class="btn btn-primary" id="btnSaveLocations">{{ __('Save Locations') }}</button>
+        @else
+        <button type="submit" class="btn btn-primary" id="btnSaveLocations" style="display:none;">{{ __('Save Locations') }}</button>
+        @endif
+    </form>
     </div>
 </div>
