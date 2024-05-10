@@ -175,7 +175,7 @@ $(document).ready(function(){
 
 
     $(document).on('click','#add_more_location_btn',function(){
-        console.log('ou');
+        $('#btnSaveLocations').show();
         $('#add_more_location_div').fadeIn();
 		var lst_id = $(this).attr('data-last_location_id');
 		var incre = (parseInt(lst_id)+1);
@@ -264,7 +264,7 @@ $(document).ready(function(){
 
 
     $(document).on('click','#add_more_level_btn',function(){
-        console.log('ou');
+        $('#btnSaveLevels').show();
         $('#add_more_level_div').fadeIn();
 		var lst_id = $(this).attr('data-last_level_id');
 		var incre = (parseInt(lst_id)+1);
@@ -349,7 +349,7 @@ $(document).ready(function(){
 
 
     $(document).on('click','#add_more_tax_btn',function(){
-        console.log('ou');
+        $('#btnSaveTaxes').show();
         $('#add_more_tax_div').fadeIn();
 		var lst_id = $(this).attr('data-last_tax_id');
 		var incre = (parseInt(lst_id)+1);

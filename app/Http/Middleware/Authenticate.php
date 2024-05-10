@@ -16,6 +16,7 @@ class Authenticate extends Middleware
     protected function redirectTo($request)
     {
         if(!\Auth::user()){
+            session()->flash('error', 'You must subscribe to access this page.');
             return RouteServiceProvider::LOGIN;
         } 
     }
