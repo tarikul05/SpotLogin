@@ -2044,11 +2044,11 @@ $('.close-icon').on('click', function() {
 
 		//console.log("current view for copy="+cal_view_mode_for_copy.name);
         if(cal_view_mode_for_copy.name === "agendaWeek") {
-		    successModalCall('Copied with success', 'Schedule of current week view is copied ! You can past it in other week.');
+		    successModalCall('Copied with success', 'The schedule of the current view has been  copied  and ready to paste.');
             showMessage('Schedule of current week view is copied!', 'success')
         }
         if(cal_view_mode_for_copy.name === "agendaDay") {
-		    successModalCall('Copied with success', 'Schedule of current day view is copied ! You can past it in other day.');
+		    successModalCall('Copied with success', 'The schedule of the current view has been  copied  and ready to paste.');
             showMessage('Schedule of current day view is copied!', 'success')
         }
         if(cal_view_mode_for_copy.name === "month") {
@@ -4569,7 +4569,7 @@ $('#add_lesson').on('submit', function(e) {
                     Swal.fire({
                     icon: "success",
                     title: agendaSelect === 1 ? "New Lesson Added" : "New Event Added",
-                    html: "Please wait few seconds...",
+                    html: "One moment...",
                     timer: 2000,
                     timerProgressBar: true,
                     didOpen: () => {

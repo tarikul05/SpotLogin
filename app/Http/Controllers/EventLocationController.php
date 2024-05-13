@@ -86,7 +86,7 @@ class EventLocationController extends Controller
                     'message' => __('Successfully Registered')
                 );
 
-                return redirect()->route('calendar.settings')->with('success', 'Paramètres des locations enregistrés avec succès.');
+                return redirect()->route('calendar.settings')->with('success', __('Successfully Registered'));
 
             }
         }catch (Exception $e) {
