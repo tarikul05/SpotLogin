@@ -81,8 +81,7 @@ class EventLevelController extends Controller
                     'message' => __('Successfully Registered')
                 );
 
-                return redirect()->route('calendar.settings')->with('success', 'Paramètres des levels enregistrés avec succès.');
-
+                return redirect()->route('calendar.settings')->with('success', __('Successfully Registered'));
             }
         }catch (Exception $e) {
             DB::rollBack();

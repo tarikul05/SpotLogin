@@ -85,7 +85,7 @@
 										@endif
 									</div>
 								</div>
-								<div class="form-group row">
+								<!--<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="gender_id" id="gender_label_id">{{__('Gender') }} : *</label>
 									<div class="col-sm-7">
 										<div class="selectdiv">
@@ -96,7 +96,8 @@
 											</select>
 										</div>
 									</div>
-								</div>
+								</div>-->
+								<input type="hidden" name="gender_id" id="gender_id" value="{{ $key }}">
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="billing_method" id="visibility_label_id">{{__('Hourly rate applied') }} :</label>
 									<div class="col-sm-7">

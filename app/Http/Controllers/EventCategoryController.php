@@ -126,9 +126,9 @@ class EventCategoryController extends Controller
                 );
 
                 if ($newCategoryAdded) {
-                    return redirect()->route('calendar.settings')->with('success', 'Paramètres des catégories enregistrés avec succès.')->with('success_new_cat', 'true');
+                    return redirect()->route('calendar.settings')->with('success', __('Successfully Registered'))->with('success_new_cat', 'true');
                 }
-                return redirect()->route('calendar.settings')->with('success', 'Paramètres des catégories enregistrés avec succès.');
+                return redirect()->route('calendar.settings')->with('success', __('Successfully Registered'));
 
             }
         }catch (Exception $e) {
@@ -215,9 +215,9 @@ class EventCategoryController extends Controller
                 );
 
                 if ($newCategoryAdded) {
-                    return redirect()->route('calendar.teacher.settings')->with('success', 'Paramètres des catégories enregistrés avec succès.')->with('success_new_cat', 'true');
+                    return redirect()->route('calendar.teacher.settings')->with('success', __('Successfully Registered'))->with('success_new_cat', 'true');
                 }
-                return redirect()->route('calendar.teacher.settings')->with('success', 'Paramètres des catégories enregistrés avec succès.');
+                return redirect()->route('calendar.teacher.settings')->with('success', __('Successfully Registered'));
 
             }
         }catch (Exception $e) {

@@ -31,7 +31,7 @@
                                     </div>
                                     @endif
 
-                                    <div class="form-group custom-form-group">
+                                    <!--<div class="form-group custom-form-group">
                                         <label class="text-left" for="gender_id" id="gender_label_id">{{__('Gender') }}</label>
                                         <div class="input-group">
                                             <span class="input-group-addon"><i class="fa-solid fa-venus-mars"></i></span>
@@ -41,7 +41,8 @@
                                                     @endforeach
                                                 </select>
                                         </div>
-                                    </div>
+                                    </div>-->
+									<input type="hidden" name="gender_id" id="gender_id" value="1">
                                     <input type="hidden" id="billing_method" name="billing_method" value="E">
 
                                     <div class="form-group custom-form-group">
@@ -56,12 +57,12 @@
                                     </div>
 
 
-
+									<br>
                                     <div class="border mt-5 p-2">
                                         <div class="form-group" id="shas_user_account_div">
                                             <div id="shas_user_account_div111" class="text-center">
                                                 <h6 style="font-size:18px;"><small>
-                                            <input id="shas_user_account" name="is_sent_invite" type="checkbox" value="1" style="width:15px;height:15px;">
+                                            	<input id="shas_user_account" name="is_sent_invite" type="checkbox" value="1" style="width:15px;height:15px;">
                                                 <label class="text-left" for="shas_user_account" id="has_user_ac_label_id">{{__('Send account invite') }} <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('If you enter an email, the student will receive an email with instructions to connect to his student account.')}}"></i></label>
                                                 </small></h6>
                                             </div>
@@ -114,7 +115,7 @@
                                     </div>
 
 
-                                    <div class="form-group custom-form-group mt-5">
+                                    <div class="form-group custom-form-group mt-2">
                                         <label class="text-left" for="email" id="email_caption">{{__('Email') }}</label>
                                             <div class="input-group">
                                                 <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
