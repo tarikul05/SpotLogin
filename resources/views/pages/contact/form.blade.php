@@ -55,7 +55,7 @@
                     <div class="input-group">
                         <select class="form-select multiselect" id="emailTo" name="emailTo[]" multiple="multiple" required>
                             @foreach($students as $student)
-                            <option value="{{ $student->student->email }}">{{ $student->nickname }}</option>
+                            <option value="{{ $student->student->email }}">{{ $student->student->firstname . ' ' . $student->student->lastname }}</option>
                             @endforeach
                         </select>
                     </div>

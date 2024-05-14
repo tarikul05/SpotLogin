@@ -409,6 +409,7 @@
 <script type="text/javascript">
     $(document).ready( function () {
     var table = $('#example1').DataTable({
+        stateSave: true,
         dom: '<"top"f>rt<"bottom"lp><"clear">',
         ordering: true, // Disable column sorting
         searching: true, // Enable searching with the search input
