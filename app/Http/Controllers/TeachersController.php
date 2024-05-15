@@ -671,7 +671,8 @@ class TeachersController extends Controller
                 'bank_account' => isset($alldata['bank_account']) && !empty($alldata['bank_account']) ? $alldata['bank_account'] : '',
                 'bank_iban' => isset($alldata['bank_iban']) && !empty($alldata['bank_iban']) ? $alldata['bank_iban'] : '',
                 'bank_swift' => isset($alldata['bank_swift']) && !empty($alldata['bank_swift']) ? $alldata['bank_swift'] : '',
-                'etransfer_acc' => isset($alldata['etransfer_acc']) && !empty($alldata['etransfer_acc']) ? $alldata['etransfer_acc'] : ''
+                'etransfer_acc' => isset($alldata['etransfer_acc']) && !empty($alldata['etransfer_acc']) ? $alldata['etransfer_acc'] : '',
+                'payment_info_checkbox' => isset($alldata['payment_info_checkbox']) && !empty($alldata['payment_info_checkbox']) ? $alldata['payment_info_checkbox'] : '1',
             ];
             Teacher::where('id', $teacher->id)->update($teacherData);
             // $schoolTeacherData =SchoolTeacher::where(['teacher_id'=>$teacher->id, 'school_id'=>$schoolId])->first();

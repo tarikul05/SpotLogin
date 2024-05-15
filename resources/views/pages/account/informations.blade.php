@@ -190,8 +190,15 @@
                 <div class="row justify-content-center pt-4">
                     <div class="col-md-12">
                         <div class="card">
-                            <div class="card-header">{{ $isInEurope ? __('Coach Bank Information') :  __('Payment Information') }} <span class="d-block d-sm-none" style="color:red; font-size:11px;">{{ __('Optional - this information will appear on the invoice') }} </span> <span class="d-none d-sm-inline" style="padding-left: 10px; color:red; font-size:11px;">[ {{ __('Optional - this information will appear on the invoice') }} ]</span></div>
-                            <div class="card-body">
+                            <div class="card-header">
+                                @if ($isInEurope)
+                                <input type="radio" id="payment_info_checkbox" name="payment_info_checkbox" value="1" {{!empty($teacher->payment_info_checkbox) ? (old('payment_info_checkbox', $teacher->payment_info_checkbox) == 1 ? 'checked' : '') : 'checked'}}>
+                                @endif
+                                {{ $isInEurope ? __('Coach Bank Information') :  __('Payment Information') }} 
+                                <span class="d-block d-sm-none" style="color:red; font-size:11px;">{{ __('Optional - this information will appear on the invoice') }} </span> 
+                                <span class="d-none d-sm-inline" style="padding-left: 10px; color:red; font-size:11px;">[ {{ __('Optional - this information will appear on the invoice') }} ]</span>
+                            </div>
+                            <div class="card-body" id="payment_info_div">
 
 							@if ($isInEurope)
 
@@ -314,6 +321,39 @@
     </div>
 
 
+    @if ($isInEurope)
+    <div class="row justify-content-center mt-3">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <input type="radio" id="payment_info_checkbox2" name="payment_info_checkbox" value="2" {{!empty($teacher->payment_info_checkbox) ? (old('payment_info_checkbox', $teacher->payment_info_checkbox) == 2 ? 'checked' : '') : ''}}>
+                    Other payment method
+                </div>
+                <div class="card-body" style="display:none;" id="payment_info_div2">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa-solid fa-money-check-dollar"></i></span>
+                        <input class="form-control" id="bank_name2" name="bank_name" type="text"
+                        value="{{!empty($teacher->bank_name) ? old('bank_name', $teacher->bank_name) : old('bank_name')}}">
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa-solid fa-money-check-dollar"></i></span>
+                        <input class="form-control" id="bank_account2" name="bank_account" type="text"
+                        value="{{!empty($teacher->bank_account) ? old('bank_account', $teacher->bank_account) : old('bank_account')}}">
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa-solid fa-money-check-dollar"></i></span>
+                        <input class="form-control" id="bank_iban2" name="bank_iban" type="text"
+                        value="{{!empty($teacher->bank_iban) ? old('bank_iban', $teacher->bank_iban) : old('bank_iban')}}">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>  
+    @endif
+
+
     <div class="row justify-content-center pt-4">
         <div class="col-md-12">
             <div class="card">
@@ -389,3 +429,52 @@
 </div>
 </form>
 
+
+@section('footer_js')
+<script>
+var payment_info_checkbox = "{{ $teacher->payment_info_checkbox ?? '' }}";
+
+$(document).ready(function() {
+    if (payment_info_checkbox === '2') {
+        $('#payment_info_div').hide();
+        $('#payment_info_div2').show();
+    } else {
+        $('#payment_info_div').show();
+        $('#payment_info_div2').hide();
+    }
+
+    $('#payment_info_checkbox,#payment_info_checkbox2').on('change', function($event) {
+        if($event.target.value == 2) {
+            $('#payment_info_div').hide();
+            $('#payment_info_div2').show();
+        }else{
+            $('#payment_info_div').show();
+            $('#payment_info_div2').hide();
+        }
+    })
+
+    $(document).ready(function() {
+    // Fonction pour copier le contenu d'un champ vers un autre
+    function copyFieldContent(sourceField, targetField) {
+        $('#' + targetField).val($('#' + sourceField).val());
+    }
+
+    // Événement pour le champ "bank_name"
+    $('#bank_name').on('input', function() {
+        copyFieldContent('bank_name', 'bank_name2');
+    });
+
+    // Événement pour le champ "bank_account"
+    $('#bank_account').on('input', function() {
+        copyFieldContent('bank_account', 'bank_account2');
+    });
+
+    // Événement pour le champ "bank_iban"
+    $('#bank_iban').on('input', function() {
+        copyFieldContent('bank_iban', 'bank_iban2');
+    });
+});
+
+});
+</script>
+@endsection

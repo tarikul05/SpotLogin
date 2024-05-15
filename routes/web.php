@@ -414,6 +414,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/{school}/teacher/{teacher}', [App\Http\Controllers\TeachersController::class, 'changeStatus'])->name('teacherStatus');
     Route::post('/{school}/teacher_email_send/{teacher}', [App\Http\Controllers\TeachersController::class, 'teacherInvitation'])->name('teacherInvitation');
 
+    Route::get('invoices/{invoiceId}/download', [App\Http\Controllers\InvoiceController::class, 'downloadInvoicePdf'])->name('invoices.download');
 
     Route::get('/account', [App\Http\Controllers\TeachersController::class, 'self_edit'])->name('updateTeacher');
     Route::post('/update-teacher', [App\Http\Controllers\TeachersController::class, 'self_update'])->name('updateTeacherAction');

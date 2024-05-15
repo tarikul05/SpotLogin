@@ -85,7 +85,8 @@ class Teacher extends BaseModel
         'invoice_opt_activated',
         'is_active',
         'created_by',
-        'modified_by'
+        'modified_by',
+        'payment_info_checkbox',
     ];
 
   

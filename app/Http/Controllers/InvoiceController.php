@@ -370,12 +370,19 @@ class InvoiceController extends Controller
                     }
                     $items[$d->event_type][] = $d;
                 }
+
+                $payment_method = 0;
+                if(!$user->isSchoolAdmin() || $user->isTeacherSchoolAdmin()) {
+                    $invoice_teacher = Teacher::find($invoice_data->seller_id);
+                    $payment_method = $invoice_teacher->payment_info_checkbox;
+                }
+
                 $schoolId = $user->selectedSchoolId();
                 $school = School::active()->find($schoolId);
                 $invoice_items = $items;
                 $date_from = strtolower(date('F.Y', strtotime($invoice_data->date_invoice)));
                 $invoice_name = 'invoice-'.$invoice_data->id.'-'.strtolower($invoice_data->client_firstname).'.'.strtolower($invoice_data->client_lastname).'.'.$date_from.'.pdf';
-                $pdf = PDF::loadView('pages.invoices.invoice_pdf_view', ['school' => $school, 'invoice_data'=> $invoice_data,'invoice_items'=> $invoice_items, 'invoice_name' => $invoice_name, 'InvoicesTaxData' => $InvoicesTaxData, 'InvoicesExpData' => $InvoicesExpData]);
+                $pdf = PDF::loadView('pages.invoices.invoice_pdf_view', ['school' => $school, 'payment_method' => $payment_method, 'invoice_data'=> $invoice_data,'invoice_items'=> $invoice_items, 'invoice_name' => $invoice_name, 'InvoicesTaxData' => $InvoicesTaxData, 'InvoicesExpData' => $InvoicesExpData]);
                 $pdf->set_option('isHtml5ParserEnabled', true);
                 $pdf->set_option('isRemoteEnabled', true);
                 $pdf->set_option('DOMPDF_ENABLE_CSS_FLOAT', true);
@@ -411,6 +418,34 @@ class InvoiceController extends Controller
             return response()->json($result);
         }
     }
+
+    /**
+     * Télécharge le fichier PDF de la facture.
+     *
+     * @param  int  $invoiceId
+     * @return Response
+     */
+    public function downloadInvoicePdf($invoiceId)
+    {
+        $invoice = Invoice::findOrFail($invoiceId);
+
+        if (!$invoice->invoice_filename) {
+            abort(404, 'Le fichier PDF de la facture n\'existe pas.');
+        }
+
+        $filePath = public_path(str_replace(url('/'), '', $invoice->invoice_filename));
+
+        if (!file_exists($filePath)) {
+            abort(404, 'Le fichier PDF de la facture n\'existe pas.');
+        }
+
+        $fileName = last(explode('/', $invoice->invoice_filename));
+
+        return response()->download($filePath, $fileName, [
+            'Content-Type' => 'application/pdf',
+        ]);
+    }
+
 
     /**
      *  AJAX action for invoice discount
@@ -2027,6 +2062,7 @@ class InvoiceController extends Controller
     public function generateInvoicePDF(Request $request, $type = 'stream')
     {
         try{
+            $user = Auth::user();
             $reqData = $request->all();
             $type = $request->type ? $request->type : $type;
             $invoice_id = $reqData['invoice_id'];
@@ -2067,10 +2103,17 @@ class InvoiceController extends Controller
             $schoolId = $invoice_data->school_id;
             $school = School::active()->find($schoolId);
 
+            $payment_method = 0;
+            if(!$user->isSchoolAdmin() || $user->isTeacherSchoolAdmin()) {
+                $invoice_teacher = Teacher::find($invoice_data->seller_id);
+                $payment_method = $invoice_teacher->payment_info_checkbox;
+            }
+            
+
             $invoice_items = $items;
             $date_from = strtolower(date('F.Y', strtotime($invoice_data->date_invoice)));
             $invoice_name = 'invoice-'.$invoice_data->id.'-'.strtolower($invoice_data->client_firstname).'.'.strtolower($invoice_data->client_lastname).'.'.$date_from.'.pdf';
-            $pdf = PDF::loadView('pages.invoices.invoice_pdf_view', ['school' => $school, 'invoice_data'=> $invoice_data,'invoice_items'=> $invoice_items, 'invoice_name' => $invoice_name, 'InvoicesTaxData' => $InvoicesTaxData, 'InvoicesExpData' => $InvoicesExpData]);
+            $pdf = PDF::loadView('pages.invoices.invoice_pdf_view', ['school' => $school, 'payment_method' => $payment_method, 'invoice_data'=> $invoice_data,'invoice_items'=> $invoice_items, 'payment_method' => $payment_method, 'invoice_name' => $invoice_name, 'InvoicesTaxData' => $InvoicesTaxData, 'InvoicesExpData' => $InvoicesExpData]);
             $pdf->set_option('isHtml5ParserEnabled', true);
             $pdf->set_option('isRemoteEnabled', true);
             $pdf->set_option('DOMPDF_ENABLE_CSS_FLOAT', true);

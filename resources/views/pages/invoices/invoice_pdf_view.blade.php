@@ -643,6 +643,17 @@
     <footer>
         <div class="title-top">{{ __('Payment Preference') }}</div>
         <div class="payment-info">
+            @if($payment_method == 2)
+            <table class="table" style="border: 0;">
+                <tr>
+                    <td>
+                        <?php if(!empty($invoice_data->payment_bank_name) ) { echo $invoice_data->payment_bank_name; } ?><br>
+                        <?php if(!empty($invoice_data->payment_bank_account) ) { echo $invoice_data->payment_bank_account; } ?><br>
+                        <?php if(!empty($invoice_data->payment_bank_iban) ) { echo $invoice_data->payment_bank_iban; } ?>
+                    </td>
+                </tr>
+            </table>
+            @else
             <table class="table" style="border: 0;">
                 <tr>
                     <td>
@@ -660,6 +671,9 @@
                         <?php if($invoice_data->seller_country_code === "CA" || $invoice_data->seller_country_code === "US"){?>
                             <?php if(!empty($invoice_data->payment_bank_account_name)){?>
                                 <div class="txt"><!--<b>Bank Name : </b>-->{{ $invoice_data->payment_bank_account_name }}</div>
+                            <?php } ?>
+                            <?php if(!empty($invoice_data->payment_bank_name) && empty($invoice_data->payment_bank_account_name)){?>
+                                <div class="txt"><!--<b>Bank Name : </b>-->{{ $invoice_data->payment_bank_name }}</div>
                             <?php } ?>
                         <?php } ?>
                         <?php if($invoice_data->seller_country_code !== "CA" && $invoice_data->seller_country_code !== "US"){?>
@@ -723,6 +737,7 @@
                     </td>
                 </tr>
             </table>
+            @endif
         </div>
     </footer>
 </body>
