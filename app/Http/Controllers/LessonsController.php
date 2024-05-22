@@ -91,7 +91,9 @@ class LessonsController extends Controller
 
                 $teacher_id = $eventData['teacher_select'];
                 $studentCount = !empty($eventData['student']) ? count($eventData['student']) : 0 ;
-
+                if(empty($eventData['category_select'])) {
+                    $eventData['category_select'] = 0;
+                }
                 $eventInit = new Event;
                 $eventPrice = $eventInit->priceCalculations(['event_category_id'=>$eventData['category_select'],'teacher_id'=>$teacher_id,'student_count'=>$studentCount]);
 

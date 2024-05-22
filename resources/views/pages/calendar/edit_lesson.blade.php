@@ -339,11 +339,11 @@
 																		<label id="row_hdr_buy" name="row_hdr_buy">{{ __('Teacher') }}</label>
 																	</th>
 																@endif
-																@if(!$AppUI->isTeacherSchoolAdmin() && !$AppUI->isSchoolAdmin())
+																@if(!$AppUI->isTeacherSchoolAdmin() && !$AppUI->isSchoolAdmin())@endif
 																	<th width="15%" style="text-align:right">
 																		<label id="row_hdr_sale" name="row_hdr_sale">{{ __('Student') }}</label>
 																	</th>
-																@endif
+																
 																@endif
 															</tr>
 
@@ -375,9 +375,9 @@
 																@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
 																	<td style="text-align:right"> {{ isset($lessonData->price_currency) && !empty($lessonData->price_currency) ? $lessonData->price_currency : '' }} <span class="priceByStudent">{{ isset($relationData->buy_price) ? $relationData->buy_price: 0  }}</span></td>
 																@endif
-																@if(!$AppUI->isTeacherSchoolAdmin() && !$AppUI->isSchoolAdmin())
+																@if(!$AppUI->isTeacherSchoolAdmin() && !$AppUI->isSchoolAdmin())@endif
 																	<td style="text-align:right">{{ isset($lessonData->price_currency) && !empty($lessonData->price_currency) ? $lessonData->price_currency : '' }} <span class="priceByStudent">{{ isset($relationData->sell_price) ? $relationData->sell_price : 0 }}</span></td>
-																@endif
+																
 																@endif
 															</tr>
 															@endforeach

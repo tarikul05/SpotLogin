@@ -218,12 +218,12 @@
 																	<label>{{ !empty($eventData->price_currency) ? '(' + $eventData->price_currency + ')' : '' }}</label>
 																	</th>
 																	@endif
-																	@if(!$AppUI->isTeacherSchoolAdmin() && !$AppUI->isSchoolAdmin())
+																	@if(!$AppUI->isTeacherSchoolAdmin() && !$AppUI->isSchoolAdmin())@endif
 																	<th width="10%" style="text-align:center">
 																	<label id="row_hdr_sale" name="row_hdr_sale">{{ __('Student') }}</label>
 																	<label>{{ !empty($eventData->price_currency) ? '(' + $eventData->price_currency + ')' : '' }}</label>
 																	</th>
-																	@endif
+																	
 																@endif
 															</tr>
 															@foreach($studentOffList as $student)
@@ -248,11 +248,11 @@
 																		{{ $student->price_amount_buy }} {{ $student->price_currency }}
 																	</td>
 																@endif
-																@if(!$AppUI->isTeacherSchoolAdmin() && !$AppUI->isSchoolAdmin())
+																@if(!$AppUI->isTeacherSchoolAdmin() && !$AppUI->isSchoolAdmin())@endif
 																	<td style="text-align:center">								
 																			{{ $student->sell_price }}	{{ $student->price_currency }}	 
 																	</td>
-																@endif
+																
 																@endif
 															</tr>
 															@endforeach

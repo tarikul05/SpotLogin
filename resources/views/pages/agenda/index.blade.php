@@ -119,11 +119,11 @@
                                         <div class="dropdown" id="dropdownActions" style="margin-top:0; padding-top:0;">
                                         <span class="btn btn-theme-outline">Actions <i class="fa fa-caret-down"></i></span>
                                         <div class="dropdown-content">
-                                            <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_validate_events" target="_blank" class="btn btn-sm btn-info m-1 mb-2"><i class="fa-solid fa-lock"></i> <span id ="btn_validate_events_cap">{{__('Validate All')}}</span></a>
-                                            <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_delete_events" target="_blank" class="btn btn-sm btn-theme-warn m-1 mb-2"><i class="fas fa-trash"></i> <span id ="btn_delete_events_cap">{{__('Delete All')}}</span></a>
+                                            <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_validate_events" class="btn btn-sm btn-info m-1 mb-2"><i class="fa-solid fa-lock"></i> <span id ="btn_validate_events_cap">{{__('Validate All')}}</span></a>
+                                            <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_delete_events" class="btn btn-sm btn-theme-warn m-1 mb-2"><i class="fas fa-trash"></i> <span id ="btn_delete_events_cap">{{__('Delete All')}}</span></a>
 
-                                            <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_copy_events" target="_blank" class="btn btn-theme-outline m-1 mb-2"><i class="far fa-copy"></i> <span id ="btn_copy_events_cap">{{__('Copy All')}}</span></a>
-                                            <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_goto_planning" target="_blank" class="btn btn-theme-outline m-1 mb-2"><em class="glyphicon glyphicon-fast-forward"></em> <span id ="btn_goto_planning_cap">{{__('Paste')}}</span></a>
+                                            <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_copy_events" class="btn btn-theme-outline m-1 mb-2"><i class="far fa-copy"></i> <span id ="btn_copy_events_cap">{{__('Copy All')}}</span></a>
+                                            <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_goto_planning" class="btn btn-theme-outline m-1 mb-2"><em class="glyphicon glyphicon-fast-forward"></em> <span id ="btn_goto_planning_cap">{{__('Paste')}}</span></a>
 
 
 
@@ -419,7 +419,7 @@
                                 <div class="col-md-10 offset-md-1">
 
                                 @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin())
-                                <div class="row show_coach_off hide_on_off mt-4 mb-4">
+                                <div class="row show_coach_off show_teacher_off hide_on_off mt-4 mb-4">
                                 <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher') }} :</label>
                                 @endif
                                 @if(!$AppUI->isSchoolAdmin() && !$AppUI->isTeacherSchoolAdmin())
@@ -432,7 +432,7 @@
                                                 <i class="fa-solid fa-list-ul"></i>
                                             </span>
                                         <select class="form-control" id="teacher_select" name="teacher_select">
-                                                <option value="">{{__('Select Professor') }}</option>
+                                                <option value="">{{__('Select Teacher') }}</option>
                                             @foreach($professors as $key => $professor)
                                                 <option value="{{ $professor->teacher_id }}" {{ old('teacher_select') == $professor->teacher_id ? 'selected' : ''}}>{{ $professor->nickname }}</option>
                                             @endforeach
@@ -1808,7 +1808,7 @@ $('.close-icon').on('click', function() {
                     var EresultHtml ='';
                     var i='0';
 
-                    resultHtml+='<option value="">{{__('Select Professor') }}</option>';
+                    resultHtml+='<option value="">{{__('Select Teacher') }}</option>';
                     $.each(data, function(key,value){
                         resultHtml+='<option value="'+value.teacher_id+'">'+value.full_name+'</option>';
                     });
@@ -1827,7 +1827,7 @@ $('.close-icon').on('click', function() {
                 },
                 error: function(ts) {
                     // alert(ts.responseText)
-                    errorModalCall('Populate Event Type:'+GetAppMessage('error_message_text'));
+                    //errorModalCall('Populate Event Type:'+GetAppMessage('error_message_text'));
                 }
             }); // Ajax
         }
@@ -4404,8 +4404,10 @@ $('#add_lesson').on('submit', function(e) {
         }
 
         if(invoice_cat_type_id == ''){
-            var errMssg = 'Category type is required';
-            $('#event_invoice_type').addClass('error');
+            if(agendaSelect == "1") {
+                var errMssg = 'Category type is required';
+                $('#event_invoice_type').addClass('error');
+            }
         }else{
             $('#event_invoice_type').removeClass('error');
         }
@@ -4509,7 +4511,7 @@ $('#add_lesson').on('submit', function(e) {
         }
     }else if(type == 4){
         if(professor == ''){
-            var errMssg = 'professor required';
+            var errMssg = 'Teacher required';
             $('#teacher_select').addClass('error');
         }else{
             $('#teacher_select').removeClass('error');
@@ -4951,7 +4953,13 @@ $('#agenda_select').on('change', function() {
              $("#std-check-div").css('display', 'none');
             $(".lesson-text").hide();
             $('.show_coach_off.hide_on_off').hide();
-            $(".event-text").show()
+            $(".event-text").show();
+
+            var isSchoolAdmin = +"{{$AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin()}}";
+            if(isSchoolAdmin){
+                $(".show_teacher_off").fadeIn();
+            }
+
             // $('#event_invoice_type').trigger('change');
         }else if(this.value == 3){
             if (selected_school_ids.length == 1) {
@@ -5156,7 +5164,7 @@ if (school_id !=null) {
           $("#pageloader").hide();
         },
         error: function(ts) {
-            // alert(ts.responseText)
+            console.log(ts);
             errorModalCall('Populate Event Type:'+GetAppMessage('error_message_text'));
         }
     }); // Ajax

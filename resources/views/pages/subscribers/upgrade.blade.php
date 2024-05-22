@@ -502,12 +502,13 @@
                                 <input type="hidden" name="number_of_coaches" id="number_of_coaches" value="1" />
 
                                 <div class="form-group">
-                                    <label style="font-size:11px;" for="coupon_code">{{ __('Coupon code') }}</label>
+                                    <label style="font-size:11px; color:#333;" for="coupon_code">{{ __('Coupon code') }}</label>
                                     <input type="text" class="form-control" id="coupon_code" name="coupon_code" placeholder="{{ __('Enter Coupon Code') }}">
                                 </div>
+                                <br>
                                 <div class="form-group">
-                                    <label style="font-size:11px;" for="cardholder_name">{{ __('Cardholder full name') }}</label>
-                                    <input type="text" class="form-control" id="card_holder_name" name="card_holder_name" placeholder="{{ __('Enter Cardholder full name') }}" value="{{ Auth::user()->firstname .' ' . Auth::user()->lastname }}" required>
+                                    <label style="font-size:11px; color:#333;" for="cardholder_name">{{ __('Cardholder full name') }}</label>
+                                    <input type="text" style="font-size:15px; color:#333;" class="form-control" id="card_holder_name" name="card_holder_name" placeholder="{{ __('Enter Cardholder full name') }}" value="{{ Auth::user()->firstname .' ' . Auth::user()->lastname }}" required>
                                 </div>
                                 <br>
 
@@ -516,9 +517,12 @@
                                     <!--Stripe paymentRequestButton Element inserted here-->
                                 </div>
 
-                                    <div class="container">
+                                <div class="form-group">
+                                  <label style="font-size:11px; color:#333;" for="coupon_code">{{ __('Card informations') }}</label>
+                                    <div class="container" style="border:1px solid #b3d6ec; border-radius:7px; padding:9px;">
                                     <div id="example4-card"></div>
                                     </div>
+                                </div>
 
                                     <span class="errorStripe"></span>
 
@@ -617,6 +621,7 @@ $("#choose-plan").click(function(){
   let cardSaved = "";
   const stripe = Stripe('<?= env('STRIPE_KEY') ?>', { locale: 'en' });
   var elements = stripe.elements({
+    disableLink:true,
     fonts: [
       {
         cssSrc: "https://rsms.me/inter/inter.css"
@@ -642,7 +647,7 @@ $("#choose-plan").click(function(){
         fontSmoothing: "antialiased",
 
         "::placeholder": {
-          color: "#AAAAAA"
+          color: "#555"
         }
       },
       invalid: {
