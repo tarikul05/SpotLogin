@@ -126,7 +126,7 @@
             imported: row.data('imported')
         };
 
-        var studentsContent = '<p><span style="color:#0075bf;">New lesson for ' + selectedRowData.start_time + '</span> between ' + selectedRowData.start_time + ' and ' + selectedRowData.end_time + '</p><hr>';
+        var studentsContent = '<p><span style="color:#0075bf;">New lesson for ' + selectedRowData.date + '</span> between ' + selectedRowData.start_time + ' and ' + selectedRowData.end_time + '</p><hr>';
         studentsContent += '<p><i class="fa fa-arrow-right"></i> <b>Find this student(s) in your list</b><br><span style="font-size:11px;">' + selectedRowData.students_names + '</span></p>';
         studentsContent += '<select id="studentSelect" multiple="multiple">';
         @foreach ($students as $student)

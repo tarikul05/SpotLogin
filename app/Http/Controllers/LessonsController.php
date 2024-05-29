@@ -525,6 +525,7 @@ class LessonsController extends Controller
             $user = Auth::user();
             $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId();
             $school = School::active()->find($schoolId);
+            $timezone = $school->timezone;
 
             if (empty($school)) {
                 return redirect()->route('schools')->with('error', __('School is not selected'));
@@ -551,8 +552,8 @@ class LessonsController extends Controller
 
             $start_date = date('Y-m-d H:i:s', strtotime($lessonData['date_start']));
             $end_date = date('Y-m-d H:i:s', strtotime($lessonData['date_end']));
-            $start_date = $this->formatDateTimeZone($start_date, 'long', 'UTC', 'UTC');
-            $end_date = $this->formatDateTimeZone($end_date, 'long', 'UTC', 'UTC');
+            $start_date = $this->formatDateTimeZone($start_date, 'long', $timezone, 'UTC');
+            $end_date = $this->formatDateTimeZone($end_date, 'long', $timezone, 'UTC');
 
             $lessonData['date_start'] = $start_date;
             $lessonData['date_end'] = $end_date;
