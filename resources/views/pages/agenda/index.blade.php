@@ -2740,7 +2740,7 @@ $('.close-icon').on('click', function() {
                 //Check if students are not away
                 var icon2 = '<i class="fa-solid fa-circle-info" style="position:absolute; right:2px; top:2px; color:orange;"></i>';
                 var hasStudentWithFutureDate = false;
-                console.log(event);
+                
                 for (var i = 0; i < event.studentsbySchool.length; i++) {
                     var student = event.studentsbySchool[i];
                     if (student.dates) {
