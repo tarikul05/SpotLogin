@@ -23,6 +23,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Currency;
 use App\Models\School;
 use Carbon\Carbon;
+use App\Models\AgendaImport as AgendaImportModel;
+
 class AgendaController extends Controller
 {
     /**
@@ -184,9 +186,17 @@ class AgendaController extends Controller
             $myCurrentTimeZone = $settingUser->timezone;
         }
 
+        $dataImported = AgendaImportModel::where('teacher_id', $user->person_id)->where('imported', false)->get();
+    
+        if (count($dataImported) > 0) {
+            $counterDataImported = count($dataImported);
+        } else {
+            $counterDataImported = 0;
+        }
+
         $events = json_encode($events);
         //unset($event_types[10]);
-        return view('pages.agenda.index')->with(compact('settingUser', 'schools','school','schoolId','user_role','coach_user','students','teachers','locations','alllanguages','events','event_types','event_types_all','eventCategoryList','professors','studentsbySchool','lessonPrice','currency', 'myCurrentTimeZone'));
+        return view('pages.agenda.index')->with(compact('settingUser', 'counterDataImported', 'schools','school','schoolId','user_role','coach_user','students','teachers','locations','alllanguages','events','event_types','event_types_all','eventCategoryList','professors','studentsbySchool','lessonPrice','currency', 'myCurrentTimeZone'));
 
     }
 

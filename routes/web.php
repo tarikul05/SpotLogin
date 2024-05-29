@@ -334,6 +334,10 @@ Route::group(['middleware' => ['auth']], function () {
     ))->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     Route::get('/{school}/edit-student/{student}', [App\Http\Controllers\StudentsController::class, 'edit'])->name('adminEditStudent');
 
+    Route::post('/import', [App\Http\Controllers\AgendaImportController::class, 'import'])->name('agenda.import');
+    Route::post('/import/add-lesson', [App\Http\Controllers\AgendaImportController::class, 'addLesson'])->name('import.addLesson');
+    Route::get('/import/get-lessons', [App\Http\Controllers\AgendaImportController::class, 'getAgendaImportModel'])->name('import.getLessons');
+
     Route::get('/{school}/admin/add-event', [App\Http\Controllers\LessonsController::class, 'addEvent'])->name('event.create-admin');
     Route::post('/{school}/admin/add-event-action', [App\Http\Controllers\LessonsController::class, 'addEventAction'])->name('event.createAction-admin');
     Route::get('/{school}/admin/edit-event/{event}', [App\Http\Controllers\LessonsController::class, 'editEvent'])->name('event.edit-admin');

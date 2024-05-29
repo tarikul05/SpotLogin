@@ -117,7 +117,7 @@
 
 @if ($errors->any())
     @foreach ($errors->all() as $error)
-    <div style="background-color: #eed285; text-align: center; padding: 10px; border-radius: 0px; padding-top:15px; width: 100%; z-index:9999; border-radius:0 0 15px 15px;">
+    <div style="background-color: #eed285; text-align: center; padding: 10px; border-radius: 0px; padding-top:15px; width: 100%; z-index:9999; border-radius:0 0 15px 15px; margin-bottom:40px;">
         <strong>{{ $error }}</strong>
     </div>
     @endforeach

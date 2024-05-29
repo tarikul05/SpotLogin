@@ -26,6 +26,7 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
 <!-- end the assets area -->
 @endsection
 
@@ -125,11 +126,17 @@
                                             <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_copy_events" class="btn btn-theme-outline m-1 mb-2"><i class="far fa-copy"></i> <span id ="btn_copy_events_cap">{{__('Copy All')}}</span></a>
                                             <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_goto_planning" class="btn btn-theme-outline m-1 mb-2"><em class="glyphicon glyphicon-fast-forward"></em> <span id ="btn_goto_planning_cap">{{__('Paste')}}</span></a>
 
-
+                                            @if($AppUI->isTeacherAdmin())
+                                            @if($counterDataImported > 0)
+                                            <a style="display:inline-block; min-width: 190px;" href="{{route('import.getLessons')}}" class="btn btn-theme-outline m-1" id="importStudents"><img src="{{ asset('img/excel_icon.png') }}"  width="17" height="auto"/> Import Agenda <span class="badge bg-info">{{$counterDataImported}}</span</a>
+                                            @else
+                                            <a style="display:inline-block; min-width: 190px;" href="#" data-bs-toggle="modal" data-bs-target="#importModal" id="csv_btn_import" class="btn btn-theme-outline m-1" id="importStudents"><img src="{{ asset('img/excel_icon.png') }}"  width="17" height="auto"/> Import Agenda</a>
+                                            @endif
+                                            @endif
 
                                             @if(!$AppUI->isStudent() && !$AppUI->isParent())
                                             <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_export_events" target="_blank" class="btn btn-theme-outline m-1"><img src="{{ asset('img/excel_icon.png') }}"  width="17" height="auto"/>
-                                                <span id ="btn_export_events_cap">Excel</span></a>
+                                                <span id ="btn_export_events_cap">Export Agenda</span></a>
                                             @endif
 
                                             @if($AppUI->isStudent() || $AppUI->isParent())
@@ -844,6 +851,8 @@
     </div>
 </div>
 
+@include('layouts.elements.modal_csv_import_agenda')
+
 <!-- End Tabs content -->
 @endsection
 
@@ -898,6 +907,35 @@ $('.close-icon').on('click', function() {
         }
 
         toastr.info('Press and hold for 2 seconds on calendar, then release to add a lesson or event');
+    }
+</script>
+
+<script>
+    function exportTableToExcel(tableID, filename = ''){
+        var table = document.getElementById(tableID);
+        var wb = XLSX.utils.table_to_book(table, {sheet: "Sheet JS"});
+        var wbout = XLSX.write(wb, {bookType:'xlsx',  type: 'binary'});
+
+        function s2ab(s) { 
+            var buf = new ArrayBuffer(s.length); 
+            var view = new Uint8Array(buf); 
+            for (var i=0; i<s.length; i++) view[i] = s.charCodeAt(i) & 0xFF; 
+            return buf;    
+        }
+
+        var blob = new Blob([s2ab(wbout)], {type:"application/octet-stream"});
+
+        // For IE
+        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+            window.navigator.msSaveOrOpenBlob(blob, filename);
+        } else {
+            var link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
     }
 </script>
 
@@ -2004,13 +2042,15 @@ $('.close-icon').on('click', function() {
 
     $("#btn_export_events").click(function () {
 
-        $("#agenda_table").table2excel({
+        exportTableToExcel('agenda_table', 'exported-file.xlsx');
+
+       /* $("#agenda_table").table2excel({
             // exclude CSS class
             //exclude: ".noExl",
             name: "Sheet",
             filename: "events.xls" //do not include extension
         });
-        return false;
+        return false;*/
 
 
     })
@@ -2684,6 +2724,7 @@ $('.close-icon').on('click', function() {
                 //Check if students are not away
                 var icon2 = '<i class="fa-solid fa-circle-info" style="position:absolute; right:2px; top:2px; color:orange;"></i>';
                 var hasStudentWithFutureDate = false;
+                console.log(event);
                 for (var i = 0; i < event.studentsbySchool.length; i++) {
                     var student = event.studentsbySchool[i];
                     if (student.dates) {
@@ -2750,15 +2791,35 @@ $('.close-icon').on('click', function() {
                    // $(el).find('div.fc-title').prepend(event.event_type_name+':'+moment(event.start).format('DD-MM-YYYY')+' '+content_format);
                     resultHtml+='<tr class="agenda_event_row" href="'+event.url+'">';
                     resultHtml+='<td href="'+event.url+'">'+moment(event.start).format('DD-MM-YYYY')+'</td>';
+                    //resultHtml += '<td href="'+event.url+'">' + moment(event.start).format('DD&#8203;-&#8203;MM&#8203;-&#8203;YYYY') + '</td>';
                     resultHtml+='<td>'+stime+'</td>';
                     resultHtml+='<td>'+etime+'</td>';
                     if ( event.no_of_students <= 1 ){
-                        resultHtml+='<td>'+event.no_of_students+' :</td>';
+                        resultHtml+='<td>'+event.no_of_students+'</td>';
                     }else{
-                        resultHtml+='<td>'+event.no_of_students+' :</td>';
+                        resultHtml+='<td>'+event.no_of_students+'</td>';
                     }
-                    resultHtml+='<td>'+event.title+'</td>';
+
+                        var studentsForExcel = @json($studentsbySchool);
+                        var studentIdList = event.student_id_list.split(',');
+
+                        if (studentIdList.length > 0) {
+                            var studentNames = [];
+
+                            for (var i = 0; i < studentIdList.length; i++) {
+                                var studentId = parseInt(studentIdList[i]); 
+                                var student = studentsForExcel.find(s => s.student_id === studentId); 
+                                if (student) {
+                                    studentNames.push(student.full_name); 
+                                }
+                            }
+                            resultHtml += '<td>' + studentNames.join(', ') + '</td>';
+                        }
+
+   
                     resultHtml+='<td>'+event.cours_name+'</td>';
+                    resultHtml+='<td>'+event.category_id+'</td>';
+                    resultHtml+='<td>"'+event.student_id_list+'"</td>';
                     resultHtml+='<td>'+event.duration_minutes+' minutes</td>';
                     resultHtml+='<td>'+event.teacher_name+'</td>';
                     resultHtml+='</tr>';
@@ -2919,8 +2980,10 @@ $('.close-icon').on('click', function() {
                 row_hdr_start_time='Heure de d�part';
                 row_hdr_end_time='Heure de fin';
                 row_hdr_no_of_students='Nombre of studiants';
-                row_hdr_student_name='Nom de student name';
+                row_hdr_student_name='Students name';
+                row_hdr_student_ids='students ids';
                 row_hdr_course='Cours';
+                row_hdr_category='Category';
                 row_hdr_duration_id='Duration Minutes';
                 row_hdr_teacher_id='Professeur';
 
@@ -2933,6 +2996,8 @@ $('.close-icon').on('click', function() {
                 resultHtmlHeader+='<th width="10%">'+row_hdr_no_of_students+'</th>';
                 resultHtmlHeader+='<th width="19%">'+row_hdr_student_name+'</th>';
                 resultHtmlHeader+='<th width="19%">'+row_hdr_course+'</th>';
+                resultHtmlHeader+='<th width="19%">'+row_hdr_category+'</th>';
+                resultHtmlHeader+='<th width="19%">'+row_hdr_student_ids+'</th>';
                 resultHtmlHeader+='<th width="10%">'+row_hdr_duration_id+'</th>';
                 resultHtmlHeader+='<th width="8%">'+row_hdr_teacher_id+'</th>';
                 resultHtmlHeader+='</tr>';

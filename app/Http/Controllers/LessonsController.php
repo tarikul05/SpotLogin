@@ -518,6 +518,79 @@ class LessonsController extends Controller
         return $result;
     }
 
+    public function addImportedLesson($lessonData, $students, $category, $schoolId = null)
+    {
+        DB::beginTransaction();
+        try {
+            $user = Auth::user();
+            $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId();
+            $school = School::active()->find($schoolId);
+
+            if (empty($school)) {
+                return redirect()->route('schools')->with('error', __('School is not selected'));
+            }
+
+            $lessonData = [
+                'title' => "",
+                'school_id' => $schoolId,
+                'event_type' => 10,
+                'event_category' => $category,
+                'teacher_id' => $user->person_id,
+                'date_start' => $lessonData['date'] . ' ' . $lessonData['start_time'],
+                'date_end' => $lessonData['date'] . ' ' . $lessonData['end_time'],
+                'duration_minutes' => $lessonData['duration'],
+                'price_currency' => null,
+                'price_amount_buy' => 0,
+                'price_amount_sell' => 0,
+                'fullday_flag' => null,
+                'no_of_students' => count($students),
+                'location_id' => null,
+                'is_paying' => 0,
+                'student_is_paying' => 0,
+            ];
+
+            $start_date = date('Y-m-d H:i:s', strtotime($lessonData['date_start']));
+            $end_date = date('Y-m-d H:i:s', strtotime($lessonData['date_end']));
+            $start_date = $this->formatDateTimeZone($start_date, 'long', 'UTC', 'UTC');
+            $end_date = $this->formatDateTimeZone($end_date, 'long', 'UTC', 'UTC');
+
+            $lessonData['date_start'] = $start_date;
+            $lessonData['date_end'] = $end_date;
+
+            $eventInit = new Event();
+            $eventPrice = $eventInit->priceCalculations(['event_category_id' => $category, 'teacher_id' => $lessonData['teacher_id'], 'student_count' => count($students)]);
+            
+            $buyPriceCal = ($eventPrice['price_buy'] * ($lessonData['duration_minutes'] / 60)) / count($students);
+            $sellPriceCal = ($eventPrice['price_sell'] * ($lessonData['duration_minutes'] / 60));
+
+            $lessonData['price_amount_buy'] = round($buyPriceCal, 2);
+            $lessonData['price_amount_sell'] = round($sellPriceCal, 2);
+
+            $event = Event::create($lessonData);
+
+            foreach ($students as $studentId) {
+                $dataDetails = [
+                    'event_id' => $event->id,
+                    'teacher_id' => $lessonData['teacher_id'],
+                    'student_id' => $studentId,
+                    'buy_total' => $lessonData['price_amount_buy'],
+                    'sell_total' => $lessonData['price_amount_sell'],
+                    'buy_price' => $lessonData['price_amount_buy'],
+                    'sell_price' => $lessonData['price_amount_sell'],
+                    'price_currency' => null
+                ];
+                EventDetails::create($dataDetails);
+            }
+
+            DB::commit();
+
+            return true;
+        } catch (Exception $e) {
+            DB::rollBack();
+            return false;
+        }
+    }
+
     /**
      * Show the form for creating a new resource.
      *
