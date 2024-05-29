@@ -13,7 +13,7 @@
           @csrf
             <input type="file" class="form-control form-control-sm" name="csvFile" id="csvFile" accept=".xlsx,.xls"/>
           <div class="text-center mt-3">
-            <button type="submit" class="btn btn-lg btn-primary btn-block">{{ __('Import Excel') }}</button>
+            <button type="submit" class="btn btn-lg btn-primary btn-block" id="btnImportAgenda">{{ __('Import Excel') }}</button>
           </div>
         </form>
       </div>

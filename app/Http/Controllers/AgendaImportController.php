@@ -18,9 +18,9 @@ class AgendaImportController extends Controller
         $user = Auth::user();
         $schoolId = $user->selectedSchoolId();
 
-        $request->validate([
+        /*$request->validate([
             'csvFile' => 'required|mimes:xlsx,xls',
-        ]);
+        ]);*/
 
         $file = $request->file('csvFile');
         $import = new AgendaImport();

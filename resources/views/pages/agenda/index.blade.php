@@ -869,6 +869,11 @@
         e.preventDefault();
     }
 });
+
+
+
+
+
 var windowWidth = $(window).width();
 if (windowWidth < 768) {
     $('#search_text').hide();
@@ -911,24 +916,34 @@ $('.close-icon').on('click', function() {
 </script>
 
 <script>
-    function exportTableToExcel(tableID, filename = ''){
+    function exportTableToExcel(tableID, filename = 'export.xlsx') {
+        // Récupère la table par ID
         var table = document.getElementById(tableID);
-        var wb = XLSX.utils.table_to_book(table, {sheet: "Sheet JS"});
-        var wbout = XLSX.write(wb, {bookType:'xlsx',  type: 'binary'});
+        var wb = XLSX.utils.book_new(); // Crée un nouveau workbook
+        var ws = XLSX.utils.table_to_sheet(table); // Crée une feuille à partir de la table HTML
 
-        function s2ab(s) { 
-            var buf = new ArrayBuffer(s.length); 
-            var view = new Uint8Array(buf); 
-            for (var i=0; i<s.length; i++) view[i] = s.charCodeAt(i) & 0xFF; 
-            return buf;    
+        // Ajoute la feuille au workbook
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+        // Écrit le workbook en binaire
+        var wbout = XLSX.write(wb, {bookType: 'xlsx', type: 'binary'});
+
+        // Fonction pour convertir une chaîne binaire en ArrayBuffer
+        function s2ab(s) {
+            var buf = new ArrayBuffer(s.length);
+            var view = new Uint8Array(buf);
+            for (var i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
+            return buf;
         }
 
-        var blob = new Blob([s2ab(wbout)], {type:"application/octet-stream"});
+        // Crée un Blob à partir des données binaires
+        var blob = new Blob([s2ab(wbout)], {type: "application/octet-stream"});
 
-        // For IE
+        // Gestion du téléchargement pour Internet Explorer
         if (window.navigator && window.navigator.msSaveOrOpenBlob) {
             window.navigator.msSaveOrOpenBlob(blob, filename);
         } else {
+            // Crée un lien temporaire pour le téléchargement
             var link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
             link.download = filename;
@@ -2041,8 +2056,9 @@ $('.close-icon').on('click', function() {
 
 
     $("#btn_export_events").click(function () {
-
-        exportTableToExcel('agenda_table', 'exported-file.xlsx');
+        //date in filename
+        var filename = 'events_' + $("#date_from").val() + '_' + $("#date_to").val() + '.xlsx';
+        exportTableToExcel('agenda_table', filename);
 
        /* $("#agenda_table").table2excel({
             // exclude CSS class
@@ -2980,7 +2996,7 @@ $('.close-icon').on('click', function() {
                 row_hdr_start_time='Heure de d�part';
                 row_hdr_end_time='Heure de fin';
                 row_hdr_no_of_students='Nombre of studiants';
-                row_hdr_student_name='Students name';
+                row_hdr_student_name='Nom de student name';
                 row_hdr_student_ids='students ids';
                 row_hdr_course='Cours';
                 row_hdr_category='Category';
