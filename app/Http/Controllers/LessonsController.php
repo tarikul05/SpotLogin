@@ -518,7 +518,7 @@ class LessonsController extends Controller
         return $result;
     }
 
-    public function addImportedLesson($lessonData, $students, $category, $schoolId = null)
+    public function addImportedLesson($lessonData, $students, $category, $location = null, $schoolId = null)
     {
         DB::beginTransaction();
         try {
@@ -545,7 +545,7 @@ class LessonsController extends Controller
                 'price_amount_sell' => 0,
                 'fullday_flag' => null,
                 'no_of_students' => count($students),
-                'location_id' => null,
+                'location_id' => $location,
                 'is_paying' => 0,
                 'student_is_paying' => 0,
             ];
