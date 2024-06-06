@@ -206,7 +206,9 @@
             font-size: 12px;
             text-align: right;
         }
-
+        main {
+            margin-bottom:50px;
+        }
         footer {
             position: fixed;
             bottom: 0;
