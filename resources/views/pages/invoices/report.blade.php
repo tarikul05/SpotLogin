@@ -553,6 +553,8 @@ $('#billing_period_search_btn_2').on('click', function() {
             } else {
                 var totalTaxesElement2 = document.getElementById("totalTaxes");
                 totalTaxesElement2.innerHTML = 0 + ' '+schoolCurrency+'';
+                var detailTaxesElement = document.getElementById("detailTaxes");
+                detailTaxesElement.innerHTML = "";
             }
 
 
