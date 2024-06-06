@@ -98,6 +98,8 @@
         .table-bordered thead tr th,
         .table-bordered tbody tr td {
             border-bottom: 1px solid #B3D6EC;
+            padding-top: 7px!important;
+            padding-bottom: 7px!important;
         }
 
         .table-bordered thead tr th {
@@ -207,7 +209,7 @@
             text-align: right;
         }
         main {
-            margin-bottom:50px;
+            margin-bottom:70px;
         }
         footer {
             position: fixed;
