@@ -24,7 +24,7 @@
 
 
               <?php if($product_object){?>
-                <div class="card p-2 mb-2">
+                <div class="p-2 mb-2">
                 @if($subscriber->cancel_at_period_end)
                 <?php
                 if($subscription['status'] === 'trialing') {
@@ -48,8 +48,7 @@
 
                 @endif
                 @if($subscriber->status === 'active')
-                <hr>
-                <span class="text-success"><i class="fa-solid fa-check"></i> {{ __('Premium Plan is active on your account') }}.</span>
+                <span class="text-success"><i class="fa-solid fa-check"></i> {{ __('Premium Plan is active on your account') }}.</span><br>
                     Period in process : <?php echo date('M j, Y', $subscription['current_period_start']); ?> - <?php echo date('M j, Y', $subscription['current_period_end']); ?>
                 @endif
             </div>

@@ -18,7 +18,7 @@ use App\Models\Level;
 use App\Models\Task;
 use App\Models\Alert;
 use App\Models\Event;
-
+use DateTimeZone;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -180,6 +180,9 @@ class SchoolsController extends Controller
                 $p_school_id = $authUser->selectedSchoolId();
                 $role_type = $authUser->getRoleTypeAttribute();
                 $school = School::find($p_school_id);
+                $timezone = $school->timezone;
+                $europeanTimezones = DateTimeZone::listIdentifiers(DateTimeZone::EUROPE);
+                $isInEurope = in_array($timezone, $europeanTimezones);
                 if ($role_type=='school_admin') {
                     $school_admin = $authUser;
                 } else {
@@ -317,6 +320,7 @@ class SchoolsController extends Controller
             'school',
             'emailTemplate',
             'country',
+            'isInEurope',
             'role_type',
             'school_admin',
             'timezones',

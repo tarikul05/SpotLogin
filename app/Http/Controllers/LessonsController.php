@@ -292,7 +292,6 @@ class LessonsController extends Controller
                         return Redirect::to($schoolId.'/view-event/'.$eventId);
                     }
                 }else{
-                 //return back()->with('success', __('Successfully Registered'));
                  return redirect()->route('agenda',['school'=> $schoolId])->with('success', __('Successfully Updated !'));
                 }
 

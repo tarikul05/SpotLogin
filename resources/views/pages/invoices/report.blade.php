@@ -72,20 +72,34 @@
                 <div class="card-body p-3 text-right">
                 <b id="info_invoice_report" class="text-right"></b>
                 <b>Amount of the total invoiced that is an extra or refund:</b>
-                <b class="text-lowercase text-primary" id="totalExtra"></b>
-                <hr>
+                <b class="text-lowercase text-primary" id="totalExtra"></b><br>
                 <b>Total Taxes:</b> <span class="text-lowercase" id="totalTaxes"></span><br>
                 <span class="text-lowercase" id="detailTaxes"></span>
                 </div>
             </div>
 
-            <div class="mb-4">
+            <table class="table table-stripped table-hover" style="font-size:13px;">
+                <tr>
+                    <td>Total Discount</td>
+                    <td style="text-align: right;"><div class="text-lowercase" id="totalDiscount"></div></td>
+                </tr>
+                <tr>
+                    <td>Total amount invoiced (excluding taxes)</td>
+                    <td style="text-align: right;"><div class="text-lowercase" id="totalAmountLessonHT"></div></td>
+                </tr>
+                <tr>
+                    <td>Net total (after taxes)</td>
+                    <td style="text-align: right;"><div class="text-lowercase" id="totalAmount"></div></td>
+                </tr>
+            </table>
+
+            <!--<div class="mb-4">
                 <div class="card-body p-3 text-right">
                 <b>Total Discount</b><div class="text-lowercase" id="totalDiscount"></div>
                 <b>Total amount invoiced (excluding taxes)</b> <div class="text-lowercase" id="totalAmountLessonHT"></div>
                 <b>Net total (after taxes)</b> <div class="text-lowercase" id="totalAmount"></div>
                 </div>
-            </div>
+            </div>-->
 
             <div class="row pb-4">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="table_container"></div>
@@ -213,7 +227,6 @@
 			dataType: 'json',
 			async: false,
 			success: function(result) {
-
 
 
             // Créez un objet pour regrouper les invoices par date
@@ -360,6 +373,7 @@ $('#billing_period_search_btn_22').on('click', function() {
         dataType: 'json',
         async: false,
         success: function(result) {
+
             // Créez un objet pour regrouper les invoices par date
             var invoicesByDate = {};
 
@@ -502,6 +516,14 @@ $('#billing_period_search_btn_2').on('click', function() {
         dataType: 'json',
         async: false,
         success: function(result) {
+        
+            var inittotalDiscount = document.getElementById('totalDiscount');
+            inittotalDiscount.innerHTML = 0;
+            var inittotalAmountLessonHT = document.getElementById('totalAmountLessonHT');
+            inittotalAmountLessonHT.innerHTML = 0;
+            var inittotalAmountLessonHT2 = document.getElementById('totalAmount');
+            inittotalAmountLessonHT2.innerHTML = 0;
+
             var summary = {};
             var totalTaxesDisplay = 0;
             result.forEach(function(rowData) {
@@ -518,15 +540,19 @@ $('#billing_period_search_btn_2').on('click', function() {
                 });
             });
 
-            var totalTaxesElement = document.getElementById("totalTaxes");
-            totalTaxesElement.innerHTML = totalTaxesDisplay.toLocaleString(2) + ' '+schoolCurrency+'';
+            if(totalTaxesDisplay) {
+                var totalTaxesElement = document.getElementById("totalTaxes");
+                totalTaxesElement.innerHTML = totalTaxesDisplay.toLocaleString(2) + ' '+schoolCurrency+'';
+                var detailTaxesElement = document.getElementById("detailTaxes");
+                var resultString = "" + Object.keys(summary).map(function(taxName) {
+                    return taxName + " = " + summary[taxName];
+                }).join("<br>");
+                detailTaxesElement.innerHTML = resultString;
+            } else {
+                var totalTaxesElement2 = document.getElementById("totalTaxes");
+                totalTaxesElement2.innerHTML = 0 + ' '+schoolCurrency+'';
+            }
 
-            var detailTaxesElement = document.getElementById("detailTaxes");
-            var resultString = "" + Object.keys(summary).map(function(taxName) {
-                return taxName + " = " + summary[taxName];
-            }).join("<br>");
-
-            detailTaxesElement.innerHTML = resultString;
 
             var invoicesByDate = {};
 
@@ -588,7 +614,7 @@ $('#billing_period_search_btn_2').on('click', function() {
 
                 // Créez une liste pour les détails des invoices
                 var invoiceList = document.createElement('td'); // Utilisez une cellule <td> au lieu d'une liste <ul>
-
+                    console.log(dateInvoices);
                 // Parcourez les invoices pour cette date
                 dateInvoices.forEach(function(invoice) {
                     totalAmount += parseFloat(invoice.total_amount);

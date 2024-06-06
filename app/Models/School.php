@@ -80,6 +80,7 @@ class School extends BaseModel
         'discipline',
         'is_active',
         'number_of_coaches',
+        'payment_info_checkbox',
         'created_by',
         'modified_by'
     ];

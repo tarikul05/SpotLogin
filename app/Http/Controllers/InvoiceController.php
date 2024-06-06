@@ -136,6 +136,7 @@ class InvoiceController extends Controller
             $endDate = $request->input('billing_period_end_date');
 
             $invoices = Invoice::active()
+            ->where('deleted_at', null)
             ->with('invoice_items')
             ->where('school_id', $school->id)
             ->whereBetween('date_invoice', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
