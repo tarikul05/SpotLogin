@@ -523,6 +523,8 @@ $('#billing_period_search_btn_2').on('click', function() {
             inittotalAmountLessonHT.innerHTML = 0;
             var inittotalAmountLessonHT2 = document.getElementById('totalAmount');
             inittotalAmountLessonHT2.innerHTML = 0;
+            var inittotalExtra = document.getElementById('totalExtra'); 
+            inittotalExtra.innerHTML = 0;
 
             var summary = {};
             var totalTaxesDisplay = 0;
