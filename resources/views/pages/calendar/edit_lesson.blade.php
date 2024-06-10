@@ -373,7 +373,7 @@
 																</td>
 																@if($showPrice)
 																@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
-																	<td style="text-align:right"> {{ isset($lessonData->price_currency) && !empty($lessonData->price_currency) ? $lessonData->price_currency : '' }} <span class="priceByStudent">{{ isset($relationData->buy_price) ? $relationData->buy_price: 0  }}</span></td>
+																	<td style="text-align:right"> {{ isset($lessonData->price_currency) && !empty($lessonData->price_currency) ? $lessonData->price_currency : '' }} <span class="priceByTeacher">{{ isset($relationData->buy_price) ? $relationData->buy_price: 0  }}</span></td>
 																@endif
 																@if(!$AppUI->isTeacherSchoolAdmin() && !$AppUI->isSchoolAdmin())@endif
 																	<td style="text-align:right">{{ isset($lessonData->price_currency) && !empty($lessonData->price_currency) ? $lessonData->price_currency : '' }} <span class="priceByStudent">{{ isset($relationData->sell_price) ? $relationData->sell_price : 0 }}</span></td>
@@ -1022,14 +1022,18 @@ $("#student, #teacher_select, #duration").on('change', function(event) {
                             $("#sprice_amount_buy").val(response.eventPrice['price_buy'])
                     	    var newDuration = $("#duration").val();
 							if(response.eventPrice['isFixed'] === 2) {
+								$(".priceByTeacher").text(response.eventPrice['price_buy']);
 								$(".priceByStudent").text(response.eventPrice['price_sell']);
 							} else {
+								$(".priceByTeacher").text(response.eventPrice['price_buy']);
                             	$(".priceByStudent").text(response.eventPrice['price_sell']);
 							}
                         } else {
 							$("#sprice_amount_sell").val(response.eventPrice['price_buy'])
+							$("#sprice_amount_buy").val(response.eventPrice['price_buy'])
                     	    var newDuration = $("#duration").val();
                             $(".priceByStudent").text(response.eventPrice['price_buy']);
+							$(".priceByTeacher").text(response.eventPrice['price_buy']);
 
 						}
 

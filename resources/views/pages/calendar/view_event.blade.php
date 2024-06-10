@@ -139,7 +139,7 @@
 																<th width="15%" style="text-align:left"></th>
 																@if($priceShow)
 																	<th width="10%" style="text-align:left;">
-																		@if($eventData->is_locked !=1)
+																		@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherMinimum() || $AppUI->isTeacherMedium())
 																		<label id="row_hdr_buy" name="row_hdr_buy">{{ __('Teacher') }}</label>
 																		<label>({{ !empty($eventData->price_currency) ? $eventData->price_currency : '' }})</label>
 																		@endif
@@ -162,8 +162,8 @@
 																<td>Present</td>
 																@if($priceShow)
 																	<td>
-																		@if($eventData->is_locked !=1)
-																		{{ $student->buy_price }}
+																		@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherMinimum() || $AppUI->isTeacherMedium())
+																		{{ $student->price_amount_sell }}
 																		@endif
 																	</td>
 																	<td style="text-align:center">

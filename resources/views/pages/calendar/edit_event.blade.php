@@ -19,7 +19,7 @@
 	$date_end = $initDate->formatDateTimeZone($eventData->date_end, 'long','UTC', $zone);
 	$current_time = $initDate->formatDateTimeZone(now(), 'long','UTC', $zone);
 
-	$priceShow = ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()) && ($eventData->event_invoice_type == 'S') || ($AppUI->isTeacher() && ($eventData->event_invoice_type == 'T'))
+	$priceShow = ((($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()) && ($eventData->event_invoice_type == 'S')) || ($AppUI->isTeacher() && ($eventData->event_invoice_type == 'T')));
 @endphp
 @section('content')
   <div class="content">
@@ -191,7 +191,7 @@
 											</div>
 										</div>
 									</div>
-									<?php if(!$AppUI->isTeacher()){ ?>
+									<?php if($AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherMinimum() || $AppUI->isTeacherMedium()){ ?>
 									<div class="form-group row">
 										<label class="col-lg-4 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price (per event)') }} :</label>
 										<div class="col-sm-4">
@@ -251,7 +251,7 @@
 																	<button id="mark_present_btn" class="btn btn-xs btn-theme-success" type="button" style="display: block;">Mark all present</button>
 																</th>
 																@if($priceShow)
-																@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
+																@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherMinimum() || $AppUI->isTeacherMedium())
 																	<th width="15%" style="text-align:right;">
 																		<label id="row_hdr_buy" name="row_hdr_buy">{{ __('Teacher') }}</label>
 																	</th>
@@ -283,7 +283,7 @@
 																</td>
 
 																@if($priceShow)
-																	@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
+																	@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherMinimum() || $AppUI->isTeacherMedium())
 																	<td style="text-align:right"> {{ ($relationData->price_currency) }} {{ ($relationData->buy_price) }}</td>
 																	@endif
 																	<td style="text-align:right"> {{ ($relationData->price_currency) }} {{ !empty($eventData->price_amount_sell) ? $eventData->price_amount_sell : ''; }} </td>

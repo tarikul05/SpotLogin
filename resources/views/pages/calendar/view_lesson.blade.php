@@ -102,22 +102,18 @@
 							<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left">{{__('Category') }} :</label>
 									<div class="col-sm-7">
-										{{ !empty($lessonData->title) ? $lessonData->title : ''; }}
-									</div>
-								</div>
-							<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left">{{__('Location') }} :</label>
-									<div class="col-sm-7">
-										{{ !empty($locations->title) ? $locations->title : ''; }}
-									</div>
-								</div>
-								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left">{{__('Assistant Type') }} :</label>
-									<div class="col-sm-7">
 										{{ !empty($lessonCategory->title) ? $lessonCategory->title : ''; }}
 									</div>
 								</div>
-
+								@if(!empty($locations->location_id))
+								<div class="form-group row">
+									<label class="col-lg-3 col-sm-3 text-left">{{__('Location') }} :</label>
+									<div class="col-sm-7">
+										{{ !empty($locations->location_id) ? $locations->location_id : ''; }}
+									</div>
+								</div>
+								@endif
+		
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left">{{__('Professor') }} :</label>
 									<div class="col-sm-7">
