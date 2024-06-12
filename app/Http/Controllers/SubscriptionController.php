@@ -338,8 +338,19 @@ class SubscriptionController extends Controller
             $number_of_coaches = $request->filled('number_of_coaches') ? $request->input('number_of_coaches') : 1;
 
 
-            if ($user->subscribed('default')) {
+            /*if ($user->subscribed('default')) {
                 return redirect()->route('agenda')->with('success', 'You have already subscribed to ' . $plan_name);
+            }*/
+
+            $subscription = $user->subscriptions()->where('name', 'default')->first();
+
+            if ($subscription && ($subscription->stripe_status === 'active' || $subscription->stripe_status === 'trialing' || $subscription->stripe_status === 'succeeded')) {
+                return redirect()->route('agenda')->with('success', 'You have already subscribed to ' . $plan_name);
+            }
+    
+            // If the subscription is not active or trialing, cancel it if it exists
+            if ($subscription && $subscription->stripe_status !== 'active' && $subscription->stripe_status !== 'trialing' && $subscription->stripe_status !== 'succeeded') {
+                $subscription->delete();
             }
 
             $school = $user->related_school;
