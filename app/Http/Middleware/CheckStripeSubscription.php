@@ -25,7 +25,12 @@ class CheckStripeSubscription
     protected function isSubscribed($user)
     {
         // Use Laravel Cashier to check if the user is subscribed
-        return $user->subscribed('default');
+       // Check the custom subscription status field
+       $subscription = $user->subscriptions()->where('name', 'default')->first();
+       if ($subscription) {
+           return $subscription->stripe_status === 'active' || $subscription->stripe_status === 'trialing' || $subscription->stripe_status === 'succeeded';
+       }
+       return false;
     }
 
     protected function isTrialValid($user)
