@@ -131,9 +131,10 @@
                                     </div>
                             </div>
                             <span style="font-size:11px;">
-                            At least 7 char.
-                            | A Lowercase Char.
+                            8 char. min. |
+                            A Lowercase Char.
                             | A Number
+                            <!--| A Special Character-->
                             </span>
                         </div>
                     </div>
@@ -311,6 +312,21 @@ document.getElementById('email_confirm').onpaste = function(){
 
 
 $(document).ready(function () {
+    $.validator.addMethod("pwLowercase", function (value) {
+        return /[a-z]/.test(value);
+    }, "{{ __('Your password must contain at least one lowercase letter')}}");
+
+    $.validator.addMethod("pwUppercase", function (value) {
+        return /[A-Z]/.test(value);
+    }, "{{ __('Your password must contain at least one uppercase letter')}}");
+
+    $.validator.addMethod("pwDigit", function (value) {
+        return /[0-9]/.test(value);
+    }, "{{ __('Your password must contain at least one digit')}}");
+
+    /*$.validator.addMethod("pwSpecial", function (value) {
+        return /[@$!%*#?&]/.test(value);
+    }, "{{ __('Your password must contain at least one special character')}}");*/
     $("#signup_form").submit(function(e) {
     e.preventDefault();
 }).validate({
@@ -332,7 +348,11 @@ $(document).ready(function () {
         },
         password: {
             required: true,
-            minlength: 7
+            minlength: 8,
+            pwLowercase: true,
+            pwUppercase: true,
+            pwDigit: true,
+            /*pwSpecial: true*/
         }
     },
     // Specify validation error messages
@@ -344,7 +364,7 @@ $(document).ready(function () {
         country_code: "{{ __('Please select country')}}",
         password: {
             required: "{{ __('Please provide a password')}}",
-            minlength: "{{ __('Your password must be at least 7 characters long')}}"
+            minlength: "{{ __('Your password must be at least 8 characters long')}}"
         },
         email: "{{ __('Please enter a valid email address')}}",
         email_confirm: "{{ __('Email addresses don\'t match')}}"
