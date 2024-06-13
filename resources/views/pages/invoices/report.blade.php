@@ -36,7 +36,7 @@
 			<div class="col-md-12">
 				<form enctype="multipart/form-data" role="form" id="form_invoicing" class="form-horizontal" method="post" action="#">
                     <div class="form-group row">
-                        Generate report from your invoice's list.
+                        Generate report from your invoice's list :<br>
                         <div class="col-md-4 p-2 md-12">
                             <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
                                 <i class="fa fa-calendar"></i>&nbsp;
