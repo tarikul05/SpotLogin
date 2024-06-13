@@ -484,7 +484,7 @@
 
                 <div class="columns p-4 card bg-white" id="payment-form" style="display: none;">
                             <div class="text-center">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg" width="120">
+                                <img src="{{asset('img/logo_stripe.svg')}}" width="120">
                             </div>
 
                         <div class="subscription-form-wrapper2">
@@ -549,7 +549,7 @@
                                             @endif
                                         </a>
                                         <br><br>
-                                        <img src="https://www.eposhybrid.uk/ihybridnew//upload/ck/2035148938.png" width="110">
+                                        <img src="{{asset('img/powered_by_stripe.png')}}" width="120">
                                     </div>
 
                                 </form>

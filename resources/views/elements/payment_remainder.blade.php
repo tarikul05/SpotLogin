@@ -1,5 +1,14 @@
 @if( !$is_subscribed )
-    <?php if( !empty($user->trial_ends_at) && ($today_date <= $ends_at) ){ ?>
+
+<?php if( !empty($user->trial_ends_at) && ($today_date <= $ends_at) ){ ?>
+        <a href="{{ route('subscription.upgradePlan') }}" class="nav-item nav-link text-center mr-2 text-success" data-bs-toggle="tooltip" data-bs-placement="top" title="<?php echo $day_diff ?> {{__('days remaining in your trial period. Please get a Premium Plan to unlock all features.')}}"><b><i class="fa-regular fa-star"></i> <span class="d-none d-sm-block"></span> {{ __('Premium') }}</b></a>
+<?php } else { ?>
+    <?php if( !empty( $user->trial_ends_at) ){ ?>
+        <a href="{{ route('subscription.upgradePlan') }}" class="nav-item nav-link text-center mr-2 text-success" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('Your subscription is ended. Please get a Premium Plan to unlock all features.')}}"><b><i class="fa-regular fa-star"></i> <span class="d-none d-sm-block"></span> {{ __('Premium') }}</b></a>
+    <?php } ?>
+<?php } ?>
+
+    <?php /*if( !empty($user->trial_ends_at) && ($today_date <= $ends_at) ){ ?>
         <div class="subscription_info">
         <div class="d-none d-sm-block">
                 <div class="text-success">
@@ -25,7 +34,6 @@
                 <div class="text-success">
                     <p class="text pb-2">
                       Trial period ended. <a class="custom-link" href="{{ route('subscription.upgradePlan') }}"> {{ __('Upgrade now') }}</a>
-                        <?php /*date('M j, Y', strtotime($trial_ends_date)) date('M j, Y, g:i a', strtotime($trial_ends_date))*/ ?>
                     </p>
                 </div>
         </div>
@@ -40,6 +48,6 @@
 
     <?php
             }
-        }
+        }*/
     ?>
 @endif

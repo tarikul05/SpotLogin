@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-fixed-top" style="padding-left:1%!important; padding-right:4.5%!important; width:100%!important; margin:0 auto!important;">
         <!--<div class="snowflakes"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>-->
-        <div class="container-fluid paddingLogo">
+        <div class="container-fluid paddingLogo headerLinks">
             <div class="position-relative d-none d-sm-block pt-1 pl-1">
             <!--<img src="{{ asset('img/merrychristmas.png') }}" class="d-none d-sm-block" width="25px" alt="SpotLogin" style="position:absolute; width:25px padding-left:3px; left:20px; top:6px;">-->
             <a href="{{  route('agenda') }}" class="navbar-brand d-none d-sm-block">
@@ -50,7 +50,7 @@
                 </button>
 
          <div class="collapse navbar-collapse custom-collapse" id="navbarCollapse">
-                <div class="navbar-nav">
+                <div class="navbar-nav activeLoaderLink">
 
                     @php
                     $url = route('agenda');
@@ -120,7 +120,7 @@
                     @endcan
                     @if($AppUI['person_type'] != 'SUPER_ADMIN')
                     <div class="nav-item dropdown">
-                         <a href="#" class="nav-link dropdown-toggle text-center mr-2" data-bs-toggle="dropdown"><i class="fa-solid fa-file-invoice-dollar"></i> <span class="d-none d-sm-block"></span> {{ __('Invoicing') }}</a>
+                         <a href="#" class="nav-link dropdown-toggle text-center mr-2" data-bs-toggle="dropdown"><i class="fa-solid fa-file-invoice-dollar"></i> <span class="d-none d-sm-block"></span> {{ __('Invoicing') }} <i class="fa fa-caret-down"></i></a>
                         <div class="dropdown-menu header">
                         @if(!$AppUI->isStudent() && !$AppUI->isParent())
 
@@ -198,6 +198,11 @@
                     </div>-->
                     @endif
 
+                    <!--Premium Reminded-->
+                    @if(!$AppUI->isStudent() && !$AppUI->isParent())
+                        @include('elements.payment_remainder')
+                    @endif
+
                     <a class="nav-item nav-link d-sm-none text-center text-danger" href="/logout"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a>
 
                     @unlessrole('superadmin')
@@ -212,10 +217,6 @@
 
                 </div>
 
-                <!--Payment Reminded-->
-                @if(!$AppUI->isStudent() && !$AppUI->isParent())
-                    @include('elements.payment_remainder')
-                @endif
 
                 <div class="navbar-nav ms-auto user-area d-none d-sm-block">
 
@@ -369,4 +370,9 @@
             $("#custom-dropdown-toggle").dropdown('toggle');
         });
     });
+    $(document).ready(function() {
+    $('.activeLoaderLink a:not(.dropdown-toggle)').on('click', function() {
+        $("#pageloader").fadeIn('fast');
+    });
+});
 </script>
