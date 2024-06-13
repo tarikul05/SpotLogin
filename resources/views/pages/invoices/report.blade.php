@@ -34,7 +34,7 @@
 		<!-- Formulaires -->
 		<div class="row">
 			<div class="col-md-12">
-                Generate report from your invoice's list :<br>  
+                Generate report from your list of invoices by invoice's date:<br>  
 				<form enctype="multipart/form-data" role="form" id="form_invoicing" class="form-horizontal" method="post" action="#">
                     <div class="form-group row">
                         <div class="col-md-4 p-2 md-12">
