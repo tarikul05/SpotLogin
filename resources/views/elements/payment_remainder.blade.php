@@ -3,7 +3,11 @@
 <?php if( !empty($user->trial_ends_at) && ($today_date <= $ends_at) ){ ?>
         <a href="{{ route('subscription.upgradePlan') }}" class="nav-item nav-link text-center mr-2 text-success" data-bs-toggle="tooltip" data-bs-placement="top" title="<?php echo $day_diff ?> {{__('days remaining in your trial period. Please get a Premium Plan to unlock all features.')}}"><b><i class="fa-regular fa-star"></i> <span class="d-none d-sm-block"></span> {{ __('Premium') }}</b></a>
 <?php } else { ?>
-    <a href="{{ route('subscription.upgradePlan') }}" class="nav-item nav-link text-center mr-2 text-success" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('Please get a Premium Plan to unlock all features.')}}"><b><i class="fa-regular fa-star"></i> <span class="d-none d-sm-block"></span> {{ __('Premium') }}</b></a>
+    <?php if( !empty( $user->trial_ends_at) ){ ?>
+        <a href="{{ route('subscription.upgradePlan') }}" class="nav-item nav-link text-center mr-2 text-success" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('Your subscription is ended. Please get a Premium Plan to unlock all features.')}}"><b><i class="fa-regular fa-star"></i> <span class="d-none d-sm-block"></span> {{ __('Premium') }}</b></a>
+    <?php } else { ?>
+        <a href="{{ route('subscription.upgradePlan') }}" class="nav-item nav-link text-center mr-2 text-success" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('Your subscription is ended. Please get a Premium Plan to unlock all features.')}}"><b><i class="fa-regular fa-star"></i> <span class="d-none d-sm-block"></span> {{ __('Premium') }}</b></a>
+    <?php } ?>
 <?php } ?>
 
     <?php /*if( !empty($user->trial_ends_at) && ($today_date <= $ends_at) ){ ?>

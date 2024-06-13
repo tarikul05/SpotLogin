@@ -66,7 +66,15 @@ class AppServiceProvider extends ServiceProvider
             ['layouts.main'],
             function ($view) {
                 $user = auth()->user();
-                $is_subscribed = $user->subscribed('default');
+                //$is_subscribed = $user->subscribed('default');
+
+                $is_subscribed = false;
+                $verifSubscription = $user->subscriptions()->where('name', 'default')->first();
+
+                if ($verifSubscription && ($verifSubscription->stripe_status === 'active' || $verifSubscription->stripe_status === 'trialing' || $verifSubscription->stripe_status === 'succeeded')) {
+                    $is_subscribed = true;
+                }
+
                 $today_date = new DateTime();
                 $today_date->setTime(0, 0, 0);
                 if(!$is_subscribed){
