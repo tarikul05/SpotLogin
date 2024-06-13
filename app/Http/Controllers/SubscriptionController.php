@@ -176,13 +176,28 @@ class SubscriptionController extends Controller
                     $subscription = (object) $subscription_info['data'][0];
                 }
             }
-            $is_subscribed = $user->subscribed('default');
+            
+            /*$is_subscribed = $user->subscribed('default');
             $today_date = new DateTime();
             if (!$is_subscribed) {
                 $trial_ends_date = date('F j, Y, g:i a', strtotime($user->trial_ends_at));
             } else {
                 $trial_ends_date = null;
+            }*/
+
+            $is_subscribed = false;
+            $verifSubscription = $user->subscriptions()->where('name', 'default')->first();
+
+            if ($verifSubscription && ($verifSubscription->stripe_status === 'active' || $verifSubscription->stripe_status === 'trialing' || $verifSubscription->stripe_status === 'succeeded')) {
+                $is_subscribed = true;
             }
+
+            if (!$is_subscribed) {
+                $trial_ends_date = $user->trial_ends_at ? date('F j, Y, g:i a', strtotime($user->trial_ends_at)) : null;
+            } else {
+                $trial_ends_date = null;
+            }
+
             $plans = [];
             // $get_plans = $this->stripe->plans->all(); // get plan form stripe
             if ($user_per->isSchoolAdmin()) {
