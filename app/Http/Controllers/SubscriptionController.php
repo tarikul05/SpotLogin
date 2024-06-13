@@ -185,6 +185,8 @@ class SubscriptionController extends Controller
                 $trial_ends_date = null;
             }*/
 
+            $today_date = new DateTime();
+            
             $is_subscribed = false;
             $verifSubscription = $user->subscriptions()->where('name', 'default')->first();
 
