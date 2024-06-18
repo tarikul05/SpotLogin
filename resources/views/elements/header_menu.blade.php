@@ -143,7 +143,7 @@
                                     <a href="{{ $urlTeacherInvoice.'/school' }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("Teacher's Invoice") }}</a>
                                 @endif
                             <?php } else { ?>
-                                <span class="mt-2 badge bg-danger w-100">Only with Premium Access</span>
+                                <!--<span class="badge bg-danger w-90 text-center" style="font-size:10px; width:90% margin:0 auto; padding:5px; margin-left:20px; margin-right:3px;">Only with Premium Access</span>-->
                                 <a href="{{ $urlStudentInvoice }}" class="dropdown-item text-danger"><i class="fa-solid fa-file-invoice"></i> {{ __("To be invoiced") }}</a>
                                 @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin())
                                     <a href="{{ $urlTeacherInvoice.'/school' }}" class="dropdown-item text-danger"><i class="fa-solid fa-file-invoice"></i> {{ __("Teacher's Invoice") }}</a>
