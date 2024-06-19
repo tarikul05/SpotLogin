@@ -231,7 +231,9 @@ header.panel-heading {
 }
 /* Optionally, make sure table-bordered is not affecting your table */
 
-
+.text-primary {
+    color:#0075bf!important;
+}
 
 @media (max-width: 576px) {
     .titlePage{
@@ -1243,7 +1245,6 @@ table.dataTable.dtr-inline.collapsed>tbody>tr>th.dtr-control:before {
     margin-top: -9px;
     position: absolute;
 }
-
 
 
 .dataTables_wrapper .dataTables_filter input {

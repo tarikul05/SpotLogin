@@ -121,32 +121,32 @@
                                             </a>
                                             <div class="dropdown-menu list action text-left">
 
-                                                    <a class="dropdown-item" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditStudent',['school'=> $schoolId,'student'=> $student->id]) : route('editStudent',['student' => $student->id]) }}">
+                                                    <a class="dropdown-item text-primary" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditStudent',['school'=> $schoolId,'student'=> $student->id]) : route('editStudent',['student' => $student->id]) }}">
                                                         <i class="fa-solid fa-pen-to-square"></i>
                                                         {{ __('Edit')}}
                                                     </a>
-                                                    <a class="dropdown-item" href="{{ route('students.availabilities', $student) }}">
+                                                    <!--<a class="dropdown-item" href="{{ route('students.availabilities', $student) }}">
                                                         <i class="fa-solid fa-calendar"></i>
                                                         {{ __('Availabilities')}}
-                                                    </a>
+                                                    </a>-->
 
                                                     @if(!$student->user)
 
-                                                    <a href="javascript:void(0)" class="dropdown-item send-invite-btn" data-email="{{ $student->email }}" data-school="{{ $schoolId }}" data-student="{{ $student->id }}" title="{{ __("Send invitation") }}">
+                                                    <a href="javascript:void(0)" class="dropdown-item send-invite-btn text-primary" data-email="{{ $student->email }}" data-school="{{ $schoolId }}" data-student="{{ $student->id }}" title="{{ __("Send invitation") }}">
                                                         <i class="fa-solid fa-envelope"></i>
                                                         {{ __('Send invite') }}
                                                     </a>
 
                                                     @else
 
-                                                    <a href="javascript:void(0)" class="dropdown-item send-password-btn" data-email="{{ $student->email }}" data-school="{{ $schoolId }}" data-student="{{ $student->id }}" title="{{ __("Send invitation") }}">
+                                                    <a href="javascript:void(0)" class="dropdown-item send-password-btn text-primary" data-email="{{ $student->email }}" data-school="{{ $schoolId }}" data-student="{{ $student->id }}" title="{{ __("Send invitation") }}">
                                                         <i class="fa-solid fa-envelope"></i>
                                                         {{ __('Resend password') }}
                                                     </a>
 
                                                     @endif
 
-                                                    <a href="javascript:void(0)" class="dropdown-item delete-student-btn" data-school="{{ $student->pivot->school_id }}" data-student="{{ $student->id }}">
+                                                    <a href="javascript:void(0)" class="dropdown-item delete-student-btn text-danger" data-school="{{ $student->pivot->school_id }}" data-student="{{ $student->id }}">
                                                         <i class="fa fa-trash"></i>
                                                         {{ __('Delete') }}
                                                     </a>
