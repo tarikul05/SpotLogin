@@ -1,7 +1,7 @@
 <div class="row justify-content-center pt-3">
     <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">Account information</div>
+        <div class="card2">
+            <div class="card-header titleCardPage">Account information</div>
             <div class="card-body">
                 <!--@if (session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -11,28 +11,27 @@
 
 
 
-                <table class="table table-bordered table-hover">
-                    <tr><td><b>{{ __('School name') }}</b></td> <td>{{  $AppUI->related_school->school_name }}</td></tr>
+                <table class="table table-stripped table-hover">
+                    <tr><td class="titleFieldPage" width="250"><b>{{ __('School name') }}</b></td> <td>{{  $AppUI->related_school->school_name }}</td></tr>
                     @if($AppUI->related_school->discipline != null)
-                    <tr><td><b>{{ __('Activity') }}</b></td> <td>{{  $AppUI->related_school->discipline }}</td></tr>
+                    <tr><td class="titleFieldPage"><b>{{ __('Activity') }}</b></td> <td>{{  $AppUI->related_school->discipline }}</td></tr>
                     @endif
-                    <tr><td><b>{{ __('Created at') }}</b></td> <td>{{  $AppUI->created_at }}</td></tr>
-                    <tr><td><b>Account Timezone</b></td> <td>{{  $AppUI->related_school->timezone }}</td></tr>
+                    <tr><td class="titleFieldPage"><b>{{ __('Created at') }}</b></td> <td>{{  $AppUI->created_at }}</td></tr>
+                    <tr><td class="titleFieldPage"><b>Account Timezone</b></td> <td>{{  $AppUI->related_school->timezone }}</td></tr>
                     @if(!empty($settingUser))
-                    <tr><td><b>{{ __('Setting Timezone') }}</b> <span class="badge bg-info">current</span></td> <td>{{  $settingUser->timezone }}</td></tr>
+                    <tr><td class="titleFieldPage"><b>{{ __('Setting Timezone') }}</b></td> <td>{{  $settingUser->timezone ? $settingUser->timezone : '-' }}</td></tr>
                     @endif
                     @php
                       $countryCode = $AppUI->related_school->country_code; // Vous pouvez remplacer "FR" par la valeur souhaitée
                       $countryName = DB::table('countries')->where('code', $countryCode)->value('name');
                     @endphp
 
-                    <tr><td><b>{{ __('Country') }}</b></td> <td>{{  $countryName }}</td></tr>
-                    <tr><td><b>{{ __('Currency') }}</b></td> <td>{{  $AppUI->related_school->default_currency_code }}</td></tr>
+                    <tr><td class="titleFieldPage"><b>{{ __('Country') }}</b></td> <td>{{  $countryName }}</td></tr>
+                    <tr><td class="titleFieldPage"><b>{{ __('Currency') }}</b></td> <td>{{  $AppUI->related_school->default_currency_code }}</td></tr>
 
                   </table>
 
-                  <br>
-                  <a class="btn btn-danger btn-sm" href="#" data-bs-toggle="modal" data-bs-target="#delete_user">{{ __('Delete my account') }}</a>
+                  <a class="btn btn-outline-danger btn-sm" href="#" data-bs-toggle="modal" data-bs-target="#delete_user">{{ __('Delete my account') }}</a>
 
 
             </div>
@@ -57,7 +56,7 @@
 
             </div>
             <div class="modal-footer">
-                <a href="<?= $BASE_URL;?>/admin/profile-update" class="btn btn-secondary close"  data-dismiss="modal">{{ __('No') }}</a>
+                <a href="<?= $BASE_URL;?>" class="btn btn-secondary close"  data-dismiss="modal">{{ __('No') }}</a>
                 <a class="btn btn-danger" href="{{ route('user.disable_user') }}">{{ __('Yes, i confirm') }}</a>
             </div>
         </div>

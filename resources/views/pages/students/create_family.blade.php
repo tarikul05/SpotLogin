@@ -1,21 +1,22 @@
 
 <form enctype="multipart/form-data" class="form-horizontal" id="add_family" method="post" action="{{ route('student.createFamilyAction') }}"  name="add_family" role="form">
     @csrf
+
     <input type="hidden" name="schoolID" value="{{ $schoolId }}">
     <div class="row justify-content-center pt-1">
     <div class="col-md-12">
 
-        <div class="card">
-        <div class="card-header h6">{{ __('Create a family') }}</div>
+        <div class="card2">
+        <div class="card-header titleCardPage h6">{{ __('Create a family') }}</div>
             <div class="card-body">
 
                 <div class="from-group">
-                    <label for="name"><b>{{ __('Family name') }}</b></label>
+                    <label class="titleFieldPage" for="name"><b>{{ __('Family name') }}</b></label>
                     <input class="form-control" id="family_name" placeholder="{{ __('Family name') }}" name="family_name" type="text" required>
                 </div>
 
                 <div class="from-group mt-3">
-                    <label for="principal_name"><b>{{ __('Select all members of the family') }}</b></label>
+                    <label class="titleFieldPage" for="principal_name"><b>{{ __('Select all members of the family') }}</b></label>
                     <select class="form-select" multiple id="students" name="students[]" required>
                         @foreach($students as $student)
                         <option value="{{ $student->id }}" id="{{ $student->id }}">{{ $student->full_name }}</option>
@@ -35,7 +36,7 @@
                 </div>
 
                 <div class="from-group mt-3">
-                    <label for="principal_email"><b>{{ __('Principal Email') }}</b> <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('This address will receive the email necessary to set up the familly account')}}"></i></label>
+                    <label  class="titleFieldPage"for="principal_email"><b>{{ __('Principal Email') }}</b> <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('This address will receive the email necessary to set up the familly account')}}"></i></label>
                     <select class="form-control" id="principal_email" name="principal_email">
                        <option>{{ __('Select Email') }}</option>
                     </select>
@@ -53,12 +54,15 @@
 
 
 
-
-		<div class="mt-3">
-			<button type="submit" id="save_btn" name="save_btn" class="btn btn-success">{{ __('Save') }}</button>
-		</div>
-
     </div>
+
+    <div class="row justify-content-center" style="position:fixed; bottom:0; z-index=99999!important;opacity:1!important; width:100%;">
+        <div class="col-md-12 mt-3 pt-3 pb-3 card-header text-center" style="opacity:0.8!important; background-color:#DDDD!important;">
+            <button type="submit" id="save_btn" name="save_btn" class="btn btn-success">{{ __('Save') }}</button>
+        </div>
+    </div>
+
+
 </div>
 
 </form>

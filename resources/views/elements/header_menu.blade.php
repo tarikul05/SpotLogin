@@ -10,20 +10,20 @@
             </div>
                 <a class="user_profile d-block d-sm-none" href="#">
                 <!--<img src="{{ asset('img/merrychristmas.png') }}" width="23px" alt="SpotLogin" style="position:absolute; width:23px padding-left:25px; left:20px; top:2px; z-index:9999;">-->
-                    <div style="position: relative; width:48px; font-size:11px; display:inline;">
+                    <div style="position: relative; width:48px; font-size:11px;">
 
                             @if( $is_subscribed )
                             @if($plan->stripe_status == 'active' || $plan->stripe_status == 'trialing')
-                            <span class="badge bg-success p-1" style="position: absolute; right:-12px; top:5px; padding:2px!important;">premium</span>
+                            <span class="badge bg-success p-1" style="position: absolute; left:38px; top:3px; padding:2px!important;">premium</span>
                             @else
-                            <span class="badge bg-info p-1" style="position: absolute; right:-1px; top:5px; padding:2px!important;">basic</span>
+                            <span class="badge bg-info p-1" style="position: absolute; left:38px; top:3px; padding:2px!important;">basic</span>
                             @endif
                             @endif
                             @if( !$is_subscribed )
                                 <?php if( !empty($user->trial_ends_at) && ($today_date <= $ends_at) ){ ?>
-                                    <span class="badge bg-info p-1" style="position: absolute; right:0px; top:5px; padding:2px!important;">basic</span>
+                                    <span class="badge bg-info p-1" style="position: absolute; left:38px; top:3px; padding:2px!important;">basic</span>
                                 <?php } else { ?>
-                                    <span class="badge bg-warning p-1" style="position: absolute; right:0px; top:5px; padding:2px!important;">basic</span>
+                                    <span class="badge bg-warning p-1" style="position: absolute; left:38px; top:3px; padding:2px!important;">basic</span>
                                 <?php } ?>
                             @endif
                         <?php if (!empty($AppUI->profileImage->path_name)): ?>
@@ -43,11 +43,11 @@
 
 
             <button type="button" class="navbar-toggler custom-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" style="z-index:99999!important;">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
 
          <div class="collapse navbar-collapse custom-collapse" id="navbarCollapse">
                 <div class="navbar-nav activeLoaderLink">

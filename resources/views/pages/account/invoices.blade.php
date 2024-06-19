@@ -1,7 +1,7 @@
 <div class="row justify-content-center pt-3">
     <div class="col-md-12">
-        <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
+        <div class="card2">
+            <div class="card-header titleCardPage d-flex justify-content-between align-items-center">
                 {{ __('My invoices') }}
                 @if(!empty($invoices) && count($invoices) > 0)
                 <select id="invoiceFilter">
@@ -31,13 +31,13 @@
      <div class="table-invoices mb-3">
 
                <div class="table-responsive">
-                 <table class="table table-bordered table-hover">
+                 <table class="table table-stripped table-hover">
                    <thead>
                      <tr>
-                       <th class="text-left">{{ __('Date') }}</th>
-                       <th class="text-left">{{ __('Amount') }}</th>
-                       <th class="text-left">{{ __('Status') }}</th>
-                       <th class="text-center">{{ __('Action') }}</th>
+                       <th class="text-left titleFieldPage">{{ __('Date') }}</th>
+                       <th class="text-left titleFieldPage">{{ __('Amount') }}</th>
+                       <th class="text-left titleFieldPage">{{ __('Status') }}</th>
+                       <th class="text-center titleFieldPage">{{ __('Action') }}</th>
                      </tr>
                    </thead>
                    <tbody>
@@ -47,7 +47,7 @@
                          <td class="text-left"><?= '$'.($invoice['amount_paid']/100) ?></td>
                          <td class="text-left"><?= $invoice['status'] ?></td>
                          <td class="text-center">
-                           <a class="action_link" href="<?= $invoice['hosted_invoice_url'] ?>" target="_blank"><i class="fa-solid fa-download"></i></a>
+                           <a class="action_link titleCardPage" href="<?= $invoice['hosted_invoice_url'] ?>" target="_blank"><i class="fa-solid fa-download"></i></a>
                          </td>
                        </tr>
                      <?php endforeach;?>

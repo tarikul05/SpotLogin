@@ -9,20 +9,23 @@
   <div class="container">
 
 
-    <div class="row justify-content-center">
+    <div class="row justify-content-center pt-3">
         <div class="col-md-10">
 
-            @if($type == 'school')
-            <h5 id="page_header_id" name="page_header_id">{{ __('Invoicing for the school') }}</h5>
-            @else
-            <h5 id="page_header_id" name="page_header_id">{{ __('Invoicing System') }}</h5>
-            @endif
+            <div class="page_header_class pt-1" style="position: static;">
+                @if($type == 'school')
+                <h5 class="titlePage">{{ __('Invoicing for the school') }}</h5>
+                @else
+                <h5 class="titlePage">{{ __('Invoicing System') }}</h5>
+                @endif
+            </div>
+
 
             <div class="row justify-content-center pt-3">
                 <div class="col-md-12">
 
-    <div class="card" style="border-radius:10px;">
-        <div class="card-header d-flex justify-content-between align-items-center">
+    <div class="card2" style="border-radius:10px;">
+        <div class="card-header titleCardPage d-flex justify-content-between align-items-center">
             <b class="d-none d-sm-inline">{{ __('Invoice System') }}</b>
             <input name="search_text" type="input" class="form-control search_text_box" id="search_text"  placeholder="Find a student">
         </div>

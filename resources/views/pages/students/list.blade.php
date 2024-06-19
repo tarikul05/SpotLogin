@@ -17,13 +17,18 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
-
 @endsection
 
 @section('content')
     <div class="container">
 
-        <h5>{{ __("Student\"s List") }}</h5>
+        <div class="row justify-content-center pt-3">
+            <div class="col-md-12">
+
+        <div class="page_header_class pt-1" style="position: static;">
+            <h5 class="titlePage">{{ __("Student\"s List") }}</h5>
+        </div>
+        
 
         @include('pages.students.navbar')
 
@@ -53,6 +58,9 @@
 
         </div>
     </div>
+
+    </div>
+</div>  
 
 @endsection
 
@@ -180,7 +188,7 @@ $('#principal_email_family').append($('<option>', { value: 'custom', text: "{{__
 
 <script>
     $(document).ready(function () {
-        var table = $('#example1').DataTable({
+        var table = $('#students1').DataTable({
             dom: '<"top"f>rt<"bottom"lp><"clear">',
             ordering: false,
             searching: true,
@@ -192,7 +200,7 @@ $('#principal_email_family').append($('<option>', { value: 'custom', text: "{{__
             table.search($(this).val()).draw();
         });
 
-        $("#example1_filter").hide();
+        $("#students1_filter").hide();
     });
 </script>
 

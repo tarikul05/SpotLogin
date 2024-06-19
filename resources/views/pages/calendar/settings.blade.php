@@ -7,18 +7,20 @@
 @section('content')
     <div class="container">
 
-        <div class="row justify-content-center">
+        <div class="row justify-content-center pt-3">
             <div class="col-md-10">
 
-        @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin())
-        <h5>{{ __('School Settings') }}</h5>
-        @endif
-        @if($AppUI->isTeacherAdmin() || $AppUI->isTeacherMinimum())
-        <h5>{{ __('Coach Settings') }}</h5>
-        @endif
-        @if($AppUI->isStudent())
-        <h5>{{ __('Student Settings') }}</h5>
-        @endif
+        <div class="page_header_class pt-1" style="position: static;">
+            @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin())
+            <h5 class="titlePage">{{ __('School Settings') }}</h5>
+            @endif
+            @if($AppUI->isTeacherAdmin() || $AppUI->isTeacherMinimum())
+            <h5 class="titlePage">{{ __('Coach Settings') }}</h5>
+            @endif
+            @if($AppUI->isStudent())
+            <h5 class="titlePage">{{ __('Student Settings') }}</h5>
+            @endif
+        </div>
 
         @include('pages.settings.navbar')
 

@@ -476,8 +476,9 @@ table.tc_template .detail_header {
 .delete_event,
 .delete_location,
 .delete_level {
-	background-color: #ff8000;
-	border-color: #ff8000;
+	cursor: pointer;
+	/*background-color: #ff8000;
+	border-color: #ff8000;*/
 	color: #fff;
 	font-size: 18px;
 }

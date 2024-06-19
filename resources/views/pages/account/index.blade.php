@@ -3,15 +3,17 @@
 @section('content')
     <div class="container">
 
-        <div class="row justify-content-center">
+        <div class="row justify-content-center pt-3">
             <div class="col-md-10">
 
-        <h5>{{ __('Coach Account') }}</h5>
+        <div class="page_header_class pt-1" style="position: static;">
+            <h5 class="titlePage">{{ __('Coach Account') }}</h5>
+        </div>
+        
 
         @include('pages.account.navbar')
 
         <div class="tab-content" id="ex1-content">
-
 
             <div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
                 @include('pages.account.informations')
@@ -29,14 +31,11 @@
                 @include('pages.account.info-plus')
             </div>
 
-
         </div>
     </div>
+
         </div>
     </div>
 @endsection
 
-@section('footer_js')
-    <script src="{{ asset('js/pages/account/index.js') }}"></script>
-    <script src="{{ asset('js/pages/account/image.js') }}"></script>
-@endsection
+

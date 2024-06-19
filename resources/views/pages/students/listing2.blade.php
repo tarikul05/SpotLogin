@@ -1,13 +1,13 @@
 
 
-<div class="row justify-content-center pt-1">
+<form method="POST" action="{{ route('students.delete') }}">
+    @csrf
+    
+    <div class="row justify-content-center pt-1">
     <div class="col-md-12">
 
-        <form method="POST" action="{{ route('students.delete') }}">
-            @csrf
-
-        <div class="card" style="border-radius:10px;">
-            <div class="card-header d-flex justify-content-between align-items-center">
+        <div class="card2" style="border-radius:10px;">
+            <div class="card-header titleCardPage d-flex justify-content-between align-items-center">
                 <b class="d-none d-sm-inline">{{ __("Student\"s List") }}</b>
                 <input name="search_text" type="input" class="form-control search_text_box" id="search_text"  placeholder="Find a student">
             </div>
@@ -16,7 +16,7 @@
                 <input name="schoolId" type="hidden" value="{{$schoolId}}">
 
 
-                    <table class="table table-bordered table-hover" id="example1" style="width:100%">
+                    <table class="table table-stripped table-hover" id="students1" style="width:100%">
                         <thead>
                         <tr>
                             <th style="width: 10px!important;" class="text-left">
@@ -25,28 +25,28 @@
                                 </div>
                               </th>
                               <th></th>
-                            <th class="d-none d-lg-table-cell">{{ __('Name') }}</th>
-                            <th class="d-none d-lg-table-cell">{{ __('Status') }}</th>
-                            <th width="40" class="text-center d-none d-lg-table-cell">{{ __('Action') }}</th>
+                            <th class="d-none d-lg-table-cell titleFieldPage">{{ __('Name') }}</th>
+                            <th class="d-none d-lg-table-cell titleFieldPage">{{ __('Status') }}</th>
+                            <th width="40" class="text-center d-none d-lg-table-cell titleFieldPage">{{ __('Action') }}</th>
 
                         </tr>
                         </thead>
                         <tbody>
                             @foreach($students as $student)
                                 <tr class="add_more_level_row mobile_list_student" id="row_{{ $student->id }}">
-                                <td style="width: 10px!important; text-align:center!important;" class="p-2"><input type="checkbox" name="selected_students[]" value="{{ $student->id }}"></td>
+                                <td style="width: 10px!important; text-align:center!important;" class="p-2 align-middle"><input type="checkbox" name="selected_students[]" value="{{ $student->id }}"></td>
                                     <td class="text-center d-none d-lg-table-cell" style="width:40px; text-align: center;">
                                         <a class="text-reset text-decoration-none" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditStudent',['school'=> $schoolId,'student'=> $student->id]) : route('editStudent',['student' => $student->id]) }}">
                                         <?php if (!empty($student->profileImageStudent->path_name)): ?>
-                                        <img src="{{ $student->profileImageStudent->path_name }}" class="img-thumbnail" id="admin_logo"  alt="Sportlogin">
+                                        <img src="{{ $student->profileImageStudent->path_name }}" style="border-radius:50px; width:40px;" id="admin_logo"  alt="Sportlogin">
                                     <?php elseif (!empty($student->user->profileImage->path_name)): ?>
-                                        <img src="{{ $student->user->profileImage->path_name }}" class="img-thumbnail" id="admin_logo"  alt="Sportlogin">
+                                        <img src="{{ $student->user->profileImage->path_name }}" style="border-radius:50px; width:40px;" id="admin_logo"  alt="Sportlogin">
                                     <?php else: ?>
-                                        <img src="{{ asset('img/photo_blank.jpg') }}" class="img-thumbnail" id="admin_logo" alt="Sportlogin">
+                                        <img src="{{ asset('img/photo_blank.jpg') }}" style="border-radius:50px; width:40px;" id="admin_logo" alt="Sportlogin">
                                     <?php endif; ?>
                                         </a>
                                     </td>
-                                    <td style="position: relative;">
+                                    <td style="position: relative;" class="align-middle">
                                         <!--<a disabled style="border:1px solid #EEE; font-size:12px; margin:0; width:auto; position:absolute; right:0; top:0; background-color:#EEE;">{{$student->user ?  __('Registered') : __('Not yet registered') }}</a>-->
                                         @if(count($student->family) > 0)
                                         <a href="#" data-toggle="modal" data-target="#student_family_{{ $student->id }}">
@@ -54,11 +54,11 @@
                                         </a>
                                         @endif
                                         <a class="text-reset text-decoration-none" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditStudent',['school'=> $schoolId,'student'=> $student->id]) : route('editStudent',['student' => $student->id]) }}">
-                                            <b>{{ $student->full_name; }}</b> @if($student->user)| ID: {{$student->user->username}}@endif<br>
+                                            {{ $student->full_name; }} @if($student->user) <!--<br><span class="titleFieldPage">ID: {{$student->user->username}}</span>-->@endif<br>
                                         </a>
-                                        {{ $student->email; }}
+                                        <span class="titleFieldPage">{{ $student->email; }}</span>
                                     </td>
-                                    <td class="d-none d-lg-table-cell">
+                                    <td class="d-none d-lg-table-cell align-middle">
                                         @if($student->user)
                                         <span disabled  class="badge bg-success">{{$student->user ?  __('Registered') : __('Not yet registered') }}</span>
                                         @else
@@ -163,11 +163,21 @@
             </div>
         </div>
 
-        <button class="btn btn-danger btn-md mt-3" type="submit" id="delete-selected" onclick="return confirm('{{ __('Are you sure you want to delete the selected students?') }}')">{{ __('Delete selected students') }}</button>
-    </form>
+    
 
     </div>
+
+    <div class="row justify-content-center footer2" style="position:fixed; bottom:0; z-index=99999!important;opacity:1!important;">
+        <div class="col-md-12 mt-3 pt-3 pb-3 card-header text-center" style="opacity:0.9!important; background-color:#DDDD!important;">
+            <button class="btn btn-danger btn-md" type="submit" id="delete-selected" onclick="return confirm('{{ __('Are you sure you want to delete the selected students?') }}')">{{ __('Delete selected students') }}</button>
+            <a href="#" data-bs-toggle="modal" data-bs-target="#importModal" id="csv_btn_import" class="btn btn-primary" id="importStudents"><i class="fa-solid fa-upload"></i> Import</a>
+            <a id="csv_btn" href="{{ auth()->user()->isSuperAdmin() ? route('admin.student.export',['school'=> $schoolId]) : route('student.export') }}" target="_blank" class="btn btn-primary" id="exportStudents"><i class="fa-solid fa-download"></i> Export</a>
+        </div>
+    </div>
+   
 </div>
+</form>
+
 
 
 

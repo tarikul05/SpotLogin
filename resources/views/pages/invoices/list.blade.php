@@ -19,10 +19,14 @@
 @section('content')
   <div class="container">
 
-    <div class="row justify-content-center">
+
+    <div class="row justify-content-center pt-3">
         <div class="col-md-10">
 
-    <h5>{{ __("Invoices List") }}</h5>
+
+    <div class="page_header_class pt-1" style="position: static;">
+        <h5 class="titlePage">{{ __("Invoices List") }}</h5>
+    </div>
 
     @if(!$AppUI->isStudent() && !$AppUI->isParent())
     <nav class="subNav">
@@ -52,8 +56,8 @@
 
     <div class="row justify-content-center pt-1 mb-5">
         <div class="col-md-12">
-        <div class="card" style="border-radius:10px;">
-            <div class="card-header d-flex justify-content-between align-items-center">
+        <div class="card2" style="border-radius:10px;">
+            <div class="card-header titleCardPage d-flex justify-content-between align-items-center">
                 <b class="d-none d-sm-inline">{{ __('Invoices List') }}</b>
                 <input name="search_text" type="input" class="form-control search_text_box" id="search_text"  placeholder="Find an invoice">
             </div>
@@ -71,14 +75,14 @@
         <table id="example1" class="table table-stripped table-hover" style="width:100%">
             <thead>
                 <tr>
-                <th class="mobile-hide">{{ __('Date') }}</th>
-                <th class="sp_only">{{ __('Client') }}</th>
-                <th class="mobile-hide">{{ __('Type') }}</th>
-                <th class="mobile-hide">{{ __('Invoice Name') }}</th>
-                <th class="mobile-hide">N°</th>
-                <th>{{ __('Amount') }}</th>
-                <th class="mobile-hide">{{ __('Status') }}</th>
-                <th class="mobile-hide"></th>
+                <th class="mobile-hide titleFieldPage">{{ __('Date') }}</th>
+                <th class="sp_only titleFieldPage">{{ __('Client') }}</th>
+                <th class="mobile-hide titleFieldPage">{{ __('Type') }}</th>
+                <th class="mobile-hide titleFieldPage">{{ __('Invoice Name') }}</th>
+                <th class="mobile-hide titleFieldPage">N°</th>
+                <th class="titleFieldPage">{{ __('Amount') }}</th>
+                <th class="mobile-hide titleFieldPage">{{ __('Status') }}</th>
+                <th class="mobile-hide titleFieldPage"></th>
                 <th></th>
                 </tr>
             </thead>

@@ -1,8 +1,12 @@
-<div class="row justify-content-center pt-3">
+<form method="POST" action="{{ route('selfUpdatePriceAction') }}">
+    @csrf
+    
+    <div class="row justify-content-center pt-3">
     <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">{{ __('Prices by category') }}</div>
+        <div class="card2">
+            <div class="card-header titleCardPage">{{ __('Prices by category') }}</div>
             <div class="card-body">
+
                 <!--@if (session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         {{ session('success') }}
@@ -11,8 +15,7 @@
 
                 @if(!empty($eventCategory) && $eventCategory->count() > 0)
 
-                <form method="POST" action="{{ route('selfUpdatePriceAction') }}">
-                    @csrf
+           
 
                     <div class="accordion" id="accordionExample">
 
@@ -20,7 +23,7 @@
                         <div class="accordion-item">
                           <h6 class="accordion-header" id="heading-{{ $key }}">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ $key }}" aria-expanded="false" aria-controls="collapse-{{ $key }}">
-                                <h6><small><i class="fa-solid fa-arrow-right"></i> {{$category->title}}</small></h6>
+                                <b<small><i class="fa-solid fa-arrow-right"></i> {{$category->title}}</small></b>
                             </button>
                           </h6>
                           <div id="collapse-{{ $key }}" class="accordion-collapse collapse" aria-labelledby="heading-{{ $key }}" data-bs-parent="#accordionExample" data-category-id="{{ $category->title }}" style="background-color: rgba(0, 0, 0, .03);">
@@ -28,14 +31,14 @@
                                 <table id="tariff_table_rate" class="table table-bordered table-hover">
                                     <thead>
                                         <tr>
-                                            <th><b>{{__('Type of course')}}</b></th>
+                                            <th class="titleFieldPage"><b>{{__('Type of course')}}</b></th>
                                             @if(!$AppUI->isSchoolAdmin() && !$AppUI->isTeacherSchoolAdmin())
-                                            <th>{{__('Type of billing')}}</th>
+                                            <th class="titleFieldPage">{{__('Type of billing')}}</th>
                                             @endif
                                             @if(($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin()) && $category->s_std_pay_type == 2)
-                                            <th class="sell" style="text-align: right; font-size:12px;"><b>({{__('price for teacher /hour')}})</b></th>
+                                            <th class="sell titleFieldPage" style="text-align: right; font-size:12px;"><b>({{__('price for teacher /hour')}})</b></th>
                                             @else
-                                            <th class="sell" style="text-align: right; font-size:12px;"><b>({{__('per student /hour')}})</b></th>
+                                            <th class="sell titleFieldPage" style="text-align: right; font-size:12px;"><b>({{__('per student /hour')}})</b></th>
                                             @endif
                                         </tr>
                                     </thead>
@@ -79,11 +82,11 @@
                                                 <input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][id]" value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['id'] : '' }}">
                                                 <input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_student]" value="{{$lessionPrice->lesson_price_student}}">
                                                 <input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_id]" value="{{$lessionPrice->id}}">
-                                                <td>{{__('Lessons/Events')}}</td>
+                                                <td class="align-middle">{{__('Lessons/Events')}}</td>
                                                 @if(!$AppUI->isSchoolAdmin() && !$AppUI->isTeacherSchoolAdmin())
-                                                <td>{{ __($textForTypeBilling) }}</td>
+                                                <td class="align-middle">{{ __($textForTypeBilling) }}</td>
                                                 @endif
-                                                <td>
+                                                <td class="align-middle">
                                                     <input data-toggle="tooltip" data-bs-trigger="hover" data-bs-divider="{{ $lessionPrice->divider }}" data-bs-original-title="For 15 mn. {{  $textTooltip }}  will pay  ({{ $school->default_currency_code }}) {{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? ($ltprice[$category->id][$lessionPrice->lesson_price_student]['price_sell']/4) : '0.00' }}<hr>For 30 mn. {{  $textTooltip }} will pay ({{ $school->default_currency_code }}) {{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? ($ltprice[$category->id][$lessionPrice->lesson_price_student]['price_sell']/2) : '0.00' }}" type="text" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_sell]" value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['price_sell'] : '0.00' }}" style="text-align:right" class="form-control input-price numeric float <?= ($studentPrice == 1) && ($lessionPrice->divider != -1) ? 'd-none' : '' ?>">
                                                 </td>
                                             </tr>
@@ -93,11 +96,11 @@
                                                 <input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][id]" value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['id'] : '' }}">
                                                 <input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_student]" value="{{$lessionPrice->lesson_price_student}}">
                                                 <input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_id]" value="{{$lessionPrice->id}}">
-                                                <td>{{__('Lessons/Events')}}</td>
+                                                <td class="align-middle">{{__('Lessons/Events')}}</td>
                                                 @if(!$AppUI->isSchoolAdmin() && !$AppUI->isTeacherSchoolAdmin())
-                                                <td>{{ __($textForTypeBilling) }}</td>
+                                                <td class="align-middle">{{ __($textForTypeBilling) }}</td>
                                                 @endif
-                                                <td>
+                                                <td class="align-middle">
                                                     <input data-toggle="tooltip" data-bs-trigger="hover" data-bs-divider="{{ $lessionPrice->divider }}" data-bs-original-title="For 15 mn. {{  $textTooltip }}  will pay  ({{ $school->default_currency_code }}) {{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? ($ltprice[$category->id][$lessionPrice->lesson_price_student]['price_sell']/4) : '0.00' }}<hr>For 30 mn. {{  $textTooltip }} will pay ({{ $school->default_currency_code }}) {{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? ($ltprice[$category->id][$lessionPrice->lesson_price_student]['price_sell']/2) : '0.00' }}" type="text" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_sell]" value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['price_sell'] : '0.00' }}" style="text-align:right" class="form-control input-price numeric float <?= ($studentPrice == 1) && ($lessionPrice->divider != -1) ? 'd-none' : '' ?>">
                                                 </td>
                                             </tr>
@@ -251,13 +254,20 @@
 
 
 
-                    <br>
-                    <button type="submit" class="btn btn-primary">{{ __('Save Prices by category') }}</button>
-                </form>
+                    
                 @else
                 <i class="fa-solid fa-circle-info"></i> {{ __('Please create your first category for setup your prices') }}.
                 @endif
             </div>
         </div>
     </div>
+
+    <div class="row justify-content-center" style="position:fixed; bottom:0; z-index=99999!important;opacity:1!important;">
+        <div class="col-md-12 mt-3 pt-3 pb-3 card-header text-center" style="opacity:0.8!important; background-color:#DDDD!important;">
+            <button type="submit" class="btn btn-success">{{ __('Save Prices by category') }}</button>
+        </div>
+    </div>
+
+
 </div>
+</form>

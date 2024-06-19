@@ -162,7 +162,7 @@ $(document).ready(function(){
         </div>
         </td>
         <td class="align-middle text-center">
-        <button type="button" class="btn btn-theme-warn delete_event" data-r_id="`+lst_id+`"><i class="fa fa-trash" aria-hidden="true"></i></button>
+        <a class="text-danger delete_event" data-r_id="`+lst_id+`"><i class="fa fa-trash" aria-hidden="true"></i></a>
         </td>
         </tr>`;
         $("#add_more_event_category_div").append(resultHtml);
@@ -188,7 +188,7 @@ $(document).ready(function(){
         </td>
         <td></td>
         <td class="align-middle text-center">
-        <button type="button" class="btn btn-theme-warn delete_location"><i class="fa fa-trash" aria-hidden="true"></i></button>
+        <a class="text-danger delete_location"><i class="fa fa-trash" aria-hidden="true"></i></a>
         </td>
         </tr>`;
 
@@ -277,7 +277,7 @@ $(document).ready(function(){
         </td>
         <td></td>
         <td class="align-middle text-center">
-        <button type="button" class="btn btn-theme-warn delete_level"><i class="fa fa-trash" aria-hidden="true"></i></button>
+        <a type="button" class="text-danger delete_level"><i class="fa fa-trash" aria-hidden="true"></i></a>
         </td>
         </tr>`;
 
@@ -367,7 +367,7 @@ $(document).ready(function(){
         <input type="text" class="form-control" name="tax_number[]" value="" placeholder="Tax Number" maxlength="255">
         </td>
         <td class="align-middle text-center">
-        <button type="button" class="btn btn-danger delete_tax"><i class="fa fa-trash" aria-hidden="true"></i></button>
+        <a class="text-danger delete_tax"><i class="fa fa-trash" aria-hidden="true"></i></a>
         </td>
         </tr>`;
 

@@ -5,9 +5,9 @@
                 {{ __('List all') }}
         </button>
 
-        <button class="nav-link" id="nav-import_export-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
+        <!--<button class="nav-link" id="nav-import_export-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
                 {{ __('Export/Import') }}
-        </button>
+        </button>-->
 
         <button class="nav-link" style="background-color:#f8f5f5; padding-left:10px; margin-bottom:1px;" id="nav-add-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
                 + {{ __('Add new student') }}
@@ -20,7 +20,7 @@
         @endif
 
         @if($students)
-            <button class="nav-link" style="ight:0; background-color:#f8f5f5; padding-left:10px; margin-bottom:1px;" id="nav-family-tab" data-bs-toggle="tab" data-bs-target="#family" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
+            <button class="nav-link" style="right:0; background-color:#f8f5f5; padding-left:10px; margin-bottom:1px;" id="nav-family-tab" data-bs-toggle="tab" data-bs-target="#family" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
                + {{ __('Create a family') }}
             </button>
         @endif

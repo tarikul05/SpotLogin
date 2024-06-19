@@ -1,7 +1,7 @@
 <div class="row justify-content-center pt-3">
     <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">{{ __('My plan')}}</div>
+        <div class="card2">
+            <div class="card-header titleCardPage">{{ __('My plan')}}</div>
             <div class="card-body">
                 <!--@if (session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -70,31 +70,31 @@
 
 
 
-<table class="table table-bordered table-hover">
+<table class="table table-stripped table-hover">
 
     <tr>
-      <td><b>{{ __('Plan Type') }}</b></td>
+      <td class="titleFieldPage" width="200"><b>{{ __('Plan Type') }}</b></td>
       <?php
           if($product_object){
-              echo '<td><span class="badge bg-success"><i class="fa-solid fa-check"></i> '.$product_object->name.'</span></td>';
+              echo '<td class="titleFieldPage"><span class="badge bg-success"><i class="fa-solid fa-check"></i> '.$product_object->name.'</span></td>';
           }else{
               if($AppUI->isSchoolAdmin()){
-              echo '<td><span class="badge bg-info"><i class="fa-solid fa-circle-info"></i> ' . __('Trial period') .' </span></td>';
+              echo '<td class="titleFieldPage"><span class="badge bg-info"><i class="fa-solid fa-circle-info"></i> ' . __('Trial period') .' </span></td>';
               }else{
                 $today_date = new DateTime();
                 $trial_ends_at = new DateTime($user->trial_ends_at);
                 if (!empty($user->trial_ends_at) && $today_date <= $trial_ends_at) {
-                  echo '<td><span class="badge bg-info"><i class="fa-solid fa-circle-info"></i> Basic</span> <small>(' . __('Trial period') .')</small></td>';
+                  echo '<td class="titleFieldPage"><span class="badge bg-info"><i class="fa-solid fa-circle-info"></i> Basic</span> <small>(' . __('Trial period') .')</small></td>';
                 } else {
 
                   if($last_past_subscription) {
                   if($last_past_subscription['status'] === 'canceled'){
-                      echo '<td><span class="badge bg-info"><i class="fa-solid fa-circle-info"></i> Basic</span> <small>(' . __('Cancelled') .')</small></td>';
+                      echo '<td class="titleFieldPage"><span class="badge bg-info"><i class="fa-solid fa-circle-info"></i> Basic</span> <small>(' . __('Cancelled') .')</small></td>';
                   } else {
-                  echo '<td><span class="badge bg-info"><i class="fa-solid fa-circle-info"></i> Basic</span> <small>(' . __('Incomplete payment') .')</small></td>';
+                  echo '<td class="titleFieldPage"><span class="badge bg-info"><i class="fa-solid fa-circle-info"></i> Basic</span> <small>(' . __('Incomplete payment') .')</small></td>';
                   }
                   } else {
-                      echo '<td><span class="badge bg-info"><i class="fa-solid fa-circle-info"></i> Basic</span> (' . __('Trial ended') .')</td>';
+                      echo '<td class="titleFieldPage"><span class="badge bg-info"><i class="fa-solid fa-circle-info"></i> Basic</span> (' . __('Trial ended') .')</td>';
                   }
 
                 }
@@ -105,8 +105,8 @@
 
     @if ($subscription && ($subscription['plan']['billing_scheme'] === 'tiered' && $subscription['plan']['tiers_mode'] === 'volume'))
     <tr>
-        <td>{{ __('Number of teachers') }}</td>
-        <td>{{ $subscription['quantity'] }} teachers available</td>
+        <td class="titleFieldPage">{{ __('Number of teachers') }}</td>
+        <td class="titleFieldPage">{{ $subscription['quantity'] }} teachers available</td>
     </tr>
     @endif
 
@@ -114,9 +114,9 @@
       <tr>
           <?php
             if($AppUI->isSchoolAdmin()){
-                echo '<td><b>' . __('Trial Valid Until') . '</b></td>';
+                echo '<td class="titleFieldPage"><b>' . __('Trial Valid Until') . '</b></td>';
             }else{
-                echo '<td><b>' . __('Basic Valid Until') . '</b></td>';
+                echo '<td class="titleFieldPage"><b>' . __('Basic Valid Until') . '</b></td>';
             }
           ?>
           <td>
@@ -130,10 +130,10 @@
         <tr>
           <?php {
             if($subscription['status'] === 'trialing') {
-            echo '<td><b>' . __('Next payment') . '</b></td><td>' . date('M j, Y', $subscription['billing_cycle_anchor']).'</td>';
+            echo '<td class="titleFieldPage"><b>' . __('Next payment') . '</b></td><td>' . date('M j, Y', $subscription['billing_cycle_anchor']).'</td>';
             }
             if($subscription['status'] === 'active') {
-              echo '<td><b>' . __('Next payment') . '</b></td><td>' . date('M j, Y', $subscription['current_period_end']).'</td>';
+              echo '<td class="titleFieldPage"><b>' . __('Next payment') . '</b></td><td>' . date('M j, Y', $subscription['current_period_end']).'</td>';
             }
             }
           ?>
@@ -141,7 +141,7 @@
       <?php } ?>
 
       <tr>
-        <td><b>{{ __('Price') }}</b></td>
+        <td class="titleFieldPage"><b>{{ __('Price') }}</b></td>
           <?php if(!empty($subscription)) { ?>
               <td><span class="price"><?= '$'.($subscription['plan']['amount_decimal'])/100 ?></span>
               <span class="interval"><?= '/'.$subscription['plan']['interval'] ?></span></td>
@@ -152,7 +152,7 @@
 
       <?php if(!empty($subscription)) { ?>
         <tr>
-          <td><b>{{ __('Invoice') }}</b></td><td>
+          <td class="titleFieldPage"><b>{{ __('Invoice') }}</b></td><td>
             <i class="fa-solid fa-download"></i>
             <a class="action_link" target="_blank" href="<?= $invoice_url['hosted_invoice_url'] ?>">
             <span class="action_icon">{{ __('Download') }}</span>
@@ -171,10 +171,10 @@
       @if($subscriber->cancel_at_period_end === true || $subscriber->cancel_at_period_end === "true")
       <a class="btn btn-warning btn-md disabled" href="#"><i class="fa-solid fa-arrow-right"></i> {{ __('Cancel my subscription') }}</a>
       @else
-      <a class="btn btn-warning btn-md" href="#" id="buttonCancelSubscription"><i class="fa-solid fa-arrow-right"></i> {{ __('Cancel my subscription') }}</a>
+      <a class="btn btn-outline-warning btn-md" href="#" id="buttonCancelSubscription"><i class="fa-solid fa-arrow-right"></i> {{ __('Cancel my subscription') }}</a>
       @endif
     <?php } else { ?>
-      <a class="btn btn-success" href="{{ route('subscription.upgradePlan') }}"><i class="fa-regular fa-bell fa-bounce"></i>  {{ __('Choose a Plan & Upgrade Now') }} !</a>
+      <a class="btn btn-outline-primary" href="{{ route('subscription.upgradePlan') }}"><i class="fa-regular fa-bell fa-bounce"></i>  {{ __('Choose a Plan & Upgrade Now') }} !</a>
     <?php } ?>
   </div>
 

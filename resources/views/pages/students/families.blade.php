@@ -1,7 +1,7 @@
 <div class="row justify-content-center pt-1">
     <div class="col-md-12">
-        <div class="card" style="border-radius:10px;">
-            <div class="card-header d-flex justify-content-between align-items-center">
+        <div class="card2" style="border-radius:10px;">
+            <div class="card-header titleCardPage d-flex justify-content-between align-items-center">
                 <b class="d-none d-sm-inline">{{ __("Families\"s List") }}</b>
                 <input name="search_text_families" type="input" class="form-control search_text_box" id="search_text_families"  placeholder="Find a family">
             </div>

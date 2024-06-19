@@ -1,9 +1,12 @@
-<div class="row justify-content-center pt-3">
+<form method="POST" action="{{ route('event_location.create') }}">
+    @csrf
+    
+    <div class="row justify-content-center pt-3">
     <div class="col-md-12">
-        <form method="POST" action="{{ route('event_location.create') }}">
-        <div class="card">
-            <div class="card-header">{{__('Locations')}}</div>
+        <div class="card2">
+            <div class="card-header titleCardPage">{{__('Locations')}}</div>
             <div class="card-body">
+
                 <!--@if (session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         {{ session('success') }}
@@ -11,15 +14,14 @@
                 @endif-->
 
               
-                    @csrf
                     @php $countLocation= isset($eventLastLocaId->id) ? ($eventLastLocaId->id) : 1; @endphp
 
-                    <table class="table table-bordered table-hover">
+                    <table class="table table-stripped table-hover">
                         @if($locations->count() > 0)
                         <thead>
-                            <th width="30%">{{__('Name')}}</th>
-                            <th></th>
-                            <th width="40" class="text-center">{{__('Action')}}</th>
+                            <th class="titleFieldPage"  width="30%">{{__('Name')}}</th>
+                            <th class="titleFieldPage"></th>
+                            <th class="titleFieldPage"  width="40" class="text-center">{{__('Action')}}</th>
                         </thead>
                         @else
                         <i class="fa-solid fa-circle-info"></i> Please create your first location<br>
@@ -35,18 +37,18 @@
                                     </td>
                                     <td></td>
                                     <td class="text-center align-middle">
-                                        <button type="button" class="btn btn-danger delete_location" data-location_id="<?= $loca->id; ?>"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                                        <a type="button" class="text-danger delete_location" data-location_id="<?= $loca->id; ?>"><i class="fa fa-trash" aria-hidden="true"></i></a>
                                     </td>
                                 </tr>
                                 @php $countLocation++; @endphp
                             @endforeach
                         </tbody>
                     </table>
-                        <table class="table table-bordered" id="add_more_location_div" style="display: none;">
+                        <table class="table table-stripped" id="add_more_location_div" style="display: none;">
                             <thead>
-                                <th width="30%">{{__('Name')}}</th>
-                                <th></th>
-                                <th width="40" class="text-center">{{__('Action')}}</th>
+                                <th class="titleFieldPage"  width="30%">{{__('Name')}}</th>
+                                <th class="titleFieldPage"></th>
+                                <th class="titleFieldPage"  width="40" class="text-center">{{__('Action')}}</th>
                             </thead>
                             <tbody>
                         </table>
@@ -57,12 +59,18 @@
                     </div>
             </div>
         </div>
-        <br>
-        @if($locations->count() > 0)
-        <button type="submit" class="btn btn-primary" id="btnSaveLocations">{{ __('Save Locations') }}</button>
-        @else
-        <button type="submit" class="btn btn-primary" id="btnSaveLocations" style="display:none;">{{ __('Save Locations') }}</button>
-        @endif
-    </form>
+  
     </div>
+
+    <div class="row justify-content-center" style="position:fixed; bottom:0; z-index=99999!important;opacity:1!important; width:100%;">
+        <div class="col-md-12 mt-3 pt-3 pb-3 card-header text-center" style="opacity:0.8!important; background-color:#DDDD!important;">
+            @if($locations->count() > 0)
+            <button type="submit" class="btn btn-success" id="btnSaveLocations">{{ __('Save Locations') }}</button>
+            @else
+            <button type="submit" class="btn btn-success" id="btnSaveLocations" style="display:none;">{{ __('Save Locations') }}</button>
+            @endif
+        </div>
+    </div>
+
 </div>
+ </form>

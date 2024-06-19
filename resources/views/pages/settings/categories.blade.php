@@ -1,10 +1,12 @@
-<div class="row justify-content-center pt-3">
+<form method="POST" action="{{ route('event_category.create') }}">
+    @csrf
+    
+    <div class="row justify-content-center pt-3">
     <div class="col-md-12">
-        <form method="POST" action="{{ route('event_category.create') }}">
-            @csrf
-        <div class="card">
-            <div class="card-header">Categories</div>
+        <div class="card2">
+            <div class="card-header titleCardPage">Categories</div>
             <div class="card-body">
+
                 <!--@if (session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         {{ session('success') }}
@@ -14,12 +16,12 @@
                     @php $count= isset($eventLastCatId->id) ? ($eventLastCatId->id) : 1; @endphp
 
                     @if(!empty($eventCat) && $eventCat->count() > 0)
-                        <table class="table table-bordered table-hover">
+                        <table class="table table-stripped table-hover">
                             <thead>
-                                <th width="30%"> {{ __('Name')}}</th>
-                                <th width="60" class="text-center"> {{ __('Color')}}</th>
-                                <th>{{ __('Billing')}}</th>
-                                <th width="40" class="text-center">Action</th>
+                                <th width="30%" class="titleFieldPage"> {{ __('Name')}}</th>
+                                <th width="60" class="text-center titleFieldPage"> {{ __('Color')}}</th>
+                                <th class="titleFieldPage">{{ __('Billing')}}</th>
+                                <th width="40" class="text-center titleFieldPage">Action</th>
                             </thead>
                             <tbody>
                                 @foreach($eventCat as $cat)
@@ -59,7 +61,7 @@
                                             @endif
                                         </td>
                                         <td class="text-center align-middle">
-                                            <button type="button" class="btn btn-danger delete_event" data-category_id="<?= $cat->id; ?>"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                                            <a class="text-danger delete_event" data-category_id="<?= $cat->id; ?>"><i class="fa fa-trash" aria-hidden="true"></i></a>
                                         </td>
                                     </tr>
                                     @php $count++; @endphp
@@ -71,12 +73,12 @@
                         <i class="fa-solid fa-circle-info"></i> Please create your first category<br><br>
                         @endif
 
-                        <table class="table table-bordered" id="add_more_event_category_div" style="display: none;">
+                        <table class="table table-stripped" id="add_more_event_category_div" style="display: none;">
                             <thead>
-                                <th width="30%">Name</th>
-                                <th width="60" class="text-center">Color</th>
-                                <th>Billing</th>
-                                <th width="40" class="text-center">Action</th>
+                                <th class="titleFieldPage" width="30%">Name</th>
+                                <th width="60" class="text-center titleFieldPage">Color</th>
+                                <th class="titleFieldPage">Billing</th>
+                                <th width="40" class="text-center titleFieldPage">Action</th>
                             </thead>
                             <tbody>
                         </table>
@@ -92,9 +94,14 @@
             </div>
         </div>
 
-        <br>
-        <button type="submit" class="btn btn-primary" id="btnSaveCategories">{{ __('Save Categories') }}</button>
-    </form>
     
     </div>
-</div>
+
+       
+    
+
+    </div>
+    </form>
+    
+
+

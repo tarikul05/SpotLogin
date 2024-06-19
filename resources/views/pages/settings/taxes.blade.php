@@ -1,10 +1,12 @@
-<div class="row justify-content-center pt-3">
+<form method="POST" action="{{ route('selfUpdateTaxeAction') }}">
+    @csrf
+    
+    <div class="row justify-content-center pt-3">
     <div class="col-md-12">
-        <form method="POST" action="{{ route('selfUpdateTaxeAction') }}">
-            @csrf
-        <div class="card">
-            <div class="card-header">{{__('Taxes')}}</div>
+        <div class="card2">
+            <div class="card-header titleCardPage">{{__('Taxes')}}</div>
             <div class="card-body">
+
                 <!--@if (session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         {{ session('success') }}
@@ -12,13 +14,13 @@
                 @endif-->
 
                 
-                    <table class="table table-bordered table-hover">
+                    <table class="table table-stripped table-hover">
                         @if($InvoicesTaxData->count() > 0)
                         <thead>
-                            <th width="30%">{{__('Name')}}</th>
-                            <th>{{__('Purcentage')}}</th>
-                            <th>{{__('Number')}}</th>
-                            <th width="40" class="text-center">{{__('Action')}}</th>
+                            <th class="titleFieldPage" width="30%">{{__('Name')}}</th>
+                            <th class="titleFieldPage">{{__('Purcentage')}}</th>
+                            <th class="titleFieldPage">{{__('Number')}} <span style="font-size:10px; color:#CCC;">will show on your invoice</span></th>
+                            <th width="40" class="text-center titleFieldPage">{{__('Action')}}</th>
                         </thead>
                         @else
                         <i class="fa-solid fa-circle-info"></i> Please create your first taxe<br>
@@ -36,22 +38,22 @@
                                     </td>
                                     <td>
                                         <input type="text" class="form-control" name="tax_number[]" value="<?= $tax['tax_number'] ?>" placeholder="Tax Number" maxlength="100">
-                                        <p style="font-size:11px;">this number will show on your invoice</p>
+                                        
                                     </td>
-                                    <td class="text-center">
-                                        <button type="button" class="btn btn-danger delete_tax" data-tax_id="<?= $tax->id; ?>"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                                    <td class="text-center align-middle">
+                                        <a class="text-danger delete_tax" data-tax_id="<?= $tax->id; ?>"><i class="fa fa-trash" aria-hidden="true"></i></a>
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
 
-                        <table class="table table-bordered" id="add_more_tax_div" style="display: none;">
+                        <table class="table table-stripped" id="add_more_tax_div" style="display: none;">
                             <thead>
-                                <th width="30%">{{__('Name')}}</th>
-                                <th>{{__('Purcentage')}}</th>
-                                <th>{{__('Number')}}</th>
-                                <th width="40" class="text-center">{{__('Action')}}</th>
+                                <th class="titleFieldPage" width="30%">{{__('Name')}}</th>
+                                <th class="titleFieldPage">{{__('Purcentage')}}</th>
+                                <th class="titleFieldPage">{{__('Number')}}</th>
+                                <th width="40" class="text-center titleFieldPage">{{__('Action')}}</th>
                             </thead>
                             <tbody>
                         </table>
@@ -66,12 +68,22 @@
                    
             </div>
         </div>
-        <br>
-        @if($InvoicesTaxData->count() > 0)
-        <button type="submit" class="btn btn-primary" id="btnSaveTaxes">{{ __('Save Taxes') }}</button>
-        @else
-        <button type="submit" class="btn btn-primary" id="btnSaveTaxes" style="display:none;">{{ __('Save Taxes') }}</button>
-        @endif
-    </form>
+
     </div>
-</div>
+
+
+    <div class="row justify-content-center" style="position:fixed; bottom:0; z-index=99999!important;opacity:1!important; width:100%;">
+        <div class="col-md-12 mt-3 pt-3 pb-3 card-header text-center" style="opacity:0.8!important; background-color:#DDDD!important;">
+            @if($InvoicesTaxData->count() > 0)
+            <button type="submit" class="btn btn-success" id="btnSaveTaxes">{{ __('Save Taxes') }}</button>
+            @else
+            <button type="submit" class="btn btn-success" id="btnSaveTaxes" style="display:none;">{{ __('Save Taxes') }}</button>
+            @endif
+        </div>
+    </div>
+
+     
+
+    </div>
+    </form>
+
