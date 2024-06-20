@@ -126,7 +126,7 @@ use App\Models\LessonPriceTeacher;
                                             <div class="accordion-item" style="font-size:13px; max-width:550px; margin:0 auto;">
                                                 <h6 class="accordion-header" id="heading-T{{ $key2 }}">
                                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-T{{ $key2 }}" aria-expanded="false" aria-controls="collapse-T{{ $key2 }}">
-                                                    <b><i class="fa fa-user mr-1"></i> <b>{{ $teacher->firstname }} {{ $teacher->lastname }}</b>
+                                                    <i class="fa fa-user mr-1"></i> <b>{{ $teacher->firstname }} {{ $teacher->lastname }}</b>
                                                 </button>
                                                 </h6>
                                                 <div id="collapse-T{{ $key2 }}" class="accordion-collapse collapse" aria-labelledby="heading-T{{ $key2 }}" data-bs-parent="#accordionExampleT{{$category->id}}">

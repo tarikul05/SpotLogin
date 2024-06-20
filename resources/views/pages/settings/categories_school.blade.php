@@ -1,7 +1,7 @@
 <form method="POST" action="{{ route('event_category.create') }}">
     @csrf
     
-    <div class="row justify-content-center pt-3">
+    <div class="row justify-content-center pt-3 pb-4">
     <div class="col-md-12">
         <form method="POST" action="{{ route('event_category.create') }}">
             @csrf
@@ -54,17 +54,17 @@
                                         </td>
                                         <td>
 
-                                            <div class="pack_invoice_area student form-group row" <?php if($cat->invoiced_type == 'T'){ echo 'style="display:none"'; }  ?>>
+                                            <div class="pack_invoice_area titleFieldPage student form-group row" <?php if($cat->invoiced_type == 'T'){ echo 'style="display:none"'; }  ?>>
                                                 @if(!$AppUI->isTeacherAdmin())
-                                                <div class="col-md-6">
-                                                    <label class="titl">Teachers</label>
+                                                <div class="col-md-6 titleFieldPage">
+                                                    <label class="titleFieldPage">Teachers</label>
                                                     <!--<div class="form-check">
                                                         <label class="form-check-label" for="radio2{{$count}}">
                                                             <input type="radio" class="form-check-input" id="radio2{{$count}}" name="category[{{$count}}][s_thr_pay_type]" value="0" <?php if($cat->s_thr_pay_type == 0){ echo 'checked'; }  ?>>Hourly rate
                                                         </label>
                                                     </div>-->
                                                     <div class="form-check">
-                                                        <label class="form-check-label" for="radio{{$count}}">
+                                                        <label class="form-check-label titleFieldPage" for="radio{{$count}}">
                                                             <input type="radio" class="form-check-input" id="radio{{$count}}" name="category[{{$count}}][s_thr_pay_type]" value="1" <?php if($cat->s_thr_pay_type == 1){ echo 'checked'; }  ?>>Fixed price <span class="d-none d-sm-inline-block" style="font-size:11px;">(per student /hour)</span>
                                                         </label>
                                                     </div>
@@ -72,7 +72,7 @@
                                                 @endif
                                                 <div class="col-md-6">
                                                     @if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
-                                                    <label class="titl">Students</label>
+                                                    <label class="titl titleFieldPage">Students</label>
                                                     @endif
                                                     <!--<div class="form-check">
                                                         <label class="form-check-label" for="sradio2{{$count}}">
@@ -85,12 +85,12 @@
                                                         </label>
                                                     </div>-->
                                                     @if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
-                                                    <div class="form-check">
+                                                    <div class="form-check titleFieldPage">
                                                         <label class="form-check-label" for="sradio3{{$count}}">
                                                             <input type="radio" class="form-check-input" id="sradio3{{$count}}" name="category[{{$count}}][s_std_pay_type]" value="2" <?php if($cat->s_std_pay_type == 2){ echo 'checked'; }  ?>>Packaged
                                                         </label>
                                                     </div>
-                                                    <div class="form-check">
+                                                    <div class="form-check titleFieldPage">
                                                         <label class="form-check-label" for="sradio{{$count}}">
                                                             <input type="radio" class="form-check-input" id="tradio{{$count}}" name="category[{{$count}}][s_std_pay_type]" value="1" <?php if($cat->s_std_pay_type == 1){ echo 'checked'; }  ?>>Fixed price <span class="d-none d-sm-inline-block" style="font-size:11px;">(per student /hour)</span>
                                                         </label>
@@ -98,17 +98,17 @@
                                                     @endif
                                                 </div>
                                             </div>
-                                            <div class="pack_invoice_area teacher form-group row" <?php if($cat->invoiced_type == 'S'){ echo 'style="display:none"'; }  ?> >
-                                                <div class="col-md-6">
+                                            <div class="pack_invoice_area titleFieldPage teacher form-group row" <?php if($cat->invoiced_type == 'S'){ echo 'style="display:none"'; }  ?> >
+                                                <div class="col-md-6 titleFieldPage">
                                                     @if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
                                                     <label class="titl">Students</label>
                                                     @endif
-                                                    <div class="form-check">
+                                                    <div class="form-check titleFieldPage">
                                                         <label class="form-check-label" for="tradio2{{$count}}">
                                                             <input type="radio" class="form-check-input" id="tradio2{{$count}}" name="category[{{$count}}][t_std_pay_type]" value="0" <?php if($cat->t_std_pay_type == 0){ echo 'checked'; }  ?>>Hourly rate
                                                         </label>
                                                     </div>
-                                                    <div class="form-check">
+                                                    <div class="form-check titleFieldPage">
                                                         <label class="form-check-label" for="tradio{{$count}}">
                                                             <input type="radio" class="form-check-input" id="tradio{{$count}}" name="category[{{$count}}][t_std_pay_type]" value="1" <?php if($cat->t_std_pay_type == 1){ echo 'checked'; }  ?>>Fixed price <span class="d-none d-sm-inline-block" style="font-size:11px;">(per student /hour)</span>
                                                         </label>
