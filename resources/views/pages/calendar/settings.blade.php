@@ -153,7 +153,7 @@
         </div>
         </td>
         <td class="align-middle text-center">
-            <button type="button" class="btn btn-theme-warn delete_event" data-r_id="`+lst_id+`"><i class="fa fa-trash" aria-hidden="true"></i></button>
+            <a class="text-danger delete_event" data-r_id="`+lst_id+`"><i class="fa fa-trash" aria-hidden="true"></i></a>
         </td>
         </tr>`;
         $("#add_more_event_category_div tbody").append(resultHtml);

@@ -1,10 +1,14 @@
-<div class="row justify-content-center pt-3">
+<form method="POST" action="{{ route('event_category.create') }}">
+    @csrf
+    
+    <div class="row justify-content-center pt-3">
     <div class="col-md-12">
         <form method="POST" action="{{ route('event_category.create') }}">
             @csrf
-        <div class="card">
-            <div class="card-header">{{__('School categories')}}</div>
+        <div class="card2">
+            <div class="card-header titleCardPage">{{__('School categories')}}</div>
             <div class="card-body">
+
                 <!--@if (session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         {{ session('success') }}
@@ -22,12 +26,12 @@
                     @php $count= isset($eventLastCatId->id) ? ($eventLastCatId->id) : 1; @endphp
 
                     @if(!empty($eventCat) && $eventCat->count() > 0)
-                        <table class="table table-bordered table-hover">
+                        <table class="table table-stripped table-hover">
                             <thead>
-                                <th style="width:150px;"> {{ __('Name')}}</th>
-                                <th>{{ __('Invoice type')}}</th>
-                                <th>{{ __('Billing')}}</th>
-                                <th width="40" class="text-center">Action</th>
+                                <th class="titleFieldPage" style="width:150px;"> {{ __('Name')}}</th>
+                                <th class="titleFieldPage">{{ __('Invoice type')}}</th>
+                                <th class="titleFieldPage">{{ __('Billing')}}</th>
+                                <th width="40" class="text-center titleFieldPage">Action</th>
                             </thead>
                             <tbody>
                                 @foreach($eventCat as $cat)
@@ -116,7 +120,7 @@
                                         </td>
 
                                         <td class="text-center align-middle">
-                                            <button type="button" class="btn btn-danger delete_event" data-category_id="<?= $cat->id; ?>"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                                            <a class="text-danger delete_event" data-category_id="<?= $cat->id; ?>"><i class="fa fa-trash" aria-hidden="true"></i></a>
                                         </td>
                                     </tr>
                                     @php $count++; @endphp
@@ -128,12 +132,12 @@
                         <i class="fa-solid fa-circle-info"></i> Please create your first category<br><br>
                         @endif
 
-                        <table class="table table-bordered bg-tertiary" id="add_more_event_category_div" style="display: none;">
+                        <table class="table table-stripped bg-tertiary" id="add_more_event_category_div" style="display: none;">
                             <thead>
-                                <th style="width:200px;">Name <span class="badge bg-info">new</span></th>
-                                <th>Invoice type</th>
-                                <th>Billing</th>
-                                <th width="40" class="text-center">Action</th>
+                                <th class="titleFieldPage" style="width:200px;">Name <span class="badge bg-info">new</span></th>
+                                <th class="titleFieldPage">Invoice type</th>
+                                <th class="titleFieldPage">Billing</th>
+                                <th width="40" class="text-center titleFieldPage">Action</th>
                             </thead>
                             <tbody>
                             </tbody>
@@ -151,11 +155,14 @@
 
         </div>
 
-        <br>
-        <button type="submit" class="btn btn-primary" id="btnSaveCategories">{{ __('Save Categories') }}</button>
-    </form>
-
-
     </div>
-</div>
 
+    <div class="row justify-content-center" style="position:fixed; bottom:0; z-index=99999!important;opacity:1!important; width:100%;">
+        <div class="col-md-12 mt-3 pt-3 pb-3 card-header text-center" style="opacity:0.8!important; background-color:#DDDD!important;">
+            <button type="submit" class="btn btn-success" id="btnSaveCategories">{{ __('Save Categories') }}</button>
+        </div>
+    </div>
+
+
+</div>
+    </form>

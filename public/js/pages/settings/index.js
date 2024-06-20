@@ -123,14 +123,24 @@ $(document).on('click','.delete_event',function(){
     }else{
 
         $(this).parents('.add_more_event_category_row').remove();
+
         var table = document.getElementById("add_more_event_category_div");
         var rows = table.querySelectorAll("tr");
         if (rows.length === 1) {
             table.style.display = "none";
+            //$('#btnSaveCategories').hide();
+        }
+
+        //check if table main_category_table exist
+        var table2 = document.getElementById("main_category_table");
+        if(!table2 && rows.length === 1) {
             $('#btnSaveCategories').hide();
         }
+      
     }
 });
+
+
 
 //Add category
 $(document).ready(function(){

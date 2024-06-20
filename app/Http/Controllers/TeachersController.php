@@ -847,51 +847,83 @@ class TeachersController extends Controller
 
 
     /**
-     * Check users .
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function selfPriceUpdate(Request $request)
-    {
-        $user = Auth::user();
-        $alldata = $request->all();
+ * Check users .
+ *
+ * @param  int  $id
+ * @return \Illuminate\Http\Response
+ */
+public function selfPriceUpdate(Request $request)
+{
+    $user = Auth::user();
+    $alldata = $request->all();
 
-        $teacher = Teacher::find($user->person_id);
+    $teacher = Teacher::find($user->person_id);
 
-      // dd($alldata);
-      DB::beginTransaction();
-        try{
-             foreach ($alldata['data'] as $key => $catPrices) {
-              // dd($catPrices);
-               foreach ($catPrices as $pkey => $price) {
-                 // dd($price);
-                 $dataprice = [
-                      'event_category_id' => $key,
-                      'teacher_id' => $teacher->id,
-                      'lesson_price_student' => $price['lesson_price_student'],
-                      'lesson_price_id' => $price['lesson_price_id'],
-                      'price_buy' => $price['price_sell'],
-                      'price_sell' => $price['price_sell'],
-                  ];
+    // dd($alldata);
+    DB::beginTransaction();
+    try {
+        foreach ($alldata['data'] as $key => $catPrices) {
+            // dd($catPrices);
+            foreach ($catPrices as $pkey => $price) {
+                // dd($price);
+                $dataprice = [
+                    'event_category_id' => $key,
+                    'teacher_id' => $teacher->id,
+                    'lesson_price_student' => $price['lesson_price_student'],
+                    'lesson_price_id' => $price['lesson_price_id'],
+                    'price_buy' => $price['price_sell'],
+                    'price_sell' => $price['price_sell'],
+                ];
 
-                 if (empty($price['id'])) {
+                if (empty($price['id'])) {
                     $updatedPrice = LessonPriceTeacher::create($dataprice);
-                 }else{
+                } else {
                     $updatedPrice = LessonPriceTeacher::where('id', $price['id'])->update($dataprice);
-                 }
-               }
-             }
+                }
+            }
+        }
+        DB::commit();
+        // return back()->withInput($request->all())->with('success', __('Lesson Price updated successfully!'));
+    } catch (\Exception $e) {
+        DB::rollBack();
+        // dd($e);
+        // return error message
+        return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+    }
+
+    if (isset($alldata['data2'])) {
+        DB::beginTransaction();
+        try {
+            foreach ($alldata['data2'] as $key => $catPrices) {
+                foreach ($catPrices as $pkey => $price) {
+                    $dataprice = [
+                        'event_category_id' => $key,
+                        'teacher_id' => $price['teacher_id'],
+                        'lesson_price_student' => $price['lesson_price_student'],
+                        'lesson_price_id' => $price['lesson_price_id'],
+                        'price_buy' => !empty($price['price_buy']) ? $price['price_buy'] : $price['price_sell'],
+                        'price_sell' => $price['price_sell'],
+                    ];
+
+                    if (empty($price['id'])) {
+                        $updatedPrice = LessonPriceTeacher::create($dataprice);
+                    } else {
+                        $updatedPrice = LessonPriceTeacher::where('id', $price['id'])->update($dataprice);
+                    }
+                }
+            }
             DB::commit();
             return back()->withInput($request->all())->with('success', __('Lesson Price updated successfully!'));
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
             // dd($e);
-            //return error message
+            // return error message
             return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
         }
-
+    } else {
+        return back()->withInput($request->all())->with('success', __('Lesson Price updated successfully!'));
     }
+}
 
 
     /**

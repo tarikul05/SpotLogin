@@ -1,3 +1,7 @@
+<?php
+use App\Models\LessonPriceTeacher;
+?>
+
 <form method="POST" action="{{ route('selfUpdatePriceAction') }}">
     @csrf
     
@@ -145,6 +149,10 @@
                                                             </thead>
                                                             <tbody>
                                                                 @foreach($lessonPrices as $key3 => $lessionPrice)
+                                                                <?php                                                   
+                                                                $thepriceInit = LessonPriceTeacher::where('event_category_id', $category->id)->where('teacher_id', $teacher->id)->first();
+                                                                $theprice = !empty($thepriceInit) ? $thepriceInit : null;
+                                                                ?>
                                                                 <?php
                                                                 $class = "";
                                                                 if ($lessionPrice->divider == 1) {
@@ -181,18 +189,20 @@
                                                                     <?php if($lessionPrice->divider == -1) { ?>
                                                                     <tr class="{{$class}}">
                                                                         <input type="hidden" name="data2[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][teacher_id]" value="{{ $teacher->id }}">
-                                                                        <input type="hidden" name="data2[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][id]" value="{{ $category->id }}">
+                                                                        <input type="hidden" name="data2[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][id]" value="{{ !empty($theprice) ? $theprice->id : '' }}">
                                                                         <input type="hidden" name="data2[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_student]" value="price_fix">
                                                                         <input type="hidden" name="data2[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_id]" value="{{$lessionPrice->id}}">
                                                                         <td>{{__('Lessons/Events')}}</td>
                                                                         <!--<td>{{ __($textForTypeBilling) }}</td>-->
+     
+
                                                                         @if($category->s_std_pay_type === 1)
                                                                         <td>
-                                                                            <input data-toggle="tooltip" data-bs-trigger="hover" data-bs-divider="{{ $lessionPrice->divider }}" data-bs-original-title="For 15 mn. the teacher will be paid ({{ $school->default_currency_code }}) {{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? ($ltprice[$category->id][$lessionPrice->lesson_price_student]['price_sell']/4) : '0.00' }}<hr>For 30 mn. the teacher will be paid ({{ $school->default_currency_code }}) {{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? ($ltprice[$category->id][$lessionPrice->lesson_price_student]['price_sell']/2) : '0.00' }}" type="text" name="data2[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_sell]" value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['price_sell'] : '0.00' }}" style="text-align:right" class="form-control input-price numeric float <?= ($studentPrice == 1) && ($lessionPrice->divider != -1) ? 'd-none' : '' ?>">
+                                                                            <input data-toggle="tooltip" data-bs-trigger="hover" data-bs-divider="{{ $lessionPrice->divider }}" data-bs-original-title="For 15 mn. the teacher will be paid ({{ $school->default_currency_code }}) {{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? ($ltprice[$category->id][$lessionPrice->lesson_price_student]['price_buy']/4) : '0.00' }}<hr>For 30 mn. the teacher will be paid ({{ $school->default_currency_code }}) {{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? ($ltprice[$category->id][$lessionPrice->lesson_price_student]['price_buy']/2) : '0.00' }}" type="text" name="data2[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_buy]" value="{{ !empty($theprice) ? $theprice['price_buy'] : '0.00' }}" style="text-align:right" class="form-control input-price numeric float <?= ($studentPrice == 1) && ($lessionPrice->divider != -1) ? 'd-none' : '' ?>">
                                                                         </td>
                                                                         @endif
                                                                         <td>
-                                                                            <input data-toggle="tooltip" data-bs-trigger="hover" data-bs-divider="{{ $lessionPrice->divider }}" data-bs-original-title="For 15 mn. {{  $textTooltip }}  will pay  ({{ $school->default_currency_code }}) {{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? ($ltprice[$category->id][$lessionPrice->lesson_price_student]['price_sell']/4) : '0.00' }}<hr>For 30 mn. {{  $textTooltip }} will pay ({{ $school->default_currency_code }}) {{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? ($ltprice[$category->id][$lessionPrice->lesson_price_student]['price_sell']/2) : '0.00' }}" type="text" name="data2[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_sell]" value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['price_sell'] : '0.00' }}" style="text-align:right" class="form-control input-price numeric float <?= ($studentPrice == 1) && ($lessionPrice->divider != -1) ? 'd-none' : '' ?>">
+                                                                            <input data-toggle="tooltip" data-bs-trigger="hover" data-bs-divider="{{ $lessionPrice->divider }}" data-bs-original-title="For 15 mn. {{  $textTooltip }}  will pay  ({{ $school->default_currency_code }}) {{ isset($theprice) ? ($theprice['price_sell']/4) : '0.00' }}<hr>For 30 mn. {{  $textTooltip }} will pay ({{ $school->default_currency_code }}) {{ !empty($theprice) ? ($theprice['price_sell']/2) : '0.00' }}" type="text" name="data2[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_sell]" value="{{ !empty($theprice) ? $theprice['price_sell'] : '0.00' }}" style="text-align:right" class="form-control input-price numeric float <?= ($studentPrice == 1) && ($lessionPrice->divider != -1) ? 'd-none' : '' ?>">
                                                                         </td>
                                                                     </tr>
                                                                     <?php } ?>

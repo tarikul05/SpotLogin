@@ -16,7 +16,7 @@
                     @php $count= isset($eventLastCatId->id) ? ($eventLastCatId->id) : 1; @endphp
 
                     @if(!empty($eventCat) && $eventCat->count() > 0)
-                        <table class="table table-stripped table-hover">
+                        <table class="table table-stripped table-hover" id="main_category_table">
                             <thead>
                                 <th width="30%" class="titleFieldPage"> {{ __('Name')}}</th>
                                 <th width="60" class="text-center titleFieldPage"> {{ __('Color')}}</th>
@@ -97,8 +97,12 @@
     
     </div>
 
-       
     
+    <div class="row justify-content-center" style="position:fixed; bottom:0; z-index=99999!important;opacity:1!important; width:100%;">
+        <div class="col-md-12 mt-3 pt-3 pb-3 card-header text-center" style="opacity:0.8!important; background-color:#DDDD!important;">
+            <button type="submit" class="btn btn-success" id="btnSaveCategories">{{ __('Save Categories') }}</button>
+        </div>
+    </div>
 
     </div>
     </form>
