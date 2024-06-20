@@ -14,10 +14,12 @@
   <div class="container">
 
 
-<div class="row justify-content-center pt-1">
+<div class="row justify-content-center pt-3">
     <div class="col-md-10">
 
-    <h5>{{ __("Teacher\"s List") }}</h5>
+    <div class="page_header_class pt-1" style="position: static;">
+        <h5 class="titlePage">{{ __("Teacher\"s List") }}</h5>
+    </div>
 
     @include('pages.teachers.navbar')
 
@@ -25,8 +27,8 @@
 
 <div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 
-    <div class="card" style="border-radius:10px;">
-        <div class="card-header d-flex justify-content-between align-items-center">
+    <div class="card2" style="border-radius:10px;">
+        <div class="card-header titleCardPage d-flex justify-content-between align-items-center">
             <b class="d-none d-sm-inline">{{ __("Teacher\"s List") }}</b>
             <input name="search_text" type="input" class="form-control search_text_box" id="search_text"  placeholder="Find a teacher">
         </div>
@@ -37,11 +39,11 @@
             <tr>
                 <!--<th>{{ __('#') }}</th>-->
                 <th>&nbsp;</th>
-                <th>{{ __('Name of the Teacher') }}</th>
-                <th>{{ __('Email') }}</th>
-                <th>{{ __('User Account') }}</th>
-                <th>{{ __('Status') }}</th>
-                <th>{{ __('Action') }}</th>
+                <th class="titleFieldPage">{{ __('Name of the Teacher') }}</th>
+                <th class="titleFieldPage">{{ __('Email') }}</th>
+                <th class="titleFieldPage">{{ __('User Account') }}</th>
+                <th class="titleFieldPage">{{ __('Status') }}</th>
+                <th class="titleFieldPage">{{ __('Action') }}</th>
             </tr>
         </thead>
         <tbody>

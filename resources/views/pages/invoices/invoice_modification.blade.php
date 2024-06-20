@@ -16,10 +16,13 @@
 <div class="content">
 	<div class="container">
 
-        <div class="row justify-content-center">
+        <div class="row justify-content-center pt-3 pb-3">
             <div class="col-md-10">
 
-        <h5>{{ __("Invoice Detail") }}</h5>
+        <div class="page_header_class pt-1" style="position: static;">
+            <h5 class="titlePage">{{ __("Invoice Detail") }}</h5>
+        </div>
+        
 
         @if($invoice->invoice_status !== 10)
 		<nav>
@@ -37,15 +40,15 @@
         @endif
 
 		<!-- Tabs content -->
-        <div class="card" style="margin-bottom:25px;">
-            <div class="card-header">{{ __('Invoice Detail') }}</div>
+        <div class="card2" style="margin-bottom:25px;">
+            <div class="card-header titleCardPage">{{ __('Invoice Detail') }}</div>
             <div class="card-body">
 			<div class="tab-content" id="invoice-details-content">
 				<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 						<form role="form" id="form_main" class="form-horizontal" method="post" action="">
-                        <fieldset class="section_header_class p-3">
+                        <fieldset class="section_header_class">
                             @if ($invoice->seller_country_id != 'CA' && $invoice->seller_country_id != 'US')
-                                <label>{{ $invoice->invoice_header }}</label>
+                                <span style="font-size:12px;">{{ $invoice->invoice_header }}</span><br><br>
                             @endif
                             <table class="table table-stripped table-hover" id="invoice_list_item" name="invoice_list_item" style="font-size:1em;">
 
@@ -71,11 +74,11 @@
 
                                     <tbody>
                                         <tr class="header_tbl">
-                                            <th width="10%"><span id="row_hdr_date" name="row_hdr_date">{{ __('invoice_column_date') }}</span></th>
-                                            <th width="50%" style="text-align:left"><span id="item_particular_caption" name="item_particular_caption">{{ __('invoice_column_details') }}</span></th>
-                                            <th width="15%" style="text-align:right"><?php if($invoice->invoice_type > 0) { ?><span id="item_unit_caption" name="item_unit_caption">{{ __('Duration') }}<?php } ?></span></th>
-                                            <th width="15%" style="text-align:right"><span id="row_hdr_amount" name="row_hdr_amount">{{ __('invoice_column_amount') }}</span></th>
-                                            <th width="15%" style="text-align:right"><span id="row_hdr_amount" name="row_hdr_amount">{{ __('Extra') }}</span></th>
+                                            <th width="10%" class="titleFieldPage"><span id="row_hdr_date" name="row_hdr_date">{{ __('invoice_column_date') }}</span></th>
+                                            <th width="50%" class="titleFieldPage" style="text-align:left"><span id="item_particular_caption" name="item_particular_caption">{{ __('invoice_column_details') }}</span></th>
+                                            <th width="15%" class="titleFieldPage" style="text-align:right"><?php if($invoice->invoice_type > 0) { ?><span id="item_unit_caption" name="item_unit_caption">{{ __('Duration') }}<?php } ?></span></th>
+                                            <th width="15%" class="titleFieldPage" style="text-align:right"><span id="row_hdr_amount" name="row_hdr_amount">{{ __('invoice_column_amount') }}</span></th>
+                                            <th width="15%" class="titleFieldPage" style="text-align:right"><span id="row_hdr_amount" name="row_hdr_amount">{{ __('Extra') }}</span></th>
                                         </tr>
                                     @if (!empty($invoice->invoice_items))
                                         @foreach($invoice->invoice_items as $event_type => $group)
@@ -1018,66 +1021,74 @@
         </div>
 
 
-        <div class="col-sm-12 col-12 btn-area mb-5" style="text-align: left;">
-            <div class="pull-right btn-group save-button" id="invoice_modification">
-
-            <div id="otherButtons">
-                @if($invoice->invoice_status ==10)
-
-                @if(!$AppUI->isStudent() && !$AppUI->isParent())
-                    @if($invoice->payment_status == 0)
-                        <a id="payment_btn" target href="#" class="btn btn-theme-warn">
-                            <i class="fa-solid fa-hand-holding-dollar"></i>  <span class="d-none d-sm-inline-block">{{__('Flag as Paid')}}</span>
-                        </a>
-                    @endif
-                    @if($invoice->payment_status == 1)
-                        <a id="payment_btn" target href="#" class="btn btn-theme-success"><i class="fa fa-money" aria-hidden="true"></i>
-                            <i class="fa-solid fa-hand-holding-dollar"></i> <span class="d-none d-sm-inline-block">{{__('Paid')}}</span>
-                        </a>
-                    @endif
-                    @if($invoice->payment_status == 2)
-                    <a id="payment_btn" target href="#" class="btn btn-theme-success"><i class="fa fa-money" aria-hidden="true"></i>
-                        <i class="fa-solid fa-hand-holding-dollar"></i> <span class="d-none d-sm-inline-block">{{__('Paid in cash')}}</span>
-                    </a>
-                    @endif
-                    <button id="approved_btn" target="" href="" class="btn btn-theme-outline" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><label><i class="fa-solid fa-envelope-open-text"></i> <span class="d-none d-sm-inline-block">{{__('Send by email')}}</span></label></button>
-                    @endif
-
-                    <a id="download_pdf_btn_a" target="_blank" href="{{ route('generateInvoicePDF',['invoice_id'=> $invoice->id, 'type' => 'print_view']) }}" class="btn btn-theme-outline">
-                        <label name="download_pdf_btn d-none d-sm-block" id="download_pdf_btn"><i class="fa-solid fa-file-pdf"></i> <span class="d-none d-sm-inline-block"> {{__('Download PDF')}}</span></label>
-                    </a>
-
-                    <!--<a id="download_pdf_btn_a" href="{{ route('invoices.download', $invoice->id) }}" class="btn btn-theme-outline">
-                        <label name="download_pdf_btn d-none d-sm-block" id="download_pdf_btn"><i class="fa-solid fa-file-pdf"></i> <span class="d-none d-sm-inline-block"> {{__('Download PDF')}}</span></label>
-                    </a>-->
-
-                @else
-                    <a id="issue_inv_btn" name="issue_inv_btn" class="btn btn-sm btn-success" target="">
-                        <i class="fa-solid fa-check"></i> <span class="d-none d-sm-inline-block">{{__('Generate invoice')}}</span>
-                    </a>
-                    <a id="print_preview_btn" href="{{ route('generateInvoicePDF',['invoice_id'=> $invoice->id, 'type' => 'print_view']) }}" name="print_preview_btn" class="btn btn-theme-outline" target="_blank"><i class="fa-solid fa-file-pdf"></i> <span class="d-none d-sm-inline-block">{{__('Print Preview')}}</span></a>
-
-                @endif
-
-                @if(!$AppUI->isStudent() && !$AppUI->isParent())
-                    <a id="delete_btn_inv" name="delete_btn_inv" class="btn btn-danger" href=""><i class="fa-solid fa-trash"></i> <span class="d-none d-sm-inline-block">{{__('Delete')}}</span></a>
-                @endif
-
-            </div>
-
-                <a id="save_btn" name="save_btn" class="btn btn-theme-success" style="display: none;"><i class="fa-solid fa-check"></i> <span class="d-none d-sm-inline-block">{{__('Update invoice')}}</span></a>
-
-
-            </div>
-    </div>
+        
 
 
 
             </div>
         </div>
 
+        
+
 		</form>
 	</div>
+
+
+
+    <div class="row justify-content-center" style="position:fixed; bottom:0; z-index=99999!important;opacity:1!important; width:100%;">
+        <div class="col-md-12 mt-3 pt-3 pb-3 card-header text-center" style="opacity:0.8!important; background-color:#DDDD!important;">
+
+        <div id="otherButtons">
+            @if($invoice->invoice_status ==10)
+
+            @if(!$AppUI->isStudent() && !$AppUI->isParent())
+                @if($invoice->payment_status == 0)
+                    <a id="payment_btn" target href="#" class="btn btn-theme-warn">
+                        <i class="fa-solid fa-hand-holding-dollar"></i>  <span class="d-none d-sm-inline-block">{{__('Flag as Paid')}}</span>
+                    </a>
+                @endif
+                @if($invoice->payment_status == 1)
+                    <a id="payment_btn" target href="#" class="btn btn-theme-success"><i class="fa fa-money" aria-hidden="true"></i>
+                        <i class="fa-solid fa-hand-holding-dollar"></i> <span class="d-none d-sm-inline-block">{{__('Paid')}}</span>
+                    </a>
+                @endif
+                @if($invoice->payment_status == 2)
+                <a id="payment_btn" target href="#" class="btn btn-theme-success"><i class="fa fa-money" aria-hidden="true"></i>
+                    <i class="fa-solid fa-hand-holding-dollar"></i> <span class="d-none d-sm-inline-block">{{__('Paid in cash')}}</span>
+                </a>
+                @endif
+                <button id="approved_btn" target="" href="" class="btn btn-theme-outline" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><label><i class="fa-solid fa-envelope-open-text"></i> <span class="d-none d-sm-inline-block">{{__('Send by email')}}</span></label></button>
+                @endif
+
+                <a id="download_pdf_btn_a" target="_blank" href="{{ route('generateInvoicePDF',['invoice_id'=> $invoice->id, 'type' => 'print_view']) }}" class="btn btn-theme-outline">
+                    <label name="download_pdf_btn d-none d-sm-block" id="download_pdf_btn"><i class="fa-solid fa-file-pdf"></i> <span class="d-none d-sm-inline-block"> {{__('Download PDF')}}</span></label>
+                </a>
+
+                <!--<a id="download_pdf_btn_a" href="{{ route('invoices.download', $invoice->id) }}" class="btn btn-theme-outline">
+                    <label name="download_pdf_btn d-none d-sm-block" id="download_pdf_btn"><i class="fa-solid fa-file-pdf"></i> <span class="d-none d-sm-inline-block"> {{__('Download PDF')}}</span></label>
+                </a>-->
+
+            @else
+                <a id="issue_inv_btn" name="issue_inv_btn" class="btn btn-sm btn-success" target="">
+                    <i class="fa-solid fa-check"></i> <span class="d-none d-sm-inline-block">{{__('Generate invoice')}}</span>
+                </a>
+                <a id="print_preview_btn" href="{{ route('generateInvoicePDF',['invoice_id'=> $invoice->id, 'type' => 'print_view']) }}" name="print_preview_btn" class="btn btn-theme-outline" target="_blank"><i class="fa-solid fa-file-pdf"></i> <span class="d-none d-sm-inline-block">{{__('Print Preview')}}</span></a>
+
+            @endif
+
+            @if(!$AppUI->isStudent() && !$AppUI->isParent())
+                <a id="delete_btn_inv" name="delete_btn_inv" class="btn btn-danger" href=""><i class="fa-solid fa-trash"></i> <span class="d-none d-sm-inline-block">{{__('Delete')}}</span></a>
+            @endif
+
+        </div>
+
+            <a id="save_btn" name="save_btn" class="btn btn-success" style="display: none; max-width:200px; margin:0 auto;"><i class="fa-solid fa-check"></i> <span class="d-none d-sm-inline-block">{{__('Update invoice')}}</span></a>
+
+
+        </div>
+</div>
+
+
 	<!-- success modal-->
 	<div class="modal modal_parameter" id="modal_add_teacher">
 		<div class="modal-dialog">
