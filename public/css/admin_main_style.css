@@ -219,7 +219,7 @@ header.panel-heading {
 
 .card2 .dataTables_length label,select {
     color:#0075bf!important;
-    font-size:11px!important;
+    font-size:12px!important;
 }
 .card2 .dataTables_length select {
     border:1px solid #0075bf!important;
@@ -228,6 +228,10 @@ header.panel-heading {
     color:#0075bf!important;
     border:none!important;
     font-size:11px!important;
+}
+
+.form-control {
+    height: auto!important;
 }
 /* Optionally, make sure table-bordered is not affecting your table */
 
