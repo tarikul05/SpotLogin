@@ -34,12 +34,18 @@
   <div class="content">
 	<div class="container">
 
-		<div class="row justify-content-center">
+		<form class="form-horizontal" id="edit_lesson" method="post" action="{{ route('lesson.editAction',['school'=> $schoolId,'lesson'=> $lessonlId]) }}"  name="edit_lesson" role="form">
+			@csrf
+
+		<div class="row justify-content-center pt-3 pb-5">
 			<div class="col-md-10">
 
-		<h5>{{ __('Lesson Information') }}</h5>
+		<div class="page_header_class pt-1" style="position: static;">
+            <h5 class="titlePage">{{ __('Lesson Information') }}</h5>
+        </div>
 
-	<form class="form-horizontal" id="edit_lesson" method="post" action="{{ route('lesson.editAction',['school'=> $schoolId,'lesson'=> $lessonlId]) }}"  name="edit_lesson" role="form">
+
+
 		<div class="row">
 			<div class="col-lg-12">
 
@@ -47,13 +53,28 @@
 		<div class="tab-content" id="ex1-content">
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 
-					@csrf
+					
 					<input id="save_btn_value" name="save_btn_more" type="hidden" class="form-control" value="0">
 					<input id="redirect_url" name="redirect_url" type="hidden" class="form-control" value="{{$redirect_url}}">
 
 
-						<div class="card">
-							<div class="card-header">{{ __('Edit lesson') }}</div>
+						<div class="card2">
+
+							<!--<div class="d-block d-sm-none">-->
+								@if($lessonData->eventcategory)
+								@if(strtotime($date_end) < strtotime($current_time))
+								<div id="button_lock_and_save_div" class="alert alert-info mt-5 mb-1 text-center" role="alert" style="position: relative; display: block;  margin:0 auto;"><label id="button_lock_and_save_help_text"><i class="fa-regular fa-bell fa-bounce"></i> Please validate the event to make it available for invoicing</label>
+									<div class="save_and_more_area mt-1" style="width:100%; max-width:190px; margin:0 auto;">
+									<input type="submit" class="btn btn-sm btn-info button_lock_and_save w-100" name="validate" value="Validate">
+									<i class="fa-solid fa-lock"></i>
+									</div>
+								</div>
+								@endif
+							@endif
+						<!--</div>-->
+
+						
+						<div class="card-header titleCardPage">{{ __('Edit lesson') }}</div>
 						<div class="card-body bg-tertiary">
 						<div class="row">
 							<div class="col-md-12">
@@ -67,22 +88,11 @@
 									</div>
 								@endif
 
-								<!--<div class="d-block d-sm-none">-->
-									@if($lessonData->eventcategory)
-										@if(strtotime($date_end) < strtotime($current_time))
-										<div id="button_lock_and_save_div" class="alert alert-info mt-5 mb-3 text-center" role="alert" style="position: relative; display: block;"><label id="button_lock_and_save_help_text"><i class="fa-regular fa-bell fa-bounce"></i> Please validate the event to make it available for invoicing</label>
-											<div class="save_and_more_area mt-1" style="width:100%; max-width:190px; margin:0 auto;">
-											<input type="submit" class="btn btn-sm btn-info button_lock_and_save w-100" name="validate" value="Validate">
-											<i class="fa-solid fa-lock"></i>
-											</div>
-										</div>
-										@endif
-									@endif
-								<!--</div>-->
+								
 
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Category') }} :</label>
-									<div class="col-sm-7">
+									<label class="col-lg-4 col-sm-4 text-left" for="availability_select" id="visibility_label_id">{{__('Category') }} :</label>
+									<div class="col-sm-8">
                                         @php
                                         //dd($lessonData->eventcategory)
                                         @endphp
@@ -107,8 +117,8 @@
 									</div>
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Location') }} :</label>
-									<div class="col-sm-7">
+									<label class="col-lg-4 col-sm-4 text-left" for="availability_select" id="visibility_label_id">{{__('Location') }} :</label>
+									<div class="col-sm-8">
 										<div class="selectdiv">
 											<select class="form-control" id="location" name="location">
 												<option value="">{{__('Select Location') }}</option>
@@ -120,8 +130,8 @@
 									</div>
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Title') }} :</label>
-									<div class="col-sm-7">
+									<label class="col-lg-4 col-sm-4 text-left" for="availability_select" id="visibility_label_id">{{__('Title') }} :</label>
+									<div class="col-sm-8">
 										<div class="input-group">
 											<input id="Title" name="title" type="text" class="form-control" value="{{!empty($lessonData->title) ? old('title', $lessonData->title) : old('title')}}">
 										</div>
@@ -129,12 +139,12 @@
 								</div>
 								<div class="form-group row">
 									@if(!$AppUI->isTeacherAdmin() && !$AppUI->isTeacherMinimum())
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Professor') }} :</label>
+									<label class="col-lg-4 col-sm-4 text-left" for="availability_select" id="visibility_label_id">{{__('Professor') }} :</label>
 									@endif
 									@if($AppUI->isTeacherAdmin() || $AppUI->isTeacherMinimum())
 										<input type="hidden" name="teacher_select" id="teacher_select" class="form-control" value="{{ $lessonData->teacher_id }}" readonly>
 									@else
-									<div class="col-sm-7">
+									<div class="col-sm-8">
 										<div class="selectdiv">
 											<select class="form-control" id="teacher_select" name="teacher_select">
 													<option value="">{{__('Select Professor') }}</option>
@@ -147,8 +157,8 @@
 									@endif
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student') }} :</label>
-									<div class="col-sm-7">
+									<label class="col-lg-4 col-sm-4 text-left" for="availability_select" id="visibility_label_id">{{__('Student') }} :</label>
+									<div class="col-sm-8">
 										<div class="selectdiv student_list">
 											<select class="form-control" id="student" name="student[]" multiple="multiple">
 												@foreach($students as $sub)
@@ -168,8 +178,8 @@
 									</div>
 								</div>
 								<div class="form-group row not-allday">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Start date') }} :</label>
-									<div class="col-sm-7 row">
+									<label class="col-lg-4 col-sm-4 text-left" for="availability_select" id="visibility_label_id">{{__('Start date') }} :</label>
+									<div class="col-sm-8 row">
 										<div class="col-sm-4">
 											<div class="input-group" id="start_date_div">
 												<input id="start_date" name="start_date" type="text" class="form-control" value="{{!empty($date_start) ? old('start_date', date('d/m/Y', strtotime($date_start))) : old('start_date')}}" autocomplete="off">
@@ -190,8 +200,8 @@
 									</div>
 								</div>
 								<div class="form-group row not-allday">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('End date') }} :</label>
-									<div class="col-sm-7 row">
+									<label class="col-lg-4 col-sm-4 text-left" for="availability_select" id="visibility_label_id">{{__('End date') }} :</label>
+									<div class="col-sm-8 row">
 										<div class="col-sm-4">
 											<div class="input-group" id="end_date_div">
 												<input id="end_date" name="end_date" type="text" class="form-control" value="{{!empty($date_end) ? old('end_date', date('d/m/Y', strtotime($date_end))) : old('end_date')}}" autocomplete="off" readonly>
@@ -211,7 +221,7 @@
 									</div>
 								</div>
 								<div class="form-group row not-allday">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Duration') }} :</label>
+									<label class="col-lg-4 col-sm-4 text-left" for="availability_select" id="visibility_label_id">{{__('Duration') }} :</label>
 									<div class="col-sm-2">
 										<div class="input-group">
 											<input id="duration" name="duration" type="text" class="form-control" value="{{!empty($lessonData->duration_minutes) ? old('duration', $lessonData->duration_minutes) : old('duration')}}">
@@ -227,8 +237,8 @@
 									</div>
 								</div> -->
 								<div class="form-group row lesson hide_on_off" id="teacher_type_billing">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher type of billing') }} :</label>
-									<div class="col-sm-7">
+									<label class="col-lg-4 col-sm-4 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher type of billing') }} :</label>
+									<div class="col-sm-8">
 										<div class="selectdiv">
 											<select class="form-control" id="sis_paying" name="sis_paying">
 												<option value="0" {{!empty($lessonData->is_paying) ? (old('student_attn', $lessonData->is_paying) == 0 ? 'selected' : '') : (old('student_attn') == 0 ? 'selected' : '')}}>Hourly rate</option>
@@ -238,8 +248,8 @@
 									</div>
 								</div>
 								<div class="form-group row lesson hide_on_off">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student type of billing') }} :</label>
-									<div class="col-sm-7">
+									<label class="col-lg-4 col-sm-4 text-left" for="availability_select" id="visibility_label_id">{{__('Student type of billing') }} :</label>
+									<div class="col-sm-8">
 										<div class="selectdiv">
 											<select class="form-control" id="student_sis_paying" name="student_sis_paying">
 												<option value="0" {{!empty($lessonData->is_paying) ? (old('student_attn', $lessonData->is_paying) == 0 ? 'selected' : '') : (old('student_attn') == 0 ? 'selected' : '')}}>Hourly rate</option>
@@ -251,8 +261,8 @@
 								</div>
 
 								<div class="form-group row" id="hourly" style="display:none">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Number of students') }} :</label>
-									<div class="col-sm-7">
+									<label class="col-lg-4 col-sm-4 text-left" for="availability_select" id="visibility_label_id">{{__('Number of students') }} :</label>
+									<div class="col-sm-8">
 										<div class="selectdiv">
 											<select class="form-control" id="sevent_price" name="sevent_price">
 												@foreach($lessonPrice as $key => $lessprice)
@@ -271,7 +281,7 @@
 
 								<div id="price_per_student">
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Currency') }} :</label>
+									<label class="col-lg-4 col-sm-4 text-left" for="availability_select" id="visibility_label_id">{{__('Currency') }} :</label>
 									<div class="col-sm-4">
 										<div class="selectdiv">
 											<select class="form-control" id="sprice_currency" name="sprice_currency" readonly>
@@ -284,7 +294,7 @@
 								</div>
 								<div class="form-group row">
 									@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price (class/hour)') }} :</label>
+									<label class="col-lg-4 col-sm-4 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price (class/hour)') }} :</label>
 									@endif
 									<div class="col-sm-4">
 										<div class="input-group" id="sprice_amount_buy_div">
@@ -301,7 +311,7 @@
 								</div>
 								@if(!$AppUI->isTeacherSchoolAdmin() && !$AppUI->isSchoolAdmin())
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student price (student/hour)') }} :</label>
+									<label class="col-lg-4 col-sm-4 text-left" for="availability_select" id="visibility_label_id">{{__('Student price (student/hour)') }} :</label>
 									<div class="col-sm-4">
 										<div class="input-group" id="sprice_amount_sell_div">
 											<span class="input-group-addon">
@@ -314,8 +324,8 @@
 								@endif
 								</div>
 							</div>
-							<div class="section_header_class">
-								<label id="teacher_personal_data_caption">{{ __('Attendance') }}</label>
+							<div class="mt-5 mb-3">
+								<div class="card-header titleCardPage">{{ __('Students') }}</div>
 							</div>
 							<div class="col-md-12">
 								<div class="form-group row">
@@ -328,10 +338,10 @@
 															<tr>
 																<!--<th width="5%" style="text-align:left"></th>-->
 																<th width="20%" style="text-align:left">
-																	<span>{{ __('Student') }}</span>
+																	<!--<span>{{ __('Student') }}</span>-->
 																</th>
 																<th width="15%" style="text-align:left">
-																	<button id="mark_present_btn" class="btn btn-xs btn-theme-success" type="button" style="display: block;">Mark all present</button>
+																	<button id="mark_present_btn" class="btn btn-sm btn-outline-success" type="button" style="display: block;">Mark all present</button>
 																</th>
 																@if($showPrice)
 																@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
@@ -356,7 +366,7 @@
 																$studentName = App\Models\Student::find($student->student_id);
 																@endphp
                                                                 @if(!empty($studentName))
-																{{$studentName->firstname}} {{$studentName->lastname}}
+																<span style="font-size:13px;">{{$studentName->firstname}} {{$studentName->lastname}}</span>
                                                                 @else
                                                                 Student not found (deleted)
                                                                 @endif
@@ -390,8 +400,8 @@
 								</div>
 							</div>
 
-							<div class="section_header_class">
-								<label id="teacher_personal_data_caption">{{ __('Optional information') }}</label>
+							<div class="mt-5 mb-3">
+								<div class="card-header titleCardPage">{{ __('Optional information') }}</div>
 							</div>
 							<div class="col-md-12">
 								<div class="form-group row">
@@ -410,25 +420,12 @@
 					<div class="mt-3">
 					<a class="btn btn-default mobile-editLesson-btn mb-1" href="<?= $BASE_URL; ?>/agenda"><i class="fa-solid fa-arrow-left"></i> Back</a>
 
-							@if($AppUI->person_id == $lessonData->teacher_id)
-								@can('self-delete-event')
-									<a class="btn btn-theme-warn mobile-editLesson-btn mb-1" href="#" id="delete_btn" style="display: inline-block !important;">Delete</a>
-								@endcan
-							@else
-								@if($lessonData->eventcategory && ($lessonData->eventcategory->invoiced_type == 'S') && ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()))
-									<a class="btn btn-theme-warn mobile-editLesson-btn mb-1" href="#" id="delete_btn" style="display: inline-block !important;">Delete</a>
-								@else
-									@can('self-delete-event')
-										<a class="btn btn-theme-warn mobile-editLesson-btn mb-1" href="#" id="delete_btn" style="display: inline-block !important;">Delete</a>
-									@endcan
-								@endif
-							@endif
+		
 
 
-					<button id="save_btn" class="btn btn-theme-success mobile-editLesson-btn mb-1">{{ __('Save') }}</button>
-					<button id="save_btn_more" class="btn btn-theme-success mobile-editLesson-btn mb-1">{{ __('Save & add more') }}</button>
+					
 
-					<div class="d-block d-sm-none">
+					<!--<div class="d-block d-sm-none">
 						@if($lessonData->eventcategory)
 						@if(strtotime($date_end) < strtotime($current_time))
 
@@ -438,7 +435,7 @@
 
 						@endif
 						@endif
-					</div>
+					</div>-->
 
 					</div>
 
@@ -460,8 +457,33 @@
 
 	</div>
 
-</form>
+
+    <div class="row justify-content-center" style="position:fixed; bottom:0; z-index=99999!important;opacity:1!important; width:100%;">
+        <div class="col-md-12 mt-3 pt-3 pb-3 card-header text-center" style="opacity:0.91!important; background-color:#DDDD!important;">
+           
+			@if($AppUI->person_id == $lessonData->teacher_id)
+				@can('self-delete-event')
+					<a class="btn btn-danger mobile-editLesson-btn" href="#" id="delete_btn" style="display: inline-block !important;">Delete</a>
+				@endcan
+			@else
+				@if($lessonData->eventcategory && ($lessonData->eventcategory->invoiced_type == 'S') && ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()))
+					<a class="btn btn-danger mobile-editLesson-btn" href="#" id="delete_btn" style="display: inline-block !important;">Delete</a>
+				@else
+					@can('self-delete-event')
+						<a class="btn btn-danger mobile-editLesson-btn" href="#" id="delete_btn" style="display: inline-block !important;">Delete</a>
+					@endcan
+				@endif
+			@endif
+
+			<button id="save_btn" class="btn btn-success mobile-editLesson-btn">{{ __('Save') }}</button>
+			<button id="save_btn_more" class="btn btn-success mobile-editLesson-btn">{{ __('Save & add more') }}</button>
+
+        </div>
+    </div>
+
+
 </div>
+</form>
 
 </div>
 	</div>
@@ -1022,18 +1044,18 @@ $("#student, #teacher_select, #duration").on('change', function(event) {
                             $("#sprice_amount_buy").val(response.eventPrice['price_buy'])
                     	    var newDuration = $("#duration").val();
 							if(response.eventPrice['isFixed'] === 2) {
-								$(".priceByTeacher").text(response.eventPrice['price_buy']);
-								$(".priceByStudent").text(response.eventPrice['price_sell']);
+								$(".priceByTeacher").text(response.buyPriceCal);
+								$(".priceByStudent").text(response.newPrice); //eventPrice['price_sell']
 							} else {
-								$(".priceByTeacher").text(response.eventPrice['price_buy']);
-                            	$(".priceByStudent").text(response.eventPrice['price_sell']);
+								$(".priceByTeacher").text(response.buyPriceCal);
+                            	$(".priceByStudent").text(response.newPrice); //eventPrice['price_sell']
 							}
                         } else {
 							$("#sprice_amount_sell").val(response.eventPrice['price_buy'])
-							$("#sprice_amount_buy").val(response.eventPrice['price_buy'])
+							$("#sprice_amount_buy").val(response.buyPriceCal)
                     	    var newDuration = $("#duration").val();
-                            $(".priceByStudent").text(response.eventPrice['price_buy']);
-							$(".priceByTeacher").text(response.eventPrice['price_buy']);
+                            $(".priceByStudent").text(response.newPrice); //eventPrice['price_buy']
+							$(".priceByTeacher").text(response.buyPriceCal);
 
 						}
 

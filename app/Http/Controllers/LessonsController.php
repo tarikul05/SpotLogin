@@ -432,6 +432,11 @@ class LessonsController extends Controller
                 }
 
 
+                if($user->isSchoolAdmin() || $user->isTeacherSchoolAdmin()) {
+                    $attendBuyPrice = $eventPrice['price_buy']*($lessonData['duration']/60);
+                }
+
+
 
                 // fix 2 decimal value
                 $attendSellPrice = round($attendSellPrice,2);
@@ -694,7 +699,12 @@ class LessonsController extends Controller
 
 
                 $eventInit = new Event();
-                $eventPrice = $eventInit->priceCalculations(['event_category_id'=>$lessonData['category_select'],'teacher_id'=>$teacher_id,'student_count'=>$studentCount]);
+
+                if($user->isSchoolAdmin() || $user->isTeacherSchoolAdmin()) {
+                    $eventPrice = $eventInit->priceCalculationsSchool(['event_category_id'=>$lessonData['category_select'],'teacher_id'=>$teacher_id,'student_count'=>$studentCount]);
+                } else {
+                    $eventPrice = $eventInit->priceCalculations(['event_category_id'=>$lessonData['category_select'],'teacher_id'=>$teacher_id,'student_count'=>$studentCount]);
+                }
 
                 $lessonData['sprice_amount_buy'] =  $eventPrice['price_buy']; //isset($lessonData['sprice_amount_buy']) ? $lessonData['sprice_amount_buy'] : 0;
                 $lessonData['sprice_amount_sell'] = $eventPrice['price_sell']; //isset($lessonData['sprice_amount_sell']) ? $lessonData['sprice_amount_sell'] : 0;
@@ -726,6 +736,11 @@ class LessonsController extends Controller
                 $attendBuyPrice = round($attendBuyPrice,2);
 
 // dd($attendSellPrice, $attendBuyPrice);
+
+                if($user->isSchoolAdmin() || $user->isTeacherSchoolAdmin()) {
+                    $attendSellPrice = $eventPrice['price_sell']*($lessonData['duration']/60);
+                    $attendBuyPrice = $eventPrice['price_buy']*($lessonData['duration']/60);
+                }
 
 
                 $data = [
@@ -1410,6 +1425,7 @@ class LessonsController extends Controller
                     'eventPrice' => $eventPrice,
                     'lessonPriceTeacher' => $lessonPriceTeacher,
                     'newPrice' => $buyPriceCal,
+                    'buyPriceCal' => $buyPriceCal,
                     'message' =>  __('Successfully get price for this teacher')
                 ];
             }else{

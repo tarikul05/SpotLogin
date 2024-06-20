@@ -230,6 +230,10 @@ header.panel-heading {
     font-size:11px!important;
 }
 
+.card2 label {
+    color:#0075bf!important;
+}
+
 .form-control {
     height: auto!important;
 }

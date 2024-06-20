@@ -15,33 +15,18 @@
 @endphp
 @section('content')
   <div class="content">
-	<div class="container-fluid body">
-		<header class="panel-heading" style="border: none;">
-			<div class="row panel-row" style="margin:0;">
-				<div class="col-sm-6 col-xs-12 header-area" style="padding-top:8px; padding-bottom:20px;">
-					<div class="page_header_class">
-						<label id="page_header" class="page_header bold" name="page_header"><i class="fa-solid fa-calendar-day"></i> {{ __('Lesson') }}</label>
-					</div>
+	<div class="container">
+
+		<div class="row justify-content-center pt-3 pb-4">
+			<div class="col-md-10">
+
+				<div class="page_header_class pt-1" style="position: static;">
+					<h5 class="titlePage">{{ __('Lesson') }}</h5>
 				</div>
-				<div class="col-sm-6 col-xs-12 btn-area">
-
-				</div>
-			</div>
-
-		<!-- Tabs navs -->
-
-		<nav style="margin-bottom:0; padding-bottom:0;">
-			<div class="nav nav-tabs" id="nav-tab" role="tablist">
-				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Lesson information') }}</button>
-			</div>
-		</nav>
-		<!-- Tabs navs -->
-
-	</header>
 
 
 	<div class="row">
-		<div class="col-lg-10">
+		<div class="col-lg-12">
 
 		<input type="hidden" name="confirm_event_id" id="confirm_event_id" value="{{ !empty($lessonlId) ? $lessonlId : ''; }}">
 
@@ -49,9 +34,7 @@
 		<div class="tab-content view_part" id="ex1-content">
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 					<fieldset>
-						<div class="section_header_class">
-							<label id="teacher_personal_data_caption">{{ __('Lesson information') }}</label>
-						</div>
+					
 						@if((($AppUI->person_id == $lessonData->teacher_id) || (($lessonData->eventcategory->invoiced_type == 'S') && ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()))) && ($lessonData->is_locked ==1))
 							<div class="alert alert-warning">
 								<label>{{ __('This lesson is blocked, but it can still be modified by first clicking the unlock button') }}.</label>
@@ -95,8 +78,10 @@
 						@endif
 
 
-						<div class="card">
+						<div class="card2">
+							<div class="card-header titleCardPage">{{ __('Lesson detail') }}</div>
 							<div class="card-body bg-tertiary">
+
 						<div class="row">
 							<div class="col-md-12">
 							<div class="form-group row">
@@ -186,11 +171,13 @@
 						</div>
 							</div>
 						</div>
-							<div class="section_header_class">
-								<label id="teacher_personal_data_caption">{{ __('Attendance') }}</label>
-							</div>
+						
+					
 							
-							<div class="card">
+								
+							
+							<div class="card2">
+								<div class="card-header titleCardPage">{{ __('Students') }}</div>
 								<div class="card-body bg-tertiary">
 							<div class="row">
 
@@ -204,7 +191,7 @@
 														<tbody>
 															<tr>
 																<th width="15%" style="text-align:left">
-																<span>{{ __('Student') }}</span>
+																<!--<span>{{ __('Student') }}</span>-->
 																</th>
 																<th width="15%" style="text-align:left"></th>
 																@if($showPrice)
@@ -230,7 +217,7 @@
 																$studentName = App\Models\Student::find($student->student_id);
 																@endphp
                                                                 @if(!empty($studentName))
-																{{$studentName->firstname}} {{$studentName->lastname}}
+																<span style="font-size:13px;">{{$studentName->firstname}} {{$studentName->lastname}}</span>
                                                                 @else
                                                                 Student not found (deleted)
                                                                 @endif
@@ -240,13 +227,14 @@
 																</td>
 																@if($showPrice)
 																@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
+													
 																	<td>	
 																		{{ $student->price_amount_buy }} {{ $student->price_currency }}
 																	</td>
 																@endif
 																@if(!$AppUI->isTeacherSchoolAdmin() && !$AppUI->isSchoolAdmin())@endif
 																	<td style="text-align:center">								
-																			{{ $student->sell_price }}	{{ $student->price_currency }}	 
+																			{{ $student->price_amount_sell }}	{{ $student->price_currency }}	 
 																	</td>
 																
 																@endif
@@ -265,10 +253,9 @@
 								</div>
 							</div>
 
-							<div class="section_header_class">
-								<label id="teacher_personal_data_caption">{{ __('Optional information') }}</label>
-							</div>
-							<div class="card">
+		
+							<div class="card2">
+								<div class="card-header titleCardPage">{{ __('Optional information') }}</div>
 								<div class="card-body bg-tertiary">
 							<div class="row">
 							<div class="col-md-12">
@@ -289,39 +276,39 @@
 						</div>
 
 					</fieldset>
-					<!--<button id="save_btn" class="btn btn-theme-back">{{ __('Back') }} </button>-->
-			</div>
-		</div>
-
-
-	</div>
-	<div class="col-lg-2">
-
-		<div class="col-lg-2 btn_actions" style="position: fixed; right: 0;">
-			<div class="section_header_class">
-				<label><br></label>
-			</div>
-			<div class="card" style="border-radius: 8px 0 0 8px; background-color: #EEE;">
-				<div class="card-body p-3 pb-3 text-center">
-					<a class="btn btn-sm btn-info w-100 text-white mb-2" href="<?= $BASE_URL;?>/agenda" id="back_btn">
+					
+					<a class="btn btn-default mobile-editLesson-btn" href="<?= $BASE_URL;?>/agenda" id="back_btn">
 						<i class="fa-solid fa-arrow-left"></i>
 						{{ __('Back')}}
 					</a>
 
-					@if((($AppUI->person_id == $lessonData->teacher_id) || (($lessonData->eventcategory->invoiced_type == 'S') && ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()))) && ($lessonData->is_locked ==1))
-
-						<button class="btn btn-sm btn-warning w-100" onclick="confirm_event(true)"><i class="fa-solid fa-lock-open"></i> {{__('Unlock')}}</button>
-						<input type="hidden" name="confirm_event_id" id="confirm_event_id" value="{{ !empty($eventId) ? $eventId : ''; }}">
-
-					@endif
-
-				</div>
 			</div>
 		</div>
-	</div>
+
 	</div>
 
 	</div>
+
+</div>
+</div>
+</div>
+
+
+	<div class="row justify-content-center" style="position:fixed; bottom:0; z-index=99999!important;opacity:1!important; width:100%;">
+		<div class="col-md-12 mt-3 pt-3 pb-3 card-header text-center" style="opacity:0.91!important; background-color:#DDDD!important;">
+
+			@if((($AppUI->person_id == $lessonData->teacher_id) || (($lessonData->eventcategory->invoiced_type == 'S') && ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()))) && ($lessonData->is_locked ==1))
+
+				<a class="btn btn-sm btn-warning" onclick="confirm_event(true)"><i class="fa-solid fa-lock-open"></i> {{__('Unlock')}}</a>
+				<input type="hidden" name="confirm_event_id" id="confirm_event_id" value="{{ !empty($eventId) ? $eventId : ''; }}">
+
+			@endif
+
+		</div>
+	</div>
+
+
+
 @endsection
 
 
