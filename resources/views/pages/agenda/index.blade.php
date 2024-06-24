@@ -438,13 +438,13 @@
                                             <span class="input-group-addon">
                                                 <i class="fa-solid fa-list-ul"></i>
                                             </span>
-                                        <select class="form-control" id="teacher_select" name="teacher_select">
+                                            <select class="form-control" id="teacher_select" name="teacher_select">
                                                 <option value="">{{__('Select Teacher') }}</option>
-                                            @foreach($professors as $key => $professor)
-                                                <option value="{{ $professor->teacher_id }}" {{ old('teacher_select') == $professor->teacher_id ? 'selected' : ''}}>{{ $professor->nickname }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                                                @foreach($professors as $key => $professor)
+                                                    <option value="{{ $professor->teacher_id }}" @if(session('last_teacher') == $professor->teacher_id) selected @endif>{{ $professor->nickname }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                                 </div>
@@ -462,8 +462,8 @@
                                                 </span>
                                                 <select class="form-control" id="event_invoice_type" name="event_invoice_type" disabled>
                                                     <option value="">{{__('Select Type') }}</option>
-                                                    <option value="T">{{__('Teacher invoice')}}</option>
-                                                    <option value="S">{{__('School invoice')}}</option>
+                                                    <option value="T" @if(session('event_invoice_type') == "T") selected @endif>{{__('Teacher invoice')}}</option>
+                                                    <option value="S" @if(session('event_invoice_type') == "S") selected @endif>{{__('School invoice')}}</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -510,7 +510,7 @@
                                                 <select class="form-control" id="location" name="location">
                                                     <option value="" selected>Select Location</option>
                                                     @foreach($locations as $key => $location)
-                                                        <option value="{{ $location->id }}" {{ old('location') == $location->id ? 'selected' : ''}}>{{ $location->title }}</option>
+                                                        <option value="{{ $location->id }}" @if(session('last_location') == $location->id) selected @endif>{{ $location->title }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -1862,8 +1862,9 @@ $('.close-icon').on('click', function() {
                     var i='0';
 
                     resultHtml+='<option value="">{{__('Select Teacher') }}</option>';
+                    var lastTeacher = '{{ session('last_teacher') }}';
                     $.each(data, function(key,value){
-                        resultHtml+='<option value="'+value.teacher_id+'">'+value.full_name+'</option>';
+                        resultHtml+='<option value="'+value.teacher_id+'" ' + ((lastTeacher && lastTeacher == value.teacher_id) ? 'selected' : '') + '>'+value.full_name+'</option>';
                     });
 
                     $.each(data, function(key,value){
@@ -4190,6 +4191,10 @@ $(function() {
 });
 
 
+    $("#student").html($("#student option").sort(function(a, b) {
+        return a.text == b.text ? 0 : a.text < b.text ? -1 : 1
+    }))
+
 
   $('#student').multiselect({
     maxHeight: 400,  // Augmentez cette valeur selon vos besoins
@@ -4448,7 +4453,10 @@ $('#add_lesson').on('submit', function(e) {
         "name": "_token",
         "value": csrfToken,
     });
-
+    formData.push({
+        "name": "category_select",
+        "value": evetCat,
+    });
     
     var errMssg = '';
 
@@ -5226,7 +5234,8 @@ if (school_id !=null) {
                     if(isAdmin) {
                         textAdmin = "<span class='text-danger'>("+value.invoiced_type+")</span> ";
                     }
-                    resultHtml+='<option data-s_thr_pay_type="'+value.s_thr_pay_type+'" data-s_std_pay_type="'+value.s_std_pay_type+'" data-t_std_pay_type="'+value.t_std_pay_type+'" value="'+value.id+'" data-invoice="'+value.invoiced_type+'">'+textAdmin+''+value.title+'</option>';
+                    var lastCat = '{{ session('last_cat') }}';
+                    resultHtml+='<option data-s_thr_pay_type="'+value.s_thr_pay_type+'" data-s_std_pay_type="'+value.s_std_pay_type+'" data-t_std_pay_type="'+value.t_std_pay_type+'" value="'+value.id+'" data-invoice="'+value.invoiced_type+'" ' + ((lastCat && lastCat == value.id) ? 'selected' : '') + '>'+textAdmin+''+value.title+'</option>';
                 });
                 $('#category_select').html(resultHtml);
                 $('#category_select').change();

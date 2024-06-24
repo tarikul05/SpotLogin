@@ -494,8 +494,13 @@ class LessonsController extends Controller
 
                 DB::commit();
 
-                //create session "last_cat"
+                //Remember last parameters
                 Session::put('last_cat', $lessonData['category_select']);
+                Session::put('last_teacher', $lessonData['teacher_select']);
+                Session::put('last_location', $lessonData['location']);
+                if($user->isSchoolAdmin() || $user->isTeacherSchoolAdmin()) {
+                    Session::put('event_invoice_type', $lessonData['event_invoice_type']);
+                }
 
                 if($lessonData['save_btn_more'] == 1){
                     return [
