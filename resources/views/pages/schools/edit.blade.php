@@ -13,10 +13,12 @@
 
 	<div class="container">
 
-        <div class="row justify-content-center">
+        <div class="row justify-content-center pt-3 pb-3">
             <div class="col-md-10">
 
-		<h5>{{ __('School Account') }}</h5>
+		<div class="page_header_class pt-1" style="position: static;">
+			<h5 class="titlePage">{{ __('School Account') }}</h5>
+		</div>
 
 			<nav>
 				<div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -78,8 +80,8 @@
 						@csrf
 						  <div class="row justify-content-center pt-3">
 					<div class="col-md-12">
-						<div class="card">
-							<div class="card-header">{{ __('Information') }}</div>
+						<div class="card2">
+							<div class="card-header titleCardPage">{{ __('Information') }}</div>
 							<div class="card-body">
 								<div class="row">
 									<div class="col-md-6 col-xs-12">
@@ -113,7 +115,7 @@
 											</div>
 									</div> -->
 									<div class="form-group mb-3">
-										<label class="mb-1" id="row_hdr_school_name">{{ __('Name of the School')}}</label>
+										<label class="mb-1 titleFieldPage" id="row_hdr_school_name">{{ __('Name of the School')}}</label>
 										<div class="col-sm-10">
 										<div class="input-group">
 											<span class="input-group-addon"><i class="fa-solid fa-building"></i></span>
@@ -126,6 +128,25 @@
 												</span>
 											@endif
 										</div>
+										</div>
+									</div>
+
+
+									<div class="form-group mb-3">
+										<label id="organization_type_caption"
+										class="mb-1 titleFieldPage">{{ __('Timezone')}}</label>
+										<div class="col-sm-10">
+
+												<select class="form-control selectpicker" name="timezone" data-live-search="true" id="timezone">
+													<option value="">Select</option>
+													@foreach ($timezones as $key => $value)
+														<option value="{{ $key }}" {{!empty($school->timezone) ? (old('timezone', $school->timezone) == $key ? 'selected' : '') : (old('timezone') == $key ? 'selected' : '')}}>
+
+														{{ $value }}
+														</option>
+													@endforeach
+												</select>
+
 										</div>
 									</div>
 
@@ -162,7 +183,7 @@
 									</div> -->
 									<div class="form-group mb-3">
 										<label id="sender_email_label" name="sender_email_label"
-										class="mb-1">{{ __('Sender email address')}}</label>
+										class="mb-1 titleFieldPage">{{ __('Sender email address')}}</label>
 										<div class="col-sm-10">
 												<input type="email" id="sender_email"
 												name="sender_email" size="100" class="form-control"
@@ -170,7 +191,7 @@
 										</div>
 									</div>
 									<div class="form-group mb-3">
-										<label class="mb-1" id="birth_date_label_id">{{ __('Incorporation Date')}}</label>
+										<label class="mb-1 titleFieldPage" id="birth_date_label_id">{{ __('Incorporation Date')}}</label>
 										<div class="col-sm-10">
 											<div class="input-group" id="sbirth_date_div">
 												<input id="incorporation_date" name="incorporation_date" type="text" class="form-control date_picker"
@@ -182,23 +203,6 @@
 										</div>
 									</div>
 
-									<div class="form-group mb-3">
-										<label id="organization_type_caption"
-										class="mb-1">{{ __('Timezone')}}</label>
-										<div class="col-sm-10">
-
-												<select class="form-control selectpicker" name="timezone" data-live-search="true" id="timezone">
-													<option value="">Select</option>
-													@foreach ($timezones as $key => $value)
-														<option value="{{ $key }}" {{!empty($school->timezone) ? (old('timezone', $school->timezone) == $key ? 'selected' : '') : (old('timezone') == $key ? 'selected' : '')}}>
-
-														{{ $value }}
-														</option>
-													@endforeach
-												</select>
-
-										</div>
-									</div>
 
 
 								</div>
@@ -207,15 +211,15 @@
 						</div>
 					</div>
 
-							<div class="clearfix mt-3"></div>
+					
+							<div class="card-body">
 							<div class="row">
-								<div class="col-xs-12">
-										<div class="form-group alert alert-info row">
-												<label for="default_currency_code" id="default_currency_lbl"
-														name="default_currency_lbl"
-														class="mb-1 text-start">{{ __('Base currency')}}</label>
-														<div class="col-sm-12">
-														<div class="selectdiv">
+								<div class="col-lg-10 col-sm-10 col-xs-12">
+											<div class="form-group2 titleFieldPage">
+												<label 	name="default_currency_lbl"
+												class="mb-1 titleFieldPage">{{ __('Base currency')}}</label>
+														<div class="col-sm-10">
+														
 															<select class="form-control" name="default_currency_code" id="default_currency_code">
 															<option value="">Select</option>
 																@foreach ($currency as $key => $value)
@@ -224,15 +228,19 @@
 																		>  {{ $value->currency_code }}</option>
 																@endforeach
 															</select>
+													
 														</div>
-												</div>
-												<div class="col-sm-10">
+												<div class="col-sm-10 mt-2">
 														<label id="currency_alert_text"
 																name="currency_alert_text">{{ __('Wanring: Generate all pending invoices before change base currency')}}. <br>{{ __('(Lessons already scheduled will be invoiced)')}}</label>
 												</div>
 										</div>
 								</div>
 							</div>
+							</div>
+
+
+							
 							<div class="clearfix"></div>
 							@role('superadmin')
 							<div class="section_header_class">
@@ -241,7 +249,7 @@
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group row">
-										<label class="col-lg-6 col-sm-6 text-left" for="sstreet" id="street_caption">{{ __('Maximum Number of Students')}}:</label>
+										<label class="col-lg-6 col-sm-6 text-left titleFieldPage" for="sstreet" id="street_caption">{{ __('Maximum Number of Students')}}:</label>
 										<div class="col-sm-4">
 											<input type="number" min="0" max="5000" class="form-control right" id="max_students" name="max_students"
 											value="{{!empty($school->max_students) ? old('max_students', $school->max_students) : old('max_students')}}">
@@ -251,7 +259,7 @@
 								</div>
 								<div class="col-md-6">
 									<div class="form-group row">
-										<label class="col-lg-6 col-sm-6 text-left" for="sstreet" id="street_caption">{{ __('Maximum number of teachers')}}:</label>
+										<label class="col-lg-6 col-sm-6 text-left titleFieldPage" for="sstreet" id="street_caption">{{ __('Maximum number of teachers')}}:</label>
 										<div class="col-sm-4">
 										<input type="number" min="0" max="5000" class="form-control" id="max_teachers" name="max_teachers"
 										value="{{!empty($school->max_teachers) ? old('max_teachers', $school->max_teachers) : old('max_teachers')}}">
@@ -373,14 +381,14 @@
 
 							<div class="clearfix mt-3"></div>
 
-							<div class="card">
-								<div class="card-header">{{ __('Contact Person') }}</div>
+							<div class="card2">
+								<div class="card-header titleCardPage">{{ __('Contact Person') }}</div>
 								<div class="card-body">
 							<div class="row">
 								<div class="col-md-6">
 									@if($AppUI->isSuperAdmin())
 									<div class="form-group row">
-										<label class="mb-1" for="sstreet" id="street_caption">{{ __('Genre')}}:</label>
+										<label class="mb-1 titleFieldPage" for="sstreet" id="street_caption">{{ __('Genre')}}:</label>
 										<div class="col-sm-10">
 											<div class="selectdiv">
 												<select class="form-control" name="contact_gender_id" id="contact_gender_id">
@@ -393,7 +401,7 @@
 									</div>
 									@endif
 									<div class="form-group row">
-										<label class="mb-1" for="sstreet" id="street_caption">{{ __('First Name')}}</label>
+										<label class="mb-1 titleFieldPage" for="sstreet" id="street_caption">{{ __('First Name')}}</label>
 										<div class="col-sm-10">
 											<input class="form-control" id="contact_firstname" name="contact_firstname" type="text"
 											value="{{!empty($school->contact_firstname) ? old('contact_firstname', $school->contact_firstname) : old('contact_firstname')}}">
@@ -434,8 +442,8 @@
 
 							<div class="clearfix mt-3"></div>
 
-							<div class="card">
-								<div class="card-header">{{ __('School Address') }}</div>
+							<div class="card2">
+								<div class="card-header titleCardPage">{{ __('School Address') }}</div>
 								<div class="card-body">
 							<div class="row">
 								<div class="col-md-6">
@@ -511,8 +519,8 @@
 
 							<div class="clearfix mt-3"></div>
 
-							<div class="card">
-								<div class="card-header">{{ __('Contact Information') }}</div>
+							<div class="card2">
+								<div class="card-header titleCardPage">{{ __('Contact Information') }}</div>
 								<div class="card-body">
 							<div class="row">
 								<div class="col-md-6">
@@ -592,8 +600,8 @@
 
 							<div class="clearfix mt-3"></div>
 							@if($AppUI->isTeacherAdmin() || $school->country_code != 'CA' )
-							<div class="card">
-									<div class="card-header">
+							<div class="card2">
+									<div class="card-header titleCardPage">
 									@if ($isInEurope)
 										<input type="radio" id="payment_info_checkbox" name="payment_info_checkbox" value="1" {{!empty($school->payment_info_checkbox) ? (old('payment_info_checkbox', $school->payment_info_checkbox) == 1 ? 'checked' : '') : 'checked'}}>
 									@endif
@@ -678,8 +686,8 @@
 								</div>
 							</div>
 							@else
-							<div class="card">
-								<div class="card-header">{{ __('School Bank Information') }}</div>
+							<div class="card2">
+								<div class="card-header titleCardPage">{{ __('School Bank Information') }}</div>
 								<div class="card-body">
 							<div class="row">
 								<div class="col-md-6">
@@ -705,8 +713,8 @@
 							@if ($isInEurope)
 							<div class="row justify-content-center mt-3">
 								<div class="col-md-12">
-									<div class="card">
-										<div class="card-header">
+									<div class="card2">
+										<div class="card-header titleCardPage">
 											<input type="radio" id="payment_info_checkbox2" name="payment_info_checkbox" value="2" {{!empty($school->payment_info_checkbox) ? (old('payment_info_checkbox', $school->payment_info_checkbox) == 2 ? 'checked' : '') : ''}}>
 											Other payment method
 										</div>
@@ -736,8 +744,8 @@
 
 							<div class="clearfix mt-3"></div>
 
-							<div class="card">
-								<div class="card-header">{{ __('Logo') }}</div>
+							<div class="card2">
+								<div class="card-header titleCardPage">{{ __('Logo') }}</div>
 								<div class="card-body">
 
 									@if(!$AppUI->isStudent())
@@ -783,22 +791,33 @@
 							</div>
 
 						</div>
-					</div>
+					  </div>
 					</form>
 
-                    <div class="row justify-content-center pt-3">
+                    <!--<div class="row justify-content-center pt-3">
                         <div class="col-md-12">
                         <button type="submit" class="btn btn-primary" id="update_btn">
                             <i class="fa fa-save"></i> {{ __('Save')}}
                         </button>
                     </div>
-                    </div>
+                    </div>-->
+
 
 				</div>
 
 
 			</div></div>
         </div></div>
+
+		<div class="row justify-content-center" style="position:fixed; bottom:0; z-index=99999!important;opacity:1!important; width:100%;" id="main_valid">
+			<div class="col-md-12 mt-3 pt-3 pb-3 card-header text-center" style="opacity:0.91!important; background-color:#DDDD!important; margin:0 auto;">
+	
+				<a class="btn btn-success" style="width: auto;" id="update_btn">
+					{{ __('Update School Account')}}
+				</a>
+	
+			</div>
+		</div>
 
 
 	<!-- success modal-->
@@ -842,7 +861,7 @@ $(document).ready(function(){
 		document.getElementById("update_btn").style.display = "none";
 	}
 	else  {
-		document.getElementById("update_btn").style.display = "block";
+		document.getElementById("update_btn").style.display = "block-content";
 	}
 	var vtab=getUrlVarsO()["tab"];
 	if (typeof vtab === "undefined") {
@@ -852,7 +871,7 @@ $(document).ready(function(){
 		document.getElementById("update_btn").style.display = "none";
 		activaTab('tab_5');
 	} else {
-		document.getElementById("update_btn").style.display = "block";
+		document.getElementById("update_btn").style.display = "block-content";
 	}
 
 	$(document).on( 'shown.bs.tab', 'button[data-bs-toggle="tab"]', function (e) {
@@ -861,8 +880,15 @@ $(document).ready(function(){
 			document.getElementById("update_btn").style.display = "none";
 		}
 		else  {
-			document.getElementById("update_btn").style.display = "block";
+			document.getElementById("update_btn").style.display = "block-content";
 		}
+
+		if (e.target.id == 'nav-home-tab') {
+			document.getElementById("main_valid").style.display = "block";
+		} else {
+			document.getElementById("main_valid").style.display = "none";
+		}
+		//main_valid
 	})
 
 	// CKEDITOR.replace( "body_text", {
