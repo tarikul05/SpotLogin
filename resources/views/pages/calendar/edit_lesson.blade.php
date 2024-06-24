@@ -158,7 +158,7 @@
 								</div>
 								<div class="form-group row">
 									<label class="col-lg-4 col-sm-4 text-left" for="availability_select" id="visibility_label_id">{{__('Student') }} :</label>
-									<div class="col-sm-8">
+									<div class="col-sm-6">
 										<div class="selectdiv student_list">
 											<select class="form-control" id="student" name="student[]" multiple="multiple">
 												@foreach($students as $sub)
@@ -302,9 +302,9 @@
 											<span class="input-group-addon">
 												<i class="fa-solid fa-arrow-right"></i>
 											</span>
-											<input id="sprice_amount_buy" name="sprice_amount_buy" type="text" class="form-control" value="{{ isset($lessonData['price_amount_buy']) && !empty($lessonData['price_amount_buy']) ? $lessonData['price_amount_buy'] : 0 }}" autocomplete="off">
+											<input readonly id="sprice_amount_buy" name="sprice_amount_buy" type="text" class="form-control" value="{{ isset($lessonData['price_amount_buy']) && !empty($lessonData['price_amount_buy']) ? $lessonData['price_amount_buy'] : 0 }}" autocomplete="off">
 											@else
-											<input id="sprice_amount_buy" name="sprice_amount_buy" type="hidden" class="form-control" value="{{ isset($lessonData['price_amount_buy']) && !empty($lessonData['price_amount_buy']) ? $lessonData['price_amount_buy'] : 0 }}" autocomplete="off">
+											<input readonly id="sprice_amount_buy" name="sprice_amount_buy" type="hidden" class="form-control" value="{{ isset($lessonData['price_amount_buy']) && !empty($lessonData['price_amount_buy']) ? $lessonData['price_amount_buy'] : 0 }}" autocomplete="off">
 											@endif
 										</div>
 									</div>
@@ -327,7 +327,7 @@
 							<div class="mt-5 mb-3">
 								<div class="card-header titleCardPage">{{ __('Students') }}</div>
 							</div>
-							<div class="col-md-12">
+							<div class="col-md-11" style="margin:0 auto;">
 								<div class="form-group row">
 									<div class="col-sm-12">
 										<div class="form-group row">
@@ -403,12 +403,12 @@
 							<div class="mt-5 mb-3">
 								<div class="card-header titleCardPage">{{ __('Optional information') }}</div>
 							</div>
-							<div class="col-md-12">
+							<div class="col-md-11" style="margin:0 auto;">
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Description') }} :</label>
+									<label class="col-lg-3 col-sm-3 text-left titleFieldPage" for="availability_select" id="visibility_label_id">{{__('Description') }} :</label>
 									<div class="col-sm-7">
 										<div class="input-group">
-											<textarea class="form-control" cols="60" id="description" name="description" rows="5">{{!empty($lessonData->description) ? old('description', $lessonData->description) : old('description')}}</textarea>
+											<textarea class="form-control" cols="60" placeholder="Short description..." id="description" name="description" rows="5">{{!empty($lessonData->description) ? old('description', $lessonData->description) : old('description')}}</textarea>
 										</div>
 									</div>
 								</div>
@@ -463,20 +463,20 @@
            
 			@if($AppUI->person_id == $lessonData->teacher_id)
 				@can('self-delete-event')
-					<a class="btn btn-danger mobile-editLesson-btn" href="#" id="delete_btn" style="display: inline-block !important;">Delete</a>
+					<a class="btn btn-outline-danger mobile-editLesson-btn" href="#" id="delete_btn" style="display: inline-block !important;">Delete</a>
 				@endcan
 			@else
 				@if($lessonData->eventcategory && ($lessonData->eventcategory->invoiced_type == 'S') && ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()))
-					<a class="btn btn-danger mobile-editLesson-btn" href="#" id="delete_btn" style="display: inline-block !important;">Delete</a>
+					<a class="btn btn-outline-danger mobile-editLesson-btn" href="#" id="delete_btn" style="display: inline-block !important;">Delete</a>
 				@else
 					@can('self-delete-event')
-						<a class="btn btn-danger mobile-editLesson-btn" href="#" id="delete_btn" style="display: inline-block !important;">Delete</a>
+						<a class="btn btn-outline-danger mobile-editLesson-btn" href="#" id="delete_btn" style="display: inline-block !important;">Delete</a>
 					@endcan
 				@endif
 			@endif
 
+			<button id="save_btn_more" class="btn btn-outline-success mobile-editLesson-btn">{{ __('Save & add more') }}</button>
 			<button id="save_btn" class="btn btn-success mobile-editLesson-btn">{{ __('Save') }}</button>
-			<button id="save_btn_more" class="btn btn-success mobile-editLesson-btn">{{ __('Save & add more') }}</button>
 
         </div>
     </div>
@@ -1044,10 +1044,10 @@ $("#student, #teacher_select, #duration").on('change', function(event) {
                             $("#sprice_amount_buy").val(response.eventPrice['price_buy'])
                     	    var newDuration = $("#duration").val();
 							if(response.eventPrice['isFixed'] === 2) {
-								$(".priceByTeacher").text(response.buyPriceCal);
+								$(".priceByTeacher").text(response.sellPriceCal);
 								$(".priceByStudent").text(response.newPrice); //eventPrice['price_sell']
 							} else {
-								$(".priceByTeacher").text(response.buyPriceCal);
+								$(".priceByTeacher").text(response.sellPriceCal);
                             	$(".priceByStudent").text(response.newPrice); //eventPrice['price_sell']
 							}
                         } else {
@@ -1055,7 +1055,7 @@ $("#student, #teacher_select, #duration").on('change', function(event) {
 							$("#sprice_amount_buy").val(response.buyPriceCal)
                     	    var newDuration = $("#duration").val();
                             $(".priceByStudent").text(response.newPrice); //eventPrice['price_buy']
-							$(".priceByTeacher").text(response.buyPriceCal);
+							$(".priceByTeacher").text(response.sellPriceCal);
 
 						}
 

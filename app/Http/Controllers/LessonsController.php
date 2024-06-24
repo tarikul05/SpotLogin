@@ -738,7 +738,7 @@ class LessonsController extends Controller
 // dd($attendSellPrice, $attendBuyPrice);
 
                 if($user->isSchoolAdmin() || $user->isTeacherSchoolAdmin()) {
-                    $attendSellPrice = $eventPrice['price_sell']*($lessonData['duration']/60);
+                    $attendSellPrice = $eventPrice['price_sell']*($lessonData['duration']/60)/$studentCount;
                     $attendBuyPrice = $eventPrice['price_buy']*($lessonData['duration']/60);
                 }
 
@@ -1378,6 +1378,7 @@ class LessonsController extends Controller
         if ($request->isMethod('post')){
             $lessonData = $request->all();
             $studentCount = $lessonData['no_of_students'] || 0;
+            $sellPriceCal = 0;
 
             $initEventPrice = new Event();
             $user = Auth::user();
@@ -1398,11 +1399,14 @@ class LessonsController extends Controller
             if(!empty($studentCount)){
                 if($lessonPriceTeacher && $lessonPriceTeacher['lesson_price_student'] === "price_fix") {
                     $buyPriceCal = ($lessonPriceTeacher['price_buy']*($duration/60));
+                    $sellPriceCal = ($lessonPriceTeacher['price_buy']*($duration/60)/$lessonData['no_of_students']);
                 } else {
                     $buyPriceCal = ($eventPrice['price_buy']*($duration/60));
+                    $sellPriceCal = ($eventPrice['price_buy']*($duration/60));
                 }
             }else{
                 $buyPriceCal = ($eventPrice['price_buy']*($duration/60));
+                $sellPriceCal = ($eventPrice['price_buy']*($duration/60));
             }
 
         } else {
@@ -1426,6 +1430,7 @@ class LessonsController extends Controller
                     'lessonPriceTeacher' => $lessonPriceTeacher,
                     'newPrice' => $buyPriceCal,
                     'buyPriceCal' => $buyPriceCal,
+                    'sellPriceCal' => $sellPriceCal,
                     'message' =>  __('Successfully get price for this teacher')
                 ];
             }else{

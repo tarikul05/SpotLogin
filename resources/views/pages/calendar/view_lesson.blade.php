@@ -229,14 +229,18 @@
 																@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
 													
 																	<td>	
-																		{{ $student->price_amount_buy }} {{ $student->price_currency }}
+																		{{ $student->price_amount_sell }} {{ $student->price_currency }}
 																	</td>
 																@endif
-																@if(!$AppUI->isTeacherSchoolAdmin() && !$AppUI->isSchoolAdmin())@endif
+																@if(!$AppUI->isTeacherSchoolAdmin() && !$AppUI->isSchoolAdmin())
 																	<td style="text-align:center">								
-																			{{ $student->price_amount_sell }}	{{ $student->price_currency }}	 
+																			{{ $student->price_amount_sell }} {{ $student->price_currency }}	 
 																	</td>
-																
+																@else
+																	<td style="text-align:center">								
+																		{{ $student->price_amount_buy }} {{ $student->price_currency }}	 
+																	</td>
+																@endif
 																@endif
 															</tr>
 															@endforeach
