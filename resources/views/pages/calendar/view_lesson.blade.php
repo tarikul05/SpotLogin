@@ -217,7 +217,7 @@
 																$studentName = App\Models\Student::find($student->student_id);
 																@endphp
                                                                 @if(!empty($studentName))
-																<span style="font-size:13px;">{{$studentName->firstname}} {{$studentName->lastname}}</span>
+																{{$studentName->firstname}} {{$studentName->lastname}}
                                                                 @else
                                                                 Student not found (deleted)
                                                                 @endif
