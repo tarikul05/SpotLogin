@@ -292,7 +292,7 @@
                                         <?php if( !empty($user->trial_ends_at) && ($today_date <= $ends_at) ){ ?>
                                             <span class="badge bg-info d-none d-sm-block" style="position: absolute; right:0;">basic</span>
                                         <?php } else { ?>
-                                            <span class="badge bg-warning d-none d-sm-block" style="position: absolute; right:0;">basic</span>
+                                            <span class="badge bg-warning d-none d-sm-block" style="position: absolute; right:-12px; top:-4px;">basic</span>
                                         <?php } ?>
                                     @endif
                                 @endif
