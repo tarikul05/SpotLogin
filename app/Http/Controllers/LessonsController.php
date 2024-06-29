@@ -714,7 +714,6 @@ class LessonsController extends Controller
                 $lessonData['sprice_amount_buy'] =  $eventPrice['price_buy']; //isset($lessonData['sprice_amount_buy']) ? $lessonData['sprice_amount_buy'] : 0;
                 $lessonData['sprice_amount_sell'] = $eventPrice['price_sell']; //isset($lessonData['sprice_amount_sell']) ? $lessonData['sprice_amount_sell'] : 0;
 
-            if($user->isSchoolAdmin() || $user->isTeacherSchoolAdmin()) {
 
                 if(!empty($studentCount)){
                     $buyPriceCal = ($eventPrice['price_buy']*($lessonData['duration']/60))/$studentCount;
@@ -722,15 +721,6 @@ class LessonsController extends Controller
                     $buyPriceCal = ($eventPrice['price_buy']*($lessonData['duration']/60));
                 }
                 $sellPriceCal = ($eventPrice['price_sell']*($lessonData['duration']/60));
-
-            } else {
-                if(!empty($studentCount)){
-                    $buyPriceCal = ($eventPrice['price_sell']*($lessonData['duration']/60))/$studentCount;
-                }else{
-                    $buyPriceCal = ($eventPrice['price_sell']*($lessonData['duration']/60));
-                }
-                $sellPriceCal = ($eventPrice['price_sell']*($lessonData['duration']/60));
-            }
 
                 if($lessonData['sis_paying'] == 1 && $lessonData['student_sis_paying'] == 1 ){
                    $attendBuyPrice = ($lessonData['sprice_amount_buy']*($lessonData['duration']/60))/$studentCount;
