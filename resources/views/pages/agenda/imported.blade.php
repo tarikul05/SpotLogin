@@ -26,14 +26,15 @@
         <div class="col-md-12">
             <h5>{{ __('Import Agenda') }}</h5>
 
-            @if($counter > 0)
-
             @php
                 $deleteImportUrl = route('import.deleteLessons');
-            @endphp
+                $addAllLessonUrl = route('import.addAllLessons');
+            @endphp 
 
-                <h6><small style="color:#0075bf">{{ $counter }} lessons ready to add to your agenda</small></h6>
-                Select lessons and choose a category and a list of students for validate the import.<br>
+            @if($counter > 0)
+
+                <h6><small style="color:#0075bf">{{ $counter }} {{ $counter > 1 ? 'lessons':'lesson' }} ready to add to your agenda</small></h6>
+                Select {{ $counter > 1 ? 'each lesson':'lesson' }} to configure or add all at once.<br>
 
                 <form class="form-horizontal" id="add_lesson" method="post" name="add_lesson" action="{{ route('import.addLesson') }}" role="form">
                     @csrf
@@ -63,6 +64,8 @@
                                 data-title="{{ $row->title }}"
                                 data-duration="{{ $row->duration }}"
                                 data-coach="{{ $row->coach }}"
+                                data-category="{{ $row->category }}"
+                                data-students="{{ $row->students }}"
                                 data-imported="{{ $row->imported }}">
                                 <td>{{$row->date}}</td>
                                 <td>{{$row->start_time}}</td>
@@ -78,7 +81,8 @@
                         </tbody>
                     </table>
                 </form>
-                <button class="btn btn-lg btn-primary" id="deleteAll">Delete all</button>
+                <button class="btn btn-lg btn-outline-danger" id="deleteAll">Delete all</button>
+                <button class="btn btn-lg btn-primary" id="addAll">Add {{ $counter > 1 ? 'all lessons':'lesson' }}</button>
             @else
             Nothing to import.
             @endif
@@ -132,6 +136,12 @@
         });
     }
 
+    $('#addAll').on('click', function() {
+        setTimeout(() => {
+            window.location.href = "{{ $addAllLessonUrl }}";
+        }, 100);
+    });
+
     $('#deleteAll').on('click', function() {
 
         const swalWithBootstrapButtons = Swal.mixin({
@@ -181,6 +191,8 @@
             title: row.data('title'),
             duration: row.data('duration'),
             coach: row.data('coach'),
+            category: row.data('category'),
+            students: row.data('students'),
             imported: row.data('imported')
         };
 
@@ -199,7 +211,7 @@
         var categoriesContent = '<br><label for="new_date">Category:</label> <span style="font-size:11px;">(select ' + selectedRowData.title + ')</span><br>';
         categoriesContent += '<select class="form-control" id="categorySelect" name="categorySelect">';
         @foreach ($categories as $category)
-        categoriesContent += '<option value="{{ $category->id }}">{{ $category->title }}</option>';
+        categoriesContent += '<option value="{{ $category->id }}"' + (selectedRowData.category == '{{ $category->id }}' ? ' selected' : '') + '>{{ $category->title }}</option>';
         @endforeach
         categoriesContent += '</select>';
 
@@ -235,6 +247,12 @@
             enableCaseInsensitiveFiltering: true,
             enableFullValueFiltering: false,
         });
+
+        var studentIds = selectedRowData.students.split(',').map(function(id) { return id.trim(); });
+        studentIds.forEach(function(id) {
+            $('#studentSelect option[value=' + id + ']').prop('selected', true);
+        });
+        $('#studentSelect').multiselect('refresh');
     }
 
     function initDateAndTimePickers() {
@@ -296,6 +314,7 @@
         var newDate = $('#new_date').val();
         var newStartTime = $('#new_start_time').val();
         var newEndTime = $('#new_end_time').val();
+        //return console.log('alors ?', newDate);
 
         if (!selectedStudents || selectedStudents.length === 0 || 
             !selectedCategory || selectedCategory.length === 0 || 

@@ -11,6 +11,6 @@ class AgendaImport extends Model
 
     protected $table = 'agenda_imports';
 
-    protected $fillable = ['created_at', 'updated_at', 'date', 'start_time', 'end_time', 'count_students', 'students_names', 'title', 'duration', 'coach', 'teacher_id', 'imported'];
+    protected $fillable = ['created_at', 'updated_at', 'date', 'start_time', 'end_time', 'count_students', 'students_names', 'title', 'duration', 'coach', 'teacher_id', 'imported', 'category', 'students'];
 
 }

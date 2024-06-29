@@ -1048,7 +1048,7 @@ $("#student, #teacher_select, #duration").on('change', function(event) {
 								$(".priceByStudent").text(response.newPrice); //eventPrice['price_sell']
 							} else {
 								$(".priceByTeacher").text(response.sellPriceCal);
-                            	$(".priceByStudent").text(response.newPrice); //eventPrice['price_sell']
+                            	$(".priceByStudent").text(eventPrice['price_sell']); //eventPrice['price_sell']
 							}
                         } else {
 							$("#sprice_amount_sell").val(response.eventPrice['price_buy'])

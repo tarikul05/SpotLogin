@@ -8,9 +8,11 @@ use App\Imports\AgendaImport;
 use App\Models\EventCategory;
 use Illuminate\Support\Facades\Auth;
 use App\Models\SchoolStudent;
+use Carbon\Carbon;
 use App\Models\Location;
 use App\Http\Controllers\LessonsController;
 use App\Models\AgendaImport as AgendaImportModel;
+use DB;
 
 class AgendaImportController extends Controller
 {
@@ -63,6 +65,8 @@ class AgendaImportController extends Controller
                     'end_time' => $row['heure_de_fin'],
                     'date' => $row['date'],
                     'count_students' => $row['nombre_of_studiants'] ?? null,
+                    'category'=> $row['category'] ?? null,
+                    'students'=> $row['students_ids'] ?? null,
                     'imported' => false,
                 ]);
             }
@@ -121,7 +125,7 @@ class AgendaImportController extends Controller
         $durationString = $lessonData['duration'];
         $words = explode(' ', $durationString);
 
-
+        //$date = Carbon::createFromFormat('d/m/Y', $date);
         $startDateTime = \DateTime::createFromFormat('H:i', $start_time);
         $endDateTime = \DateTime::createFromFormat('H:i', $end_time);
 
@@ -155,5 +159,68 @@ class AgendaImportController extends Controller
 
         // Return the final lesson data as a JSON response for now
         return response()->json($response);
+    }
+
+
+
+    public function addLessonFromImport(Request $request)
+    {
+        $user = Auth::user();
+        $data = AgendaImportModel::where('teacher_id', $user->person_id)->where('imported', false)->get();
+
+        DB::beginTransaction();
+        try {
+            foreach ($data as $item) {
+
+                $studentsString = str_replace('"', '', $item->students);
+                $students = explode(',', $studentsString);
+                $count_students = $item->count_students;
+                $category = $item->category;
+                $date = $item->date;
+                $title = $item->title;
+                $duration = $item->duration;
+                $start_time = $item->start_time;
+                $coach = $item->teacher_id;
+                $end_time = $item->end_time;
+                $location = null;
+                $idDelete = $item->id;
+
+                $startDateTime = \DateTime::createFromFormat('H:i', $start_time);
+                $endDateTime = \DateTime::createFromFormat('H:i', $end_time);
+
+                if ($startDateTime && $endDateTime) {
+                    $interval = $startDateTime->diff($endDateTime);
+                    $duration = $interval->h * 60 + $interval->i;
+                } else {
+                    $duration = null;
+                }
+        
+                $finalLessonData = [
+                    'date' => $date,
+                    'start_time' => $start_time,
+                    'end_time' => $end_time,
+                    'students' => $students,
+                    'description' => $title,
+                    'duration' => $duration,
+                    'professor' => $coach,
+                    'category' => $category 
+                ];
+
+                $lessonController = new LessonsController();
+                $response = $lessonController->addImportedLesson($finalLessonData, $students, $category, $location, $schoolId = null);
+
+                if($response) {
+                    AgendaImportModel::where('id', $idDelete)->delete();
+                }
+            }
+
+            DB::commit();
+            return redirect()->route('agenda')->with('success', __('All lessons added !'));
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+
     }
 }

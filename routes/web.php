@@ -338,6 +338,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/import/add-lesson', [App\Http\Controllers\AgendaImportController::class, 'addLesson'])->name('import.addLesson');
     Route::get('/import/get-lessons', [App\Http\Controllers\AgendaImportController::class, 'getAgendaImportModel'])->name('import.getLessons');
     Route::get('/import/delete-import', [App\Http\Controllers\AgendaImportController::class, 'deleteImport'])->name('import.deleteLessons');
+    Route::get('/import/addAllLesson-import', [App\Http\Controllers\AgendaImportController::class, 'addLessonFromImport'])->name('import.addAllLessons');
     
 
     Route::get('/{school}/admin/add-event', [App\Http\Controllers\LessonsController::class, 'addEvent'])->name('event.create-admin');
