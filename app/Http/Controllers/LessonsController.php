@@ -1420,11 +1420,11 @@ class LessonsController extends Controller
                     $sellPriceCal = ($lessonPriceTeacher['price_buy']*($duration/60)/$lessonData['no_of_students']);
                 } else {
                     $buyPriceCal = ($eventPrice['price_sell']*($duration/60));
-                    $sellPriceCal = ($eventPrice['price_buy']*($duration/60));
+                    $sellPriceCal = ($eventPrice['price_buy']*($duration/60)/$lessonData['no_of_students']);
                 }
             }else{
                 $buyPriceCal = ($eventPrice['price_sell']*($duration/60));
-                $sellPriceCal = ($eventPrice['price_buy']*($duration/60));
+                $sellPriceCal = ($eventPrice['price_buy']*($duration/60)/$lessonData['no_of_students']);
             }
 
         } else {
