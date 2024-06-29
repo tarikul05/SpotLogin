@@ -1404,7 +1404,7 @@ class LessonsController extends Controller
             if(!empty($studentCount)){
                 if($lessonPriceTeacher && $lessonPriceTeacher['lesson_price_student'] === "price_fix") {
                     $buyPriceCal = ($lessonPriceTeacher['price_buy']*($duration/60));
-                    $sellPriceCal = ($lessonPriceTeacher['price_buy']*($duration/60)/$lessonData['no_of_students']);
+                    $sellPriceCal = ($lessonPriceTeacher['price_sell']*($duration/60)/$lessonData['no_of_students']);
                 } else {
                     $buyPriceCal = ($eventPrice['price_buy']*($duration/60));
                     $sellPriceCal = ($eventPrice['price_sell']*($duration/60));
