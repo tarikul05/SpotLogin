@@ -149,8 +149,14 @@ use App\Models\LessonPriceTeacher;
                                                             </thead>
                                                             <tbody>
                                                                 @foreach($lessonPrices as $key3 => $lessionPrice)
-                                                                <?php                                                   
-                                                                $thepriceInit = LessonPriceTeacher::where('event_category_id', $category->id)->where('teacher_id', $teacher->id)->where('lesson_price_student', 'price_fix')->first();
+                                                                <?php       
+                                                                         
+                                                                if($category->s_std_pay_type == 2) {                                  
+                                                                    $thepriceInit = LessonPriceTeacher::where('event_category_id', $category->id)->where('teacher_id', $teacher->id)->first();
+                                                                } else {
+                                                                    $thepriceInit = LessonPriceTeacher::where('event_category_id', $category->id)->where('teacher_id', $teacher->id)->where('lesson_price_student', 'price_fix')->first();
+                                                                }
+
                                                                 $theprice = !empty($thepriceInit) ? $thepriceInit : null;
                                                                 ?>
                                                                 <?php
