@@ -756,8 +756,8 @@ class LessonsController extends Controller
 // dd($attendSellPrice, $attendBuyPrice);
 
                 if($user->isSchoolAdmin() || $user->isTeacherSchoolAdmin()) {
-                    $attendSellPrice = $eventPrice['price_sell']*($lessonData['duration']/60)/$studentCount;
-                    $attendBuyPrice = $eventPrice['price_buy']*($lessonData['duration']/60);
+                    $attendSellPrice = $eventPrice['price_buy']*($lessonData['duration']/60)/$studentCount;
+                    $attendBuyPrice = $eventPrice['price_sell']*($lessonData['duration']/60);
                 }
 
 
