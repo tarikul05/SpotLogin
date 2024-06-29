@@ -132,13 +132,20 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left">{{__('Start date') }} :</label>
 									<div class="col-sm-7">
-										{{ !empty($date_start) ? date('l jS F-Y', strtotime($date_start)) : ''; }}
+										{{ !empty($date_start) ? date('d-m-Y', strtotime($date_start)) : ''; }} {{ !empty($date_start) ? date('l jS F-Y', strtotime($date_start)) : ''; }}
 									</div>
 								</div>
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left">{{__('End Date') }} :</label>
 									<div class="col-sm-7">
-										{{ !empty($date_end) ? date('l jS F-Y', strtotime($date_end)) : ''; }}
+										{{ !empty($date_end) ? date('d-m-Y', strtotime($date_end)) : ''; }} {{ !empty($date_end) ? date('l jS F-Y', strtotime($date_end)) : ''; }}
+									</div>
+								</div>
+								<div class="form-group row">
+									<label class="col-lg-3 col-sm-3 text-left">{{__('Time') }} :</label>
+									<div class="col-sm-7">
+										{{ !empty($date_start) ? date('H:i', strtotime($date_start)) : ''; }} - 
+										{{ !empty($date_end) ? date('H:i', strtotime($date_end)) : ''; }}
 									</div>
 								</div>
 								<div class="form-group row">
