@@ -149,82 +149,85 @@ use App\Models\LessonPriceTeacher;
                                                             </thead>
                                                             <tbody>
                                                                 @foreach($lessonPrices as $key3 => $lessionPrice)
-                                                                <?php       
-                                                                         
-                                                                if($category->s_std_pay_type == 2) {                                  
-                                                                    $thepriceInit = LessonPriceTeacher::where('event_category_id', $category->id)->where('teacher_id', $teacher->id)->first();
-                                                                } else {
-                                                                    $thepriceInit = LessonPriceTeacher::where('event_category_id', $category->id)->where('teacher_id', $teacher->id)->where('lesson_price_student', 'price_fix')->first();
-                                                                }
-
-                                                                $theprice = !empty($thepriceInit) ? $thepriceInit : null;
-                                                                ?>
-                                                                <?php
-                                                                $class = "";
-                                                                if ($lessionPrice->divider == 1) {
-                                                                    $textForTypeBilling = 'Private session';
-                                                                    $textTooltip = "student";
-                                                                } elseif ($lessionPrice->divider == 9999) {
-                                                                    $textForTypeBilling = 'Student more than 10';
-                                                                    $textTooltip = "each of the students";
-                                                                    $class = "hide-custom-price";
-                                                                } elseif ($lessionPrice->divider == -1) {
-                                                                    $textForTypeBilling = 'Fixed price';
-                                                                    $textTooltip = "each student";
-                                                                    $classFiexPrice = "hide-show-more";
-                                                                } else {
-                                                                    $textForTypeBilling = "Group lessons for $lessionPrice->divider students";
-                                                                    $textTooltip = "each of the  $lessionPrice->divider  students";
-                                                                if (($lessionPrice->divider >=1 && $lessionPrice->divider < 6) || $lessionPrice->divider === 9999) {
-                                                                        $class = "";
+                                                                    <?php       
+                                                                    if($category->s_std_pay_type == 2) {                                  
+                                                                        $thepriceInit = LessonPriceTeacher::where('event_category_id', $category->id)
+                                                                                                            ->where('teacher_id', $teacher->id)
+                                                                                                            ->first();
                                                                     } else {
-                                                                        $class = "hide-custom-price";
+                                                                        $thepriceInit = LessonPriceTeacher::where('event_category_id', $category->id)
+                                                                                                            ->where('teacher_id', $teacher->id)
+                                                                                                            ->where('lesson_price_student', 'price_fix')
+                                                                                                            ->first();
                                                                     }
-                                                                }
-                        
-                                                                $studentPrice = $category->s_std_pay_type;
-                        
-                                                                if ($studentPrice == 1) {
-                                                                    if ($lessionPrice->divider != -1) continue;
-                                                                } elseif ($studentPrice == 0) {
-                                                                    if ($lessionPrice->divider == -1) continue;
-                                                                } else {
-                                                                }
-                                                                ?>
-                                                                <?php if(($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin()) && $category->invoiced_type == "S") { ?>
-                                                                    <?php if($lessionPrice->divider == -1) { ?>
-                                                                    <tr class="{{$class}}">
-                                                                        <input type="hidden" name="data2[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][teacher_id]" value="{{ $teacher->id }}">
-                                                                        <input type="hidden" name="data2[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][id]" value="{{ !empty($theprice) ? $theprice->id : '' }}">
-                                                                        <input type="hidden" name="data2[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_student]" value="price_fix">
-                                                                        <input type="hidden" name="data2[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_id]" value="{{$lessionPrice->id}}">
-                                                                        <td class="align-middle">{{__('Lessons/Events')}}</td>
-                                                                        <!--<td>{{ __($textForTypeBilling) }}</td>-->
-     
-
-                                                                        @if($category->s_std_pay_type === 1)
-                                                                        <td class="align-middle">
-                                                                            <input data-toggle="tooltip" data-bs-trigger="hover" data-bs-divider="{{ $lessionPrice->divider }}" data-bs-original-title="For 15 mn. the teacher will be paid ({{ $school->default_currency_code }}) {{ isset($theprice) ? ($theprice['price_buy']/4) : '0.00' }}<hr>For 30 mn. the teacher will be paid ({{ $school->default_currency_code }}) {{ isset($theprice) ? ($theprice['price_buy']/2) : '0.00' }}" type="text" name="data2[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_buy]" value="{{ !empty($theprice) ? $theprice['price_buy'] : '0.00' }}" style="text-align:right" class="form-control input-price numeric float <?= ($studentPrice == 1) && ($lessionPrice->divider != -1) ? 'd-none' : '' ?>">
-                                                                        </td>
-                                                                        @endif
-                                                                        <td class="align-middle">
-                                                                            <input data-toggle="tooltip" data-bs-trigger="hover" data-bs-divider="{{ $lessionPrice->divider }}" data-bs-original-title="For 15 mn. {{  $textTooltip }}  will pay  ({{ $school->default_currency_code }}) {{ isset($theprice) ? ($theprice['price_sell']/4) : '0.00' }}<hr>For 30 mn. {{  $textTooltip }} will pay ({{ $school->default_currency_code }}) {{ !empty($theprice) ? ($theprice['price_sell']/2) : '0.00' }}" type="text" name="data2[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_sell]" value="{{ !empty($theprice) ? $theprice['price_sell'] : '0.00' }}" style="text-align:right" class="form-control input-price numeric float <?= ($studentPrice == 1) && ($lessionPrice->divider != -1) ? 'd-none' : '' ?>">
-                                                                        </td>
-                                                                    </tr>
-                                                                    <?php } ?>
+                                                            
+                                                                    $theprice = !empty($thepriceInit) ? $thepriceInit : null;
+                                                                    ?>
+                                                            
+                                                                    <?php
+                                                                    $class = "";
+                                                                    if ($lessionPrice->divider == 1) {
+                                                                        $textForTypeBilling = 'Private session';
+                                                                        $textTooltip = "student";
+                                                                    } elseif ($lessionPrice->divider == 9999) {
+                                                                        $textForTypeBilling = 'Student more than 10';
+                                                                        $textTooltip = "each of the students";
+                                                                        $class = "hide-custom-price";
+                                                                    } elseif ($lessionPrice->divider == -1) {
+                                                                        $textForTypeBilling = 'Fixed price';
+                                                                        $textTooltip = "each student";
+                                                                        $classFiexPrice = "hide-show-more";
+                                                                    } else {
+                                                                        $textForTypeBilling = "Group lessons for $lessionPrice->divider students";
+                                                                        $textTooltip = "each of the $lessionPrice->divider students";
+                                                                        if (($lessionPrice->divider >= 1 && $lessionPrice->divider < 6) || $lessionPrice->divider === 9999) {
+                                                                            $class = "";
+                                                                        } else {
+                                                                            $class = "hide-custom-price";
+                                                                        }
+                                                                    }
+                                                            
+                                                                    $studentPrice = $category->s_std_pay_type;
+                                                            
+                                                                    if ($studentPrice == 1) {
+                                                                        if ($lessionPrice->divider != -1) continue;
+                                                                    } elseif ($studentPrice == 0) {
+                                                                        if ($lessionPrice->divider == -1) continue;
+                                                                    } else {
+                                                                    }
+                                                                    ?>
+                                                            
+                                                                    <?php if(($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin()) && $category->invoiced_type == "S") { ?>
+                                                                        <?php if($lessionPrice->divider == -1) { ?>
+                                                                        <tr class="{{$class}}">
+                                                                            <input type="hidden" name="data2[{{$category->id}}][{{$teacher->id}}][{{$lessionPrice->lesson_price_student}}][teacher_id]" value="{{ $teacher->id }}">
+                                                                            <input type="hidden" name="data2[{{$category->id}}][{{$teacher->id}}][{{$lessionPrice->lesson_price_student}}][id]" value="{{ !empty($theprice) ? $theprice->id : '' }}">
+                                                                            <input type="hidden" name="data2[{{$category->id}}][{{$teacher->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_student]" value="price_fix">
+                                                                            <input type="hidden" name="data2[{{$category->id}}][{{$teacher->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_id]" value="{{$lessionPrice->id}}">
+                                                                            <td class="align-middle">{{__('Lessons/Events')}}</td>
+                                                            
+                                                                            @if($category->s_std_pay_type === 1)
+                                                                            <td class="align-middle">
+                                                                                <input data-toggle="tooltip" data-bs-trigger="hover" data-bs-divider="{{ $lessionPrice->divider }}" data-bs-original-title="For 15 mn. the teacher will be paid ({{ $school->default_currency_code }}) {{ isset($theprice) ? ($theprice['price_buy']/4) : '0.00' }}<hr>For 30 mn. the teacher will be paid ({{ $school->default_currency_code }}) {{ isset($theprice) ? ($theprice['price_buy']/2) : '0.00' }}" type="text" name="data2[{{$category->id}}][{{$teacher->id}}][{{$lessionPrice->lesson_price_student}}][price_buy]" value="{{ !empty($theprice) ? $theprice['price_buy'] : '0.00' }}" style="text-align:right" class="form-control input-price numeric float {{ ($studentPrice == 1) && ($lessionPrice->divider != -1) ? 'd-none' : '' }}">
+                                                                            </td>
+                                                                            @endif
+                                                                            <td class="align-middle">
+                                                                                <input data-toggle="tooltip" data-bs-trigger="hover" data-bs-divider="{{ $lessionPrice->divider }}" data-bs-original-title="For 15 mn. {{  $textTooltip }} will pay  ({{ $school->default_currency_code }}) {{ isset($theprice) ? ($theprice['price_sell']/4) : '0.00' }}<hr>For 30 mn. {{  $textTooltip }} will pay ({{ $school->default_currency_code }}) {{ !empty($theprice) ? ($theprice['price_sell']/2) : '0.00' }}" type="text" name="data2[{{$category->id}}][{{$teacher->id}}][{{$lessionPrice->lesson_price_student}}][price_sell]" value="{{ !empty($theprice) ? $theprice['price_sell'] : '0.00' }}" style="text-align:right" class="form-control input-price numeric float {{ ($studentPrice == 1) && ($lessionPrice->divider != -1) ? 'd-none' : '' }}">
+                                                                            </td>
+                                                                        </tr>
+                                                                        <?php } ?>
                                                                     <?php } else { ?>
-                                                                    <tr class="{{$class}}">
-                                                                        <input type="hidden" name="data2[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][teacher_id]" value="{{ $teacher->id }}">
-                                                                        <input type="hidden" name="data2[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][id]" value="{{ $category->id }}">
-                                                                        <input type="hidden" name="data2[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_student]" value="price_fix">
-                                                                        <input type="hidden" name="data2[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_id]" value="{{$lessionPrice->id}}">
-                                                                        <td>{{__('Lessons/Events')}}</td>
-                                                                        <!--<td>{{ __($textForTypeBilling) }}</td>-->
-                                                                        <td>
-                                                                            <input data-toggle="tooltip" data-bs-trigger="hover" data-bs-divider="{{ $lessionPrice->divider }}" data-bs-original-title="For 15 mn. {{  $textTooltip }}  will pay  ({{ $school->default_currency_code }}) {{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? ($ltprice[$category->id][$lessionPrice->lesson_price_student]['price_sell']/4) : '0.00' }}<hr>For 30 mn. {{  $textTooltip }} will pay ({{ $school->default_currency_code }}) {{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? ($ltprice[$category->id][$lessionPrice->lesson_price_student]['price_sell']/2) : '0.00' }}" type="text" name="data2[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_sell]" value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['price_sell'] : '0.00' }}" style="text-align:right" class="form-control input-price numeric float <?= ($studentPrice == 1) && ($lessionPrice->divider != -1) ? 'd-none' : '' ?>">
-                                                                        </td>
-                                                                    </tr>
-                                                            <?php } ?>
+                                                                        <tr class="{{$class}}">
+                                                                            <input type="hidden" name="data2[{{$category->id}}][{{$teacher->id}}][{{$lessionPrice->lesson_price_student}}][teacher_id]" value="{{ $teacher->id }}">
+                                                                            <input type="hidden" name="data2[{{$category->id}}][{{$teacher->id}}][{{$lessionPrice->lesson_price_student}}][id]" value="{{ $category->id }}">
+                                                                            <input type="hidden" name="data2[{{$category->id}}][{{$teacher->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_student]" value="price_fix">
+                                                                            <input type="hidden" name="data2[{{$category->id}}][{{$teacher->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_id]" value="{{$lessionPrice->id}}">
+                                                                            <td>{{__('Lessons/Events')}}</td>
+                                                                            <td>
+                                                                                <input data-toggle="tooltip" data-bs-trigger="hover" data-bs-divider="{{ $lessionPrice->divider }}" data-bs-original-title="For 15 mn. {{  $textTooltip }} will pay  ({{ $school->default_currency_code }}) {{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? ($ltprice[$category->id][$lessionPrice->lesson_price_student]['price_sell']/4) : '0.00' }}<hr>For 30 mn. {{  $textTooltip }} will pay ({{ $school->default_currency_code }}) {{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? ($ltprice[$category->id][$lessionPrice->lesson_price_student]['price_sell']/2) : '0.00' }}" type="text" name="data2[{{$category->id}}][{{$teacher->id}}][{{$lessionPrice->lesson_price_student}}][price_sell]" value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['price_sell'] : '0.00' }}" style="text-align:right" class="form-control input-price numeric float {{ ($studentPrice == 1) && ($lessionPrice->divider != -1) ? 'd-none' : '' }}">
+                                                                            </td>
+                                                                        </tr>
+                                                                    <?php } ?>
                                                                 @endforeach
                                                             </tbody>
                                                         </table>

@@ -859,13 +859,11 @@ public function selfPriceUpdate(Request $request)
 
     $teacher = Teacher::find($user->person_id);
 
-    // dd($alldata);
     DB::beginTransaction();
     try {
+        // Process data for teacher's own prices
         foreach ($alldata['data'] as $key => $catPrices) {
-            // dd($catPrices);
-            foreach ($catPrices as $pkey => $price) {
-                // dd($price);
+            foreach ($catPrices as $price) {
                 $dataprice = [
                     'event_category_id' => $key,
                     'teacher_id' => $teacher->id,
@@ -876,52 +874,42 @@ public function selfPriceUpdate(Request $request)
                 ];
 
                 if (empty($price['id'])) {
-                    $updatedPrice = LessonPriceTeacher::create($dataprice);
+                    LessonPriceTeacher::create($dataprice);
                 } else {
-                    $updatedPrice = LessonPriceTeacher::where('id', $price['id'])->update($dataprice);
+                    LessonPriceTeacher::where('id', $price['id'])->update($dataprice);
                 }
             }
         }
-        DB::commit();
-        // return back()->withInput($request->all())->with('success', __('Lesson Price updated successfully!'));
-    } catch (\Exception $e) {
-        DB::rollBack();
-        // dd($e);
-        // return error message
-        return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
-    }
 
-    if (isset($alldata['data2'])) {
-        DB::beginTransaction();
-        try {
+        // Process data for other teachers' prices
+        if (isset($alldata['data2'])) {
             foreach ($alldata['data2'] as $key => $catPrices) {
-                foreach ($catPrices as $pkey => $price) {
-                    $dataprice = [
-                        'event_category_id' => $key,
-                        'teacher_id' => $price['teacher_id'],
-                        'lesson_price_student' => $price['lesson_price_student'],
-                        'lesson_price_id' => $price['lesson_price_id'],
-                        'price_buy' => !empty($price['price_buy']) ? $price['price_buy'] : $price['price_sell'],
-                        'price_sell' => $price['price_sell'],
-                    ];
+                foreach ($catPrices as $priceList) {
+                    foreach ($priceList as $price) {
+                        $dataprice = [
+                            'event_category_id' => $key,
+                            'teacher_id' => $price['teacher_id'],
+                            'lesson_price_student' => $price['lesson_price_student'],
+                            'lesson_price_id' => $price['lesson_price_id'],
+                            'price_buy' => $price['price_buy'] ?? $price['price_sell'],
+                            'price_sell' => $price['price_sell'],
+                        ];
 
-                    if (empty($price['id'])) {
-                        $updatedPrice = LessonPriceTeacher::create($dataprice);
-                    } else {
-                        $updatedPrice = LessonPriceTeacher::where('id', $price['id'])->update($dataprice);
+                        if (empty($price['id'])) {
+                            LessonPriceTeacher::create($dataprice);
+                        } else {
+                            LessonPriceTeacher::where('id', $price['id'])->update($dataprice);
+                        }
                     }
                 }
             }
-            DB::commit();
-            return back()->withInput($request->all())->with('success', __('Lesson Price updated successfully!'));
-        } catch (\Exception $e) {
-            DB::rollBack();
-            // dd($e);
-            // return error message
-            return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
         }
-    } else {
+
+        DB::commit();
         return back()->withInput($request->all())->with('success', __('Lesson Price updated successfully!'));
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
     }
 }
 
