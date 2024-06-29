@@ -1044,18 +1044,18 @@ $("#student, #teacher_select, #duration").on('change', function(event) {
                             $("#sprice_amount_buy").val(response.eventPrice['price_buy'])
                     	    var newDuration = $("#duration").val();
 							if(response.eventPrice['isFixed'] === 2) {
-								$(".priceByTeacher").text(response.sellPriceCal.toFixed(2));
+								$(".priceByTeacher").text(response.sellPriceCal);
 								$(".priceByStudent").text(response.newPrice); //eventPrice['price_sell']
 							} else {
-								$(".priceByTeacher").text(response.sellPriceCal.toFixed(2));
-                            	$(".priceByStudent").text(response.eventPrice['price_sell']); //eventPrice['price_sell']
+								$(".priceByTeacher").text(response.sellPriceCal);
+                            	$(".priceByStudent").text(response.newPrice); //eventPrice['price_sell']
 							}
                         } else {
 							$("#sprice_amount_sell").val(response.eventPrice['price_buy'])
 							$("#sprice_amount_buy").val(response.buyPriceCal)
                     	    var newDuration = $("#duration").val();
                             $(".priceByStudent").text(response.newPrice); //eventPrice['price_buy']
-							$(".priceByTeacher").text(response.sellPriceCal.toFixed(2));
+							$(".priceByTeacher").text(response.sellPriceCal);
 
 						}
 
