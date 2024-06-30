@@ -40,7 +40,14 @@
                             <tr>
                                 <td>{{ $subscription->price_name }}<br>
                                     {{ $subscription->items->data[0]->plan->amount/100 }} {{ $subscription->items->data[0]->plan->currency }} /{{ $subscription->items->data[0]->plan->interval }}</td>
-                                <td><a href="details/user={{ $subscription->metadata->userID }}&school={{ $subscription->metadata->schoolID }}">{{ $subscription->metadata->name }} ({{ $subscription->metadata->email }})</a></td>
+                                <td>
+                                    @if($subscription->metadata->name)
+                                    {{ $subscription->metadata->name }} ({{ $subscription->metadata->email }})
+                                    <br><span style="font-size:12px;">UserID: {{ $subscription->metadata->userID }} | SchoolId: {{ $subscription->metadata->schoolID }}</span>
+                                    @else
+                                    {{ $subscription->metadata->note }}
+                                    @endif
+                                </td>
                                 <td>{{ getStatusExplanation($subscription->status) }}</td>
                                 <td>{{ date('d-m-Y', $subscription->current_period_start) }}</td>
                                 <td>{{ date('d-m-Y', $subscription->current_period_end) }}</td>
