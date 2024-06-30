@@ -12,6 +12,8 @@ use Carbon\Carbon;
 use Exception;
 use DateTime;
 
+use Stripe\Stripe;
+
 use Stripe\Exception\ApiErrorException;
 use Stripe\Subscription;
 use Stripe\Customer;
@@ -90,21 +92,34 @@ class SubscriptionController extends Controller
 
 
    public function getSubscription(Request $request){
-        $user = auth()->user();
-        $subscriptions = [];
-        $subscriptionsInit = $this->stripe->subscriptions->all();
-        foreach ($subscriptionsInit as $subscription) {
+
+        Stripe::setApiKey(config('services.stripe.secret'));
+
+        // Get all subscriptions
+        $subscriptions = Subscription::all();
+
+        //Find the Plan/Product Name for each subscription
+        foreach ($subscriptions->data as $subscription) {
             $price = $this->stripe->products->retrieve($subscription->items->data[0]->plan->product);
             $subscription->price_name = $price->name;
-            $subscriptions[] = $subscription;
-          }
-          usort($subscriptions, function ($a, $b) {
-            $statusOrder = ['active', 'trialing', 'incomplete', 'past_due', 'unpaid', 'canceled'];
-            $statusA = array_search($a->status, $statusOrder);
-            $statusB = array_search($b->status, $statusOrder);
-            return $statusA - $statusB;
-        });
-        return view('pages.admin.subscriptions', compact('subscriptions'));
+        }
+
+        // Organiser les abonnements par statut
+        $subscriptionsByStatus = [
+            'active' => [],
+            'trialing' => [],
+            'canceled' => [],
+            'incomplete' => [],
+            'incomplete_expired' => [],
+            'past_due' => [],
+            'unpaid' => []
+        ];
+
+        foreach ($subscriptions->data as $subscription) {
+            $subscriptionsByStatus[$subscription->status][] = $subscription;
+        }
+
+        return view('pages.admin.subscriptions', compact('subscriptions', 'subscriptionsByStatus'));
     }
 
     public function getActiveSubscriptions(Request $request) {
