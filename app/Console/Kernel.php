@@ -34,6 +34,11 @@ class Kernel extends ConsoleKernel
         //     // ->runInBackground()
         // ;
         $schedule->command('events:check')->everyThirtyMinutes();
+        $schedule->command('report:admin')
+                 ->weeklyOn(0, '23:59')
+                 ->when(function() {
+                     return now()->second == 59;
+                 });
     }
 
     /**
