@@ -57,7 +57,7 @@ class EmailReportAdmin extends Command
             return $created->between(now()->startOfWeek(), now()->endOfWeek());
         })->count();
 
-        $recipients = ['j.steeve@free.fr', 'vanessagusmeroli@gmail.com', 'kimlucine@gmail.com', 'matthieu.jost@gmail.com'];
+        $recipients = ['j.steeve@free.fr'];
 
         // Envoyer l'email de rapport
         Mail::to($recipients)->send(new \App\Mail\ReportAdmin($period_start, $period_end, $weekCount, $monthCount, $subscriptions_count, $subscriptions_this_week, $user_week, $invoice_week, $user_month, $invoice_month));
