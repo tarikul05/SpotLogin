@@ -11,7 +11,7 @@
     <div class="row justify-content-center pt-3">
         <div class="col-md-10">
 
-            <div class="page_header_class pt-1" style="position: static;">
+            <div class="page_header_class pt-1 pb-2" style="position: static;">
                 @if($type == 'school')
                 <h5 class="titlePage">{{ __('Invoicing for the school') }}</h5>
                 @else
@@ -19,6 +19,12 @@
                 @endif
             </div>
 
+            <div class="card2" style="border-radius:10px;">
+                <div class="card-header titleCardPage d-flex justify-content-between align-items-center">
+                    <b class="d-none d-sm-inline">{{ __('Invoice System') }}</b>
+                    <input name="search_text" type="input" class="form-control search_text_box" id="search_text"  placeholder="Find a student">
+                </div>
+                <div class="card-body">
 
     <div class="table-responsive1">
         <input id="seleted_auto_id" name="seleted_auto_id" style="display: none;">
@@ -66,6 +72,8 @@
         </table>
     </div>
   </div>
+</div>
+</div>
 </div>
 </div>
 @endsection
