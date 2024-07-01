@@ -1267,7 +1267,7 @@ function populate_teacher_lesson() {
 				// week summary
 				if ((prev_week != '') && (prev_week != value.week_name)) {
 					resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
-					resultHtml += '<td colspan="3">' + sub_total_caption + ' ' + week_caption + ' </td>';
+					resultHtml += '<td colspan="2" style="text-align:right">' + sub_total_caption + ' ' + week_caption + ' </td>';
 					resultHtml += '<td style="text-align:right">' + week_total_buy.toFixed(2) + '</td>';
 					//resultHtml+='<td style="text-align:right">'+week_total_sell.toFixed(2)+'</td>';
 					resultHtml += '</tr>'
@@ -1284,7 +1284,7 @@ function populate_teacher_lesson() {
 					resultHtml += '<b><td colspan="1">Category</td>';
 					resultHtml += '<b><td colspan="2">Students</td>';
 					resultHtml += '<td colspan="2">' + 'Lesson' + '</td>';
-					resultHtml += '<td colspan="2" style="text-align:right">' + 'Price' + '</td>';
+					resultHtml += '<td colspan="2" style="text-align:left">' + 'Price' + '</td>';
 					resultHtml += '<td style="text-align:right" colspan="2">Extra Charges</td></tr></b>';;
 				}
 				resultHtml += '<tr>';
@@ -1304,12 +1304,12 @@ function populate_teacher_lesson() {
 				if (value.event_type == 100) {
 
 					if (value.title != '' && value.title != null) {
-							resultHtml += '<td colspan="2">Event : '+value.title+'</td>';
+							resultHtml += '<td colspan="1">Event : '+value.title+'</td>';
 						}else{
-							resultHtml += '<td colspan="2">Event</td>';
+							resultHtml += '<td colspan="1">Event</td>';
 						}
 				} else {
-					resultHtml += '<td colspan="2">' + value.category_name + '</td>';
+					resultHtml += '<td colspan="1">' + value.category_name + '</td>';
 				}
 				//resultHtml += '<td></td>';
 				//resultHtml += '<td></td>';
@@ -1385,7 +1385,7 @@ function populate_teacher_lesson() {
 		// summary for last week of course records
 		if ((week_total_buy > 0) || (week_total_sell > 0)) {
 			resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
-			resultHtml += '<td colspan="3">' + sub_total_caption + ' ' + week_caption + ' </td>';
+			resultHtml += '<td colspan="2" style="text-align:right">' + sub_total_caption + ' ' + week_caption + ' </td>';
 			resultHtml += '<td style="text-align:right">' + week_total_buy.toFixed(2) + '</td>';
 			resultHtml+='<td style="text-align:right" colspan="2"></td>';
 			resultHtml += '</tr>'
@@ -1395,8 +1395,8 @@ function populate_teacher_lesson() {
 
 		// display grand total
 		resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
-		resultHtml += '<td colspan="2">' + sub_total_caption + ': </td>';
-		resultHtml+='<td style="text-align:right" colspan="2">'+total_buy.toFixed(2)+'</td>';
+		resultHtml += '<td colspan="2" style="text-align:right">' + sub_total_caption + ': </td>';
+		resultHtml+='<td style="text-align:right" colspan="1">'+total_buy.toFixed(2)+'</td>';
 		resultHtml+='<td style="text-align:right" colspan="1"></td>';
 		//resultHtml += '<td style="text-align:right">' + total_sell.toFixed(2) + '</td>';
 		resultHtml += '</tr>'
@@ -1427,13 +1427,13 @@ function populate_teacher_lesson() {
 		if (total_disc > 0) {
 			resultHtml += '<tr><td colspan="6">';
 			//resultHtml+='<td colspan="2">Montant total de la réduction:';
-			resultHtml += '<td colspan="3"><strong>Total Commission</strong></td>';
+			resultHtml += '<td colspan="3" style="text-align:right"><strong>Total Commission</strong></td>';
 			resultHtml += '<td style="text-align:right" colspan="2">-' + total_disc.toFixed(2) + '</tr>';
 		}
 
 		// display grand total
 		resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
-		resultHtml += '<td colspan="3">Total</td>';
+		resultHtml += '<td colspan="2" style="text-align:right">Total</td>';
 		resultHtml += '<td style="text-align:right" colspan="1">' + total_buy.toFixed(2) + '</td>';
 		resultHtml+='<td style="text-align:right" colspan="2"></td>';
 		//resultHtml+='<td style="text-align:right">'+total_buy.toFixed(2)+'</td>';
