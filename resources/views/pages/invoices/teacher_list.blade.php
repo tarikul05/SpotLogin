@@ -22,7 +22,7 @@
             <div class="card2" style="border-radius:10px;">
                 <div class="card-header titleCardPage d-flex justify-content-between align-items-center">
                     <b class="d-none d-sm-inline">{{ __('Invoice System') }}</b>
-                    <input name="search_text" type="input" class="form-control search_text_box" id="search_text"  placeholder="Find a student">
+                    <input name="search_text" type="input" class="form-control search_text_box" id="search_text"  placeholder="Find a teacher">
                 </div>
                 <div class="card-body">
 
