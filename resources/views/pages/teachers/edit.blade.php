@@ -1446,7 +1446,7 @@ function populate_teacher_lesson() {
 			if (invoice_already_generated == 1) {
 				document.getElementById("lesson_footer_div").style.display = "none";
 			} else {
-				document.getElementById('lesson_footer_div').className = "alert alert-info";
+				document.getElementById('lesson_footer_div').className = "alert alert-default";
 				document.getElementById("lesson_footer_div").style.display = "block";
 				document.getElementById("btn_convert_invoice").style.display = "block";
 				document.getElementById("verify_label_id").style.display = "none";
