@@ -6,25 +6,20 @@
 @endsection
 
 @section('content')
-  <div class="container-fluid">
-    <header class="panel-heading invoice_list_header" style="border: none;">
-        <div class="row panel-row" style="margin:0;">
-            <div class="col-sm-6 col-xs-12 header-area">
-                <div class="page_header_class">
-                    @if($type == 'school')
-                    <label id="page_header_id" name="page_header_id">{{ __('Invoicing for the school') }}</label>
-                    @else
-                    <label id="page_header_id" name="page_header_id">{{ __('Invoicing for myself') }}</label>
-                    @endif
-                </div>
+  <div class="container">
+
+    <div class="row justify-content-center pt-3">
+        <div class="col-md-10">
+
+            <div class="page_header_class pt-1" style="position: static;">
+                @if($type == 'school')
+                <h5 class="titlePage">{{ __('Invoicing for the school') }}</h5>
+                @else
+                <h5 class="titlePage">{{ __('Invoicing System') }}</h5>
+                @endif
             </div>
-            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 btn-area">
-                <div class="invoce_search_box">
-                    <input name="search_text" type="input" class="form-control search_text_box" id="search_text" value="" placeholder="">
-               </div>
-            </div>
-        </div>
-    </header>
+
+
     <div class="table-responsive1">
         <input id="seleted_auto_id" name="seleted_auto_id" style="display: none;">
         <input id="p_school_id" name="p_school_id" style="display: none;">
@@ -33,8 +28,6 @@
         <table id="example" class="display" style="width:100%">
             <thead>
                 <tr>
-                    <th>{{ __('#') }}</th>
-                    <th>{{ __('Image') }}</th>
                     <th>{{ __('Name of the Teacher') }}</th>
                     <th>{{ __('Items') }}</th>
                     <th>{{ __('Action') }}</th>
@@ -50,22 +43,20 @@
                         $i++;
                     @endphp
                     <tr>
-                        <td class="txt-grey text-center">{{ $i }} </td>
                         <td>
                             <?php if (!empty($event->profile_image)): ?>
                                 <img src="{{ $event->profile_image }}" class="admin_logo" id="admin_logo"  alt="globe">
                             <?php else: ?>
                                 <img src="{{ asset('img/photo_blank.jpg') }}" class="admin_logo" id="admin_logo" alt="globe">
                             <?php endif; ?>
-                        </td>
-                        <td>{{ $event->teacher_full_name; }}</td>
-                        <td>{{ $event->invoice_items; }}</td>
+                     {{ $event->teacher_full_name; }}</td>
+                        <td align="center">{{ $event->invoice_items; }}</td>
                         <td align="center">
                             <a id="inv_butt_tobe_charged" name="inv_butt_tobe_charged" 
                             href="{{ auth()->user()->isSuperAdmin() ? 
                                     route('adminEditTeacher',['school'=> $schoolId,'teacher'=> $event->person_id]) : 
                                     route('editTeacher',['teacher' => $event->person_id]) }}?action=edit&tab=tab_3&inv_type={{$type}}"
-                            class="btn btn-sm btn-theme-success inv_butt_tobe_charged_cls">
+                            class="btn btn-sm btn-primary inv_butt_tobe_charged_cls">
                             {{ __('View items to be invoiced') }}</a>
                         </td>
                     </tr>
@@ -75,6 +66,8 @@
         </table>
     </div>
   </div>
+</div>
+</div>
 @endsection
 
 
