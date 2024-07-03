@@ -22,44 +22,43 @@
 	$priceShow = ((($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()) && ($eventData->event_invoice_type == 'S')) || ($AppUI->isTeacher() && ($eventData->event_invoice_type == 'T')));
 @endphp
 @section('content')
+
+<form class="form-horizontal" id="edit_event" method="post" action="{{ route('event.editAction',['school'=> $schoolId,'event'=> $eventId]) }}"  name="edit_event" role="form">
+	@csrf
+
   <div class="content">
-	<div class="container-fluid body">
-		<header class="panel-heading" style="border: none;">
-			<div class="row panel-row" style="margin:0;">
-				<div class="col-sm-6 col-xs-12 header-area" style="padding-top:8px; padding-bottom:20px;">
-					<div class="page_header_class">
-						<label id="page_header" class="page_header bold" name="page_header"><i class="fa-solid fa-calendar-day"></i> {{ __('Event') }}</label>
-					</div>
-				</div>
-			</div>
+	<div class="container mb-5">
 
-		<!-- Tabs navs -->
 
-		<nav style="margin-bottom:0; padding-bottom:0;">
-			<div class="nav nav-tabs" id="nav-tab" role="tablist">
-				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Event Information') }}</button>
-			</div>
-		</nav>
-		<!-- Tabs navs -->
+		<div class="row justify-content-center pt-3 pb-5">
+			<div class="col-md-10">
 
-	</header>
-
-	<form class="form-horizontal" id="edit_event" method="post" action="{{ route('event.editAction',['school'=> $schoolId,'event'=> $eventId]) }}"  name="edit_event" role="form">
+		<div class="page_header_class pt-1" style="position: static;">
+            <h5 class="titlePage">{{ __('Event') }}</h5>
+        </div>
 
 	<div class="row">
-		<div class="col-lg-10">
+		<div class="col-lg-12">
+
+	
+			@if(strtotime($date_end) < strtotime($current_time))
+			<div id="button_lock_and_save_div" class="alert alert-info mb-3 text-center" role="alert" style="position: relative; display: block;  margin:0 auto;"><label id="button_lock_and_save_help_text"><i class="fa-regular fa-bell fa-bounce"></i> Please validate the event to make it available for invoicing</label>
+				<div class="save_and_more_area mt-1" style="width:100%; max-width:190px; margin:0 auto;">
+				<input type="submit" class="btn btn-sm btn-info button_lock_and_save w-100" name="validate" value="Validate">
+				<i class="fa-solid fa-lock"></i>
+				</div>
+			</div>
+			@endif
+		
+
 
 		<!-- Tabs content -->
 		<div class="tab-content" id="ex1-content">
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 
-					@csrf
 					<input id="redirect_url" name="redirect_url" type="hidden" class="form-control" value="{{$redirect_url}}">
 					<fieldset>
-						<div class="section_header_class">
-							<label id="teacher_personal_data_caption">{{ __('Lesson information') }}</label>
-						</div>
-						<div class="card">
+						<div class="card2">
 							<div class="card-body bg-tertiary">
 						<div class="row">
 							<div class="col-md-12">
@@ -178,7 +177,7 @@
 										</div>
 									</div>
 								</div>
-								@if($priceShow)
+								
 									<div class="form-group row">
 										<label class="col-lg-4 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Currency') }} :</label>
 										<div class="col-sm-7">
@@ -191,7 +190,7 @@
 											</div>
 										</div>
 									</div>
-									<?php if($AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherMinimum() || $AppUI->isTeacherMedium()){ ?>
+									<?php if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherMinimum() || $AppUI->isTeacherMedium()){ ?>
 									<div class="form-group row">
 										<label class="col-lg-4 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price (per event)') }} :</label>
 										<div class="col-sm-4">
@@ -229,10 +228,10 @@
 											</div>
 										</div>
 									</div>
-								@endif
+								
 							</div>
-							<div class="section_header_class">
-								<label id="teacher_personal_data_caption">{{ __('Attendance') }}</label>
+							<div class="mt-5 mb-3">
+								<div class="card-header titleCardPage">{{ __('Students') }}</div>
 							</div>
 							<div class="col-md-12">
 								<div class="form-group row">
@@ -245,13 +244,13 @@
 															<tr>
 																<!--<th width="5%" style="text-align:left"></th>-->
 																<th width="20%" style="text-align:left">
-																	<span>{{ __('Student') }}</span>
+																	
 																</th>
 																<th width="15%" style="text-align:left">
-																	<button id="mark_present_btn" class="btn btn-xs btn-theme-success" type="button" style="display: block;">Mark all present</button>
+																	<button id="mark_present_btn" class="btn btn-xs btn-outline-success btn-sm" type="button" style="display: block;">Mark all present</button>
 																</th>
-																@if($priceShow)
-																@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherMinimum() || $AppUI->isTeacherMedium())
+														
+																@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherMinimum() || $AppUI->isTeacherMedium())
 																	<th width="15%" style="text-align:right;">
 																		<label id="row_hdr_buy" name="row_hdr_buy">{{ __('Teacher') }}</label>
 																	</th>
@@ -262,7 +261,7 @@
 																	<th width="15%" style="text-align:right">
 																		<label id="row_hdr_sale" name="row_hdr_sale">{{ __('Extra charges') }}</label>
 																	</th>
-																@endif
+																
 															</tr>
 
 															@foreach($studentOffList as $student)
@@ -282,13 +281,13 @@
 																	<input type="hidden" name="attnValue[{{$student->id}}]" value="{{$student->participation_id}}">
 																</td>
 
-																@if($priceShow)
-																	@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherMinimum() || $AppUI->isTeacherMedium())
-																	<td style="text-align:right"> {{ ($relationData->price_currency) }} {{ ($relationData->buy_price) }}</td>
+															
+																	@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherMinimum() || $AppUI->isTeacherMedium())
+																	<td style="text-align:right"> {{ ($relationData->price_currency) }} {{ ($student->price_amount_buy) }}</td>
 																	@endif
 																	<td style="text-align:right"> {{ ($relationData->price_currency) }} {{ !empty($eventData->price_amount_sell) ? $eventData->price_amount_sell : ''; }} </td>
 																	<td style="text-align:right"> {{ ($relationData->price_currency) }} {{ $eventData->extra_charges }}  </td>
-																@endif
+															
 															</tr>
 															@endforeach
 														</tbody>
@@ -306,11 +305,11 @@
 							</div>
 							@endif
 							</div>
-							<div class="section_header_class">
-								<label id="teacher_personal_data_caption">{{ __('Optional information') }}</label>
-                                <p style="font-size:11px;">(the description will be added on the invoice)</p>
+							<div class="mt-5 mb-3">
+								<div class="card-header titleCardPage">{{ __('Optional information') }}</div>
 							</div>
-							<div class="col-md-12">
+							<div class="col-md-10">
+								<p style="font-size:11px;">(the description will be added on the invoice)</p>
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Description') }} :</label>
 									<div class="col-sm-7">
@@ -344,64 +343,42 @@
 
 			</div>
 		</div>
-
+		<a class="btn btn-default" href="<?= $BASE_URL; ?>/agenda"><i class="fa-solid fa-arrow-left"></i> Back</a>
 	</div>
-	<div class="col-lg-2">
-
-		<div class="col-lg-2 btn_actions" style="position: fixed; right: 0;">
-			<div class="section_header_class">
-				<label><br></label>
-			</div>
-			<div class="card" style="border-radius: 8px 0 0 8px; background-color: #EEE;">
-				<div class="card-body p-3 pb-3">
-
-					<div class="row">
-						<div class="col-12">
-					<a class="btn btn-default w-100 mb-1" href="<?= $BASE_URL; ?>/agenda"><i class="fa-solid fa-arrow-left"></i> Back</a>
-						</div>
-						<div class="col-12">
-					@if($AppUI->person_id == $eventData->teacher_id)
-						@can('self-delete-event')
-							<a class="btn btn-theme-warn w-100 mb-1" href="#" id="delete_btn" style="display: block !important;">Delete</a>
-						@endcan
-					@else
-						@if(($eventData->event_invoice_type == 'S') && ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()))
-							<a class="btn btn-theme-warn w-100 mb-1" href="#" id="delete_btn" style="display: block !important;">Delete</a>
-						@else
-							@can('self-delete-event')
-								<a class="btn btn-theme-warn w-100 mb-1" href="#" id="delete_btn" style="display: block !important;">Delete</a>
-							@endcan
-						@endif
-					@endif
-						</div>
-					</div>
-
-					<button id="save_btn" name="save_btn" class="btn btn-theme-success w-100 mb-1">{{ __('Save') }}</button>
-
-					<div class="d-none d-sm-block">
-						@if(strtotime($date_end) < strtotime($current_time))
-						<div id="button_lock_and_save_div" class="alert alert-info mt-3 text-center" role="alert">
-							<label id="button_lock_and_save_help_text"><i class="fa-regular fa-bell fa-bounce"></i> Please validate the event to make it available for invoicing</label>
-							<div class="save_and_more_area">
-								<input type="submit" class="mt-1 btn btn-sm btn-info button_lock_and_save w-100 mb-1"  name="validate" value="{{ __('Validate') }}">
-								<i class="fa-solid fa-lock"></i>
-							</div>
-						</div>
-						@endif
-					</div>
-
-
-				</div>
-			</div>
-		</div>
+</div>
 
 	</div>
 
 	</div>
+	
+
+	</div>
+
+
+	<div class="row justify-content-center" style="position:fixed; bottom:0; z-index=99999!important;opacity:1!important; width:100%;">
+        <div class="col-md-12 mt-3 pt-3 pb-3 card-header text-center" style="opacity:0.91!important; background-color:#DDDD!important;">
+
+			@if($AppUI->person_id == $eventData->teacher_id)
+				@can('self-delete-event')
+					<a class="btn btn-outline-danger" href="#" id="delete_btn" style="display: inline-block !important;">Delete</a>
+				@endcan
+			@else
+				@if(($eventData->event_invoice_type == 'S') && ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()))
+					<a class="btn btn-outline-danger" href="#" id="delete_btn" style="display: inline-block !important;">Delete</a>
+				@else
+					@can('self-delete-event')
+						<a class="btn btn-outline-danger" href="#" id="delete_btn" style="display: inline-block !important;">Delete</a>
+					@endcan
+				@endif
+			@endif
+
+			<button id="save_btn" name="save_btn" class="btn btn-success">{{ __('Save') }}</button>
+
+        </div>
+    </div>
 
 </form>
 
-	</div>
 @endsection
 
 
