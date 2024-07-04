@@ -448,6 +448,11 @@ class Invoice extends BaseModel
                 ->leftJoin('users', 'users.person_id', '=', 'event_details.teacher_id')
                 //->leftJoin('schools', 'schools.id', '=', 'events.school_id')
                 //->leftJoin('lesson_prices', 'lesson_prices.event_type', '=', 'events.event_type')
+                ->leftJoin('lesson_price_teachers', function ($join) {
+                    $join->on('lesson_price_teachers.event_category_id', '=', 'events.event_category')
+                         ->on('lesson_price_teachers.teacher_id', '=', 'events.teacher_id')
+                         ->where('lesson_price_teachers.lesson_price_student', '=', 'price_fix');
+                })
                 ->select(
                     'events.id as event_id',
                     'event_details.id as event_id1',
@@ -467,7 +472,8 @@ class Invoice extends BaseModel
                     'event_details.is_sell_invoiced as is_sell_invoiced',
                     //'event_details.price_currency as price_currency',
                     //'event_details.costs_1 as costs_1',
-                    'event_details.costs_2 as costs_2'
+                    'event_details.costs_2 as costs_2',
+                    'lesson_price_teachers.price_buy AS buy_price_teacher'
                 )
                 ->selectRaw("ifnull(event_details.sell_total,0) AS sell_total")
                 ->selectRaw("ifnull(events.no_of_students,0) AS count_student")
@@ -573,6 +579,11 @@ class Invoice extends BaseModel
                 ->join('event_details', 'events.id', '=', 'event_details.event_id')
                 ->leftJoin('school_teacher', 'school_teacher.teacher_id', '=', 'event_details.teacher_id')
                 ->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')
+                ->leftJoin('lesson_price_teachers', function ($join) {
+                    $join->on('lesson_price_teachers.event_category_id', '=', 'events.event_category')
+                         ->on('lesson_price_teachers.teacher_id', '=', 'events.teacher_id')
+                         ->where('lesson_price_teachers.lesson_price_student', '=', 'price_fix');
+                })
                 ->select(
                     'event_details.event_id as event_id',
                     'events.event_type as event_type',
@@ -589,7 +600,8 @@ class Invoice extends BaseModel
                     'events.date_start as date_start',
                     'event_categories.title as category_name',
                     'event_categories.invoiced_type as invoiced_type',
-                    'events.extra_charges as extra_charges'
+                    'events.extra_charges as extra_charges',
+                    'lesson_price_teachers.price_buy AS buy_price_teacher'
                 )
                 ->selectRaw("GROUP_CONCAT(DISTINCT event_details.id SEPARATOR ',') AS detail_id ")
                 ->selectRaw("GROUP_CONCAT(DISTINCT event_details.student_id SEPARATOR ',') AS student_id ")

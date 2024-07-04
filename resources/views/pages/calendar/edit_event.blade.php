@@ -196,9 +196,9 @@
 										<div class="col-sm-4">
 											<div class="input-group" id="sprice_amount_buy_div">
 												<span class="input-group-addon">
-													<i class="fa fa-calendar1"></i>
+													<i class="fa fa-arrow-right"></i>
 												</span>
-												<input id="sprice_amount_buy" name="sprice_amount_buy" type="text" class="form-control" value="{{!empty($eventData->price_amount_buy) ? old('sprice_amount_buy', $eventData->price_amount_buy) : old('sprice_amount_buy')}}" autocomplete="off">
+												<input id="sprice_amount_buy" placeholder="0" name="sprice_amount_buy" type="text" class="form-control" value="{{!empty($eventData->price_amount_buy) ? old('sprice_amount_buy', $eventData->price_amount_buy) : old('sprice_amount_buy')}}" autocomplete="off">
 												<input type="hidden" name="attendBuyPrice" value="{{ !empty($eventData->price_amount_buy) ? $eventData->price_amount_buy : ''; }}">
 											</div>
 										</div>
@@ -209,9 +209,9 @@
 										<div class="col-sm-4">
 											<div class="input-group" id="sprice_amount_sell_div">
 												<span class="input-group-addon">
-													<i class="fa fa-calendar1"></i>
+													<i class="fa fa-arrow-right"></i>
 												</span>
-												<input id="sprice_amount_sell" name="sprice_amount_sell" type="number" class="form-control" value="{{!empty($eventData->price_amount_sell) ? old('sprice_amount_sell', $eventData->price_amount_sell) : old('sprice_amount_sell')}}" autocomplete="off">
+												<input id="sprice_amount_sell" placeholder="0" name="sprice_amount_sell" type="number" class="form-control" value="{{!empty($eventData->price_amount_sell) ? old('sprice_amount_sell', $eventData->price_amount_sell) : old('sprice_amount_sell')}}" autocomplete="off">
 												<input type="hidden" name="attendSellPrice" value="{{ !empty($eventData->price_amount_sell) ? $eventData->price_amount_sell : ''; }}">
 											</div>
 										</div>
@@ -221,9 +221,9 @@
 										<div class="col-sm-4">
 											<div class="input-group" id="extra_charges_div">
 												<span class="input-group-addon">
-													<i class="fa fa-calendar1"></i>
+													<i class="fa fa-arrow-right"></i>
 												</span>
-												<input id="extra_charges" name="extra_charges" type="number" class="form-control" value="{{!empty($eventData->extra_charges) ? old('sextra_charges', $eventData->extra_charges) : old('sextra_charges')}}" autocomplete="off">
+												<input id="extra_charges" placeholder="0" name="extra_charges" type="number" class="form-control" value="{{!empty($eventData->extra_charges) ? old('sextra_charges', $eventData->extra_charges) : old('sextra_charges')}}" autocomplete="off">
 												<input type="hidden" name="attendSellPrice" value="{{ ($eventData->price_amount_sell) }}">
 											</div>
 										</div>

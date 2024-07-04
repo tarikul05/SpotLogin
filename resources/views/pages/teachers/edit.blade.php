@@ -569,8 +569,8 @@
 							</tbody>
 						</table>
 					</div>
-					<div class="alert alert-danger" id="lesson_footer_div" style="display: block;">
-						<label id="verify_label_id" style="display: block;">{{ __('Please check all entries before you can convert these items into invoices.') }}</label>
+					<div class="alert alert-default" id="lesson_footer_div" style="display: block;">
+						<label id="verify_label_id" style="display: block;"><!--{{ __('Please check all entries before you can convert these items into invoices.') }}--></label>
 						<button style="position: absolute;right: 0;top: -2px;" class="btn btn-primary pull-right" id="btn_convert_invoice">Generate invoice</button>
 					</div>
 				</form>
@@ -1353,7 +1353,12 @@ function populate_teacher_lesson() {
 						resultHtml += "<td colspan='2' style='text-align:right'><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-lesson/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>Validate</a>";
 					}
 				} else {
-					resultHtml += '<td style="text-align:right" colspan="2">' + value.price_currency + ' ' + value.buy_total.toFixed(2) + '</td>';
+					if (value.event_type == 10 && value.count_student > 1) {
+						resultHtml += '<td style="text-align:right" colspan="2">' + value.price_currency + ' ' + value.buy_price_teacher.toFixed(2) + '</td>';
+						value ['buy_total'] = value['buy_price_teacher'];
+					} else {
+						resultHtml += '<td style="text-align:right" colspan="2">' + value.price_currency + ' ' + value.buy_total.toFixed(2) + '</td>';
+					}
 					//resultHtml+='<td style="text-align:right">' + value.price_currency + ' ' + value.sell_total + '</td>';
 					total_buy += value.buy_total + value.costs_1;
 					week_total_buy += value.buy_total + value.costs_1;
@@ -1452,9 +1457,11 @@ function populate_teacher_lesson() {
 				document.getElementById("verify_label_id").style.display = "none";
 			}
 		} else {
-			document.getElementById('lesson_footer_div').className = "alert alert-danger";
+			document.getElementById('lesson_footer_div').className = "alert alert-default";
 			document.getElementById("lesson_footer_div").style.display = "block";
-			document.getElementById("btn_convert_invoice").style.display = "none";
+			if(selected_items == 0) {
+				document.getElementById("btn_convert_invoice").style.display = "none";
+			}
 			document.getElementById("verify_label_id").style.display = "block";
 		}
 

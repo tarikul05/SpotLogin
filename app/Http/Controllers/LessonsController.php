@@ -237,13 +237,13 @@ class LessonsController extends Controller
                 $stu_num = count($eventData['student']);
 
                 if($user->isTeacher()){
-                    $attendBuyPrice =  isset($eventData['sprice_amount_sell']) ? $eventData['sprice_amount_sell'] : null;
-                    $indBuyPrice = isset($eventData['sprice_amount_sell']) ? (($eventData['sprice_amount_sell'])/($stu_num)) : null;
-                    $attendSellPrice = isset($eventData['sprice_amount_sell']) ? $eventData['sprice_amount_sell'] : null;
+                    $attendBuyPrice =  isset($eventData['sprice_amount_sell']) ? $eventData['sprice_amount_sell'] : 0;
+                    $indBuyPrice = isset($eventData['sprice_amount_sell']) ? (($eventData['sprice_amount_sell'])/($stu_num)) : 0;
+                    $attendSellPrice = isset($eventData['sprice_amount_sell']) ? $eventData['sprice_amount_sell'] : 0;
                 }else{
-                    $attendBuyPrice = isset($eventData['sprice_amount_buy']) ? $eventData['sprice_amount_buy'] : null;
-                    $indBuyPrice = isset($eventData['sprice_amount_buy']) ? (($eventData['sprice_amount_buy'])/($stu_num)) : null;
-                    $attendSellPrice = isset($eventData['sprice_amount_sell']) ? $eventData['sprice_amount_sell'] : null;
+                    $attendBuyPrice = isset($eventData['sprice_amount_buy']) ? $eventData['sprice_amount_buy'] : 0;
+                    $indBuyPrice = isset($eventData['sprice_amount_buy']) ? (($eventData['sprice_amount_buy'])/($stu_num)) : 0;
+                    $attendSellPrice = isset($eventData['sprice_amount_sell']) ? $eventData['sprice_amount_sell'] : 0;
                 }
 
                 $data = [
@@ -255,7 +255,7 @@ class LessonsController extends Controller
                     'price_currency' => !empty($eventData['sprice_currency']) ? $eventData['sprice_currency'] : null,
                     'price_amount_buy' => $attendBuyPrice,
                     'price_amount_sell' => $attendSellPrice,
-                    'extra_charges' => isset($eventData['extra_charges']) ? $eventData['extra_charges']: null,
+                    'extra_charges' => isset($eventData['extra_charges']) ? $eventData['extra_charges']: 0,
                     'fullday_flag' => 'Y',
                     'description' => $eventData['description'],
                     'location_id' => isset($eventData['location']) ? $eventData['location'] : null,

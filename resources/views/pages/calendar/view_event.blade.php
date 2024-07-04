@@ -143,11 +143,11 @@
 														
 																	<td style="text-align:center">
 																		@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherMinimum() || $AppUI->isTeacherMedium())
-																		{{ number_format($student->price_amount_sell, 2) }}  {{ $student->price_currency }}
+																		{{ number_format($student->price_amount_buy, 2) }}  {{ $student->price_currency }}
 																		@endif
 																	</td>
 																	<td style="text-align:center">
-																		{{ number_format($student->price_amount_buy, 2) }}  {{ $student->price_currency }}																
+																		{{ number_format($student->price_amount_sell, 2) }}  {{ $student->price_currency }}																
 																	</td>
 																	<td style="text-align:center">
 																		{{ number_format($eventData->extra_charges, 2) }}  {{ $eventData->price_currency }}

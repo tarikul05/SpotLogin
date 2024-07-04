@@ -967,9 +967,12 @@ class InvoiceController extends Controller
 
                 try {
                     $disc1_amt = 0;
-                    $invoiceItemData['total_item'] = $value->buy_total+$value->costs_1;
 
-
+                    if (($user->isTeacherSchoolAdmin() || $user->isSchoolAdmin()) && $value->event_type == 10) {
+                        $invoiceItemData['total_item'] = $value->buy_price_teacher+$value->costs_1;
+                    } else {
+                        $invoiceItemData['total_item'] = $value->buy_total+$value->costs_1;
+                    }
 
                     $invoiceItemData['invoice_id'] = $invoiceData->id;
                     $invoiceItemData['school_id'] = $schoolId;
@@ -978,8 +981,14 @@ class InvoiceController extends Controller
 
                     $invoiceItemData['unit'] = $value->duration_minutes;
                     $invoiceItemData['unit_type'] = 'minutes';
-                    $invoiceItemData['price'] = $value->buy_total+$value->costs_1;
-                    $invoiceItemData['price_unit'] = $value->buy_total+$value->costs_1;
+            
+                    if (($user->isTeacherSchoolAdmin() || $user->isSchoolAdmin()) && $value->event_type == 10) {
+                        $invoiceItemData['price'] = $value->buy_price_teacher+$value->costs_1;
+                        $invoiceItemData['price_unit'] = $value->buy_price_teacher+$value->costs_1;
+                    } else {
+                        $invoiceItemData['price'] = $value->buy_total+$value->costs_1;
+                        $invoiceItemData['price_unit'] = $value->buy_total+$value->costs_1;
+                    }
                     $price_currency = $invoiceItemData['price_currency'] = $value->price_currency;
                     $extra_expenses += $invoiceItemData['event_extra_expenses'] = 0;
                     $invoiceItemData['publication_mode'] = 'N,admin';
