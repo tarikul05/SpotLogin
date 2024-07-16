@@ -65,6 +65,11 @@
                                         <span disabled class="badge bg-info">{{$student->user ?  __('Registered') : __('Not yet registered') }}</span>
                                         @endif
                                         <a href="javascript:void(0)" disabled data-status="{{ $student->pivot->is_active }}" data-school="{{ $student->pivot->school_id }}" data-student="{{ $student->id }}" class="switch-student-btn" style="border:1px solid #EEE; font-size:12px; margin:0; width:150px;" href="#"><i class="fa-solid fa-retweet"></i> {{ !empty($student->pivot->is_active) ? __('Switch to inactive')  : __('Switch to active') ; }}</a>
+                                    
+                                        <span style="font-size:12px;"><br>
+                                        {{ (!empty($student->invited_at) ? __('Invited') : __('Not yet invited')) }}   {{ (!empty($student->invited_at) ? $student->invited_at : '') }}
+                                        </span>
+                                    
                                     </td>
 
                                     <td class="text-center align-middle" width="40">

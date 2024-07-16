@@ -31,7 +31,8 @@ class SchoolStudent extends BaseModel
         'level_skating_usp',
         'level_date_usp',
         'comment',
-        'is_sent_invite'
+        'is_sent_invite',
+        'invited_at'
     ];
 
 

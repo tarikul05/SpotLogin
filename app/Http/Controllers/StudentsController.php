@@ -98,6 +98,8 @@ public function index(Request $request, $schoolId = null)
         //check for each student if there is a relation with table parent_students where student_id
         foreach ($studentsList as $student) {
             $parents = ParentStudent::where('student_id',$student->id)->get();
+            $invited_at = SchoolStudent::where('student_id',$student->id)->where('school_id',$schoolId)->first();
+            $student->invited_at =!empty($invited_at)? $invited_at->invited_at : null;
             if(!empty($parents)){
                 $memberFamily = [];
                 foreach ($parents as $parent) {
@@ -435,6 +437,10 @@ public function index(Request $request, $schoolId = null)
                     'level_date_usp' => isset($alldata['level_date_usp']) && !empty($alldata['level_date_usp']) ? date('Y-m-d H:i:s',strtotime($alldata['level_date_usp'])) : null ,
                     'comment' => isset($alldata['comment']) ? $alldata['comment'] : '',
                 ];
+
+                if($sentInvite == "1") {
+                    $schoolStudent['invited_at'] = Carbon::now()->format("Y-m-d H:i:s");
+                }
 
                 if (!empty($student)) { // Student already exist in student table but not in this school
                     $exist = SchoolStudent::where(['school_id' => $schoolId, 'student_id' => $student->id ])->first();
@@ -943,7 +949,7 @@ public function index(Request $request, $schoolId = null)
         $studentId = $request->route('student');
         try {
             $schoolStudent = SchoolStudent::where(['school_id'=>$schoolId, 'student_id'=>$studentId])->first();
-            //->update(['is_sent_invite'=>$is_sent_invite]);
+            $schoolStudent->update(['is_sent_invite'=>1, 'invited_at'=>Carbon::now()->format("Y-m-d H:i:s")]);
 
             $school = School::find($schoolId);
             $student = Student::find($studentId);
