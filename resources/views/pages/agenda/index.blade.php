@@ -552,9 +552,9 @@
                                                                             <option value="{{ $student->student_id }}" {{ old('student') == $student->id ? 'selected' : '' }}>
                                                                             @php
                                                                             $studentName = App\Models\Student::find($student->student_id);
-                                                                            $schoolStudent =  App\Models\SchoolStudent::where('student_id',$student->id)->first();
+                                                                            $schoolStudentInfo =  App\Models\SchoolStudent::where('student_id',$studentName->id)->first();
                                                                             @endphp
-                                                                            {{ $studentName->firstname }} {{ $studentName->lastname }} {{ !empty($schoolStudent->nickname) ? '('.$schoolStudent->nickname.')' : '' }}</option>
+                                                                            {{ $studentName->firstname }} {{ $studentName->lastname }} {{ !empty($schoolStudentInfo->nickname) ? '('.$schoolStudentInfo->nickname.')' : '' }}</option>
                                                                         </div>
                                                                     @endforeach
                                                                 </select>
