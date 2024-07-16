@@ -100,6 +100,7 @@ public function index(Request $request, $schoolId = null)
             $parents = ParentStudent::where('student_id',$student->id)->get();
             $invited_at = SchoolStudent::where('student_id',$student->id)->where('school_id',$schoolId)->first();
             $student->invited_at =!empty($invited_at)? $invited_at->invited_at : null;
+            $student->is_sent_invite = $invited_at->is_sent_invite;
             if(!empty($parents)){
                 $memberFamily = [];
                 foreach ($parents as $parent) {
