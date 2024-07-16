@@ -554,7 +554,7 @@
                                                                             $studentName = App\Models\Student::find($student->student_id);
                                                                             $schoolStudent =  App\Models\SchoolStudent::where('student_id',$student->id)->first();
                                                                             @endphp
-                                                                            {{ $studentName->firstname }} {{ $studentName->lastname }} ({{ !empty($schoolStudent->nickname) ? $schoolStudent->nickname : '' }})</option>
+                                                                            {{ $studentName->firstname }} {{ $studentName->lastname }} {{ !empty($schoolStudent->nickname) ? '('.$schoolStudent->nickname.')' : '' }}</option>
                                                                         </div>
                                                                     @endforeach
                                                                 </select>
