@@ -710,7 +710,6 @@ class AgendaController extends Controller
             $e['text_for_search']=strtolower($e['event_type_name'].$e['cours_name'].' '.$e['teacher_name'].' - '.$e['title']);
             //$e['tooltip']=$e['event_mode_desc'].$e['cours_name'].' Duration: '.$fetch->duration_minutes.' '.$e['teacher_name'].' - '.$e['title'];
 
-
             $eventDetailsStudentId = EventDetails::active()->where('event_id', $fetch->id)->get()->toArray();
             $student_name ='';
             $first_student_name ='';
@@ -719,6 +718,7 @@ class AgendaController extends Controller
             foreach($eventDetailsStudentId as $std){
                 // $student = Student::find($std['student_id']);
                 $schoolStudent = $schoolTeacher = SchoolStudent::where('student_id',$std['student_id'])->where('school_id',$fetch->school_id)->first();
+                $e['search_by_nickname'] = $schoolStudent->nickname;
                 $theStudent =  Student::active()->find($std['student_id']);
                 if ($schoolStudent) {
                     if ($i!=0) {
@@ -731,7 +731,7 @@ class AgendaController extends Controller
                         $first_student_name = $theStudent->firstname . ' ' . $theStudent->lastname;
                     }
                     // $student_name .= $student->firstname;
-                    $student_name .= $theStudent->firstname . ' ' . $theStudent->lastname;
+                    $student_name .= $theStudent->firstname . ' ' . $theStudent->lastname . ' (' . $schoolStudent->nickname.')';
                     $studentListOfLessonOrEvent[] = $theStudent->firstname . ' ' . $theStudent->lastname;
                     $i++;
                 } else {
@@ -821,10 +821,10 @@ class AgendaController extends Controller
                         //$e['title_extend']= '<br/>'.$e['event_type_name'].' <br/> Students: '.$student_name.' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes;
                         $e['title_extend']= '<br/>Students: '.$student_name.' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes . ' Mn.';
                     }
-                    $e['title'] = $e['title'].' ('.$student_name. ')';
+                    $e['title'] = $e['title'].' '.$student_name. '';
                 }
                 elseif($fetch->duration_minutes > 5){
-                    $e['title']= $e['title'].' ('.$student_name. ')';
+                    $e['title']= $e['title'].' '.$student_name. '';
                 }
                 if($fetch->event_type != 100) {
 

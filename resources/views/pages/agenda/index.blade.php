@@ -552,8 +552,9 @@
                                                                             <option value="{{ $student->student_id }}" {{ old('student') == $student->id ? 'selected' : '' }}>
                                                                             @php
                                                                             $studentName = App\Models\Student::find($student->student_id);
+                                                                            $schoolStudent =  App\Models\SchoolStudent::where('student_id',$student->id)->first();
                                                                             @endphp
-                                                                            {{ $studentName->firstname }} {{ $studentName->lastname }}</option>
+                                                                            {{ $studentName->firstname }} {{ $studentName->lastname }} ({{ $schoolStudent->nickname }})</option>
                                                                         </div>
                                                                     @endforeach
                                                                 </select>
@@ -2708,7 +2709,7 @@ $('.close-icon').on('click', function() {
                 if ((school_found == 1) && (event_found == 1) && (student_found == 1) && (teacher_found == 1) && (date_found == 1) && (location_found == 1) ) {
                     if (search_text.length > 2){
                         search_found=0;
-                        var finalSearch = event.text_for_search + ' ' + event.text_for_search.toLowerCase() + ' ' + event.title + ' ' + event.title.toLowerCase();
+                        var finalSearch = event.text_for_search + ' ' + event.text_for_search.toLowerCase() + ' ' + event.title + ' ' + event.title.toLowerCase() + ' ' + event.search_by_nickname;
                         //if ((event.tooltip.toLowerCase().indexOf(search_text) >= 0) || (event.tooltip.toLowerCase().indexOf(search_text) >= 0)) {
                         //if (event.tooltip.toLowerCase().indexOf(search_text) >= 0) {
                         if (finalSearch.indexOf(search_text) >= 0) {
