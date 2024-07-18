@@ -250,7 +250,7 @@
 																	<button id="mark_present_btn" class="btn btn-xs btn-outline-success btn-sm" type="button" style="display: block;">Mark all present</button>
 																</th>
 														
-																@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherMinimum() || $AppUI->isTeacherMedium())
+																@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherMinimum() || $AppUI->isTeacherMedium() || $AppUI->isTeacherAll())
 																	<th width="15%" style="text-align:right;">
 																		<label id="row_hdr_buy" name="row_hdr_buy">{{ __('Teacher') }}</label>
 																	</th>
@@ -282,8 +282,8 @@
 																</td>
 
 															
-																	@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherMinimum() || $AppUI->isTeacherMedium())
-																	<td style="text-align:right"> {{ ($relationData->price_currency) }} {{ ($student->price_amount_buy) }}</td>
+																	@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherMinimum() || $AppUI->isTeacherMedium() || $AppUI->isTeacherAll())
+																	<td style="text-align:right"> {{ ($relationData->price_currency) }} {{ ($student->price_amount_sell) }}</td>
 																	@endif
 																	<td style="text-align:right"> {{ ($relationData->price_currency) }} {{ !empty($eventData->price_amount_sell) ? $eventData->price_amount_sell : ''; }} </td>
 																	<td style="text-align:right"> {{ ($relationData->price_currency) }} {{ $eventData->extra_charges }}  </td>
