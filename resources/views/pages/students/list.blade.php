@@ -69,6 +69,7 @@
 @section('footer_js')
 
 <script>
+
     $('#students').multiselect({
     maxHeight: 400,
     buttonWidth: '100%',
@@ -188,6 +189,7 @@ $('#principal_email_family').append($('<option>', { value: 'custom', text: "{{__
 
 <script>
     $(document).ready(function () {
+
         var table = $('#students1').DataTable({
             dom: '<"top"f>rt<"bottom"lp><"clear">',
             ordering: false,

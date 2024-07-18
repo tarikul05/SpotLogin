@@ -128,6 +128,11 @@ public function index(Request $request, $schoolId = null)
         }
 
 
+        //filter student by order alphabetic
+        usort($students, function ($a, $b) {
+            return strcmp($a->firstname, $b->firstname);
+        });
+
 
         if ($user->isSuperAdmin()) {
             $school = School::active()->find($schoolId);
