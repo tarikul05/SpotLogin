@@ -283,7 +283,7 @@
 
 															
 																	@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherMinimum() || $AppUI->isTeacherMedium() || $AppUI->isTeacherAll())
-																	<td style="text-align:right"> {{ ($relationData->price_currency) }} {{ ($student->price_amount_sell) }}</td>
+																	<td style="text-align:right"> {{ ($relationData->price_currency) }} {{ ($student->price_amount_buy) }}</td>
 																	@endif
 																	<td style="text-align:right"> {{ ($relationData->price_currency) }} {{ !empty($eventData->price_amount_sell) ? $eventData->price_amount_sell : ''; }} </td>
 																	<td style="text-align:right"> {{ ($relationData->price_currency) }} {{ $eventData->extra_charges }}  </td>
