@@ -228,7 +228,12 @@
                     <?php if (!empty($AppUI['id'])): ?>
                     <div class="d-flex align-items-center position-relative">
 
-                           
+                            @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAll())
+                            <span class="admin_name" style="position:absolute; top:24px; left:10px; font-size:11px; color:#AAA;">
+                            <!--<b>({{$AppUI->role_type}})</b>-->
+                            School Admin
+                            </span>
+                            @endif
 
 
                             @if($AppUI->isSchoolAdmin())
@@ -283,7 +288,7 @@
                                 @if(!$AppUI->isStudent() && !$AppUI->isParent())
                                     @if( $is_subscribed )
                                     @if($plan->stripe_status == 'active' || $plan->stripe_status == 'trialing')
-                                    <span class="badge bg-success p-1 d-none d-sm-block" style="position: absolute; right:-12px; top:-4px;">premium</span>
+                                    <span class="badge bg-success p-1 d-none d-sm-block" style="position: absolute; right:-12px; top:-4px;">Premium</span>
                                     @else
                                     <span class="badge bg-info p-1 d-none d-sm-block" style="position: absolute; right:0px;">basic</span>
                                     @endif
