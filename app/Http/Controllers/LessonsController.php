@@ -236,7 +236,7 @@ class LessonsController extends Controller
                 $end_date = $this->formatDateTimeZone($end_date, 'long', $eventData['zone'],'UTC');
                 $stu_num = count($eventData['student']);
 
-                if($user->isTeacher()){
+                if($user->isTeacher() || $user->isSchoolAdmin() || isTeacherSchoolAdmin() || isTeacherSchoolAll()){
                     $attendBuyPrice =  isset($eventData['sprice_amount_sell']) ? $eventData['sprice_amount_sell'] : 0;
                     $indBuyPrice = isset($eventData['sprice_amount_sell']) ? (($eventData['sprice_amount_sell'])/($stu_num)) : 0;
                     $attendSellPrice = isset($eventData['sprice_amount_sell']) ? $eventData['sprice_amount_sell'] : 0;
