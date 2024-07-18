@@ -43,6 +43,7 @@ class Event extends BaseModel
       'is_locked',
       'price_amount_sell',
       'price_currency',
+      'buy_total',
       'price_amount_buy',
       'fullday_flag',
       'no_of_students',
@@ -1010,7 +1011,7 @@ class Event extends BaseModel
 
         //dd($query->toSql());
         return $query;
-    }
+    }x
 
 
 

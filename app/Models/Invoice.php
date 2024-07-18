@@ -196,7 +196,7 @@ class Invoice extends BaseModel
                 ]
             );
 
-        if ($user_role == 'admin_teacher' || $user_role == 'teacher_minimum' || $user_role == 'teacher') {
+        if ($user_role == 'admin_teacher' || $user_role == 'teacher_admin' || $user_role == 'teacher_minimum' || $user_role == 'teacher_all' || $user_role == 'teacher') {
             $qq = " IF(`events`.`event_type` != 100, `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
             $studentEvents->whereRaw($qq);
             //$studentEvents->where('event_categories.invoiced_type', $invoice_type);

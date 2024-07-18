@@ -198,7 +198,7 @@
 												<span class="input-group-addon">
 													<i class="fa fa-arrow-right"></i>
 												</span>
-												<input id="sprice_amount_buy" placeholder="0" name="sprice_amount_buy" type="text" class="form-control" value="{{!empty($eventData->price_amount_buy) ? old('sprice_amount_buy', $eventData->price_amount_buy) : old('sprice_amount_buy')}}" autocomplete="off">
+												<input id="sprice_amount_buy" placeholder="0" name="sprice_amount_buy" type="text" class="form-control" value="{{!empty($eventData->buy_total) ? old('price_amount_buy', $eventData->price_amount_buy) : old('price_amount_buy')}}" autocomplete="off">
 												<input type="hidden" name="attendBuyPrice" value="{{ !empty($eventData->price_amount_buy) ? $eventData->price_amount_buy : ''; }}">
 											</div>
 										</div>
