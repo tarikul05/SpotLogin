@@ -1011,7 +1011,7 @@ class Event extends BaseModel
 
         //dd($query->toSql());
         return $query;
-    }x
+    }
 
 
 
