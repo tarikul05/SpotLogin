@@ -5025,6 +5025,13 @@ $('#agenda_select').on('change', function() {
             }else{
                 $('.not_teacher').show();
             }
+
+            //change display
+            var isAdmin = +"{{$AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAll() }}";
+            if(isAdmin) {
+                $('.not_teacher').show();
+            }
+
             if (selected_school_ids.length == 1) {
                 var page_action = BASE_URL+'/'+selected_school_ids+'/'+'add-event';
             }else{
