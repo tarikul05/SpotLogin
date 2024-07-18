@@ -5027,7 +5027,7 @@ $('#agenda_select').on('change', function() {
             }
 
             //change display
-            var isAdmin = +"{{$AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAll() }}";
+            var isAdmin = +"{{$AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherAll() }}";
             if(isAdmin) {
                 $('.not_teacher').show();
             }
