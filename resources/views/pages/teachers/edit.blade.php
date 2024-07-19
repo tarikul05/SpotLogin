@@ -1354,10 +1354,10 @@ function populate_teacher_lesson() {
 					}
 				} else {
 					if (value.event_type == 10 && value.count_student > 1) {
-						resultHtml += '<td style="text-align:right" colspan="2">' + value.price_currency + ' ' + Math.round(value.buy_price_teacher.toFixed(2)) + '</td>';
+						resultHtml += '<td style="text-align:right" colspan="2">' + value.price_currency + ' ' + Math.round(value.buy_price_teacher).toFixed(2) + '</td>';
 						value ['buy_total'] = value['buy_price_teacher'];
 					} else {
-						resultHtml += '<td style="text-align:right" colspan="2">' + value.price_currency + ' ' + Math.round(value.buy_total.toFixed(2)) + '</td>';
+						resultHtml += '<td style="text-align:right" colspan="2">' + value.price_currency + ' ' + Math.round(value.buy_total).toFixed(2) + '</td>';
 					}
 					//resultHtml+='<td style="text-align:right">' + value.price_currency + ' ' + value.sell_total + '</td>';
 					total_buy += value.buy_total + value.costs_1;
