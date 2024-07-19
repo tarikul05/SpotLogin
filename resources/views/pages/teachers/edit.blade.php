@@ -1342,7 +1342,7 @@ function populate_teacher_lesson() {
 
 				}
 				//resultHtml += '<td colspan="2">' + value.price_name + '</td>';
-				console.log(value);
+
 				// all_ready = 0 means not ready to generate invoice
 				if (value.ready_flag == "0") {
 					all_ready = 0;
@@ -1354,10 +1354,10 @@ function populate_teacher_lesson() {
 					}
 				} else {
 					if (value.event_type == 10 && value.count_student > 1) {
-						resultHtml += '<td style="text-align:right" colspan="2">' + value.price_currency + ' ' + value.buy_price.toFixed(2) + '</td>';
+						resultHtml += '<td style="text-align:right" colspan="2">' + value.price_currency + ' ' + value.buy_price_teacher.toFixed(0) + '</td>';
 						value ['buy_total'] = value['buy_price_teacher'];
 					} else {
-						resultHtml += '<td style="text-align:right" colspan="2">' + value.price_currency + ' ' + value.buy_total.toFixed(2) + '</td>';
+						resultHtml += '<td style="text-align:right" colspan="2">' + value.price_currency + ' ' + value.buy_total.toFixed(0) + '</td>';
 					}
 					//resultHtml+='<td style="text-align:right">' + value.price_currency + ' ' + value.sell_total + '</td>';
 					total_buy += value.buy_total + value.costs_1;
