@@ -1342,7 +1342,7 @@ function populate_teacher_lesson() {
 
 				}
 				//resultHtml += '<td colspan="2">' + value.price_name + '</td>';
-console.log(value);
+				console.log(value);
 				// all_ready = 0 means not ready to generate invoice
 				if (value.ready_flag == "0") {
 					all_ready = 0;

@@ -1196,17 +1196,17 @@ class Event extends BaseModel
                         'is_locked' => $lockStatus,
                         // 'participation_id' => 199,
                     ];
-                    if ($eventdetail->participation_id !== 199) {
+                    /*if ($eventdetail->participation_id !== 199) {
                         $eventdetail = $eventdetail->update($eventDetailPresent);
                     } else {
                         $eventdetail = $eventdetail->update($eventDetailAbsent);
-                    }
+                    }*/
 
                 }
-                if ($lockStatus && $currentEvent->event_type !== 100) {
+                /*if ($lockStatus && $currentEvent->event_type !== 100) {
                     $eventInit = new Event();
                     $eventInit->updateLatestPrice($event_id);
-                }
+                }*/
 
 
                 return true;
