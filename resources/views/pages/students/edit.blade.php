@@ -1668,7 +1668,11 @@ $('#save_btn').click(function (e) {
 
 
 					if(totalMinutesLessons>0) {
-						resultHtml += '<tr style="background-color:#EEE; height:80px;"><td colspan="5" style="text-align:right;"><br><b>{{ __('Total Lessons duration') }} <i class="fa-solid fa-arrow-right"></i></b> <b>'+totalMinutesLessons+' minutes</b></td><td colspan="4" style="text-align:right;"><br><b>{{ __('Sub-Total Lessons') }} </b> <i class="fa-solid fa-arrow-right"></i> '+currencyTotal+' <b id="ssubtotal_amount_with_discount_lesson">'+subTotalLessons.toFixed(2)+'</b><br><br></td><td></td></tr>';
+						if(!isTeacher){
+							resultHtml += '<tr style="background-color:#EEE; height:80px;"><td colspan="6" style="text-align:right;"><br><b>{{ __('Total Lessons duration') }} <i class="fa-solid fa-arrow-right"></i></b> <b>'+totalMinutesLessons+' minutes</b></td><td colspan="4" style="text-align:right;"><br><b>{{ __('Sub-Total Lessons') }} </b> <i class="fa-solid fa-arrow-right"></i> '+currencyTotal+' <b id="ssubtotal_amount_with_discount_lesson">'+subTotalLessons.toFixed(2)+'</b><br><br></td><td></td></tr>';
+						} else {
+							resultHtml += '<tr style="background-color:#EEE; height:80px;"><td colspan="5" style="text-align:right;"><br><b>{{ __('Total Lessons duration') }} <i class="fa-solid fa-arrow-right"></i></b> <b>'+totalMinutesLessons+' minutes</b></td><td colspan="4" style="text-align:right;"><br><b>{{ __('Sub-Total Lessons') }} </b> <i class="fa-solid fa-arrow-right"></i> '+currencyTotal+' <b id="ssubtotal_amount_with_discount_lesson">'+subTotalLessons.toFixed(2)+'</b><br><br></td><td></td></tr>';
+						}
 
 					//Lesson Discount
                     /*resultHtml += '<tr>';
@@ -1686,10 +1690,14 @@ $('#save_btn').click(function (e) {
 					resultHtml += '</tr>';*/
 
 					resultHtml += '<tr>';
-					resultHtml += '<td colspan="7" style="text-align:right">{{ __('Discount(%) on Lessons') }}:</td>';
-					resultHtml += '<td style="text-align:right"><input type="text" class="form-control numeric" id="sdiscount_percent_1" name="sdiscount_percent_1" style="text-align:right; padding-right: 5px;" value="0" placeholder=""><span style="font-size:11px;">Percentage</span></td>';
+						if(!isTeacher){
+							resultHtml += '<td colspan="8" style="text-align:right"><br>{{ __('Discount(%) on Lessons') }}:</td>';
+						} else {
+							resultHtml += '<td colspan="7" style="text-align:right"><br>{{ __('Discount(%) on Lessons') }}:</td>';
+						}
+					resultHtml += '<td style="text-align:right"><br><input type="text" class="form-control numeric" id="sdiscount_percent_1" name="sdiscount_percent_1" style="text-align:right; padding-right: 5px;" value="0" placeholder=""><span style="font-size:11px;">Percentage</span></td>';
 					resultHtml += '<td style="text-align:right">';
-					resultHtml += '<input type="text" class="form-control numeric_amount" id="samount_discount_1" name="samount_discount_1" style="text-align:right; padding-right: 5px;" value="0" placeholder=""><span style="font-size:11px;">Amount</span>';
+					resultHtml += '<br><input type="text" class="form-control numeric_amount" id="samount_discount_1" name="samount_discount_1" style="text-align:right; padding-right: 5px;" value="0" placeholder=""><span style="font-size:11px;">Amount</span>';
 					resultHtml += '</td>';
 					resultHtml += '<td></td>';
 					resultHtml += '</tr>';
@@ -1703,7 +1711,11 @@ $('#save_btn').click(function (e) {
 					resultHtml += '</tr>';*/
 
                     resultHtml += '<tr>';
-					resultHtml += '<td colspan="7" style="text-align:right">Description:</td>';
+						if(!isTeacher){
+							resultHtml += '<td colspan="8" style="text-align:right">Description:</td>';
+						} else {
+							resultHtml += '<td colspan="7" style="text-align:right">Description:</td>';
+						}
 					resultHtml += '<td colspan="2" style="text-align:right">';
 					resultHtml += '<textarea type="text" class="form-control" id="lesson_discount_description" name="lesson_discount_description" placeholder="Description"></textarea>';
 					resultHtml += '</td>';
@@ -1713,11 +1725,17 @@ $('#save_btn').click(function (e) {
 
 
 
-
-				    resultHtml += '<tr style="background-color:#EEE; height:80px;"><td colspan="4" style="text-align:right;"></td><td style="text-align:left;"></td><td colspan="4" style="text-align:right;"><br><b>{{ __('Total Lessons') }}</b> <i class="fa-solid fa-arrow-right"></i> '+currencyTotal+' <b><span id="ssubtotal_amount_with_discount">'+subTotalLessons.toFixed(2)+'</span></b></td><td style="text-align:right;"><br><span id="extra_1_display"></span></td></tr>';
-
+					if(!isTeacher){
+				    	resultHtml += '<tr style="background-color:#EEE; height:80px;"><td colspan="5" style="text-align:right;"></td><td style="text-align:left;"></td><td colspan="4" style="text-align:right;"><br><b>{{ __('Total Lessons') }}</b> <i class="fa-solid fa-arrow-right"></i> '+currencyTotal+' <b><span id="ssubtotal_amount_with_discount">'+subTotalLessons.toFixed(2)+'</span></b></td><td style="text-align:right;"><br><span id="extra_1_display"></span></td></tr>';
+					} else {
+						resultHtml += '<tr style="background-color:#EEE; height:80px;"><td colspan="4" style="text-align:right;"></td><td style="text-align:left;"></td><td colspan="4" style="text-align:right;"><br><b>{{ __('Total Lessons') }}</b> <i class="fa-solid fa-arrow-right"></i> '+currencyTotal+' <b><span id="ssubtotal_amount_with_discount">'+subTotalLessons.toFixed(2)+'</span></b></td><td style="text-align:right;"><br><span id="extra_1_display"></span></td></tr>';
+					}
 					//add empty line
-					resultHtml += '<tr><td colspan="10"><br><br></td></tr>';
+					if(!isTeacher){
+					resultHtml += '<tr><td colspan="11"><br><br></td></tr>';
+					} else {
+						resultHtml += '<tr><td colspan="10"><br><br></td></tr>';
+					}
 
 					} else { resultHtml += '<span style="display:none;" id="ssubtotal_amount_with_discount_lesson">0</span>' }
 

@@ -241,10 +241,10 @@ class LessonsController extends Controller
                 $totalBuyPrice = 0;
 
                 if($user->isSchoolAdmin() || $user->isTeacherSchoolAdmin() || $user->isTeacherAll()){
-                    $attendBuyPrice =  isset($eventData['sprice_amount_buy']) ? (($eventData['sprice_amount_buy'])/($stu_num)) : 0;
-                    $totalBuyPrice =  isset($eventData['sprice_amount_buy']) ? (($eventData['sprice_amount_buy'])) : 0;
+                    $attendBuyPrice =  isset($eventData['sprice_amount_sell']) ? (($eventData['sprice_amount_sell'])/($stu_num)) : 0;
+                    $totalBuyPrice =  isset($eventData['sprice_amount_sell']) ? (($eventData['sprice_amount_sell'])) : 0;
                     $indBuyPrice = isset($eventData['sprice_amount_sell']) ? (($eventData['sprice_amount_sell'])/($stu_num)) : 0;
-                    $attendSellPrice = isset($eventData['sprice_amount_sell']) ? $eventData['sprice_amount_sell'] : 0;
+                    $attendSellPrice = isset($eventData['sprice_amount_buy']) ? $eventData['sprice_amount_buy'] : 0;
                 }else{
                     $attendBuyPrice = isset($eventData['sprice_amount_buy']) ? $eventData['sprice_amount_buy'] : 0;
                     $indBuyPrice = isset($eventData['sprice_amount_buy']) ? (($eventData['sprice_amount_buy'])/($stu_num)) : 0;
