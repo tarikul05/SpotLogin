@@ -2086,19 +2086,31 @@ $('#save_btn').click(function (e) {
 				//}
 
 				// display grand total
-				resultHtml += '<tr><td colspan="6">';
+				if(!isTeacher){
+					resultHtml += '<tr><td colspan="7">';
+				} else {
+					resultHtml += '<tr><td colspan="6">';
+				}
                     if($(window).width() < 768){
-                        resultHtml += '<td colspan="2" style="text-align:right; font-weight: bold;"><br><br>' + sub_total_caption + ': ';
+						if(!isTeacher){
+                        	resultHtml += '<td colspan="2" style="text-align:right; font-weight: bold;"><br><br>' + sub_total_caption + ': ';
+						} else {
+							resultHtml += '<td colspan="2" style="text-align:right; font-weight: bold;"><br><br>' + sub_total_caption + ': ';
+						}
                     }
                     else {
-                        resultHtml += '<td colspan="2" style="text-align:right; font-weight: bold;"><br><br>' + sub_total_caption + ':</td>';
+						if(!isTeacher){
+                        	resultHtml += '<td colspan="2" style="text-align:right; font-weight: bold;"><br><br>' + sub_total_caption + ':</td>';
+						} else {
+							resultHtml += '<td colspan="2" style="text-align:right; font-weight: bold;"><br><br>' + sub_total_caption + ':</td>';
+						}
                     }
 
 				if (no_of_teachers == 1){
 						resultHtml += '<td style="text-align:right"></td>';
 				}else {
 					if (!isTeacher) {
-						resultHtml += '<td style="text-align:right; font-weight: bold;"><br><br>' + total_buy.toFixed(2) + '</td>';
+						//resultHtml += '<td style="text-align:right; font-weight: bold;"><br><br>' + total_buy.toFixed(2) + '</td>';
 					}
 				}
 
@@ -2288,37 +2300,61 @@ $('#save_btn').click(function (e) {
                 if($(window).width() < 768){
 		    		resultHtml += '<tr><td colspan="8" style="text-align:right;"><hr><b>Total taxe: '+currencyTotal+' <b><span id="total-taxes">'+(totalTaxAmount).toFixed(2)+'</span></b></td><td></td></tr>';
                 } else {
-                    resultHtml += '<tr><td colspan="8" style="text-align:right;"><b>Total taxes</td><td colspan="1" style="text-align:right;">'+currencyTotal+' <b><span id="total-taxes">'+(totalTaxAmount).toFixed(2)+'</span></b></td><td></td></tr>';
-                }
+					if(!isTeacher) {
+                    	resultHtml += '<tr><td colspan="9" style="text-align:right;"><b>Total taxes</td><td colspan="1" style="text-align:right;">'+currencyTotal+' <b><span id="total-taxes">'+(totalTaxAmount).toFixed(2)+'</span></b></td><td></td></tr>';
+					} else {
+						resultHtml += '<tr><td colspan="8" style="text-align:right;"><b>Total taxes</td><td colspan="1" style="text-align:right;">'+currencyTotal+' <b><span id="total-taxes">'+(totalTaxAmount).toFixed(2)+'</span></b></td><td></td></tr>';
+					}
+				}
 
                 if($(window).width() < 768){
                     resultHtml += '<tr><td colspan="9" style="text-align:right;"><br>'+sub_total_caption+':  '+currencyTotal+' <b><span id="sub-total-before-charges">'+(subTotalLessons + subTotalEvents + totalTaxAmount).toFixed(2)+'</span></b><br><br></td><td></td></tr>';
                 } else {
-                    resultHtml += '<tr><td colspan="8" style="text-align:right;"><br><b>'+sub_total_caption+'</td><td colspan="1" style="text-align:right;"><br>'+currencyTotal+' <b><span id="sub-total-before-charges">'+(subTotalLessons + subTotalEvents + totalTaxAmount).toFixed(2)+'</span></b></td><td></td></tr>';
-                }
+					if(!isTeacher) {
+                    	resultHtml += '<tr><td colspan="9" style="text-align:right;"><br><b>'+sub_total_caption+'</td><td colspan="1" style="text-align:right;"><br>'+currencyTotal+' <b><span id="sub-total-before-charges">'+(subTotalLessons + subTotalEvents + totalTaxAmount).toFixed(2)+'</span></b></td><td></td></tr>';
+					} else {
+						resultHtml += '<tr><td colspan="8" style="text-align:right;"><br><b>'+sub_total_caption+'</td><td colspan="1" style="text-align:right;"><br>'+currencyTotal+' <b><span id="sub-total-before-charges">'+(subTotalLessons + subTotalEvents + totalTaxAmount).toFixed(2)+'</span></b></td><td></td></tr>';
+					}
+				}
 
 				
 
 
 					resultHtml += '<tr>';
-					resultHtml += '<td colspan="7" style="text-align:right">{{ __('Extras Charges') }}:</td>';
-					resultHtml += '<td style="text-align:right"></td>';
-					resultHtml += '<td style="text-align:right">';
+						if(!isTeacher) {
+							resultHtml += '<td colspan="9" style="text-align:right">{{ __('Extras Charges') }}:</td>';
+						} else {
+							resultHtml += '<td colspan="7" style="text-align:right">{{ __('Extras Charges') }}:</td>';
+						}
+						if(isTeacher) {
+							resultHtml += '<td style="text-align:right"></td>';
+						}
+					resultHtml += '<td colspan="1" style="text-align:right">';
 					resultHtml += '<input type="text" class="form-control numeric" id="extra_1" name="extra_1" style="text-align:right; padding-right: 5px;" value="0" placeholder="">';
 					resultHtml += '</td>';
-					resultHtml += '<td style="text-align:right"></td>';
+					//resultHtml += '<td style="text-align:right"></td>';
                     resultHtml += '</tr>';
 
                     resultHtml += '<tr>';
-					resultHtml += '<td colspan="7" style="text-align:right">Description:</td>';
-                    resultHtml += '<td style="text-align:right"></td>';
+						if(!isTeacher) {
+							resultHtml += '<td colspan="9" style="text-align:right">Description:</td>';
+						} else {
+							resultHtml += '<td colspan="7" style="text-align:right">Description:</td>';
+						}
+						if(isTeacher) {
+                    		resultHtml += '<td style="text-align:right"></td>';
+						}
                     resultHtml += '<td><textarea type="text" class="form-control" id="extra_1_description" name="extra_1_description" placeholder="Description"></textarea></td>';
 					resultHtml += '<td style="text-align:right"></td>';
 					resultHtml += '</tr>';
 
 
 					if(subTotalEventsExtra > 0) {
-					resultHtml += '<tr><td colspan="8" style="text-align:right;">Total Extra Charges</td><td colspan="1" style="text-align:right;">'+currencyTotal+' <b><span id="extras" data-amount="'+subTotalEventsExtra.toFixed(2)+'">'+subTotalEventsExtra.toFixed(2)+'</span></b></td><td></td></tr>';
+						if(!isTeacher) {
+							resultHtml += '<tr><td colspan="9" style="text-align:right;">Total Extra Charges</td><td colspan="1" style="text-align:right;">'+currencyTotal+' <b><span id="extras" data-amount="'+subTotalEventsExtra.toFixed(2)+'">'+subTotalEventsExtra.toFixed(2)+'</span></b></td><td></td></tr>';
+						} else {
+							resultHtml += '<tr><td colspan="8" style="text-align:right;">Total Extra Charges</td><td colspan="1" style="text-align:right;">'+currencyTotal+' <b><span id="extras" data-amount="'+subTotalEventsExtra.toFixed(2)+'">'+subTotalEventsExtra.toFixed(2)+'</span></b></td><td></td></tr>';
+						}
 					} else { resultHtml += '<span id="extras" style="opacity:0;" data-amount="0">0</span>'; }
 
 					//resultHtml += '<tr><td colspan="10"><br></td></tr>';
@@ -2327,9 +2363,17 @@ $('#save_btn').click(function (e) {
 				resultHtml += '<tr style="background-color:#EEE;"><td style="font-weight: bold;" colspan="6">';
 
                 if($(window).width() < 768){
-				    resultHtml += '<td style="text-align:right; font-weight: bold;" colspan="2" class="pt-3"><b>TOTAL:</b> ';
+					if (!isTeacher) {
+				    	resultHtml += '<td style="text-align:right; font-weight: bold;" colspan="3" class="pt-3"><b>TOTAL:</b> ';
+					} else {
+						resultHtml += '<td style="text-align:right; font-weight: bold;" colspan="2" class="pt-3"><b>TOTAL:</b> ';
+					}
                 } else {
-                    resultHtml += '<td style="text-align:right; font-weight: bold; font-size:20px;" colspan="2" class="pt-3">TOTAL</td>';
+					if (!isTeacher) {
+                    	resultHtml += '<td style="text-align:right; font-weight: bold; font-size:18px;" colspan="3" class="pt-3">TOTAL</td>';
+					} else {
+						resultHtml += '<td style="text-align:right; font-weight: bold; font-size:18px;" colspan="2" class="pt-3">TOTAL</td>';
+					}
                 }
 
 				if (no_of_teachers == 1){
@@ -2341,9 +2385,9 @@ $('#save_btn').click(function (e) {
 				}else {
 					if (!isTeacher) {
                         if($(window).width() < 768){
-						    resultHtml += '' + total_buy.toFixed(2) + '<br><br></td>';
+						    //resultHtml += '' + total_buy.toFixed(2) + '<br><br></td>';
                         } else {
-                            resultHtml += '<td style="text-align:right; font-weight: bold;">' + total_buy.toFixed(2) + '</td>';
+                            //resultHtml += '<td style="text-align:right; font-weight: bold;">' + total_buy.toFixed(2) + '</td>';
                         }
 					}
 				}
