@@ -1912,10 +1912,10 @@ $('#save_btn').click(function (e) {
 										value.buy_price = value.sell_price;
 									}
 									else{
-										value.buy_price = value.buy_price;
+										value.buy_price = value.buy_total;
 									}
 									if (!isTeacher) {
-										resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.buy_price.toFixed(2) + '</td>';
+										resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.buy_total.toFixed(2) + '</td>';
 
 									}
 								}
@@ -1959,8 +1959,12 @@ $('#save_btn').click(function (e) {
 
 
                     if(subTotalEvents > 0) {
-					resultHtml += '<tr style="background-color:#EEE; height:80px;"><td colspan="4" style="text-align:right;"></td><td style="text-align:left;"></td><td colspan="4" style="text-align:right;"><br><b>Sub-Total Events</b> <i class="fa-solid fa-arrow-right"></i> '+currencyTotal+' <b><span id="stotal_amount_before_discount_event">'+subTotalEvents.toFixed(2)+'</span></b></td><td></td></tr>';
 
+					if(!isTeacher){
+						resultHtml += '<tr style="background-color:#EEE; height:80px;"><td colspan="5" style="text-align:right;"></td><td style="text-align:left;"></td><td colspan="4" style="text-align:right;"><br><b>Sub-Total Events</b> <i class="fa-solid fa-arrow-right"></i> '+currencyTotal+' <b><span id="stotal_amount_before_discount_event">'+subTotalEvents.toFixed(2)+'</span></b></td><td></td></tr>';
+					} else {
+						resultHtml += '<tr style="background-color:#EEE; height:80px;"><td colspan="4" style="text-align:right;"></td><td style="text-align:left;"></td><td colspan="4" style="text-align:right;"><br><b>Sub-Total Events</b> <i class="fa-solid fa-arrow-right"></i> '+currencyTotal+' <b><span id="stotal_amount_before_discount_event">'+subTotalEvents.toFixed(2)+'</span></b></td><td></td></tr>';
+					}
                     /*resultHtml += '<tr>';
 					resultHtml += '<td colspan="7" style="text-align:right">{{ __('Extras Charges') }}:</td>';
 					resultHtml += '<td style="text-align:right"></td>';
@@ -1975,7 +1979,11 @@ $('#save_btn').click(function (e) {
 
 
 					resultHtml += '<tr>';
-					resultHtml += '<td colspan="7" style="text-align:right">{{ __('Discount(%) on Events') }}:</td>';
+						if(!isTeacher){
+							resultHtml += '<td colspan="8" style="text-align:right">{{ __('Discount(%) on Events') }}:</td>';
+						} else {
+							resultHtml += '<td colspan="7" style="text-align:right">{{ __('Discount(%) on Events') }}:</td>';
+						}
 					resultHtml += '<td style="text-align:right"><input type="text" class="form-control numeric2" id="sdiscount_percent_2" name="sdiscount_percent_2" style="text-align:right; padding-right: 5px;" value="0" placeholder=""><span style="font-size:11px;">Percentage</span></td>';
 					resultHtml += '<td style="text-align:right">';
 					resultHtml += '<input type="text" class="form-control numeric_amount2" id="samount_discount_2" name="samount_discount_2" style="text-align:right; padding-right: 5px;" value="0" placeholder=""><span style="font-size:11px;">Amount</span>';
@@ -1992,7 +2000,11 @@ $('#save_btn').click(function (e) {
 					resultHtml += '</tr>';*/
 
                     resultHtml += '<tr>';
-					resultHtml += '<td colspan="7" style="text-align:right">Description:</td>';
+						if(!isTeacher){
+							resultHtml += '<td colspan="8" style="text-align:right">Description:</td>';
+						} else {
+							resultHtml += '<td colspan="7" style="text-align:right">Description:</td>';
+						}
 					resultHtml += '<td colspan="2" style="text-align:right">';
 					resultHtml += '<textarea type="text" class="form-control" id="lesson_event_description" name="lesson_event_description" placeholder="Description"></textarea>';
 					resultHtml += '</td>';
@@ -2003,7 +2015,11 @@ $('#save_btn').click(function (e) {
 
 
 					if(subTotalEvents > 0) {
-						resultHtml += '<tr style="background-color:#EEE; height:80px;"><td colspan="4" style="text-align:right;"></td><td style="text-align:left;"></td><td colspan="4" style="text-align:right;"><br><b>Total Events</b> <i class="fa-solid fa-arrow-right"></i> '+currencyTotal+' <b><span id="stotal_amount_with_discount_event">'+subTotalEvents.toFixed(2)+'</span></b></td><td style="text-align:right;"><br>+<span id="extra_2_display">'+subTotalEventsExtraCount.toFixed(2)+'</span></td></tr>';
+						if(!isTeacher){
+							resultHtml += '<tr style="background-color:#EEE; height:80px;"><td colspan="5" style="text-align:right;"></td><td style="text-align:left;"></td><td colspan="4" style="text-align:right;"><br><b>Total Events</b> <i class="fa-solid fa-arrow-right"></i> '+currencyTotal+' <b><span id="stotal_amount_with_discount_event">'+subTotalEvents.toFixed(2)+'</span></b></td><td style="text-align:right;"><br>+<span id="extra_2_display">'+subTotalEventsExtraCount.toFixed(2)+'</span></td></tr>';
+						} else {
+							resultHtml += '<tr style="background-color:#EEE; height:80px;"><td colspan="4" style="text-align:right;"></td><td style="text-align:left;"></td><td colspan="4" style="text-align:right;"><br><b>Total Events</b> <i class="fa-solid fa-arrow-right"></i> '+currencyTotal+' <b><span id="stotal_amount_with_discount_event">'+subTotalEvents.toFixed(2)+'</span></b></td><td style="text-align:right;"><br>+<span id="extra_2_display">'+subTotalEventsExtraCount.toFixed(2)+'</span></td></tr>';
+						}
 					} else { resultHtml += '<span style="display:none;" id="stotal_amount_with_discount_event">0</span><span style="display:none;" id="extra_2_display">0</span>'; }
 
 

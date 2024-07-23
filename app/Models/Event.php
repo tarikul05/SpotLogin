@@ -1192,15 +1192,15 @@ class Event extends BaseModel
                         'participation_id' => 200,
                     ];
 
-                    $eventDetailAbsent = [
+                    /*$eventDetailAbsent = [
                         'is_locked' => $lockStatus,
                         // 'participation_id' => 199,
-                    ];
-                    /*if ($eventdetail->participation_id !== 199) {
+                    ];*/
+                    if ($eventdetail->participation_id !== 199) {
                         $eventdetail = $eventdetail->update($eventDetailPresent);
                     } else {
                         $eventdetail = $eventdetail->update($eventDetailAbsent);
-                    }*/
+                    }
 
                 }
                 /*if ($lockStatus && $currentEvent->event_type !== 100) {

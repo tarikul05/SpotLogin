@@ -142,7 +142,7 @@ class AgendaController extends Controller
         //dd($event_types);
 
         //$eventData = Event::active()->where('school_id', $schoolId)->get();
-        $eventData = Event::active()->get();
+        //$eventData = Event::active()->get();
         $data = $request->all();
 
         $user_role = 'superadmin';
@@ -171,13 +171,13 @@ class AgendaController extends Controller
         if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role =='teacher' ) {
             $user_role = 'teacher';
         }
-        //$eventData = Event::active()->where('school_id', $schoolId)->get();
+        $events = Event::active()->where('school_id', $schoolId)->get();
 
         $data['user_role'] = $user_role;
         $data['person_id'] = $user->person_id;
 
         //dd($eventData);
-        $events = array();
+        //$events = array();
 
         $myCurrentTimeZone = $user->isSuperAdmin() || $user->isStudent() ? date_default_timezone_get() : $school->timezone;
 
@@ -194,8 +194,9 @@ class AgendaController extends Controller
             $counterDataImported = 0;
         }
 
-        $events = json_encode($events);
+        //$events = json_encode($events);
         //unset($event_types[10]);
+
         return view('pages.agenda.index')->with(compact('settingUser', 'counterDataImported', 'schools','school','schoolId','user_role','coach_user','students','teachers','locations','alllanguages','events','event_types','event_types_all','eventCategoryList','professors','studentsbySchool','lessonPrice','currency', 'myCurrentTimeZone'));
 
     }
@@ -301,6 +302,16 @@ class AgendaController extends Controller
                     'message' => __('Confirmed'),
                 );
             }
+
+
+
+            $eventdetails = EventDetails::where('event_id', $p_event_auto_id)->update(
+                [
+                    'is_locked' => $locStatus,
+                ]
+            );
+
+
             // $eventUpdate = [
             //     'is_locked' => 1
             // ];
@@ -1500,6 +1511,12 @@ class AgendaController extends Controller
                     Event::validate(['event_id' => $eventId]);
                 }
             }
+
+            $eventdetails = EventDetails::where('event_id', $eventId)->update(
+                [
+                    'is_locked' => 1,
+                ]
+            );
 
             // Si la validation réussit pour au moins un événement de type 10, retourner un succès
             $result = array(

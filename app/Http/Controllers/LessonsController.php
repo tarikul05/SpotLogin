@@ -97,7 +97,7 @@ class LessonsController extends Controller
                 $eventInit = new Event;
                 $eventPrice = $eventInit->priceCalculations(['event_category_id'=>$eventData['category_select'],'teacher_id'=>$teacher_id,'student_count'=>$studentCount]);
 
-                if($user->isSchoolAdmin() || isTeacherSchoolAdmin() || isTeacherAll()){
+                if($user->isSchoolAdmin() || $user->isTeacherSchoolAdmin() || $user->isTeacherAll()){
                     $attendBuyPrice =  isset($eventData['sprice_amount_buy']) ? (($eventData['sprice_amount_buy'])/($stu_num)) : null;
                     $indBuyPrice = isset($eventData['sprice_amount_sell']) ? (($eventData['sprice_amount_sell'])/($stu_num)) : null;
                     $totalBuyPrice =  isset($eventData['sprice_amount_sell']) ? (($eventData['sprice_amount_sell'])) : 0;
@@ -240,7 +240,7 @@ class LessonsController extends Controller
 
                 $totalBuyPrice = 0;
 
-                if($user->isSchoolAdmin() || isTeacherSchoolAdmin() || isTeacherAll()){
+                if($user->isSchoolAdmin() || $user->isTeacherSchoolAdmin() || $user->isTeacherAll()){
                     $attendBuyPrice =  isset($eventData['sprice_amount_buy']) ? (($eventData['sprice_amount_buy'])/($stu_num)) : 0;
                     $totalBuyPrice =  isset($eventData['sprice_amount_buy']) ? (($eventData['sprice_amount_buy'])) : 0;
                     $indBuyPrice = isset($eventData['sprice_amount_sell']) ? (($eventData['sprice_amount_sell'])/($stu_num)) : 0;
