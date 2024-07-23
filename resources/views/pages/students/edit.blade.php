@@ -1940,7 +1940,11 @@ $('#save_btn').click(function (e) {
 								resultHtml += '<td style="text-align:right">' + value.price_currency + ' <b>' + value.sell_price.toFixed(2) + '</b></td>';
 								total_buy += value.buy_price;
 								total_sell += value.sell_price + value.extra_charges;
-								subTotalEvents = subTotalEvents + value.buy_price;
+								if (!isTeacher) {
+									subTotalEvents = subTotalEvents + value.buy_price;
+								} else {
+									subTotalEvents = subTotalEvents + value.buy_total;
+								}
 								subTotalEventsExtra = subTotalEventsExtra + value.extra_charges;
 								subTotalEventsExtraCount = subTotalEventsExtraCount + value.extra_charges;
 
