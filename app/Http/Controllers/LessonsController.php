@@ -789,6 +789,12 @@ class LessonsController extends Controller
                 ];
 
                 $event = Event::where('id', $lessonlId)->update($data);
+
+                if($user->isSchoolAdmin() || $user->isTeacherSchoolAdmin()) {
+                    $attendBuyPrice = $eventPrice['price_buy']*($lessonData['duration']/60)/$studentCount;
+                    $attendSellPrice = $eventPrice['price_sell']*($lessonData['duration']/60);
+                }
+
                 EventDetails::where('event_id',$lessonlId)->forceDelete();
                 if (!empty($lessonData['student'])) {
                     foreach($lessonData['student'] as $std){

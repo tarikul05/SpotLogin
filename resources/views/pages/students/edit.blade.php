@@ -2324,26 +2324,25 @@ $('#save_btn').click(function (e) {
 						if(!isTeacher) {
 							resultHtml += '<td colspan="9" style="text-align:right">{{ __('Extras Charges') }}:</td>';
 						} else {
-							resultHtml += '<td colspan="7" style="text-align:right">{{ __('Extras Charges') }}:</td>';
+							resultHtml += '<td colspan="8" style="text-align:right">{{ __('Extras Charges') }}:</td>';
 						}
-						if(isTeacher) {
-							resultHtml += '<td style="text-align:right"></td>';
+						if(!isTeacher) {
+							resultHtml += '<td style="text-align:right">';
+						} else {
+							resultHtml += '<td colspan="1" style="text-align:right">';
 						}
-					resultHtml += '<td colspan="1" style="text-align:right">';
 					resultHtml += '<input type="text" class="form-control numeric" id="extra_1" name="extra_1" style="text-align:right; padding-right: 5px;" value="0" placeholder="">';
 					resultHtml += '</td>';
-					//resultHtml += '<td style="text-align:right"></td>';
+					resultHtml += '<td style="text-align:right"></td>';
                     resultHtml += '</tr>';
 
                     resultHtml += '<tr>';
 						if(!isTeacher) {
 							resultHtml += '<td colspan="9" style="text-align:right">Description:</td>';
 						} else {
-							resultHtml += '<td colspan="7" style="text-align:right">Description:</td>';
+							resultHtml += '<td colspan="8" style="text-align:right">Description:</td>';
 						}
-						if(isTeacher) {
-                    		resultHtml += '<td style="text-align:right"></td>';
-						}
+					
                     resultHtml += '<td><textarea type="text" class="form-control" id="extra_1_description" name="extra_1_description" placeholder="Description"></textarea></td>';
 					resultHtml += '<td style="text-align:right"></td>';
 					resultHtml += '</tr>';
@@ -2364,15 +2363,15 @@ $('#save_btn').click(function (e) {
 
                 if($(window).width() < 768){
 					if (!isTeacher) {
-				    	resultHtml += '<td style="text-align:right; font-weight: bold;" colspan="3" class="pt-3"><b>TOTAL:</b> ';
+				    	resultHtml += '<td style="text-align:right; font-size:14px; font-weight: bold;" colspan="3" class="pt-3"><b>TOTAL:</b> ';
 					} else {
-						resultHtml += '<td style="text-align:right; font-weight: bold;" colspan="2" class="pt-3"><b>TOTAL:</b> ';
+						resultHtml += '<td style="text-align:right; font-size:14px;" font-weight: bold;" colspan="2" class="pt-3"><b>TOTAL:</b> ';
 					}
                 } else {
 					if (!isTeacher) {
-                    	resultHtml += '<td style="text-align:right; font-weight: bold; font-size:18px;" colspan="3" class="pt-3">TOTAL</td>';
+                    	resultHtml += '<td style="text-align:right; font-weight: bold; font-size:19px;" colspan="3" class="pt-3">TOTAL</td>';
 					} else {
-						resultHtml += '<td style="text-align:right; font-weight: bold; font-size:18px;" colspan="2" class="pt-3">TOTAL</td>';
+						resultHtml += '<td style="text-align:right; font-weight: bold; font-size:19px;" colspan="2" class="pt-3">TOTAL</td>';
 					}
                 }
 
@@ -2394,7 +2393,7 @@ $('#save_btn').click(function (e) {
 
 
                 if($(window).width() < 768){
-				    resultHtml += ''+currencyTotal+' <span style="font-weight: bold;" id="grand_total_amount">' + (total_sell).toFixed(2) + '</span></td><td></td>';
+				    resultHtml += ''+currencyTotal+' <span style="font-size:14px; font-weight: bold;" id="grand_total_amount">' + (total_sell).toFixed(2) + '</span></td><td></td>';
                 } else {
                     resultHtml += '<td style="text-align:right" class="pt-3">'+currencyTotal+' <span style="font-weight: bold; font-size:20px;" id="grand_total_amount">' + (total_sell).toFixed(2) + '</span></td><td></td>';
                 }

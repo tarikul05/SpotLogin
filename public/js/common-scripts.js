@@ -10,11 +10,36 @@ jQuery(document).ready(function($) {
 
 function successModalCall(title='', desc = '') {
 
-      Swal.fire(
-        title,
-        desc,
-        'success'
-      )
+        /*Swal.fire(
+            title,
+            desc,
+            'success'
+        )*/
+
+        Swal.fire({
+        title: title,
+        html: desc,
+        timer: 2000,
+        timerProgressBar: true,
+        icon: 'success',
+        didOpen: () => {
+            Swal.showLoading();
+            const timer = Swal.getPopup().querySelector("b");
+            timerInterval = setInterval(() => {
+            timer.textContent = `${Swal.getTimerLeft()}`;
+            }, 100);
+        },
+        willClose: () => {
+            clearInterval(timerInterval);
+        }
+        }).then((result) => {
+        /* Read more about handling dismissals below */
+        if (result.dismiss === Swal.DismissReason.timer) {
+            console.log("I was closed by the timer");
+        }
+        });
+
+
  /* $('#successModal').remove();
   var modalHtml = '';
   modalHtml = `<div class="modal modal_parameter" id="successModal">
