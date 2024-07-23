@@ -1941,7 +1941,7 @@ $('#save_btn').click(function (e) {
 								total_buy += value.buy_price;
 								total_sell += value.sell_price + value.extra_charges;
 								if (!isTeacher) {
-									subTotalEvents = subTotalEvents + value.buy_total;
+									subTotalEvents = subTotalEvents + value.sell_price;
 								} else {
 									subTotalEvents = subTotalEvents + value.buy_price;
 								}
