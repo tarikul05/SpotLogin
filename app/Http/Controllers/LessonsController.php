@@ -439,7 +439,7 @@ class LessonsController extends Controller
 
 
                 if($user->isSchoolAdmin() || $user->isTeacherSchoolAdmin()) {
-                    $attendBuyPrice = $eventPrice['price_buy']*($lessonData['duration']/60);
+                    $attendBuyPrice = ($eventPrice['price_buy']*($lessonData['duration']/60))/$studentCount;
                 }
 
 
@@ -469,8 +469,9 @@ class LessonsController extends Controller
                 ];
 
                 //dd($data);
-
                 $event = Event::create($data);
+
+
                 if (!empty($lessonData['student'])) {
                    foreach($lessonData['student'] as $std){
                         $dataDetails = [
