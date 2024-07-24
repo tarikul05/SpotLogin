@@ -623,7 +623,7 @@
                         <?php } ?>
 
 
-                    <?php $total = $sub_total_event + $total_lesson + $invoice_data->extra_1 + $invoice_data->extra_2 + $totalTaxesSupp ; ?>
+                    <?php $total = $invoice_data->total_amount; //$sub_total_event + $total_lesson + $invoice_data->extra_1 + $invoice_data->extra_2 + $totalTaxesSupp ; ?>
                     <tr class="total_col">
                          <td style="text-align:right" colspan="2" class="text">{{ __('invoice_total') }} <?php echo $invoice_data->invoice_currency ? ' ('.$invoice_data->invoice_currency .') ':''; ?> </td>
                         <td colspan="2" class="price">{{ number_format($total, '2') }}</td>
