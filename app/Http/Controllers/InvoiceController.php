@@ -905,6 +905,7 @@ class InvoiceController extends Controller
             $schoolId = $p_school_id = trim($data['school_id']);
             $p_billing_period_start_date = trim($data['p_billing_period_start_date']);
             $p_billing_period_end_date = trim($data['p_billing_period_end_date']);
+            $total_buy = $data['total_buy'];
             $inv_type = trim($data['inv_type']);
 
             $school = School::active()->find($p_school_id);
@@ -1128,7 +1129,7 @@ class InvoiceController extends Controller
                 'total_amount_discount'=>$total_amount_discount,
                 'total_amount_no_discount'=> $total_amount_no_discount,
                 'total_amount_with_discount'=> $total_amount_with_discount,
-                'total_amount'=> $total_amount_extra,
+                'total_amount'=> $total_buy,
                 'tax_desc'=> $tax_desc,
                 'tax_perc'=> $tax_perc,
                 'tax_amount'=> $tax_amount,

@@ -1033,8 +1033,9 @@ $(document).ready(function(){
 
 	    var p_discount_perc = document.getElementById('discount_perc').value;
 		var lesson_discount_description = "Discount"; //document.getElementById('lesson_discount_description').value;
+		var total_buy = document.getElementById('total_buy_save').innerText;
 
-	    data = 'type=generate_teacher_invoice&school_id=' + school_id + '&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_month=' + p_month + '&p_year=' + p_year + '&p_discount_perc=' + p_discount_perc+'&p_billing_period_start_date='+from_date+'&p_billing_period_end_date='+to_date+ '&p_event_ids=' + p_event_ids +'&inv_type=' + inv_type + '&lesson_discount_description=' + lesson_discount_description;
+	    data = 'type=generate_teacher_invoice&school_id=' + school_id + '&total_buy='+total_buy+'&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_month=' + p_month + '&p_year=' + p_year + '&p_discount_perc=' + p_discount_perc+'&p_billing_period_start_date='+from_date+'&p_billing_period_end_date='+to_date+ '&p_event_ids=' + p_event_ids +'&inv_type=' + inv_type + '&lesson_discount_description=' + lesson_discount_description;
 
 		$.ajax({
 			url: BASE_URL + '/generate_teacher_invoice',
@@ -1447,7 +1448,7 @@ function populate_teacher_lesson() {
 		// display grand total
 		resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
 		resultHtml += '<td colspan="2" style="text-align:right">Total</td>';
-		resultHtml += '<td style="text-align:right" colspan="1">' + total_buy.toFixed(2) + '</td>';
+		resultHtml += '<td style="text-align:right" colspan="1" id="total_buy_save">' + total_buy.toFixed(2) + '</td>';
 		resultHtml +='<td style="text-align:right" colspan="2"></td>';
 		//resultHtml+='<td style="text-align:right">'+total_buy.toFixed(2)+'</td>';
 		resultHtml += '</tr>'
