@@ -33,6 +33,7 @@ use Illuminate\Support\Facades\URL;
 use App\Traits\UserRoleTrait;
 use App\Helpers\ReminderEmail;
 use App\Helpers\InvoiceDataMapper;
+use Log;
 
 class InvoiceController extends Controller
 {
@@ -2073,92 +2074,105 @@ class InvoiceController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function generateInvoicePDF(Request $request, $type = 'stream')
-    {
-        try{
-            $user = Auth::user();
-            $reqData = $request->all();
-            $type = $request->type ? $request->type : $type;
-            $invoice_id = $reqData['invoice_id'];
-            $invoice_data = Invoice::with(['school' => function ($q) {
+{
+    try {
+        $user = Auth::user();
+        $reqData = $request->all();
+        $type = $request->type ? $request->type : $type;
+        $invoice_id = $reqData['invoice_id'];
+        $invoice_data = Invoice::with(['school' => function ($q) {
                                 $q->select('id','tax_number');
                             }])->where('id', $invoice_id)->first();
 
-            $invoice_items = DB::table('invoice_items')
-                            ->leftJoin('events', 'events.id', '=', 'invoice_items.event_id')
-                            ->where('invoice_items.invoice_id', $invoice_id)
-                            ->orderBy('events.event_type','ASC')
-                            ->orderBy('invoice_items.item_date','ASC')->get();
-            $items = [];
-            foreach($invoice_items as $key=>$d){
-                if(!isset($items[$d->event_type])){
-                    $items[$d->event_type] = array();
-                }
-                $items[$d->event_type][] = $d;
+        $invoice_items = DB::table('invoice_items')
+                        ->leftJoin('events', 'events.id', '=', 'invoice_items.event_id')
+                        ->where('invoice_items.invoice_id', $invoice_id)
+                        ->orderBy('events.event_type','ASC')
+                        ->orderBy('invoice_items.item_date','ASC')->get();
+        $items = [];
+        foreach($invoice_items as $key=>$d){
+            if(!isset($items[$d->event_type])){
+                $items[$d->event_type] = array();
             }
-
-            $userIS = User::where('person_id', $invoice_data->seller_id)->first();
-            //Add user photo as Logo to Invoice
-            if (!empty($userIS->profileImage->path_name)) {
-                $path_name =  $userIS->profileImage->path_name;
-                $file = str_replace(URL::to('').'/uploads/','',$path_name);
-                $invoice_data['logo'] = 'uploads/'.$file;
-                //$logo_url = AttachedFile::where('created_by', $userIS->id)->latest()->first();
-                //$invoice_data['logo'] = $logo_url->path_name;
-            } else {
-                $invoice_data['logo'] = null;
-            }
-
-            //dd($invoice_data['logo_url']);
-
-            $InvoicesTaxData = InvoicesTaxes::active()->where(['invoice_id'=> $invoice_data->id])->get();
-            $InvoicesExpData = InvoicesExpenses::active()->where(['invoice_id'=> $invoice_data->id])->get();
-
-            $schoolId = $invoice_data->school_id;
-            $school = School::active()->find($schoolId);
-
-            $payment_method = 0;
-            if(!$user->isSchoolAdmin() || $user->isTeacherSchoolAdmin()) {
-                $invoice_teacher = Teacher::find($invoice_data->seller_id);
-                $payment_method = $invoice_teacher->payment_info_checkbox;
-            }
-            
-
-            $invoice_items = $items;
-            $date_from = strtolower(date('F.Y', strtotime($invoice_data->date_invoice)));
-            $invoice_name = 'invoice-'.$invoice_data->id.'-'.strtolower($invoice_data->client_firstname).'.'.strtolower($invoice_data->client_lastname).'.'.$date_from.'.pdf';
-            $pdf = PDF::loadView('pages.invoices.invoice_pdf_view', ['school' => $school, 'payment_method' => $payment_method, 'invoice_data'=> $invoice_data,'invoice_items'=> $invoice_items, 'payment_method' => $payment_method, 'invoice_name' => $invoice_name, 'InvoicesTaxData' => $InvoicesTaxData, 'InvoicesExpData' => $InvoicesExpData]);
-            $pdf->set_option('isHtml5ParserEnabled', true);
-            $pdf->set_option('isRemoteEnabled', true);
-            $pdf->set_option('DOMPDF_ENABLE_CSS_FLOAT', true);
-            $pdf->setHttpContext(
-                stream_context_create([
-                    'ssl' => [
-                        'allow_self_signed'=> TRUE,
-                        'verify_peer' => FALSE,
-                        'verify_peer_name' => FALSE,
-                    ]
-                ])
-              );
-            $pdf->render();
-            // print and save data
-            if ($type == 'stream') {
-                // save invoice name if invoice_filename is empty
-                $file_upload = Storage::put('pdf/'. $invoice_name, $pdf->output());
-                if($file_upload){
-                    $invoice_pdf_path = URL::to("").'/uploads/pdf/'.$invoice_name;
-                    $invoice_data->invoice_filename = $invoice_pdf_path;
-                    $invoice_data->save();
-                }
-                return $pdf->stream( $invoice_name );
-            }
-            // only print view without save invoice and upload
-            if ($type == 'print_view') {
-                return $pdf->stream( $invoice_name );
-            }
-        }catch( Exception $e){
-            
+            $items[$d->event_type][] = $d;
         }
+
+        $userIS = User::where('person_id', $invoice_data->seller_id)->first();
+        if (!empty($userIS->profileImage->path_name)) {
+            $path_name =  $userIS->profileImage->path_name;
+            $file = str_replace(URL::to('').'/uploads/','',$path_name);
+            $invoice_data['logo'] = 'uploads/'.$file;
+        } else {
+            $invoice_data['logo'] = null;
+        }
+
+        $InvoicesTaxData = InvoicesTaxes::active()->where(['invoice_id'=> $invoice_data->id])->get();
+        $InvoicesExpData = InvoicesExpenses::active()->where(['invoice_id'=> $invoice_data->id])->get();
+
+        $schoolId = $invoice_data->school_id;
+        $school = School::active()->find($schoolId);
+
+        $payment_method = 0;
+        if(!$user->isSchoolAdmin() || $user->isTeacherSchoolAdmin()) {
+            $invoice_teacher = Teacher::find($invoice_data->seller_id);
+            $payment_method = $invoice_teacher->payment_info_checkbox;
+        }
+
+        $invoice_items = $items;
+        $date_from = strtolower(date('F.Y', strtotime($invoice_data->date_invoice)));
+        $invoice_name = 'invoice-'.$invoice_data->id.'-'.strtolower($invoice_data->client_firstname).'.'.strtolower($invoice_data->client_lastname).'.'.$date_from.'.pdf';
+        $pdf = PDF::loadView('pages.invoices.invoice_pdf_view', [
+            'school' => $school, 
+            'payment_method' => $payment_method, 
+            'invoice_data'=> $invoice_data,
+            'invoice_items'=> $invoice_items, 
+            'payment_method' => $payment_method, 
+            'invoice_name' => $invoice_name, 
+            'InvoicesTaxData' => $InvoicesTaxData, 
+            'InvoicesExpData' => $InvoicesExpData
+        ]);
+        $pdf->set_option('isHtml5ParserEnabled', true);
+        $pdf->set_option('isRemoteEnabled', true);
+        $pdf->set_option('DOMPDF_ENABLE_CSS_FLOAT', true);
+        $pdf->setHttpContext(
+            stream_context_create([
+                'ssl' => [
+                    'allow_self_signed'=> TRUE,
+                    'verify_peer' => FALSE,
+                    'verify_peer_name' => FALSE,
+                ]
+            ])
+        );
+        $pdf->render();
+
+        if ($type == 'stream') {
+            $file_upload = Storage::put('pdf/'. $invoice_name, $pdf->output());
+            if($file_upload){
+                $invoice_pdf_path = URL::to("").'/uploads/pdf/'.$invoice_name;
+                $invoice_data->invoice_filename = $invoice_pdf_path;
+                $invoice_data->save();
+            }
+            return $pdf->stream( $invoice_name );
+        }
+
+        if ($type == 'print_view') {
+            return $pdf->stream( $invoice_name );
+        }
+    } catch (Exception $e) {
+        // Capture detailed error information
+        Log::error('Error generating PDF: ' . $e->getMessage(), [
+            'trace' => $e->getTraceAsString(),
+            'invoice_id' => $invoice_id ?? null,
+            'user_id' => $user->id ?? null
+        ]);
+        
+        // Optionally, display a friendly error message
+        return response()->json([
+            'error' => $e->getMessage(),
+            'line' => $e->getLine(),
+        ], 500);
     }
+}
 
 
     public function generateReportPDF(Request $request, $type = 'stream')

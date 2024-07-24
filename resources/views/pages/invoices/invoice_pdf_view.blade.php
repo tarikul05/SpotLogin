@@ -347,24 +347,24 @@
                             @if ($event_key == 10)
                                 <?php
                                     if($invoice_data->invoice_type == 1 || $invoice_data->invoice_type == 2 ){
-                                        echo number_format($item->price_unit, '2');
+                                        echo number_format(floatval($item->price_unit), '2');
                                     }else{
-                                        echo number_format($item->total_item, '2');
+                                        echo number_format(floatval($item->total_item), '2');
                                     }
                                 ?>
                             @else
                                 <?php
                                     if($invoice_data->invoice_type == 1 || $invoice_data->invoice_type == 2 ){
-                                        echo number_format($item->price_unit-$cost1, '2');
+                                        echo number_format(floatval($item->price_unit-$cost1), '2');
                                     }else{
-                                        echo number_format($item->total_item-$cost1, '2');
+                                        echo number_format(floatval($item->total_item-$cost1), '2');
                                     }
                                 ?>
                             @endif
                             </td>
                             <td style="text-align: right;">
                                 <?php if($cost1 > 0) {
-                                    echo '+' . number_format($cost1, '2');
+                                    echo '+' . number_format(floatval($cost1), '2');
                                 } ?>
                             </td>
                         </tr>
@@ -434,12 +434,10 @@
                             <tr class="extra_col_sub">
                                 <td colspan="3" style="text-align:right">Total Lesson:</td>
                                 <td style="text-align:right">
-                                    <?php
-                                        $total_lesson = number_format($sub_total_lesson - $totalDiscount, "2");
-                                    ?>
+                        
                                     <span id="stotal_amount_with_discount_lesson"
                                     class="form-control-static numeric"
-                                    style="text-align:right;">{{number_format($total_lesson,'2')}}</span>
+                                    style="text-align:right;">{{ $total_lesson = number_format($sub_total_lesson - $totalDiscount,'2') }}</span>
                                 </td>
                                 <td></td>
                             </tr>
@@ -622,8 +620,8 @@
                             </div>
                         <?php } ?>
 
-
-                    <?php $total = $sub_total_event + $total_lesson + $invoice_data->extra_1 + $invoice_data->extra_2 + $totalTaxesSupp ; ?>
+                       
+                    <?php $total = floatval($sub_total_event) + floatval($sub_total_lesson - $totalDiscount) + $invoice_data->extra_1 + $invoice_data->extra_2 + $totalTaxesSupp ; ?>
                     <tr class="total_col">
                          <td style="text-align:right" colspan="2" class="text">{{ __('invoice_total') }} <?php echo $invoice_data->invoice_currency ? ' ('.$invoice_data->invoice_currency .') ':''; ?> </td>
                         <td colspan="2" class="price">{{ number_format($total, '2') }}</td>
