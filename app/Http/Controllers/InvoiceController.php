@@ -866,6 +866,7 @@ class InvoiceController extends Controller
                 $old_date_timestamp = strtotime($value->date_start);
                 $value->date_start = date('d/m/Y', $old_date_timestamp);
                 $value->time_start = date('H:i', $old_date_timestamp);
+                $value->buy_price_teacher = $value->buy_price_teacher*($value->duration_minutes/60);
             }
 
             $result = array(
@@ -964,6 +965,8 @@ class InvoiceController extends Controller
 
 
             foreach ($dataFetched as $key => $value) {
+
+                $value->buy_price_teacher = $value->buy_price_teacher*($value->duration_minutes/60);
 
                 try {
                     $disc1_amt = 0;
