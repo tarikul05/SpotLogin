@@ -347,24 +347,24 @@
                             @if ($event_key == 10)
                                 <?php
                                     if($invoice_data->invoice_type == 1 || $invoice_data->invoice_type == 2 ){
-                                        echo formatLargeNumber($item->price_unit, '2');
+                                        echo number_format($item->price_unit, '2');
                                     }else{
-                                        echo formatLargeNumber($item->total_item, '2');
+                                        echo number_format($item->total_item, '2');
                                     }
                                 ?>
                             @else
                                 <?php
                                     if($invoice_data->invoice_type == 1 || $invoice_data->invoice_type == 2 ){
-                                        echo formatLargeNumber($item->price_unit-$cost1, '2');
+                                        echo number_format($item->price_unit-$cost1, '2');
                                     }else{
-                                        echo formatLargeNumber($item->total_item-$cost1, '2');
+                                        echo number_format($item->total_item-$cost1, '2');
                                     }
                                 ?>
                             @endif
                             </td>
                             <td style="text-align: right;">
                                 <?php if($cost1 > 0) {
-                                    echo '+' . formatLargeNumber($cost1, '2');
+                                    echo '+' . number_format($cost1, '2');
                                 } ?>
                             </td>
                         </tr>
@@ -395,7 +395,7 @@
                             <tr class="extra_col_sub">
                                 <td colspan="2" style="text-align:right">Sub-total Lessons</td>
                                 <td style="text-align:right">{{$sub_total_min_lesson}} minutes</td>
-                                <td style="text-align:right">{{ formatLargeNumber($sub_total_lesson,'2') }}</td>
+                                <td style="text-align:right">{{ number_format($sub_total_lesson,'2') }}</td>
                                 <td></td>
                             </tr>
                             <?php if($invoice_data->lesson_discount_description || $invoice_data->event_discount_description){ ?>
@@ -424,8 +424,8 @@
                                         ?>
                                     </td>
                                     <td style="text-align:right"><span style="font-size:12px;"><b>{{ $invoice_data->discount_percent_1 .' %' }}</b></span></td>
-                                    <td class="price" style="text-align:right">- <b>{{ formatLargeNumber(round(($sub_total_lesson * $invoice_data->discount_percent_1) / 100, 2), 2) }}</b></td>
-                                    <?php $totalDiscount = formatLargeNumber(($sub_total_lesson*$invoice_data->discount_percent_1)/100,'2'); ?>
+                                    <td class="price" style="text-align:right">- <b>{{ number_format(round(($sub_total_lesson * $invoice_data->discount_percent_1) / 100, 2), 2) }}</b></td>
+                                    <?php $totalDiscount = number_format(($sub_total_lesson*$invoice_data->discount_percent_1)/100,'2'); ?>
                                     <td></td>
                                 </tr>
 
@@ -435,11 +435,11 @@
                                 <td colspan="3" style="text-align:right">Total Lesson:</td>
                                 <td style="text-align:right">
                                     <?php
-                                        $total_lesson = formatLargeNumber($sub_total_lesson - $totalDiscount, "2");
+                                        $total_lesson = number_format($sub_total_lesson - $totalDiscount, "2");
                                     ?>
                                     <span id="stotal_amount_with_discount_lesson"
                                     class="form-control-static numeric"
-                                    style="text-align:right;">{{formatLargeNumber($total_lesson,'2')}}</span>
+                                    style="text-align:right;">{{number_format($total_lesson,'2')}}</span>
                                 </td>
                                 <td></td>
                             </tr>
@@ -458,7 +458,7 @@
                                 <tr class="extra_col_sub">
                                     <td colspan="2" style="text-align:right"><!--{{ __('invoice_sub_total') }}--></td>
                                     <td style="text-align:right"><!--{{$sub_total_min_event}} minutes--></td>
-                                    <td style="text-align:right"><!--{{ formatLargeNumber($sub_total_event,'2') }}--></td>
+                                    <td style="text-align:right"><!--{{ number_format($sub_total_event,'2') }}--></td>
                                     <td></td>
                                 </tr>
                             <?php } ?>
@@ -470,8 +470,8 @@
                         <tr class="extra_col">
                                 <td colspan="2" style="text-align:right; font-size:12px;"><b>Sub-total Events</b></td>
                                 <td style="text-align:right"></td>
-                                <td style="text-align:right; font-size:12px;">{{ formatLargeNumber($sub_total_event-$invoice_data->extra_expenses,'2') }}</td>
-                                <td style="text-align:right; font-size:12px;">@if($invoice_data->extra_expenses > 0)+{{ formatLargeNumber(($invoice_data->extra_expenses),'2')}}@endif</td>
+                                <td style="text-align:right; font-size:12px;">{{ number_format($sub_total_event-$invoice_data->extra_expenses,'2') }}</td>
+                                <td style="text-align:right; font-size:12px;">@if($invoice_data->extra_expenses > 0)+{{ number_format(($invoice_data->extra_expenses),'2')}}@endif</td>
                         </tr>
                     <?php } ?>
 
@@ -503,9 +503,9 @@
                             </td>
                             <td style="text-align:right"><span style="font-size:12px;"><b>{{ $invoice_data->discount_percent_2 .' %' }}</b></span></td>
                             <td class="price" style="text-align:right; font-size:12px;">
-                                <?php $EventDiscountAmout = formatLargeNumber((($sub_total_event-$invoice_data->extra_expenses)*$invoice_data->discount_percent_2)/100,'2'); ?>
-                                - <b>{{ formatLargeNumber((($sub_total_event-$invoice_data->extra_expenses)*$invoice_data->discount_percent_2)/100,'2') }}</b></td>
-                            <?php $totalDiscountEvent = formatLargeNumber(($sub_total_event*$invoice_data->discount_percent_2)/100,'2'); ?>
+                                <?php $EventDiscountAmout = number_format((($sub_total_event-$invoice_data->extra_expenses)*$invoice_data->discount_percent_2)/100,'2'); ?>
+                                - <b>{{ number_format((($sub_total_event-$invoice_data->extra_expenses)*$invoice_data->discount_percent_2)/100,'2') }}</b></td>
+                            <?php $totalDiscountEvent = number_format(($sub_total_event*$invoice_data->discount_percent_2)/100,'2'); ?>
                             <td></td>
                         </tr>
 
@@ -520,9 +520,9 @@
                                     ?>
                                     <span id="stotal_amount_with_discount_event"
                                     class="form-control-static numeric"
-                                    style="text-align:right; font-size:12px;">{{formatLargeNumber($sub_total_event-$invoice_data->extra_expenses,'2')}}</span>
+                                    style="text-align:right; font-size:12px;">{{number_format($sub_total_event-$invoice_data->extra_expenses,'2')}}</span>
                                 </td>
-                                <td style="text-align:right; font-size:12px;">@if($invoice_data->extra_expenses > 0)+{{ formatLargeNumber(($invoice_data->extra_expenses),'2')}}@endif</td>
+                                <td style="text-align:right; font-size:12px;">@if($invoice_data->extra_expenses > 0)+{{ number_format(($invoice_data->extra_expenses),'2')}}@endif</td>
                             </tr>
                         <?php } ?>
 
@@ -542,7 +542,7 @@
                                         echo '<tr class="extra_col">';
                                         echo '<td style="text-align:right" colspan="2" class="text"><b>' . $item['tax_name'] . '</b> <span style="font-size:11px;">[ N° ' . $item['tax_number'] . ' ]</span></td>';
                                         echo '<td style="text-align:right; font-size:13px;" class="text">' . $item['tax_percentage'] . '%</td>';
-                                        echo '<td style="text-align:right" colspan="1" class="price"><b>' . formatLargeNumber( ((($sub_total_event-$invoice_data->extra_expenses)+$total_lesson) * $item['tax_percentage']) /100, '2') . '</b></td>';
+                                        echo '<td style="text-align:right" colspan="1" class="price"><b>' . number_format( ((($sub_total_event-$invoice_data->extra_expenses)+$total_lesson) * $item['tax_percentage']) /100, '2') . '</b></td>';
                                         echo '<td></td>';
                                         echo '</tr>';
                                         //((($sub_total_event-$invoice_data->extra_expenses)+$total_lesson)*$item['tax_percentage'])/100;
@@ -553,7 +553,7 @@
                                         echo '<tr class="extra_col">';
                                         echo '<td style="text-align:right" colspan="2" class="text"><b>' . $item['tax_name'] . '</b> <span style="font-size:11px;">[ N° ' . $item['tax_number'] . ' ]</span></td>';
                                         echo '<td style="text-align:right; font-size:13px;" class="text">' . $item['tax_percentage'] . '%</td>';
-                                        echo '<td style="text-align:right" colspan="1" class="price"><b>' . formatLargeNumber( ((($sub_total_event)+$total_lesson) * $item['tax_percentage']) /100, '2') . '</b></td>';
+                                        echo '<td style="text-align:right" colspan="1" class="price"><b>' . number_format( ((($sub_total_event)+$total_lesson) * $item['tax_percentage']) /100, '2') . '</b></td>';
                                         echo '<td></td>';
                                         echo '</tr>';
                                         //((($sub_total_event-$invoice_data->extra_expenses)+$total_lesson)*$item['tax_percentage'])/100;
@@ -570,7 +570,7 @@
                             <td colspan="2" style="text-align:right"><b>Charges Events:</b></td>
                             <td></td>
                             <td style="text-align:right;">
-                                + {{formatLargeNumber($invoice_data->extra_expenses, '2')}}
+                                + {{number_format($invoice_data->extra_expenses, '2')}}
                             </td>
                             <td></td>
                         </tr>
@@ -583,7 +583,7 @@
                             </td>
                             <td></td>
                             <td style="text-align:right;">
-                                + {{formatLargeNumber($invoice_data->extra_1, '2')}}
+                                + {{number_format($invoice_data->extra_1, '2')}}
                             </td>
                             
                             <td></td>
@@ -595,7 +595,7 @@
                             <br><span>{{ $invoice_data->extra_2_description }}</span>
                             </td>
                             <td style="text-align:right;" class="small">
-                                + {{formatLargeNumber($invoice_data->extra_2, '2')}}
+                                + {{number_format($invoice_data->extra_2, '2')}}
                             </td>
                             <td></td>
                         </tr>
@@ -626,7 +626,7 @@
                     <?php $total = $sub_total_event + $total_lesson + $invoice_data->extra_1 + $invoice_data->extra_2 + $totalTaxesSupp ; ?>
                     <tr class="total_col">
                          <td style="text-align:right" colspan="2" class="text">{{ __('invoice_total') }} <?php echo $invoice_data->invoice_currency ? ' ('.$invoice_data->invoice_currency .') ':''; ?> </td>
-                        <td colspan="2" class="price">{{ formatLargeNumber($total, '2') }}</td>
+                        <td colspan="2" class="price">{{ number_format($total, '2') }}</td>
                         <td></td>
                     </tr>
                 </tfoot>
@@ -763,11 +763,5 @@ function extractExtraCharges($inputString) {
         // Si le motif n'a pas été trouvé, on peut retourner false ou une valeur par défaut selon les besoins
         return false;
     }
-}
-?>
-
-<?php
-function formatLargeNumber($number, $decimals = 2) {
-    return number_format($number, $decimals, '.', ',');
 }
 ?>
