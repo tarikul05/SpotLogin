@@ -1284,7 +1284,7 @@ function populate_teacher_lesson() {
 					resultHtml += '<b><td colspan="1">Category</td>';
 					resultHtml += '<b><td colspan="2">Students</td>';
 					resultHtml += '<td colspan="2">' + 'Lesson' + '</td>';
-					resultHtml += '<td colspan="2" style="text-align:left">' + 'Price' + '</td>';
+					resultHtml += '<td colspan="2" style="text-align:right">' + 'Price' + '</td>';
 					resultHtml += '<td style="text-align:right" colspan="2">Extra Charges</td></tr></b>';;
 				}
 				resultHtml += '<tr>';
@@ -1448,7 +1448,7 @@ function populate_teacher_lesson() {
 		resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
 		resultHtml += '<td colspan="2" style="text-align:right">Total</td>';
 		resultHtml += '<td style="text-align:right" colspan="1">' + total_buy.toFixed(2) + '</td>';
-		resultHtml+='<td style="text-align:right" colspan="2"></td>';
+		resultHtml +='<td style="text-align:right" colspan="2"></td>';
 		//resultHtml+='<td style="text-align:right">'+total_buy.toFixed(2)+'</td>';
 		resultHtml += '</tr>'
 
