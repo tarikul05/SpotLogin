@@ -989,8 +989,8 @@ class InvoiceController extends Controller
                         $invoiceItemData['price'] = $value->buy_price_teacher+$value->costs_1;
                         $invoiceItemData['price_unit'] = $value->buy_price_teacher+$value->costs_1;
                     } else {
-                        $invoiceItemData['price'] = $value->buy_total+$value->costs_1;
-                        $invoiceItemData['price_unit'] = $value->buy_total+$value->costs_1;
+                        $invoiceItemData['price'] = $value->price_amount_buy+$value->costs_1;
+                        $invoiceItemData['price_unit'] = $value->price_amount_buy+$value->costs_1;
                     }
                     $price_currency = $invoiceItemData['price_currency'] = $value->price_currency;
                     $extra_expenses += $invoiceItemData['event_extra_expenses'] = 0;

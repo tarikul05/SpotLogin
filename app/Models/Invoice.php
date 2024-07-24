@@ -587,6 +587,7 @@ class Invoice extends BaseModel
                 ->select(
                     'event_details.event_id as event_id',
                     'events.event_type as event_type',
+                    'events.price_amount_buy as price_amount_buy',
                     'events.teacher_id as teacher_id',
                     //'event_details.student_id as student_id',
 
