@@ -1250,7 +1250,7 @@ function populate_teacher_lesson() {
 		resultHtmlFooter = '',
 		resultHtmlDetails = '';
 	//resultHtml='<tr><td colspan="8"><font color="blue"><h5> Cours disponibles à la facturation</h5></font></tr>';
-	data = 'type=' + person_type + '&school_id=' + school_id + '&p_person_id=' + p_person_id + '&p_billing_period_start_date=' + p_billing_period_start_date + '&p_billing_period_end_date=' + p_billing_period_end_date +'&inv_type=' + inv_type  ;
+	data = 'type=' + person_type + '&school_id=' + school_id + '&p_person_id=' + p_person_id + '&p_billing_period_start_date=' + p_billing_period_start_date + '&p_billing_period_end_date=' + p_billing_period_end_date +'&inv_type=school' + inv_type  ;
 
 	$.ajax({
 		url: BASE_URL + '/get_teacher_lessons',
@@ -1353,7 +1353,7 @@ function populate_teacher_lesson() {
 					}
 				} else {
 					console.log(value);
-					if (value.event_type == 10 && value.count_student > 1) {
+					if (value.event_type == 10) {
 						resultHtml += '<td style="text-align:right" colspan="2">' + value.price_currency + ' ' + Math.round(value.buy_price_teacher).toFixed(2) + '</td>';
 						value['buy_total'] = value.buy_price_teacher;
 					} else {
@@ -1361,7 +1361,7 @@ function populate_teacher_lesson() {
 					}
 					//resultHtml+='<td style="text-align:right">' + value.price_currency + ' ' + value.sell_total + '</td>';
 
-					if (value.event_type == 10 && value.count_student > 1) {
+					if (value.event_type == 10) {
 						total_buy += value.buy_price_teacher + value.costs_1;
 						week_total_buy += value.buy_price_teacher + value.costs_1;
 					} else {
