@@ -123,7 +123,7 @@ class SportloginEmail extends Mailable
         if (isset($this->data['admin_email_from'])) {
             $admin_email_from = $this->data['admin_email_from'];
         } else {
-            $admin_email_from = config('global.mail_from_address');
+            $admin_email_from = config('global.from_address_default');
         }
         if (isset($this->data['admin_email_from_name'])) {
             $admin_email_from_name = $this->data['admin_email_from_name'];

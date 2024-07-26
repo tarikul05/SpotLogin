@@ -3,6 +3,8 @@
   return [
     'app_debug' => env('APP_DEBUG', false),
     'mail_from_address' => env('MAIL_FROM_ADDRESS'),
+    'mail_from_address_us' => env('MAIL_FROM_ADDRESS_US'),
+    'mail_from_address_default' => env('MAIL_FROM_ADDRESS_DEFAULT'),
     'mail_from_name' => env('MAIL_FROM_NAME'),
     // 'email_send' =>  (env('APP_ENV') =='local') ? 0 : 1,
     'email_send' =>  1,
