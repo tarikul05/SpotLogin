@@ -1098,6 +1098,12 @@ $('.close-icon').on('click', function() {
 
     $(document).ready(function(){
 
+
+        var lastCatSelect = '{{ session('last_cat') }}';
+        if (lastCatSelect != "") {
+            $("#category_select").prop('disabled', false);
+        }
+
         setTimeout(() => {
 
         if (user_role == "student" || user_role == "parent") {
