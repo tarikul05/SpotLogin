@@ -430,6 +430,7 @@
                                     ?>
                                 </div>-->
                             <?php } ?>
+                            <?php $totalDiscount = 0; ?>
                             <?php if($invoice_data->amount_discount_1 != 0){ ?>
                                 <tr class="extra_col_sub2">
                                     <td colspan="2" style="text-align:right">
