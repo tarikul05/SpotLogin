@@ -319,6 +319,7 @@
                     $total_min = 0;
                     $total = 0;
                     $sub_total = 0;
+                    $totalDiscount = 0;
 
                     foreach($invoice_items as $event_key => $invoice_item){ ?>
                     <tbody>
@@ -430,7 +431,6 @@
                                     ?>
                                 </div>-->
                             <?php } ?>
-                            <?php $totalDiscount = 0; ?>
                             <?php if($invoice_data->amount_discount_1 != 0){ ?>
                                 <tr class="extra_col_sub2">
                                     <td colspan="2" style="text-align:right">
