@@ -262,6 +262,12 @@
     </header>
     <main>
         <div class="info_area" style="clear: both">
+
+            @php
+            $recipient_user = \App\Models\User::Where('person_id', $invoice_data->seller_id)->first();
+            @endphp
+            
+            @if($recipient_user->isTeacherAdmin())
             <div class="left_cont">
                 <p class="first_name">{{$invoice_data->seller_name}}</p>
                 <p class="info_txt">{{$invoice_data->seller_street_number?$invoice_data->seller_street_number.',':''}} {{$invoice_data->seller_street}}</p>
@@ -274,6 +280,23 @@
                 <p class="last_name">{{$invoice_data->client_street_number ? $invoice_data->client_street_number.',': ''}} {{$invoice_data->client_street?$invoice_data->client_street:''}}</p>
                 <p class="info_txt">{{$invoice_data->client_zip_code}} {{$invoice_data->client_place}}</p>
             </div>
+           
+            @else
+            
+            <div class="left_cont">
+                <p class="first_name">{{$invoice_data->client_name}}</p>
+                <p class="last_name">{{$invoice_data->client_street_number ? $invoice_data->client_street_number.',': ''}} {{$invoice_data->client_street?$invoice_data->client_street:''}}</p>
+                <p class="info_txt">{{$invoice_data->client_zip_code}} {{$invoice_data->client_place}}</p>
+            </div>
+            <div class="right_cont">
+                <p class="first_name">{{$invoice_data->seller_name}}</p>
+                <p class="info_txt">{{$invoice_data->seller_street_number?$invoice_data->seller_street_number.',':''}} {{$invoice_data->seller_street}}</p>
+                <p class="info_txt">{{$invoice_data->seller_zip_code}} {{$invoice_data->seller_place}}</p>
+                <p class="info_txt">{{$invoice_data->seller_mobile?$invoice_data->seller_mobile.',':''}} {{$invoice_data->seller_phone}}</p>
+                <p class="email"><a href="mailto:{{$invoice_data->seller_email}}">{{$invoice_data->seller_email}}</a></p>
+            </div>
+            @endif
+
         </div>
         <div class="invoice_table">
             <table class="table table-bordered">
