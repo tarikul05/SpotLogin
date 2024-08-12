@@ -730,7 +730,7 @@ class AgendaController extends Controller
                 // $student = Student::find($std['student_id']);
                 $schoolStudent = SchoolStudent::where('student_id',$std['student_id'])->where('school_id',$fetch->school_id)->first();
                 $theStudent =  Student::active()->find($std['student_id']);
-                $e['search_by_nickname'] = $schoolStudent['nickname'] == '' ? $schoolStudent['nickname'] : $theStudent->firstname . ' ' . $theStudent->lastname;
+                $e['search_by_nickname'] = $schoolStudent->nickname == '' ? $schoolStudent->nickname : $theStudent->firstname . ' ' . $theStudent->lastname;
                 
                 if ($schoolStudent) {
                     if ($i!=0) {
