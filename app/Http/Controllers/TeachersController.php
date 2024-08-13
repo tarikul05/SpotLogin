@@ -817,14 +817,26 @@ class TeachersController extends Controller
               // dd($catPrices);
                foreach ($catPrices as $pkey => $price) {
                  // dd($price);
-                 $dataprice = [
-                      'event_category_id' => $key,
-                      'teacher_id' => $teacher->id,
-                      'lesson_price_student' => $price['lesson_price_student'],
-                      'lesson_price_id' => $price['lesson_price_id'],
-                      'price_buy' => $price['price_buy'],
-                      'price_sell' => $price['price_sell'],
-                  ];
+                 if($user->isSchoolAdmin() || $user->isTeacherSchoolAdmin()) {
+                    $dataprice = [
+                        'event_category_id' => $key,
+                        'teacher_id' => $teacher->id,
+                        'lesson_price_student' => $price['lesson_price_student'],
+                        'lesson_price_id' => $price['lesson_price_id'],
+                        'price_buy' => $price['price_buy'],
+                        'price_sell' => $price['price_buy'],
+                    ];
+                 } else {
+                    $dataprice = [
+                        'event_category_id' => $key,
+                        'teacher_id' => $teacher->id,
+                        'lesson_price_student' => $price['lesson_price_student'],
+                        'lesson_price_id' => $price['lesson_price_id'],
+                        'price_buy' => $price['price_buy'],
+                        'price_sell' => $price['price_sell'],
+                    ];
+                 }
+                 
 
                  if (empty($price['id'])) {
                     $updatedPrice = LessonPriceTeacher::create($dataprice);
@@ -861,22 +873,25 @@ public function selfPriceUpdate(Request $request)
 
     DB::beginTransaction();
     try {
+        
+        if (isset($alldata['data'])) {
         // Process data for teacher's own prices
-        foreach ($alldata['data'] as $key => $catPrices) {
-            foreach ($catPrices as $price) {
-                $dataprice = [
-                    'event_category_id' => $key,
-                    'teacher_id' => $teacher->id,
-                    'lesson_price_student' => $price['lesson_price_student'],
-                    'lesson_price_id' => $price['lesson_price_id'],
-                    'price_buy' => $price['price_sell'],
-                    'price_sell' => $price['price_sell'],
-                ];
+            foreach ($alldata['data'] as $key => $catPrices) {
+                foreach ($catPrices as $price) {
+                    $dataprice = [
+                        'event_category_id' => $key,
+                        'teacher_id' => $teacher->id,
+                        'lesson_price_student' => $price['lesson_price_student'],
+                        'lesson_price_id' => $price['lesson_price_id'],
+                        'price_buy' => $price['price_sell'],
+                        'price_sell' => $price['price_sell'],
+                    ];
 
-                if (empty($price['id'])) {
-                    LessonPriceTeacher::create($dataprice);
-                } else {
-                    LessonPriceTeacher::where('id', $price['id'])->update($dataprice);
+                    if (empty($price['id'])) {
+                        LessonPriceTeacher::create($dataprice);
+                    } else {
+                        LessonPriceTeacher::where('id', $price['id'])->update($dataprice);
+                    }
                 }
             }
         }

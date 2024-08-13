@@ -1414,6 +1414,9 @@ class LessonsController extends Controller
 
             $initEventPrice = new Event();
             $user = Auth::user();
+
+            $categoryPrice = LessonPriceTeacher::active()->where(['event_category_id' => $lessonData['event_category_id']])->first();
+
             if($user->isSchoolAdmin() || $user->isTeacherSchoolAdmin()) {
                 $eventPrice = $initEventPrice->priceCalculationsSchool(['event_category_id'=>$lessonData['event_category_id'],'teacher_id'=>$lessonData['teacher_select'],'student_count'=>$lessonData['no_of_students']]);
                 $lessonPriceTeacher = LessonPriceTeacher::active()->where(['event_category_id'=>$lessonData['event_category_id'], 'teacher_id'=>$lessonData['teacher_select']])->first();
@@ -1468,7 +1471,13 @@ class LessonsController extends Controller
             }else{
                 return [
                     'status' => 0,
-                    'message' =>  __('No price for this teacher')
+                    'message' =>  __('No price for this teacher'),
+                    'eventPrice' => $eventPrice,
+                    'lessonPriceTeacher' => $lessonPriceTeacher,
+                    'code' => $categoryPrice,
+                    'newPrice' => $categoryPrice->price_buy,
+                    'buyPriceCal' => $categoryPrice->price_buy,
+                    'sellPriceCal' => $categoryPrice->price_sell,
                 ];
             }
         }

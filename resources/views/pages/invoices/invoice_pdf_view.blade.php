@@ -267,7 +267,7 @@
             $recipient_user = \App\Models\User::Where('person_id', $invoice_data->seller_id)->first();
             @endphp
             
-            @if($recipient_user->isTeacherAdmin())
+            @if($recipient_user && $recipient_user->isTeacherAdmin())
             <div class="left_cont">
                 <p class="first_name">{{$invoice_data->seller_name}}</p>
                 <p class="info_txt">{{$invoice_data->seller_street_number?$invoice_data->seller_street_number.',':''}} {{$invoice_data->seller_street}}</p>

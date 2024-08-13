@@ -386,9 +386,13 @@
                             <i class="fa-solid fa-circle-warning"></i> {{ __('Create an event for 1 or more complete days') }}.
                     </div>
 
-                            <div class="col-md-10  offset-md-1 mt-4">
+                            <div class="col-md-10 offset-md-1 mt-2">
 
-                                <div class="row">
+                                <div class="alert alert-warning text-center mb-4" role="alert" style="display: none;" id="rates_error">
+                                    This teacher has not yet saved any rates
+                                </div>
+
+                                <div class="row mt-2">
                                     <label class="col-lg-3 col-sm-3 text-left">{{__('Agenda Type')}}</label>
                                     <div class="col-lg-9 col-sm-9">
                                             <div class="input-group">
@@ -471,7 +475,7 @@
                                 </div>
                                 @else
                                     <input style="opacity: 0; visibility: hidden; height: 0 !important" type="text" id="event_invoice_type" name="event_invoice_type"  value="T">
-                                @endif
+                                @endif    
 
                                 </div>
 
@@ -499,7 +503,7 @@
                                 </div>
 
 
-                                <div class="row hide_on_off">
+                                <div class="row hide_on_off mb-4">
                                     <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Location') }}</label>
                                     <div class="col-sm-9">
                                         <div class="selectdiv">
@@ -520,63 +524,64 @@
 
 
 
+                                <div class="row hide_on_off">
+                                    <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Students') }}</label>
+                                    <div class="col-sm-9">
+                                        <div class="card2"><!--card-->
+                                            <!--<label class="text-left col-lg-12 row col-sm-12 text-left" for="availability_select" id="visibility_label_id">
+                                               <b>{{__('Select student(s)') }}</b>
+                                                <input checked type="checkbox" name="check-students-availability" id="check-students-availability"> {{__('Show students availability') }} <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('If checked, you will be able to show students\'s availability if student registered it.')}}"></i>
+                                            </label>-->
+
+                                            <!--<label class="text-left col-lg-12 col-sm-12 text-left" for="availability_select" id="visibility_label_id2">
+                                               <input type="checkbox" name="check-students-availability2" id="check-students-availability2"> {{__('Show only students with availabilty') }}
+                                            </label>-->
+                                          
+                                            <div id="studentListAvailabilities"></div>
+
+                                                <div class="student_list">
+                                                    <div class="input-group">  
+                                                        <span class="input-group-addon">
+                                                            <i class="fa-solid fa-users"></i>
+                                                        </span>
+                                                    <select class="multiselect" id="student" name="student[]" multiple="multiple">
+                                                        @foreach($studentsbySchool as $key => $student)
+                                                            <div>
+                                                                <option value="{{ $student->student_id }}" {{ old('student') == $student->id ? 'selected' : '' }}>
+                                                                @php
+                                                                $studentName = App\Models\Student::find($student->student_id);
+                                                                $schoolStudentInfo =  App\Models\SchoolStudent::where('student_id',$studentName->id)->first();
+                                                                @endphp
+                                                                {{ $studentName->firstname }} {{ $studentName->lastname }} {{ !empty($schoolStudentInfo->nickname) ? '('.$schoolStudentInfo->nickname.')' : '' }}</option>
+                                                            </div>
+                                                        @endforeach
+                                                    </select>
+                                                    </div>
+                                                    <span class="no_select" id="std-check-div"><input type="checkbox" name="student_empty" id="student_empty"> {{__('do not select') }} <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('If you wish to not select any students for the lesson, for ’school invoiced’ lesson with a many students for example. Remember that if no students are selected, no invoice will be generated for them for that lesson.')}}"></i><br><br></span>
+                                                    <br>
+                                                    <div id="studentlistAway"></div>
+                                                    <br>
+                                                </div>
+
+                                   
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+
+
                                 </div>
 
                             <div class="tab-content" id="agenda_form_area" style="display:none">
                                 <div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 
                                             <div class="row m-2">
-                                                <div class="col-md-10 offset-md-1 mt-4">
-
-                                                    <div class="card bg-tertiary hide_coach_off p-3" style="border-color:#b3d6ec;"><!--card-->
-                                                        <!--<label class="text-left col-lg-12 row col-sm-12 text-left" for="availability_select" id="visibility_label_id">
-                                                           <b>{{__('Select student(s)') }}</b>
-                                                            <input checked type="checkbox" name="check-students-availability" id="check-students-availability"> {{__('Show students availability') }} <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('If checked, you will be able to show students\'s availability if student registered it.')}}"></i>
-                                                        </label>-->
-
-                                                        <!--<label class="text-left col-lg-12 col-sm-12 text-left" for="availability_select" id="visibility_label_id2">
-                                                           <input type="checkbox" name="check-students-availability2" id="check-students-availability2"> {{__('Show only students with availabilty') }}
-                                                        </label>-->
-                                                      
-                                                        <div id="studentListAvailabilities"></div>
-
-                                                            <div class="student_list pt-4">
-                                                            <label>  <b>{{__('Select student(s)') }}</b></label>
-                                                                <div class="input-group">  
-                                                                    <span class="input-group-addon">
-                                                                        <i class="fa-solid fa-users"></i>
-                                                                    </span>
-                                                                <select class="multiselect" id="student" name="student[]" multiple="multiple">
-                                                                    @foreach($studentsbySchool as $key => $student)
-                                                                        <div>
-                                                                            <option value="{{ $student->student_id }}" {{ old('student') == $student->id ? 'selected' : '' }}>
-                                                                            @php
-                                                                            $studentName = App\Models\Student::find($student->student_id);
-                                                                            $schoolStudentInfo =  App\Models\SchoolStudent::where('student_id',$studentName->id)->first();
-                                                                            @endphp
-                                                                            {{ $studentName->firstname }} {{ $studentName->lastname }} {{ !empty($schoolStudentInfo->nickname) ? '('.$schoolStudentInfo->nickname.')' : '' }}</option>
-                                                                        </div>
-                                                                    @endforeach
-                                                                </select>
-                                                                </div>
-                                                                <br>
-                                                                <div id="studentlistAway"></div>
-                                                                <br>
-                                                            </div>
-
-                                                        <div class="col-sm-2 p-l-n p-r-n">
-                                                           <span class="no_select" id="std-check-div"> <input type="checkbox" name="student_empty" id="student_empty"> {{__('do not select') }} <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('If you wish to not select any students for the lesson, for ’school invoiced’ lesson with a many students for example. Remember that if no students are selected, no invoice will be generated for them for that lesson.')}}"></i> </span>
-                                                        </div>
-                                                    </div>
+                                                <div class="col-md-10 offset-md-1">
 
 
-
-
-
-
-
-
-                                                    <div class="mt-5 form-group row not-allday">
+                                                    <div class="mt-1 form-group row not-allday">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Start date') }} :</label>
                                                         <div class="col-sm-9 row">
                                                             <div class="col-sm-6">
@@ -4807,10 +4812,12 @@ $("body").on('change', '#category_select, #teacher_select', function(event) {
     } else {
         if(teacherSelect !== 0) {
             isTeacherHasPrices = false
-            errorModalCall('This teacher has not yet saved any rates');
+            //errorModalCall('This teacher has not yet saved any rates');
+            $("#rates_error").show();
         }
     }
     } else {
+        $("#rates_error").hide();
     //console.log('No teacher found with ID ', teacherSelect, '.');
     }
 
