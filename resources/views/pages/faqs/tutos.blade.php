@@ -3,60 +3,67 @@
 @section('head_links')
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 @endsection
+
 @section('content')
 <div class="content">
     <div class="container-fluid body pt-3 pb-3">
 
-        <h3> {{__('Tutorials')}}</h3>
+        <h3>{{ __('Tutorials') }}</h3>
 
-        @foreach ($categories as $index => $category)
-        <h5 style="color:#0075bf; cursor: pointer;" data-toggle="collapse" data-target="#category{{ $category->id }}" aria-expanded="{{ $index == 0 ? 'true' : 'false' }}">{{ $category->name }} <i class="fa-solid fa-chevron-down"></i></h5> <!-- Ajouter un collapse au titre de la catégorie -->
+        <div class="row">
+            <div class="col-md-9">
+                <div class="alert alert-default" style="background-color: #f9f9f9;"><i class="fa-regular fa-file-video"></i> <span id="modelTitle">{{ $faqs[0]->title }}</span></div>
+                <div class="video-container m-0 p-0">
+                    <video id="mainVideo" width="100%" height="500" controls style="border-radius:10px; border:3px solid #EEE;" poster="{{ asset('img/background-video.png') }}">
+                        <source id="mainVideoSource" src="{{ $faqs[0]->youtube_link }}" type="video/mp4">
+                        Your browser does not support the video player.
+                    </video>
+                </div>
+                <div id="modelDescription" class="alert alert-default" style="background-color: #f9f9f9;">{{ $faqs[0]->description }}</div>
+            </div>
 
-            <div class="mb-4 collapse {{ $index == 0 ? 'show' : '' }}" id="category{{ $category->id }}"> <!-- Ajouter la classe 'show' pour la première catégorie -->
-                
-        <div class="row m-4" id="tutos_col">
-            @foreach ($faqs as $faq)
-                @if ($faq->category_id == $category->id) <!-- Vérifier si la faq appartient à la catégorie en cours -->
-                    <div class="col-md-3 mb-4">
-                        <div class='p-1'>
-                            <div class="card" style="border-radius:10px 10px 0 0;">
-                                <div class="card-header p-0" style="border-radius:10px 10px 0 0; padding-bottom:0px; margin-bottom:0px;">
-                                    <!--<div class="embed-responsive embed-responsive-16by9">
-                                        <x-embed url="{{ $faq->youtube_link }}" />
-                                    </div>-->
-                                    <video width="100%" height="200" controls style="border-radius:10px 10px 0 0; padding:0px; margin:0px;" poster="{{ asset('img/background-video.png') }}">
-                                        <source src="{{ $faq->youtube_link }}" type="video/mp4">
-                                        Your browser does not support the video player.
-                                    </video>
-                                </div>
-                                <div class="card-body" style="height: 80px;">
-                                    <b class="card-title" style="font-size:16px;">{{ $faq->title }}</b>
-                                    <span class="text" style="color:#0075bf; cursor:pointer;"><!--{{ $faq->description }}--><i class="fa-solid fa-circle-info" onclick="openFaqModal('{{ $faq->title }}', '{{ $faq->description }}')"></i></span>
-                          
-                                    <!--<a href="{{ route('faqs.tutos.show', $faq) }}" class="btn btn-primary mt-3">View Details</a>-->
+            <div class="col-md-3 p-3 pt-5">
+                <br>
+                @foreach ($categories as $index => $category)
+                <b id="toggleCategory{{ $category->id }}" style="color:#0075bf; cursor: pointer;" data-toggle="collapse" data-target="#category{{ $category->id }}" aria-expanded="{{ $index == 0 ? 'true' : 'false' }}">
+                    {{ $category->name }} <i class="fa-solid fa-chevron-down"></i>
+                </b>
+                <br>
+                <div class="mb-4 collapse {{ $index == 0 ? 'show' : '' }}" id="category{{ $category->id }}">
+                    @foreach ($faqs as $faq)
+                        @if ($faq->category_id == $category->id)
+                            <div class="video-thumbnail mb-2" style="cursor:pointer; max-width:250px;" onclick="changeVideo('{{ $faq->youtube_link }}', '{{ $faq->title }}', '{{ $faq->description }}')">
+                                <div class="card" style="border-radius:10px;">
+                                    <div class="card-header p-0" style="border-radius:10px 10px 0 0;">
+                                        <video width="100%" height="120" style="border-radius:10px 10px 0 0;" poster="{{ asset('img/background-video.png') }}">
+                                            <source src="{{ $faq->youtube_link }}" type="video/mp4">
+                                        </video>
+                                    </div>
+                                    <div class="card-body" style="height: 60px;">
+                                        <b class="card-title" style="font-size:14px;">{{ $faq->title }}</b>
+                                        <span class="text" style="color:#0075bf; cursor:pointer;">
+                                            <i class="fa-solid fa-circle-info" onclick="openFaqModal('{{ $faq->title }}', '{{ $faq->description }}')"></i>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                @endif
-            @endforeach
+                        @endif
+                    @endforeach
+                </div>
+                @endforeach
+            </div>
         </div>
-        </div>
-    @endforeach
-
     </div>
 </div>
 
-
 <div class="modal fade" id="faqModal" tabindex="-1" role="dialog" aria-labelledby="faqModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered " role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <div class="text-center pt-1">Video Tutorial</div>
-            <div class="modal-header text-center" style="width:98%;">
+            <div class="modal-header text-center">
                 <h5 class="modal-title" id="faqModalLabel"></h5>
-                <a href="#" class="close" id="modalClose" data-bs-dismiss="modal" style="position: absolute; right: 6px; top: 6px; border-radius:50%!important; padding:3px; font-size:23px;">
-                    <i class="fa-solid fa-circle-xmark fa-lg" style="color:#0075bf;"></i>
-                </a>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
                 <p id="faqModalDescription"></p>
@@ -67,14 +74,40 @@
 
 @endsection
 
-
 @section('footer_js')
-    <script>
-        
-        function openFaqModal(title, description) {
-            $('#faqModalLabel').text(title);
-            $('#faqModalDescription').text(description);
-            $('#faqModal').modal('show');
-        }
-    </script>
+<script>
+    // Fonction pour fermer tous les autres accordéons
+    function closeOtherAccordions(currentAccordion) {
+        var accordions = document.querySelectorAll('.collapse');
+        accordions.forEach(function(accordion) {
+            if (accordion.id !== currentAccordion) {
+                accordion.classList.remove('show');
+            }
+        });
+    }
+
+    // Ajout d'un événement de clic à chaque déclencheur d'accordéon
+    document.querySelectorAll('[data-toggle="collapse"]').forEach(function(element) {
+        element.addEventListener('click', function() {
+            var target = this.getAttribute('data-target').substring(1);
+            closeOtherAccordions(target);
+        });
+    });
+    function changeVideo(videoUrl, title, description) {
+        var video = document.getElementById('mainVideo');
+        var videoSource = document.getElementById('mainVideoSource');
+        videoSource.src = videoUrl;
+        video.load();
+        video.play();
+        document.getElementById('faqModalLabel').innerText = title;
+        document.getElementById('modelTitle').innerText = title;
+        document.getElementById('modelDescription').innerText = description;
+    }
+
+    function openFaqModal(title, description) {
+        $('#faqModalLabel').text(title);
+        $('#faqModalDescription').text(description);
+        $('#faqModal').modal('show');
+    }
+</script>
 @endsection
