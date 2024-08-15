@@ -352,6 +352,25 @@ class User extends Authenticatable
     }
 
 
+    /**
+     * Relation hasMany pour les méthodes de paiement.
+     */
+    public function paymentMethods()
+    {
+        return $this->hasMany(PaymentMethod::class);
+    }
+
+    /**
+     * Vérifie si l'utilisateur a des méthodes de paiement.
+     *
+     * @return bool
+     */
+    public function hasPaymentMethods()
+    {
+        return $this->paymentMethods()->exists();
+    }
+
+
 
     /**
      * Get the posted user name

@@ -19,6 +19,10 @@
                 @include('pages.account.informations')
             </div>
 
+            <div class="tab-pane fade" id="tab_5" role="tabpanel" aria-labelledby="tab_5">
+                @include('pages.account.payment-methods')
+            </div>
+
             <div class="tab-pane fade" id="tab_2" role="tabpanel" aria-labelledby="tab_2">
                 @include('pages.account.plan')
             </div>
@@ -37,5 +41,3 @@
         </div>
     </div>
 @endsection
-
-

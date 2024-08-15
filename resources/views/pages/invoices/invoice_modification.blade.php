@@ -1060,13 +1060,17 @@
                 <button id="approved_btn" target="" href="" class="btn btn-theme-outline" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><label><i class="fa-solid fa-envelope-open-text"></i> <span class="d-none d-sm-inline-block">{{__('Send by email')}}</span></label></button>
                 @endif
 
+                @if($invoice->payment_status !== 0)
                 <a id="download_pdf_btn_a" target="_blank" href="{{ route('generateInvoicePDF',['invoice_id'=> $invoice->id, 'type' => 'print_view']) }}" class="btn btn-theme-outline">
+                    <label name="download_pdf_btn d-none d-sm-block" id="download_pdf_btn"><i class="fa-solid fa-file-pdf"></i> <span class="d-none d-sm-inline-block"> {{__('View PDF')}}</span></label>
+                </a>
+                @endif
+
+                @if($invoice->payment_status == 0)
+                <a id="download_pdf_btn_a" href="{{ route('invoices.download', $invoice->id) }}" class="btn btn-theme-outline">
                     <label name="download_pdf_btn d-none d-sm-block" id="download_pdf_btn"><i class="fa-solid fa-file-pdf"></i> <span class="d-none d-sm-inline-block"> {{__('Download PDF')}}</span></label>
                 </a>
-
-                <!--<a id="download_pdf_btn_a" href="{{ route('invoices.download', $invoice->id) }}" class="btn btn-theme-outline">
-                    <label name="download_pdf_btn d-none d-sm-block" id="download_pdf_btn"><i class="fa-solid fa-file-pdf"></i> <span class="d-none d-sm-inline-block"> {{__('Download PDF')}}</span></label>
-                </a>-->
+                @endif
 
             @else
                 <a id="issue_inv_btn" name="issue_inv_btn" class="btn btn-sm btn-success" target="">
@@ -1086,6 +1090,7 @@
 
 
         </div>
+
 </div>
 
 

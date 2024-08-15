@@ -41,12 +41,22 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <input type="password" class="form-control" placeholder="Enter New Password" id="reset_password_pass" name="reset_password_pass" required>
+                        <div class="input-group" id="show_hide_password" style="border:none;">
+                        <input type="password" class="form-control" style="border:none;" placeholder="Enter New Password" id="reset_password_pass" name="reset_password_pass" required>
+                        <div class="input-group-addon">
+                            <a href=""><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
+                        </div>
+                        </div>
                     </div>
                    
 
                     <div class="form-group">
-                        <input type="password" class="form-control" placeholder="Confirm Password" id="reset_password_confirm_pass" name="reset_password_confirm_pass" required>
+                        <div class="input-group" id="show_hide_password" style="border:none;">
+                        <input type="password" style="border:none;" class="form-control" placeholder="Confirm Password" id="reset_password_confirm_pass" name="reset_password_confirm_pass" required>
+                        <div class="input-group-addon">
+                            <a href=""><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
+                        </div>
+                        </div>
                     </div>
 
 

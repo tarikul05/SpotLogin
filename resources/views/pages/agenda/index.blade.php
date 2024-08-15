@@ -2794,12 +2794,13 @@ $('.close-icon').on('click', function() {
                     if (event.isInvoice){
                         var icon ='<span class="fa fa-solid fa-file-pdf txt-orange" style="padding:2px;"></span>';
                         $(el).find('div.fc-content').prepend(icon);
+                        $(el).find('.fc-list-item-title').prepend(icon);
                     }
 
                     var icon ='<span class="fa fa-lock txt-orange" style="padding:2px;"></span>';
                     if (event.is_locked == '1'){
                         $(el).find('div.fc-content').prepend(icon);
-
+                        $(el).find('.fc-list-item-title').prepend(icon);
 
                     }else if (event.is_locked == '0'){
                         icon='';

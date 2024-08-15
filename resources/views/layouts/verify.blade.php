@@ -21,7 +21,7 @@
   <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4@5.0.15/bootstrap-4.min.css" rel="stylesheet">
 
   <!-- Theme style -->
-  <link rel="stylesheet" type="text/css" href="{{ asset('css/main_style.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ asset('css/admin_main_style.css') }}">
 
   <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
   <!-- flag icons -->

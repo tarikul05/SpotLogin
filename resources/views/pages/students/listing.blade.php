@@ -277,11 +277,22 @@ $(document).ready(function() {
                 method: 'GET',
                 success: function(response) {
                     $("#pageloader").fadeOut("fast");
-                    $('#sendMailOk').modal('show');
+                    //$('#sendMailOk').modal('show');
+                    Swal.fire(
+                        'Successfully sended',
+                        'Your student will receive an email with instructions to reset their password',
+                       'success'
+                    )
                 },
                 error: function(error) {
                     $("#pageloader").fadeOut("fast");
                     alert('Error occurred while sending the password reset invitation. Please try again.');
+                    Swal.fire(
+                        'Sorry,',
+                        'Error occurred while sending the password reset invitation. Please try again.',
+                       'error'
+                    )
+
                 }
             });
         //} else {

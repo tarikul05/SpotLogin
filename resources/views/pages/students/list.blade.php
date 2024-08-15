@@ -437,7 +437,12 @@ $(document).ready(function() {
                 method: 'GET',
                 success: function(response) {
                     $("#pageloader").fadeOut("fast");
-                    $('#sendMailOk').modal('show');
+                    //$('#sendMailOk').modal('show');
+                    Swal.fire(
+                            'Successfully sended',
+                            '{{__('Your student will receive an email with instructions.') }}',
+                            'success'
+                        )
                 },
                 error: function(error) {
                     $("#pageloader").fadeOut("fast");

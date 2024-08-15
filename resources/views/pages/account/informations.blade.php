@@ -187,6 +187,7 @@
                 </div>
                 </div>
 
+  
                 <div class="row justify-content-center pt-4">
                     <div class="col-md-12">
                         <div class="card2">
@@ -319,6 +320,7 @@
             </div>
         </div>
     </div>
+    
 
 
     @if ($isInEurope)
@@ -416,58 +418,3 @@
 
 </div>
 </form>
-
-
-
-@section('footer_js')
-
-<script src="{{ asset('js/pages/account/index.js') }}"></script>
-<script src="{{ asset('js/pages/account/image.js') }}"></script>
-
-<script>
-var payment_info_checkbox = "{{ $teacher->payment_info_checkbox ?? '' }}";
-
-$(document).ready(function() {
-    if (payment_info_checkbox === '2') {
-        $('#payment_info_div').hide();
-        $('#payment_info_div2').show();
-    } else {
-        $('#payment_info_div').show();
-        $('#payment_info_div2').hide();
-    }
-
-    $('#payment_info_checkbox,#payment_info_checkbox2').on('change', function($event) {
-        if($event.target.value == 2) {
-            $('#payment_info_div').hide();
-            $('#payment_info_div2').show();
-        }else{
-            $('#payment_info_div').show();
-            $('#payment_info_div2').hide();
-        }
-    })
-
-    $(document).ready(function() {
-    // Fonction pour copier le contenu d'un champ vers un autre
-    function copyFieldContent(sourceField, targetField) {
-        $('#' + targetField).val($('#' + sourceField).val());
-    }
-
-    // Événement pour le champ "bank_name"
-    $('#bank_name').on('input', function() {
-        copyFieldContent('bank_name', 'bank_name2');
-    });
-
-    // Événement pour le champ "bank_account"
-    $('#bank_account').on('input', function() {
-        copyFieldContent('bank_account', 'bank_account2');
-    });
-
-    // Événement pour le champ "bank_iban"
-    $('#bank_iban').on('input', function() {
-        copyFieldContent('bank_iban', 'bank_iban2');
-    });
-});
-
-});
-</script>
-@endsection

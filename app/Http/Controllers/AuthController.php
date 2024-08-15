@@ -501,7 +501,8 @@ class AuthController extends Controller
                 if ($passwordValidation === true) {
                     $user->password = $data['reset_password_pass'];
                     $user->save();
-                    return back()->with('status', "Password changed successfully!");
+                    //return back()->with('status', "Password changed successfully!");
+                    return redirect()->route('index.login')->with('status', "Password changed successfully!");
                 } else {
                     return back()->with('error', "Please verify your password");
                 }

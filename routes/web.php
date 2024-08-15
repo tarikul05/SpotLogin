@@ -7,6 +7,8 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ContactFormController;
 use App\Http\Controllers\AvailabilityController;
+use App\Http\Controllers\PaymentMethodController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -19,6 +21,8 @@ use App\Http\Controllers\AvailabilityController;
 */
 
 Route::get('/', [App\Http\Controllers\AuthController::class, 'index']);
+
+Route::get('/#login', [App\Http\Controllers\AuthController::class, 'index'])->name('index.login');
 
 // Route::get('login', [App\Http\Controllers\AuthController::class, 'index'])->name('login');
 // AJAX
@@ -144,6 +148,10 @@ Route::post('update_invoice_info', [App\Http\Controllers\InvoiceController::clas
 //AJAX update teacher discount
 Route::post('teacher_update_discount_perc', [App\Http\Controllers\TeachersController::class, 'updateDiscountPerc'])->name('teacher_update_discount_perc.submit')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
+
+Route::post('/payment-methods', [PaymentMethodController::class, 'store'])->name('payment_methods.store');
+Route::get('/payment-methods', [PaymentMethodController::class, 'index'])->name('payment_methods.index');
+Route::delete('/payment-methods/{id}', [PaymentMethodController::class, 'destroy'])->name('payment_methods.destroy');
 
 // email template  AJAX
 Route::get('/template_variables', [App\Http\Controllers\EmailTemplateController::class, 'templateVariables'])->name('email.template_variables');

@@ -1103,9 +1103,11 @@ public function index(Request $request, $schoolId = null)
             $schoolId = $school->id;
             if (config('global.email_send') == 1) {
                 $data = [];
+                $user = User::where('person_id', $person->id)->first(); 
                 $data['email'] = $person->email;
-                $data['username'] = $alldata->nickname;
+                $data['username'] = $user->firstname . ' ' . $user->lastname;
                 $data['school_name'] = $school->school_name;
+
                 $verifyUser = [
                     'school_id' => $schoolId,
                     'person_id' => $person->id,
@@ -1117,6 +1119,7 @@ public function index(Request $request, $schoolId = null)
                 $verifyUser = VerifyToken::create($verifyUser);
                 $data['token'] = $verifyUser->token;
                 $data['url'] = route('reset_password.email', $data['token']);
+                $data['username_login'] = $user->username;
 
                 if ($this->emailSend($data, 'forgot_password_email')) {
                     $data = [];

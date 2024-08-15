@@ -49,6 +49,7 @@
             float: left;
             padding: 10px 15px 0;
             background: #e1eff7;
+            border-radius:5px;
         }
 
         .info_area .right_cont {
@@ -57,6 +58,7 @@
             float: right;
             padding: 10px 15px 0;
             background: #e1eff7;
+            border-radius:5px;
         }
 
         .info_area .left_cont p,
@@ -219,6 +221,7 @@
             background-color: #03a9f4;
             padding: 5px 6px;
             background: #e1eff7;
+            border-radius:5px;
         }
         .title-top{
             font-weight: bold;
@@ -669,7 +672,49 @@
          */ ?>
     </main>
     <footer>
-        <div class="title-top">{{ __('Payment Preference') }}</div>
+        <div class="title-top p-2">{{ __('Payment Preference') }}</div>
+        
+
+        @if ($AppUI->hasPaymentMethods())
+        <div class="payment-info">
+
+            <ul class="list-group">
+                @foreach ($AppUI->paymentMethods()->get() as $paymentMethod)
+                <div style="display:block; margin:15px;">
+                    <li class="list-group-item txt" style="border-radius:6px; background-color:#d8e7ef; opacity:.7;">
+                        <b>{{ $paymentMethod->type }}</b> : 
+                        @if ($paymentMethod->type === 'Stripe')
+                            <span>{{ $paymentMethod->details['account_number'] ?? 'N/A' }}</span>
+                        @elseif ($paymentMethod->type === 'PayPal')
+                            <span>{{ $paymentMethod->details['paypal_address'] ?? 'N/A' }}</span>
+                        @elseif ($paymentMethod->type === 'IBAN')
+                            <span>{{ $paymentMethod->details['iban_number'] ?? 'N/A' }}</span>
+                        @elseif ($paymentMethod->type === 'Swift')
+                            <span>{{ $paymentMethod->details['swift_number'] ?? 'N/A' }}</span>
+                        @elseif ($paymentMethod->type === 'Cash')
+                            <span>{{ $paymentMethod->details['cash'] ?? 'N/A' }}</span>
+                        @elseif ($paymentMethod->type === 'E-Transfer')
+                            <span>{{ $paymentMethod->details['e_transfer_number'] ?? 'N/A' }}</span>
+
+                        @elseif ($paymentMethod->type === 'Bank')
+                            <ul>
+                                @forelse ($paymentMethod->details['custom_fields'] ?? [] as $field)
+                                    <li><strong>{{ $field['name'] }}:</strong> {{ $field['value'] }}</li>
+                                @empty
+                                    <li>No custom fields added.</li>
+                                @endforelse
+                            </ul>
+                        @endif
+                    </li>
+                </div>
+                @endforeach
+            </ul>
+
+        </div>
+
+        @else
+
+
         <div class="payment-info">
             @if($payment_method == 2)
             <table class="table" style="border: 0;">
@@ -767,6 +812,7 @@
             </table>
             @endif
         </div>
+        @endif
     </footer>
 </body>
 

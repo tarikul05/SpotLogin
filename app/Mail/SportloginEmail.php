@@ -47,6 +47,10 @@ class SportloginEmail extends Mailable
                 $data['body_text'] = str_replace("[~~SCHOOL_NAME~~]", $data['school_name'], $data['body_text']);
                 $data['body_text'] = str_replace("[~~ SCHOOL_NAME ~~]", $data['school_name'], $data['body_text']);
             }
+            if (isset($data['username_login'])) {
+                $data['body_text'] = str_replace("[~~USER_LOGIN~~]", $data['username_login'], $data['body_text']);
+                $data['body_text'] = str_replace("[~~ USER_LOGIN ~~]", $data['username_login'], $data['body_text']);
+            }
             if (isset($data['password'])) {
                 $data['body_text'] = str_replace("[~~PASSWORD~~]", $data['password'], $data['body_text']);
                 $data['body_text'] = str_replace("[~~ PASSWORD ~~]", $data['password'], $data['body_text']);
@@ -90,6 +94,11 @@ class SportloginEmail extends Mailable
             if (isset($data['school_name'])) {
                 $data['subject'] = str_replace("[~~SCHOOL_NAME~~]", $data['school_name'], $data['subject']);
                 $data['subject'] = str_replace("[~~ SCHOOL_NAME ~~]", $data['school_name'], $data['subject']);
+            }
+
+            if (isset($data['username_login'])) {
+                $data['subject'] = str_replace("[~~USER_LOGIN~~]", $data['username_login'], $data['subject']);
+                $data['subject'] = str_replace("[~~ USER_LOGIN ~~]", $data['username_login'], $data['subject']);
             }
 
             if (isset($data['first_name'])) {

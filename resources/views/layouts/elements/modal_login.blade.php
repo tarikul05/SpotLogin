@@ -37,6 +37,12 @@
       <div class="modal-body text-center" style="max-width: 375px; width:100%; margin: 0 auto;padding-top: 0;">
         <form id="login_form" name="login_form" method="POST" action="{{ route('login.submit') }}">
 
+          @if(session('status'))
+            <div class="mt-1 alert alert-success">
+                {{ session('status') }}
+            </div>
+        @endif
+
           <div class="form-group">
             <input type="text" class="form-control" placeholder="Your Login ID" id="login_username" name="login_username" required>
           </div>
