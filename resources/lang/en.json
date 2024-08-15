@@ -640,5 +640,15 @@
     "You are invited by":"You are invited by",
     "to create your personnal account":"to create your personnal account",
     "Welcome":"Welcome",
-    "Create my account":"Create my account"
+    "Create my account":"Create my account",
+    "Payment Methods":"Payment Methods",
+    "You have no payment methods registered":"You have no payment methods registered",
+    "You actually use the older payment methods system":"You actually use the older payment methods system",
+    "please add at least one payment method to activate the new system":"please add at least one payment method to activate the new system",
+    "Info":"Information",
+    "Actions":"Actions",
+    "Select a payment method type":"Select a payment method type",
+    "Add a Payment Method":"Add a Payment Method",
+    "Custom Field Name":"Custom Field Name",
+    "Custom Field Value":"Custom Field Value"
 }

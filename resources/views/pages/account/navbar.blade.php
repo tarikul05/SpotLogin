@@ -40,28 +40,28 @@
         if (this.value === 'Stripe') {
             container.innerHTML += `
                 <div class="form-group">
-                    <label for="account_number">Stripe Account Number</label>
+                    <label for="account_number" style="font-size:11px;">Stripe Account Number</label>
                     <input type="text" name="details[account_number]" class="form-control">
                 </div>
                  <button type="submit" class="btn btn-outline-success">Save</button>`;
         } else if (this.value === 'PayPal') {
             container.innerHTML += `
                 <div class="form-group">
-                    <label for="paypal_address">PayPal Address</label>
+                    <label for="paypal_address" style="font-size:11px;">PayPal Address</label>
                     <input type="email" name="details[paypal_address]" class="form-control">
                 </div>
                  <button type="submit" class="btn btn-outline-success">Save</button>`;
         } else if (this.value === 'Cash') {
             container.innerHTML += `
                 <div class="form-group">
-                    <label for="paypal_address">Get pay by Cash</label>
+                    <label for="paypal_address" style="font-size:11px;">Get pay by Cash</label>
                     <input type="text" name="details[cash]" class="form-control">
                 </div>
                  <button type="submit" class="btn btn-outline-success">Save</button>`;
         } else if (this.value === 'IBAN') {
             container.innerHTML += `
                 <div class="form-group">
-                    <label for="paypal_address">IBAN N°</label>
+                    <label for="paypal_address" style="font-size:11px;">IBAN N°</label>
                     <input type="text" name="details[iban_number]" class="form-control">
                 </div>
                  <button type="submit" class="btn btn-outline-success">Save</button>`;
@@ -70,7 +70,7 @@
                 } else if (this.value === 'E-Transfer') {
             container.innerHTML += `
                 <div class="form-group">
-                    <label for="paypal_address">E-Transfer Email</label>
+                    <label for="paypal_address" style="font-size:11px;">E-Transfer Email</label>
                     <input type="email" name="details[e_transfer_number]" class="form-control">
                 </div>
                  <button type="submit" class="btn btn-outline-success">Save</button>`;
@@ -78,7 +78,7 @@
         } else if (this.value === 'Swift') {
             container.innerHTML += `
                 <div class="form-group">
-                    <label for="paypal_address">SWIFT A/c No</label>
+                    <label for="paypal_address" style="font-size:11px;">SWIFT A/c No</label>
                     <input type="text" name="details[swift_number]" class="form-control">
                 </div>
                  <button type="submit" class="btn btn-outline-success">Save</button>`;
@@ -88,13 +88,13 @@
                     <div class="row">
                         <div class="col-md-6">
                         <div class="form-group p-2">
-                            <label for="custom_field_name_1">Custom Field Name</label>
+                            <label for="custom_field_name_1" style="font-size:11px;">{{__('Custom Field Name')}}</label>
                             <input type="text" name="details[custom_fields][0][name]" placeholder="ex: Bank Name" class="form-control">
                         </div>
                         </div>
                         <div class="col-md-6">
                         <div class="form-group p-2">
-                            <label for="custom_field_value_1">Custom Field Value</label>
+                            <label for="custom_field_value_1" style="font-size:11px;">{{__('Custom Field Value')}}</label>
                             <input type="text" name="details[custom_fields][0][value]" placeholder="ex: UBS" class="form-control">
                         </div>
                         </div>
@@ -111,13 +111,13 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group p-2">
-                            <label for="custom_field_name_${fieldCount + 1}">Custom Field Name</label>
+                            <label for="custom_field_name_${fieldCount + 1}" style="font-size:11px;">{{__('Custom Field Name')}}</label>
                             <input type="text" name="details[custom_fields][${fieldCount}][name]" class="form-control">
                         </div>
                     </div>
                      <div class="col-md-6">
                         <div class="form-group p-2">
-                            <label for="custom_field_value_${fieldCount + 1}">Custom Field Value</label>
+                            <label for="custom_field_value_${fieldCount + 1}" style="font-size:11px;">{{__('Custom Field Value')}}</label>
                             <input type="text" name="details[custom_fields][${fieldCount}][value]" class="form-control">
                         </div>
                     </div>

@@ -715,7 +715,7 @@
         @else
 
 
-        <div class="payment-info">
+        <div class="payment-info p-2">
             @if($payment_method == 2)
             <table class="table" style="border: 0;">
                 <tr>

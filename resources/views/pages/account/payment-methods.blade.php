@@ -9,16 +9,16 @@
                <div class="container">
             
                 @if (!$AppUI->hasPaymentMethods())
-                    <b>You have no payment methods registered.</b><br>
-                        You actually use the older payment methods system,
-                        please add at least one payment method to activate the new system
+                    <b>{{__('You have no payment methods registered')}}.</b><br>
+                    {{__('You actually use the older payment methods system')}},
+                    {{__('please add at least one payment method to activate the new system')}}.
                 @else
                 <table class="table table-bordered table-hover">
                     <thead>
                         <tr>
-                            <th>Type</th>
-                            <th>Info</th>
-                            <th>Actions</th>
+                            <th>{{__('Type')}}</th>
+                            <th>{{__('Info')}}</th>
+                            <th>{{__('Actions')}}</th>
                         </tr>
                     </thead>
                         @foreach ($AppUI->paymentMethods()->get() as $paymentMethod)
@@ -52,7 +52,7 @@
                                     </ul>
                                 @endif
                                     <br>
-                                <small>Created at: {{ $paymentMethod->created_at->format('d/m/Y H:i') }}</small>
+                                <small>{{__('Created at')}}: {{ $paymentMethod->created_at->format('d/m/Y H:i') }}</small>
                             </td>
                             <td style="width:50px; text-align:center;">
                                 <form action="{{ route('payment_methods.destroy', $paymentMethod->id) }}" method="POST" style="display:inline;">
@@ -87,7 +87,7 @@
                    
                             <div class="form-group">
                             <select id="type" name="type" class="form-control">
-                            <option value="">Select a payment method type</option>
+                            <option value="">{{__('Select a payment method type')}}</option>
                             <option value="Cash">Cash</option>
                             <option value="Bank">Bank information</option>
                             <option value="IBAN">IBAN N°</option>

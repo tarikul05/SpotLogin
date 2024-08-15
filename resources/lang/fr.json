@@ -645,6 +645,15 @@
     "Welcome":"Bienvenue",
     "Create my account":"Créer mon compte",
     "Daily schedule": "Journée",
-    "Monthly schedule": "Mois (liste)"
-
+    "Monthly schedule": "Mois (liste)",
+    "Payment Methods":"Moyens de paiement",
+    "You have no payment methods registered":"Vous n'avez pas encore enregistré de moyen de paiement",
+    "You actually use the older payment methods system":"Vous utilisez actuellement l'ancien système",
+    "please add at least one payment method to activate the new system":"merci d'ajouter au moins un moyen de paiement pour activer le nouveau système",
+    "Info":"Information",
+    "Actions":"Actions",
+    "Select a payment method type":"Choisissez un type de paiement",
+    "Add a Payment Method":"Ajouter un moyen de paiement",
+    "Custom Field Name":"Nom du champs personnalisé",
+    "Custom Field Value":"Valeur correspondante"
 }
