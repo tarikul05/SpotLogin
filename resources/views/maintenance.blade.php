@@ -10,7 +10,7 @@
 </head>
 <body>
     <div class="container">
-        <div class="row justify-content-center mt-5">
+        <div class="row justify-content-center align-items-center min-vh-100">
             <div class="col-md-6 d-flex align-items-center">
                 <div class="card">
                     <div class="card-body text-center">
