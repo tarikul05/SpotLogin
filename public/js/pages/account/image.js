@@ -2,96 +2,103 @@ function UploadImage() {
     document.getElementById("profile_image_file").value = "";
     $("#profile_image_file").trigger('click');
   }
-  function ChangeImage() {
-    var p_person_id = $("#user_id").val(),
-        p_file_id = '', data = '';
-    var file_data = $('#profile_image_file').prop('files')[0];
-    var formData = new FormData();
-    formData.append('profile_image_file', file_data);
-    formData.append('type', 'upload_image');
-    formData.append('p_person_id', p_person_id);
-    var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
-    let loader = $('#pageloader');
-    loader.fadeIn();
-    $.ajax({
-      url: BASE_URL + '/admin/update-profile-photo',
-      data: formData,
-      type: 'POST',
-      //dataType: 'json',
-      processData: false,
-      contentType: false,
-      beforeSend: function (xhr) {
-        loader.fadeIn();
-      },
-      success: function (result) {
-        loader.fadeOut();
-        var mfile = result.image_file + '?time=' + new Date().getTime();
-        $("#profile_image_user_account").attr("src",mfile);
-        $("#user_profile_image").attr("src",mfile);
-        $("#admin_logo").attr("src",mfile);
-        $("#admin_logo_mobile").attr("src",mfile);
-        $("#delete_profile_image").show();
-        var isStudent = "{{ $AppUI->isStudent() }}";
-        if(isStudent) {
-          successModalCall("Your profile picture is added!");
-        } else {
-          successModalCall("Your logo is added!");
-        }
-      },// success
-      error: function (reject) {
-        loader.fadeOut();
-        let errors = $.parseJSON(reject.responseText);
-        errors = errors.errors;
-        $.each(errors, function (key, val) {
-          //$("#" + key + "_error").text(val[0]);
-          errorModalCall(val[0]+ ' '+GetAppMessage('error_message_text'));
-        });
-      },
-      complete: function() {
-        loader.fadeOut();
-      }
-    });
-  }
-  $('#delete_profile_image').click(function (e) {
-    DeleteProfileImage();      // refresh lesson details for billing
-  })
-  function DeleteProfileImage() {
-    //delete image
+  let cropper;
+
+const uploadImage = () => {
     document.getElementById("profile_image_file").value = "";
-    var p_person_id = document.getElementById('user_id').value;
-    let loader = $('#pageloader');
-    $.ajax({
-      url: BASE_URL + '/admin/delete-profile-photo',
-      data: 'user_id=' + p_person_id,
-      type: 'POST',
-      dataType: 'json',
-      beforeSend: function (xhr) {
-        loader.fadeIn();
-      },
-      success: function(response) {
-        if (response.status == 'success'){
-          loader.fadeOut();
-          $("#profile_image_user_account").attr("src",BASE_URL+'/img/photo_blank.jpg');
-          $("#user_profile_image").attr("src",BASE_URL+'/img/photo_blank.jpg');
-          $("#admin_logo").attr("src",BASE_URL+'/img/photo_blank.jpg');
-          $("#admin_logo_mobile").attr("src",BASE_URL+'/img/photo_blank.jpg');
-          $("#delete_profile_image").hide();
-          successModalCall(response.message);
-        }
+    $("#profile_image_file").trigger('click');
+}
 
-      },
-      error: function (reject) {
-        loader.hide("fast");
-        let errors = $.parseJSON(reject.responseText);
-        errors = errors.errors;
-        $.each(errors, function (key, val) {
-          //$("#" + key + "_error").text(val[0]);
-          errorModalCall(val[0]+ ' '+GetAppMessage('error_message_text'));
-        });
-      },
-      complete: function() {
-        loader.hide("fast");
-      }
+const changeImage = () => {
+    const fileInput = document.getElementById('profile_image_file');
+    const file = fileInput.files[0];
+    
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function (event) {
+            const image = document.getElementById('image');
+            image.src = event.target.result;
+
+            // Afficher le faux modal et initialiser Cropper.js
+            document.getElementById('fakeModalOverlay').style.display = 'block';
+            document.getElementById('cropContainer').style.display = 'block';
+            cropper = new Cropper(image, {
+                aspectRatio: 1,
+                viewMode: 1,
+                ready: function () {
+                    // Ajuster la vue de recadrage initiale si nécessaire
+                }
+            });
+        }
+        reader.readAsDataURL(file);
+    }
+}
+
+const cropImage = () => {
+    const canvas = cropper.getCroppedCanvas({
+        width: 150, // Dimensions finales de l'image recadrée
+        height: 150,
     });
 
-  }
+    canvas.toBlob(function (blob) {
+        const formData = new FormData();
+        formData.append('profile_image_file', blob);
+        formData.append('type', 'upload_image');
+        formData.append('p_person_id', $("#user_id").val());
+        const csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+
+        $.ajax({
+            url: BASE_URL + '/admin/update-profile-photo',
+            data: formData,
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            beforeSend: function (xhr) {
+                $('#pageloader').fadeIn();
+            },
+            success: function (result) {
+                setTimeout(() => {
+                  $('#pageloader').fadeOut();
+                }, 500);
+                const mfile = result.image_file + '?time=' + new Date().getTime();
+                $("#profile_image_user_account").attr("src", mfile);
+                $("#user_profile_image").attr("src", mfile);
+                $("#admin_logo").attr("src", mfile);
+                $("#admin_logo_mobile").attr("src", mfile);
+                $("#delete_profile_image").show();
+                const isStudent = "{{ $AppUI->isStudent() }}";
+                setTimeout(() => {
+                  if (isStudent) {
+                    successModalCall("Your profile picture is added!");
+                  } else {
+                      successModalCall("Your logo is added!");
+                  }
+                }, 1000);
+                document.getElementById('fakeModalOverlay').style.display = 'none';
+                document.getElementById('cropContainer').style.display = 'none';
+            },
+            error: function (reject) {
+                $('#pageloader').fadeOut();
+                const errors = $.parseJSON(reject.responseText);
+                $.each(errors.errors, function (key, val) {
+                    errorModalCall(val[0] + ' ' + GetAppMessage('error_message_text'));
+                });
+            },
+            complete: function () {
+                $('#pageloader').fadeOut();
+            }
+        });
+    }, 'image/jpeg');
+}
+
+// Ajouter les gestionnaires d'événements
+document.getElementById('profile_image_file').addEventListener('change', changeImage);
+document.getElementById('cropImage').addEventListener('click', cropImage);
+document.getElementById('closeModal').addEventListener('click', () => {
+    // Masquer le faux modal
+    document.getElementById('fakeModalOverlay').style.display = 'none';
+    document.getElementById('cropContainer').style.display = 'none';
+    if (cropper) {
+        cropper.destroy();
+    }
+});
