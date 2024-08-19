@@ -19,13 +19,13 @@ class CheckForMaintenanceMode
             $isSuperAdmin = $user ? $user->isSuperAdmin() : false;
             if ($isSuperAdmin) {
                 if ($maintenance->start_date && Carbon::parse($maintenance->start_date)->isFuture()) {
-                    $request->session()->flash('maintenance', 'Maintenance à venir...');
+                    $request->session()->flash('maintenance', 'Upcoming maintenance...');
                 } else {
-                    $request->session()->flash('maintenance', 'Maintenance en cours...');
+                    $request->session()->flash('maintenance', 'Maintenance in progress...');
                 }
             } else {
                 if ($maintenance->start_date && Carbon::parse($maintenance->start_date)->isFuture()) {
-                    $request->session()->flash('maintenance', 'Maintenance à venir '. Carbon::parse($maintenance->start_date)->format('d/m/Y à H:i') . ' ' . date_default_timezone_get() );
+                    $request->session()->flash('maintenance', 'Upcoming maintenance'. Carbon::parse($maintenance->start_date)->format('d/m/Y à H:i') . ' ' . date_default_timezone_get() );
                 } else {
                     return response()->view('maintenance', [
                         'message' => $maintenance->message,
