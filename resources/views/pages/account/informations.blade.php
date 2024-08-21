@@ -25,8 +25,9 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 500px;
-      height: 500px;
+      width: 100%;
+      max-width: 500px;
+      height: auto;
       background: white; /* Couleur de fond pour le conteneur */
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.3); /* Ombre autour du conteneur */
       box-sizing: border-box;
