@@ -562,6 +562,7 @@ public function index(Request $request, $schoolId = null)
         DB::beginTransaction();
         try{
             if ($request->isMethod('post')){
+                //dd($alldata);
                 $studentData = [
                     // 'is_active' => isset($alldata['is_active']) ? $alldata['is_active'] : $student->is_active,
                     'gender_id' => $alldata['gender_id'],
@@ -595,37 +596,6 @@ public function index(Request $request, $schoolId = null)
                     'email2' => $alldata['email2'],
                     'student_notify' => isset($alldata['student_notify']) && !empty($alldata['student_notify']) ? 1 : 0 ,
                 ];
-                if($request->file('profile_image_file'))
-                {
-                    try {
-                        $image = $request->file('profile_image_file');
-
-                        if($image->getSize()>0)
-                        {
-                            $mime_type = $image->getMimeType();
-                            $extension = $image->getClientOriginalExtension();
-                            list($path, $imageNewName) = $this->__processImg($image,'StudentImage',$authUser);
-
-                            if (!empty($path)) {
-                            $fileData = [
-                                'visibility' => 1,
-                                'file_type' =>'image',
-                                'title' => $authUser->username,
-                                'path_name' =>$path,
-                                'file_name' => $imageNewName,
-                                'extension'=>$extension,
-                                'mime_type'=>$mime_type
-                            ];
-
-                            $attachedImage = AttachedFile::create($fileData);
-                            $studentData['profile_image_id'] = $attachedImage->id;
-
-                            }
-                        }
-                    } catch (\Exception $e) {
-                        $studentData['profile_image_id'] =null;
-                    }
-                }
 
                 Student::where('id', $student->id)->update($studentData);
                 $schoolStudentData =SchoolStudent::where(['student_id'=>$student->id, 'school_id'=>$schoolId])->first();

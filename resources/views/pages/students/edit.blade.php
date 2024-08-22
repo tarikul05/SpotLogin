@@ -9,6 +9,89 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.43/moment-timezone-with-data-10-year-range.js" integrity="sha512-QSV7x6aYfVs/XXIrUoerB2a7Ea9M8CaX4rY5pK/jVV0CGhYiGSHaDCKx/EPRQ70hYHiaq/NaQp8GtK+05uoSOw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <!-- color wheel -->
 <script src="{{ asset('ckeditor/ckeditor.js')}}"></script>
+
+<link href="https://fengyuanchen.github.io/cropperjs/css/cropper.css" rel="stylesheet">
+<!-- Cropper JS -->
+<script src="https://fengyuanchen.github.io/cropperjs/js/cropper.js"></script>
+
+<style>
+    /* Overlay flou */
+    .overlay {
+      display: none; /* Masquer par défaut */
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5); /* Couleur de fond semi-transparente */
+      backdrop-filter: blur(8px); /* Effet de flou */
+      z-index: 999; /* Assurez-vous qu'il est au-dessus de tout autre contenu */
+    }
+  
+    /* Conteneur du faux modal */
+    .cropContainer {
+      display: none; /* Masquer par défaut */
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      max-width: 500px;
+      height: auto;
+      background: white; /* Couleur de fond pour le conteneur */
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3); /* Ombre autour du conteneur */
+      box-sizing: border-box;
+      z-index: 1000; /* Assurez-vous qu'il est au-dessus de l'overlay */
+      overflow: hidden; /* Empêcher le débordement */
+    }
+  
+    /* Image dans le conteneur */
+    #image {
+      width: 90%;
+      height: auto;
+      max-height: 400px; /* Ajustez selon vos besoins */
+      margin:0 auto;
+    }
+
+    .cropper-view-box,
+    .cropper-face {
+      border-radius: 50%;
+    }
+
+  
+    /* Bouton de fermeture */
+
+    .close-btn {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      background: #8e8f90;
+      color: #302e2e;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      width: 100px;
+    }
+    .close-btn:hover {
+      background: #a33133;
+    }
+  
+    /* Bouton de recadrage */
+    .crop-btn {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      background: #007bff;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+  
+    .crop-btn:hover {
+      background: #0056b3;
+    }
+  </style>
 @endsection
 
 @section('content')
@@ -175,7 +258,7 @@
 										<input class="form-control" type="file" accept="image/*" id="profile_image_file" name="profile_image_file" style="display:none">
 										<span class="box_img">
 											<label for="profile_image_file" class="profile_img_area">
-											<img src="{{ isset($profile_image->path_name) ? $profile_image->path_name : asset('img/default_profile_image.png') }}"  id="frame" width="150px" alt="SpotLogin">
+											<img src="{{ isset($profile_image->path_name) ? $profile_image->path_name : asset('img/default_profile_image.png') }}" id="profile_image_user_account" width="120px" alt="SpotLogin" style="border-radius:50%;">
 											@if(empty($profile_image->path_name))
 											<i class="fa fa-plus"></i>
 											@endif
@@ -735,9 +818,24 @@
 		</div>
 	</div>
 	<!-- End Tabs content -->
+
+
+
+
+	<div id="fakeModalOverlay" class="overlay"></div>
+	<div id="cropContainer" class="cropContainer">
+	<img id="image" src="" alt="Image to Crop">
+	<button id="closeModal" class="close-btn">Cancel</button>
+	<button id="cropImage" class="crop-btn">Crop</button>
+	</div>
+
+
+
+
 @endsection
 
 @section('footer_js')
+
 <script type="text/javascript">
 
 let initPopulate=false;
@@ -857,6 +955,110 @@ $(document).ready(function(){
 </script>
 
 <script type="text/javascript">
+
+function UploadImage() {
+    document.getElementById("profile_image_file").value = "";
+    $("#profile_image_file").trigger('click');
+  }
+  let cropper;
+
+const uploadImage = () => {
+    document.getElementById("profile_image_file").value = "";
+    $("#profile_image_file").trigger('click');
+}
+
+const changeImage = () => {
+    const fileInput = document.getElementById('profile_image_file');
+    const file = fileInput.files[0];
+    
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function (event) {
+            const image = document.getElementById('image');
+            image.src = event.target.result;
+
+            // Afficher le faux modal et initialiser Cropper.js
+            document.getElementById('fakeModalOverlay').style.display = 'block';
+            document.getElementById('cropContainer').style.display = 'block';
+            cropper = new Cropper(image, {
+                aspectRatio: 1,
+                viewMode: 1,
+                ready: function () {
+                    // Ajuster la vue de recadrage initiale si nécessaire
+                }
+            });
+        }
+        reader.readAsDataURL(file);
+    }
+}
+
+const cropImage = () => {
+    const canvas = cropper.getCroppedCanvas({
+        width: 150, // Dimensions finales de l'image recadrée
+        height: 150,
+    });
+
+    canvas.toBlob(function (blob) {
+		const student_id = "{{$student->id}}"
+        const formData = new FormData();
+        formData.append('profile_image_file', blob);
+        formData.append('type', 'upload_image');
+        formData.append('p_person_id', student_id);
+        const csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+
+        $.ajax({
+            url: BASE_URL + '/admin/update-profile-photo-student',
+            data: formData,
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            beforeSend: function (xhr) {
+                $('#pageloader').fadeIn();
+            },
+            success: function (result) {
+                setTimeout(() => {
+                  $('#pageloader').fadeOut();
+                }, 500);
+                const mfile = result.image_file + '?time=' + new Date().getTime();
+				console.log(result);
+                $("#profile_image_user_account").attr("src", mfile);
+                $("#delete_profile_image").show();
+                const isStudent = "{{ $AppUI->isStudent() }}";
+                setTimeout(() => {
+                  if (isStudent) {
+                    successModalCall("Your profile picture is added!");
+                  } else {
+                      successModalCall("The student profile picture is added!");
+                  }
+                }, 1000);
+                document.getElementById('fakeModalOverlay').style.display = 'none';
+                document.getElementById('cropContainer').style.display = 'none';
+            },
+            error: function (reject) {
+                $('#pageloader').fadeOut();
+                const errors = $.parseJSON(reject.responseText);
+                $.each(errors.errors, function (key, val) {
+                    errorModalCall(val[0] + ' ' + GetAppMessage('error_message_text'));
+                });
+            },
+            complete: function () {
+                $('#pageloader').fadeOut();
+            }
+        });
+    }, 'image/jpeg');
+}
+
+// Ajouter les gestionnaires d'événements
+document.getElementById('profile_image_file').addEventListener('change', changeImage);
+document.getElementById('cropImage').addEventListener('click', cropImage);
+document.getElementById('closeModal').addEventListener('click', () => {
+    // Masquer le faux modal
+    document.getElementById('fakeModalOverlay').style.display = 'none';
+    document.getElementById('cropContainer').style.display = 'none';
+    if (cropper) {
+        cropper.destroy();
+    }
+});
 
 $(document).ready(function(){
 
@@ -1276,14 +1478,31 @@ $('#save_btn').click(function (e) {
 });
 
 
-	$('#profile_image_file').change(function(e) {
-		var reader = new FileReader();
-		reader.onload = function(e) {
-			document.getElementById("frame").src = e.target.result;
-		};
-		reader.readAsDataURL(this.files[0]);
-			$('#profile_image i.fa.fa-plus').hide();
-		$('#profile_image i.fa.fa-close').show();
+	$('#profile_image_file_student').change(function(e) {
+		
+			const fileInput = document.getElementById('profile_image_file_student');
+			const file = fileInput.files[0];
+			
+			if (file) {
+				const reader = new FileReader();
+				reader.onload = function (event) {
+					const image = document.getElementById('frame');
+					image.src = event.target.result;
+
+					// Afficher le faux modal et initialiser Cropper.js
+					document.getElementById('fakeModalOverlay').style.display = 'block';
+					document.getElementById('cropContainer').style.display = 'block';
+					cropper = new Cropper(image, {
+						aspectRatio: 1,
+						viewMode: 1,
+						ready: function () {
+							// Ajuster la vue de recadrage initiale si nécessaire
+						}
+					});
+				}
+				reader.readAsDataURL(file);
+			}
+
 	});
 
 	function activaTab(tab) {

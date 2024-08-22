@@ -26,7 +26,7 @@ function successModalCall(title='', desc = '') {
             Swal.showLoading();
             const timer = Swal.getPopup().querySelector("b");
             timerInterval = setInterval(() => {
-            timer.textContent = `${Swal.getTimerLeft()}`;
+            //timer.textContent = '';
             }, 100);
         },
         willClose: () => {

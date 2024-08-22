@@ -296,6 +296,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('update-profile-photo', ['as' =>'profile.update_photo','uses' =>'ProfileController@profilePhotoUpdate' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     Route::post('delete-profile-photo', ['as' =>'profile.delete_photo','uses' =>'ProfileController@profilePhotoDelete' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
+    Route::post('update-profile-photo-student', ['as' =>'profile.update_photo_student','uses' =>'ProfileController@profilePhotoUpdateStudent' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
     // School update
     Route::get('/schools', [App\Http\Controllers\SchoolsController::class, 'index'])->name('schools')->middleware('permission:superadmin');
     Route::get('school-update/{school}', ['as' =>'school.update_by_id','uses' =>'SchoolsController@edit' ]);

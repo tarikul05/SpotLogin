@@ -93,7 +93,7 @@
 @foreach($families as $family)
     <script>
     $('#students_family_{{ $family->id }}').multiselect({
-    maxHeight: 400,
+    /*maxHeight: 400,*/
     buttonWidth: '100%',
     dropRight: false,
     enableFiltering: true,

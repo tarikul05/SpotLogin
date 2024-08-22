@@ -133,6 +133,71 @@ class ProfileController extends Controller
     return response()->json($result);
   }
 
+   /**
+  * AJAX Action Update the specified resource in storage.
+  *
+  * @param  \App\Http\Requests\ProfilePhotoUpdateRequest  $request
+  * @return \Illuminate\Http\Response
+  */
+  public function profilePhotoUpdateStudent(ProfilePhotoUpdateRequest $request)
+  {
+    $data = $request->all();
+    $dataSave = [];
+    $result = array(
+      'status' => 0,
+      "file_id" => '0',
+      "image_file" => '',
+      'message' => __('failed to change image'),
+    );
+    try{
+
+      $student = Student::find($data['p_person_id']);
+
+      if($request->file('profile_image_file'))
+      {
+
+        $image = $request->file('profile_image_file');
+        $mime_type = $image->getMimeType();
+        $extension = $image->getClientOriginalExtension();
+        if($image->getSize()>0)
+        {
+          list($path, $imageNewName) = $this->__processImg($image,'UserImage',$student);
+
+          if (!empty($path)) {
+            $fileData = [
+              'visibility' => 1,
+              'file_type' =>'image',
+              'title' => $student->firstname . ' ' . $student->lastname,
+              'path_name' =>$path,
+              'file_name' => $imageNewName,
+              'extension'=>$extension,
+              'mime_type'=>$mime_type
+            ];
+
+            $attachedImage = AttachedFile::create($fileData);
+
+            $dataSave['profile_image_id'] = $attachedImage->id;
+
+          }
+        }
+      }
+
+      if ($student->update($dataSave)) {
+        $result = array(
+          "status"     => 1,
+          "file_id" => $student->profile_image_id,
+          "image_file" => $path,
+          'message' => __('Successfully Changed Profile image')
+        );
+      }
+
+    } catch (\Exception $e) {
+      //return error message
+      $result['message'] = $e->getMessage();
+    }
+    return response()->json($result);
+  }
+
 
   /**
    *  AJAX action image delete and unlink
