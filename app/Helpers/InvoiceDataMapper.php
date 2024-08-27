@@ -175,7 +175,7 @@ class InvoiceDataMapper
                 $teacherSchool = $Steacher->first();
                 $teacher = Teacher::find($teacherSchool->teacher_id);
                 $invoiceData['client_id'] = $teacher->id;
-                $invoiceData['client_name'] = $teacher->firstname.'N '.$teacher->lastname;
+                $invoiceData['client_name'] = $teacher->firstname.' '.$teacher->lastname;
                 $invoiceData['client_street'] = $teacher->street;
                 $invoiceData['client_street_number'] = $teacher->street_number;
                 $invoiceData['client_street2'] = $teacher->street2;
