@@ -58,7 +58,7 @@
 
 .errorStripe {
     color:#e25950;
-    padding-top:10px;
+    padding-bottom:10px;
 }
 
 .example.example4 input, .example.example4 button {
@@ -140,6 +140,10 @@
 
 .example.example4 .success .reset path {
   fill: #d782d9;
+}
+.coupon_result {
+  font-size: 12px;
+  color:#0075bf;
 }
 </style>
 @endsection
@@ -313,15 +317,16 @@
                 $codeDevise = $plan['currency'];
                 $symbole = $symbolesDevises[$codeDevise] ?? '$';
                 @endphp
-                <div class="columns premium-plan">
+                <div class="columns premium-plan text-center">
                     <ul class="price">
                         <li>
-                            <div class="plan_name">{{ $plan['plan_name']->name }}</div>
-                            @if($plan['tiers'])
+                            <div class="plan_name text-center">{{ $plan['plan_name']->name }}</div>
 
-                          <div class="card bg-tertiary text-center p-2 m-3">
+                          @if($plan['tiers'])
+
+                          <div class="card text-center p-2 m-3" style="background-color: #FFFFFF; opacity:.99; color:#333;">
                             <small>{{ __('How many coach account you need') }} ?</small>
-                            <select  name="chooseCoaches" id="chooseCoaches" style="border-radius:15px; margin:10px;">
+                            <select  name="chooseCoaches mb-3" id="chooseCoaches" style="border-radius:15px; margin:10px;">
                                  <option value="1">1 coach</option>
                                  <option value="3">3 coaches</option>
                                  <option value="5">5 coaches</option>
@@ -330,7 +335,7 @@
                              </select>
                             </div>
                             @endif
-                            <div class="plan_interval">
+                            <div class="plan_interval mb-2">
                                 @if ($plan['currency'] === 'usd' || $plan['currency'] === 'cad')
                                     {{ $symbole }} <span id="amount">{{ number_format($plan['amount'], 2) }}</span>
                                 @else
@@ -465,7 +470,8 @@
                         <?php if(!$is_subscribed && empty($subscription)){ ?>
                             <!--<li class="submit-button"><a href="{{ route('subscribe.plan', $plan['id']) }}" class="button">Choose this plan</a></li>-->
                             <li class="submit-button"><a href="#" style="font-size:18px;" id="choose-plan" class="button">{{ __('Choose this plan') }}</a></li>
-                            <li class="info-txt text-warning">{{ __('you will not be the charged until the end of your trial period') }}</li>
+                            <br>
+                            <li class="info-txt text-warning mt-2">{{ __('you will not be the charged until the end of your trial period') }}</li>
                         <?php } else {
                             if((!empty($subscription)) && $subscription['plan']['id'] == $plan['id']){
                         ?>
@@ -473,7 +479,7 @@
                             <li class="info-txt">Subscription valid until <?php echo  $subscription['billing_cycle_anchor'] ? date('M j, Y', $subscription['billing_cycle_anchor']) : ''; ?></li>
                         <?php } else { ?>
                             <li class="submit-button"><a href="#" style="font-size:18px;" id="choose-plan" class="button" class="button">{{ __('Choose this plan') }}</a></li>
-                            <li class="info-txt text-warning">{{ __('you will not be the charged until the end of your trial period') }}</li>
+                            <li class="info-txt text-warning mt-2">{{ __('you will not be the charged until the end of your trial period') }}</li>
                         <?php
                                 }
                             }
@@ -484,16 +490,16 @@
 
                 <div class="columns p-4 card bg-white" id="payment-form" style="display: none;">
                             <div class="text-center">
-                                <img src="{{asset('img/logo_stripe.svg')}}" width="120">
+                                <img src="{{asset('img/logo-blue.png')}}" width="70">
+                                <h5>{{ $plans[0]['plan_name']->name }}</h5>
                             </div>
 
                         <div class="subscription-form-wrapper2">
-                            <div class="payment-info-top text-center">
+                            <div class="payment-info-top text-center p-1">
                                 {{ __('Enter your payment details below to subscribe your Coach Premium Plan') }}
-                                <hr>
                             </div>
 
-                            <form action="{{ route('subscribe.store') }}" method="post" id="payment-form-sub">
+                            <form action="{{ route('subscribe.store') }}" method="post" id="payment-form-sub" class="card p-3">
                                 @csrf
                                 <input type="hidden" name="plan" value="{{ $plans[0]['id'] }}" />
                                 <input type="hidden" name="plan_name" value="{{ $plans[0]['plan_name']->name }}" />
@@ -504,13 +510,14 @@
                                 <div class="form-group">
                                     <label style="font-size:11px; color:#333;" for="coupon_code">{{ __('Coupon code') }}</label>
                                     <input type="text" class="form-control" id="coupon_code" name="coupon_code" placeholder="{{ __('Enter Coupon Code') }}">
+                                    <div id="couponResult" class="coupon_result p-1"></div>
                                 </div>
-                                <br>
+                                
                                 <div class="form-group">
                                     <label style="font-size:11px; color:#333;" for="cardholder_name">{{ __('Cardholder full name') }}</label>
                                     <input type="text" style="font-size:15px; color:#333;" class="form-control" id="card_holder_name" name="card_holder_name" placeholder="{{ __('Enter Cardholder full name') }}" value="{{ Auth::user()->firstname .' ' . Auth::user()->lastname }}" required>
                                 </div>
-                                <br>
+                                
 
                                 <div class="example4"></div>
                                 <div id="example4-paymentRequest">
@@ -524,14 +531,11 @@
                                     </div>
                                 </div>
 
-                                    <span class="errorStripe"></span>
-
-
-                                    <br>
+                                    <span class="errorStripe"></span>   
 
                                     <div class="text-center">
                                         <span style="font-size:11px; display:block; padding:5px;">
-                                            <hr>
+                                
                                             {{ __('Your subscription will renew automatically every month as one paypent of') }}
                                             @if ($plans[0]['currency'] === 'usd' || $plans[0]['currency'] === 'cad')
                                                 {{ $symbole }} <span id="renewInformationAmount">{{ number_format($plans[0]['amount'], 2) }}</span>
@@ -540,7 +544,11 @@
                                             @endif
                                             {{ __('You may cancel your subscription anytime from My plan section in your profile. By clicking Proceed payment you agree to the Terms and Conditions') }}
                                         </span>
-                                        <br>
+
+                                        <div class="form-groupv text-center mt-2 mb-3">
+                                          <label><input type="checkbox" id="terms_condition" name="terms_condition"> {{ __('I agree with the') }} <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal2">{{ __('terms and conditions') }}</a></label>
+                                        </div>
+                          
                                         <a id="payment-button" class="btn btn-success btn-md">{{ __('Proceed payment') }}
                                             @if ($plans[0]['currency'] === 'usd' || $plans[0]['currency'] === 'cad')
                                                 {{ $symbole }} <span id="buttonPaymentAmount">{{ number_format($plans[0]['amount'], 2) }}</span>
@@ -548,14 +556,14 @@
                                             <span id="buttonPaymentAmount">{{ number_format($plans[0]['amount'], 2) }}</span> {{ $symbole }}
                                             @endif
                                         </a>
-                                        <br><br>
-                                        <img src="{{asset('img/powered_by_stripe.png')}}" width="120">
+                                        <br>
                                     </div>
-
+                                    <br>
                                 </form>
-
+                                <div class="text-center pt-3">
+                                <img src="{{asset('img/powered_by_stripe.png')}}" width="120">
+                                </div>
                         </div>
-
             </div>
         </div>
     </div>
@@ -565,6 +573,22 @@
 </div>
 
 
+<div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModal2Label" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-white" style="background-color: #152245;">
+        <h5 class="modal-title" id="exampleModalLabel">{{ __('Terms & conditions') }}</h5>
+          <i class="fa-solid fa-circle-xmark fa-lg text-light close" data-bs-dismiss="modal" style="margin-top:-7px; border:none; cursor:pointer; font-size:25px;"></i>
+      </div>
+      <div class="modal-body">
+          {!! $template->spp_text !!}
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="switchModalBtn" class="btn btn-primary close" data-bs-dismiss="modal" aria-label="Close">{{ __('I understand') }}</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 <div class="modal" id="cancel_subscription">
@@ -694,7 +718,23 @@ card.on('change', function(event) {
             if(requestIsSchoolAdmin) {
                 document.getElementById("number_of_coaches").value = $("#chooseCoaches").val();
             }
-            $("#payment-form-sub").submit();
+
+            var is_terms_condition = $("#terms_condition").prop('checked');
+
+            if(is_terms_condition) {
+
+              $("#payment-form-sub").submit();
+
+            } else {
+
+              $('#pageloader').hide();
+              Swal.fire({
+                icon: 'error',
+                title: "{{ __('Payment error') }}",
+                text: "Please confirm you read the payment terms and conditions"
+              });
+
+            }
         }
         });
     });
@@ -704,8 +744,44 @@ card.on('change', function(event) {
 
 const paymentButton = document.getElementById('payment-button');
 
+</script>
 
+<script>
+  $(document).ready(function() {
+    $('#coupon_code').on('keyup', function() {
 
+          let couponId = $('#coupon_code').val();
+          $.ajax({
+              url: '{{ route("check.coupon") }}',
+              method: 'POST',
+              data: {
+                  _token: '{{ csrf_token() }}',
+                  coupon_id: couponId,
+              },
+              success: function(response) {
+                  if (response.success) {
+                      $('#couponResult').text('Discount: ' + response.discount + '% applied to the total amount');
 
+                      const currentPrice = {{ number_format($plans[0]['amount'], 2) }};
+                      console.log("currentPrice", currentPrice);
+
+                      // Assuming response.discount is in percentage (like 20 for 20%)
+                      const discount = (currentPrice * response.discount) / 100; 
+                      const finalPrice = currentPrice - discount;
+                      console.log("finalPrice", finalPrice);
+
+                      $('#renewInformationAmount').text(finalPrice.toFixed(2)); // Add .toFixed(2) to format as currency
+                      $('#buttonPaymentAmount').text(finalPrice.toFixed(2));
+
+                  } else {
+                      $('#couponResult').text(response.message);
+                  }
+              },
+              error: function() {
+                  $('#couponResult').text('An error occurred.');
+              }
+          });
+      });
+  });
 </script>
 @endsection

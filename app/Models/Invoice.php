@@ -36,6 +36,7 @@ class Invoice extends BaseModel
         'invoice_header',
         'invoice_footer',
         'client_id',
+        'client_type',
         'client_name',
         'client_gender_id',
         'client_firstname',
@@ -455,6 +456,7 @@ class Invoice extends BaseModel
                 })
                 ->select(
                     'events.id as event_id',
+                    'events.buy_total as event_total',
                     'event_details.id as event_id1',
                     //'event_details.buy_price as buy_price',
                     'event_details.sell_price as sell_price',
@@ -590,6 +592,7 @@ class Invoice extends BaseModel
                     'events.price_amount_buy as price_amount_buy',
                     'events.teacher_id as teacher_id',
                     //'event_details.student_id as student_id',
+                    'events.buy_total as event_total',
 
                     'events.duration_minutes as duration_minutes',
                     'events.title as title',

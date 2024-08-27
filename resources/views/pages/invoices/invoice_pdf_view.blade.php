@@ -266,11 +266,10 @@
     <main>
         <div class="info_area" style="clear: both">
 
-            @php
-            $recipient_user = \App\Models\User::Where('person_id', $invoice_data->seller_id)->first();
-            @endphp
+
+
             
-            @if($recipient_user && $recipient_user->isTeacherAdmin())
+            @if($invoice_data->client_type !== 'teacher')
             <div class="left_cont">
                 <p class="first_name">{{$invoice_data->seller_name}}</p>
                 <p class="info_txt">{{$invoice_data->seller_street_number?$invoice_data->seller_street_number.',':''}} {{$invoice_data->seller_street}}</p>
@@ -689,6 +688,7 @@
                             <span>{{ $paymentMethod->details['paypal_address'] ?? 'N/A' }}</span>
                         @elseif ($paymentMethod->type === 'IBAN')
                             <span>{{ $paymentMethod->details['iban_number'] ?? 'N/A' }}</span>
+                            <br><span>SWIFT : {{ $paymentMethod->details['swift_number'] ?? 'N/A' }}</span>
                         @elseif ($paymentMethod->type === 'Swift')
                             <span>{{ $paymentMethod->details['swift_number'] ?? 'N/A' }}</span>
                         @elseif ($paymentMethod->type === 'Cash')

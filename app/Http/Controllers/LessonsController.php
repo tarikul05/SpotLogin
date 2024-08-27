@@ -325,7 +325,14 @@ class LessonsController extends Controller
             return redirect()->route('schools')->with('error', __('School is not selected'));
         }
         $eventId = $request->route('event');
-        $eventData = DB::table('events')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->where(['events.id'=>$eventId, 'event_type' => 100,'events.is_active' => 1])->first();
+        //$eventData = DB::table('events')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->where(['events.id'=>$eventId, 'event_type' => 100,'events.is_active' => 1])->first();
+        
+        $eventData = DB::table('events')
+        ->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')
+        ->select('events.*', 'event_details.buy_total as buy_total_event')
+        ->where(['events.id' => $eventId, 'event_type' => 100, 'events.is_active' => 1])
+        ->first();
+        
         $studentOffList = DB::table('events')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->leftJoin('school_student', 'school_student.student_id', '=', 'event_details.student_id')->where(['events.id'=>$eventId, 'event_type' => 100,'events.is_active' => 1])->groupBy('school_student.student_id')->get();
 
         //echo '<pre>';print_r($eventData);exit;
@@ -334,6 +341,7 @@ class LessonsController extends Controller
 
         $locations = DB::table('locations')->select('locations.title')->leftJoin('events', 'events.location_id', '=', 'locations.id')->where(['events.id'=>$eventId, 'event_type' => 100,'events.is_active' => 1,'locations.is_active' => 1])->first();
         $lessonPrice = LessonPrice::active()->get();
+        //dd($eventData);
         return view('pages.calendar.view_event')->with(compact('eventData','schoolId','locations','professors','studentOffList','lessonPrice','eventId'));
     }
 

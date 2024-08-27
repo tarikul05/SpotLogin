@@ -12,11 +12,14 @@ use Carbon\Carbon;
 use Exception;
 use DateTime;
 
+use App\Models\TermConditionLang;
 use Stripe\Stripe;
 
 use Stripe\Exception\ApiErrorException;
 use Stripe\Subscription;
 use Stripe\Customer;
+use Stripe\Coupon;
+
 
 class SubscriptionController extends Controller
 {
@@ -291,8 +294,15 @@ class SubscriptionController extends Controller
                 }
             }
             //dd($plans);
+
+            $template = TermConditionLang::where([
+                /*['tc_template_id', 1],*/
+                ['language_id', app()->getLocale()],
+                ['is_active', 1]
+            ])->first();
+
             $intent = $request->user()->createSetupIntent();
-            return view('pages.subscribers.upgrade', compact('intent','user','is_subscribed', 'trial_ends_date', 'plans', 'subscription'));
+            return view('pages.subscribers.upgrade', compact('intent','template','user','is_subscribed', 'trial_ends_date', 'plans', 'subscription'));
         } catch (Exception $e) {
             // throw error message
         }
@@ -643,6 +653,37 @@ class SubscriptionController extends Controller
             }
         } catch (\Exception $e) {
             // Gérez les exceptions ici (par exemple, enregistrez une erreur dans un journal)
+        }
+    }
+
+
+    public function checkCoupon(Request $request)
+    {
+
+        Stripe::setApiKey(config('services.stripe.secret'));
+        $couponId = $request->input('coupon_id');
+
+        try {
+
+            $coupon = Coupon::retrieve($couponId);
+
+            // Calculer la réduction
+            $discountAmount = 0;
+            if ($coupon->amount_off) {
+                $discountAmount = $coupon->amount_off / 100; // en dollars
+            } elseif ($coupon->percent_off) {
+                $discountAmount = $coupon->percent_off;
+            }
+
+            return response()->json([
+                'success' => true,
+                'discount' => $discountAmount,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid coupon code',
+            ]);
         }
     }
 

@@ -34,14 +34,14 @@
                                 @elseif ($paymentMethod->type === 'PayPal')
                                     <span>{{ $paymentMethod->details['paypal_address'] ?? 'N/A' }}</span>
                                 @elseif ($paymentMethod->type === 'IBAN')
-                                    <span>{{ $paymentMethod->details['iban_number'] ?? 'N/A' }}</span>
+                                    <span>IBAN N°: {{ $paymentMethod->details['iban_number'] ?? 'N/A' }}</span>
+                                    <br><span>SWIFT N°: {{ $paymentMethod->details['swift_number'] ?? 'N/A' }}</span>
                                 @elseif ($paymentMethod->type === 'Swift')
                                     <span>{{ $paymentMethod->details['swift_number'] ?? 'N/A' }}</span>
                                 @elseif ($paymentMethod->type === 'Cash')
                                     <span>{{ $paymentMethod->details['cash'] ?? 'N/A' }}</span>
                                 @elseif ($paymentMethod->type === 'E-Transfer')
                                     <span>{{ $paymentMethod->details['e_transfer_number'] ?? 'N/A' }}</span>
-
                                 @elseif ($paymentMethod->type === 'Bank')
                                     <ul>
                                         @forelse ($paymentMethod->details['custom_fields'] ?? [] as $field)
@@ -51,8 +51,8 @@
                                         @endforelse
                                     </ul>
                                 @endif
-                                    <br>
-                                <small>{{__('Created at')}}: {{ $paymentMethod->created_at->format('d/m/Y H:i') }}</small>
+                                    <!--<br>
+                                    <small>{{__('Created at')}}: {{ $paymentMethod->created_at->format('d/m/Y H:i') }}</small>-->
                             </td>
                             <td style="width:50px; text-align:center;">
                                 <form action="{{ route('payment_methods.destroy', $paymentMethod->id) }}" method="POST" style="display:inline;">
@@ -90,8 +90,7 @@
                             <option value="">{{__('Select a payment method type')}}</option>
                             <option value="Cash">Cash</option>
                             <option value="Bank">Bank information</option>
-                            <option value="IBAN">IBAN N°</option>
-                            <option value="Swift">SWIFT A/c No</option>
+                            <option value="IBAN">IBAN/SWIFT</option>
                             <option value="E-Transfer">E-Transfer</option>
                             <option value="Stripe">Stripe</option>
                             <option value="PayPal">PayPal</option>

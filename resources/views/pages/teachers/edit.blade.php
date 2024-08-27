@@ -1348,17 +1348,17 @@ function populate_teacher_lesson() {
 					all_ready = 0;
 					//resultHtml+="<td></td>";
 					if (value.event_type == 100) {
-						resultHtml += "<td colspan='2' style='text-align:right'><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-event/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>Validate</a>";
+						resultHtml += "<td colspan='2' style='text-align:right'><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-event/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' class='btn btn-xs btn-info'> <i class='fa-regular fa-bell fa-bounce'></i> Validate</a>";
 					} else {
-						resultHtml += "<td colspan='2' style='text-align:right'><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-lesson/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>Validate</a>";
+						resultHtml += "<td colspan='2' style='text-align:right'><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-lesson/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' class='btn btn-xs btn-info'> <i class='fa-regular fa-bell fa-bounce'></i> Validate</a>";
 					}
 				} else {
-					console.log(value);
 					if (value.event_type == 10) {
 						resultHtml += '<td style="text-align:right" colspan="2">' + value.price_currency + ' ' + Math.round(value.buy_price_teacher).toFixed(2) + '</td>';
 						value['buy_total'] = value.buy_price_teacher;
 					} else {
-						resultHtml += '<td style="text-align:right" colspan="2">' + value.price_currency + ' ' + Math.round(value.price_amount_buy).toFixed(2) + '</td>';
+						resultHtml += '<td style="text-align:right" colspan="2">' + value.price_currency + ' ' + Math.round(value.event_total).toFixed(2) + '</td>';
+						value.buy_total = value.event_total;
 					}
 					//resultHtml+='<td style="text-align:right">' + value.price_currency + ' ' + value.sell_total + '</td>';
 
@@ -1366,8 +1366,8 @@ function populate_teacher_lesson() {
 						total_buy += value.buy_price_teacher + value.costs_1;
 						week_total_buy += value.buy_price_teacher + value.costs_1;
 					} else {
-						total_buy += value.price_amount_buy + value.costs_1;
-						week_total_buy += value.price_amount_buy + value.costs_1;
+						total_buy += Number(Math.round(value.event_total).toFixed(2)) + value.costs_1;
+						week_total_buy += Number(Math.round(value.event_total).toFixed(2)) + value.costs_1;
 					}
 
 

@@ -868,6 +868,7 @@ class InvoiceController extends Controller
                 $value->date_start = date('d/m/Y', $old_date_timestamp);
                 $value->time_start = date('H:i', $old_date_timestamp);
                 $value->buy_price_teacher = $value->buy_price_teacher*($value->duration_minutes/60);
+                $value->buy_total = $value->buy_total;
             }
 
             $result = array(
@@ -936,6 +937,8 @@ class InvoiceController extends Controller
             $invoiceData['invoice_header'] = 'From '.$invoiceData['period_starts'].' to '.$invoiceData['period_ends'].' - '.$invoiceData['seller_name'].' "'.$school->school_name.'" from '.$invoiceData['date_invoice'];
             $invoiceData['created_by'] = $user->id;
 
+            $invoiceData['client_type'] =  'teacher';
+
             $invoiceData = Invoice::create($invoiceData);
 
             $query = new Invoice;
@@ -990,10 +993,18 @@ class InvoiceController extends Controller
                     if (($user->isTeacherSchoolAdmin() || $user->isSchoolAdmin()) && $value->event_type == 10) {
                         $invoiceItemData['price'] = $value->buy_price_teacher+$value->costs_1;
                         $invoiceItemData['price_unit'] = $value->buy_price_teacher+$value->costs_1;
-                    } else {
+                    }
+                    
+                    if (($user->isTeacherSchoolAdmin() || $user->isSchoolAdmin()) && $value->event_type == 100) {
+                            $invoiceItemData['price'] = $value->event_total+$value->costs_1;
+                            $invoiceItemData['price_unit'] = $value->event_total+$value->costs_1;
+                    }
+                        
+                    if ((!$user->isTeacherSchoolAdmin() && !$user->isSchoolAdmin())) {
                         $invoiceItemData['price'] = $value->price_amount_buy+$value->costs_1;
                         $invoiceItemData['price_unit'] = $value->price_amount_buy+$value->costs_1;
                     }
+
                     $price_currency = $invoiceItemData['price_currency'] = $value->price_currency;
                     $extra_expenses += $invoiceItemData['event_extra_expenses'] = 0;
                     $invoiceItemData['publication_mode'] = 'N,admin';
@@ -1271,6 +1282,8 @@ class InvoiceController extends Controller
             $dataMap = new InvoiceDataMapper();
             $invoiceData = $dataMap->setInvoiceData($data,$school,$invoice_type,$user);
             $invoiceData['created_by'] = $user->id;
+
+            $invoiceData['client_type'] = 'student';
 
             $invoiceData = Invoice::create($invoiceData);
             //$invoiceDataGet = Invoice::active()->find($invoiceData->id);

@@ -92,13 +92,20 @@
 										@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
 										<tr>
 										  <th class="col-lg-3 col-sm-3 text-left titleFieldPage">{{__('Teacher price (per event)') }} :</th>
-										  <td class="col-sm-7">{{ !empty($eventData->price_amount_buy) ? $eventData->price_amount_buy : '-' }}</td>
+										  <td class="col-sm-7">{{ !empty($eventData->buy_total) ? $eventData->buy_total : '-' }}</td>
 										</tr>
 										@endif
+										@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
+										<tr>
+											<th class="col-lg-3 col-sm-3 text-left titleFieldPage">{{__('Student price (per student)') }} :</th>
+											<td class="col-sm-7">{{ !empty($eventData->price_amount_buy) ? $eventData->price_amount_buy : '-' }}</td>
+										</tr>
+										@else
 										<tr>
 											<th class="col-lg-3 col-sm-3 text-left titleFieldPage">{{__('Student price (per student)') }} :</th>
 											<td class="col-sm-7">{{ !empty($eventData->price_amount_sell) ? $eventData->price_amount_sell : '-' }}</td>
 										</tr>
+										@endif
 									  </tbody>
 									</table>
 								  </div>

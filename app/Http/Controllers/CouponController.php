@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Stripe\Stripe;
+use Stripe\Coupon;
 
 class CouponController extends Controller
 {
@@ -67,4 +69,5 @@ class CouponController extends Controller
 
         return redirect()->route('coupon.index')->with('success', 'Coupon créé avec succès.');
     }
+
 }

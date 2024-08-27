@@ -63,6 +63,9 @@
                 <div class="form-group">
                     <label for="paypal_address" style="font-size:11px;">IBAN N°</label>
                     <input type="text" name="details[iban_number]" class="form-control">
+                    <br>
+                    <label for="paypal_address" style="font-size:11px;">SWIFT A/c No</label>
+                    <input type="text" name="details[swift_number]" class="form-control">
                 </div>
                  <button type="submit" class="btn btn-outline-success">Save</button>`;
 
