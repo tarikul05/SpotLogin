@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
         Commands\TestBatch::class,
         Commands\SendEmailInvitation::class,
         Commands\CheckEventTable::class,
+        Commands\CheckActiveUsers::class,
     ];
     /**
      * Define the application's command schedule.
