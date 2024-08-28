@@ -15,7 +15,7 @@
 @endsection
 
 @section('content')
-<div class="content">
+<div class="content mt-3">
     <br><br><br>
 	<div class="container-fluid">
     <div class="row">
@@ -141,7 +141,7 @@
         </div>
     </div>-->
     <br><br>
-    <div cass="card">
+    <!--<div cass="card">
         <div class="row card-body">
             <div class="col-lg-6">
                 <canvas id="myChart"></canvas>
@@ -150,10 +150,43 @@
                 <canvas id="myChart2" style="max-height: 350px"></canvas>
             </div>
         </div>
+    </div>-->
+
+    <h5>Current connected users</h5>
+<div class="row">
+    <div class="col-lg-12">
+        <table id="list_tbl" class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>IP Address</th>
+                    <th>Last Login</th>
+                    <th>Last Activity</th> <!-- Nouvelle colonne pour Last Activity -->
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($connected_users as $user)
+                <tr>
+                    <td>{{ $user->id }}</td>
+                    <td>{{ $user->username }}</td>
+                    <td>{{ $user->email }}</td>
+                    <td>{{ $user->ip_address }}</td> <!-- Adresse IP -->
+                    <td>{{ $user->last_login_at ? $user->last_login_at : 'N/A' }}</td>
+                    <td>{{ $user->last_activity ?? 'N/A' }}</td> <!-- Dernière activité -->
+                    <td><a class="btn btn-danger" href="{{ route('admin.ejectUser', $user->id) }}" onclick="return confirm('Are you sure you want to eject this user?')">Eject User</a></td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
     </div>
+</div>    
+
 
     <br><br>
-    <h5>    <img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg" width="120"> Liste des Événements</h5>
+    <h5>Transactions & Événements <img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg" width="80"></h5>
     <table class="table table-hover">
         <thead>
             <tr>

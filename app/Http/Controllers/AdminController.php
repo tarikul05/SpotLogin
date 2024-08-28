@@ -11,6 +11,8 @@ use App\Models\Event;
 use App\Models\School;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
+
 
 class AdminController extends Controller
 {
@@ -83,7 +85,10 @@ class AdminController extends Controller
         $stats['alertCount'] = $alertCount;
         $stats['ContactFormCount'] = $ContactFormCount;
 
-        return view('pages.admin.dashboard')->with(compact('events', 'stats', 'subsriptions', 'events_stripe'));
+        //current connected users
+        $connected_users = Cache::get('active_users', collect()); 
+
+        return view('pages.admin.dashboard')->with(compact('connected_users', 'events', 'stats', 'subsriptions', 'events_stripe'));
     } catch(\Exception $e){
         echo $e->getMessage(); exit;
     }
@@ -129,6 +134,13 @@ class AdminController extends Controller
         }
 
         return redirect()->back()->with('success', 'Les paramètres de maintenance ont été mis à jour avec succès.');
+    }
+
+    public function ejectUser(Request $request, $userId)
+    {
+        DB::table('sessions')->where('user_id', $userId)->delete();
+
+        return redirect()->back()->with('status', 'User has been ejected successfully.');
     }
 
 }

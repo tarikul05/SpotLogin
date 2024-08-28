@@ -36,6 +36,7 @@ class Kernel extends ConsoleKernel
         //        $schedule->command('report:admin')->weeklyOn(0, '21:59');
         $schedule->command('events:check')->everyThirtyMinutes();
         $schedule->command('report:admin')->weeklyOn(0, '21:59');
+        $schedule->command('users:check-active')->everyMinute();
     }
 
     /**

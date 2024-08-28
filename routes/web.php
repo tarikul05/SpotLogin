@@ -104,6 +104,8 @@ Route::post('/admin/faqs/create', [App\Http\Controllers\FaqController::class, 'c
 Route::put('/admin/faqs/update/{faq}', [App\Http\Controllers\FaqController::class, 'update'])->name('faqs.update')->middleware('permission:superadmin');
 Route::delete('/admin/faqs/remove/{faq}', [App\Http\Controllers\FaqController::class, 'destroy'])->name('faqs.remove')->middleware('permission:superadmin');
 
+// users sessions management
+Route::get('/admin/sessions/delete/{user}', [App\Http\Controllers\AdminController::class, 'ejectUser'])->name('admin.ejectUser');
 
 
 

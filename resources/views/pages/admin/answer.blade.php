@@ -29,7 +29,7 @@
                     <span style="font-size:12px; color:#333;"><b><i>{{ $messageItem->sujet }}</i></b></span> 
                     <span style="font-size:11px; color:#AAA;">write by {{ $AppUI->firstname }} {{ $AppUI->lastname }} the {{ $messageItem->created_at }}</span>
                     <br>
-                    <span style="font-size:15px;">{{ $messageItem->message }}</span>
+                    <span style="font-size:15px;">{!! $messageItem->message !!}</span>
                     @if($messageItem->id_expediteur == $AppUI->id)
                         <div style="font-size:12px;">
                             @if($messageItem->read == 0)
@@ -47,7 +47,7 @@
                 <span style="font-size:11px; color:#AAA;">write by Support the {{ $messageItem->created_at }}</span>  
                 <img src="{{ asset('img/logo-blue.png') }}" style="width:35px!important; height :35px!important;" class="admin_logo" id="admin_logo_mobile" alt="globe">
                 <br>
-                <span style="font-size:15px;">{{ $messageItem->message }}</span>
+                <span style="font-size:15px;">{!! $messageItem->message !!}</span>
             @if($messageItem->id_expediteur == $AppUI->id)
                 <div style="font-size:12px;">
                     @if($messageItem->read == 0)
