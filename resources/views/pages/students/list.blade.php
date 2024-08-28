@@ -440,7 +440,7 @@ $(document).ready(function() {
                     //$('#sendMailOk').modal('show');
                     Swal.fire(
                             'Successfully sended',
-                            '{{__('Your student will receive an email with instructions.') }}',
+                            '{{__('Your contact will receive an email with instructions.') }}',
                             'success'
                         )
                 },

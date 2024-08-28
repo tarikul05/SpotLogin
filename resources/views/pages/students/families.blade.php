@@ -60,6 +60,12 @@
                                         <i class="fa-solid fa-pen-to-square"></i>
                                         {{ __('Edit')}}
                                     </a>
+                                    @if($family->has_user_account)
+                                    <a href="javascript:void(0)" class="dropdown-item send-password-btn text-primary" data-email="{{ $family->email }}" data-school="{{ $schoolId }}" data-student="{{ $family->id }}" title="{{ __("Resend password") }}">
+                                        <i class="fa-solid fa-envelope"></i>
+                                        {{ __('Resend password') }}
+                                    </a>
+                                    @endif
                                     @if(!$family->has_user_account)
                                     <a href="javascript:void(0)" class="dropdown-item send-invite-btn-family" data-email="{{ $family->email }}" data-school="{{ $schoolId }}" data-family="{{ $family->id }}">
                                         <i class="fa-solid fa-envelope"></i>
