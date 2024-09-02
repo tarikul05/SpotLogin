@@ -524,7 +524,7 @@
 
 
 
-                                <div class="row hide_on_off">
+                                <div class="row hide_on_off hide_off_students">
                                     <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Students') }}</label>
                                     <div class="col-sm-9">
                                         <div class="card2"><!--card-->
@@ -4946,6 +4946,7 @@ $("body").on('click', '#student_empty', function(event) {
 
     $('#agenda_select').on('change', function(e) {
         var agendaSelectdates = $("#agenda_select").val();
+
         if(agendaSelectdates == 1) {
             $("#end_date").val($("#start_date").val());
             $("#end_date").prop("hidden", true);
@@ -5086,6 +5087,12 @@ $('#agenda_select').on('change', function() {
             $('.hide_coach_off').show();
             $('.show_coach_off.hide_on_off').hide();
              $("#std-check-div").css('display', 'none');
+
+             if(agendaSelectpriceEventOptions == 3) {
+            $(".hide_off_students").fadeIn();
+            $(".hide_off_students").css('margin-top', '27px');
+            }
+
             // $('#category_select').trigger('change');
         }else if(this.value == 4){
             if (selected_school_ids.length == 1) {

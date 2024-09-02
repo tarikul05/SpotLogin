@@ -10,11 +10,10 @@
 @endsection
 <!-- Code within resources/views/blade.php -->
 @php
-	//$zone = $_COOKIE['timezone_user'];
-	$zone = $timezone;
-	$start_date = Helper::formatDateTimeZone($studentOffData->date_start, 'long','UTC',$zone);
-	$date_end = Helper::formatDateTimeZone($studentOffData->date_end, 'long','UTC', $zone);
-
+    $zone = $timezone; // Assuming this is already set
+    $helper = new \App\Helpers\Helper(); // Instantiate the Helper class
+    $start_date = $helper->formatDateTimeZone($studentOffData->date_start, 'long', 'UTC', $zone);
+    $date_end = $helper->formatDateTimeZone($studentOffData->date_end, 'long', 'UTC', $zone);
 @endphp
 @section('content')
   <div class="content">
