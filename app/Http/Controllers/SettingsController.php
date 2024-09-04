@@ -10,6 +10,8 @@ use App\Models\EventCategory;
 use App\Models\LessonPrice;
 use App\Models\School;
 use App\Models\LessonPriceTeacher;
+use App\Models\Widget;
+use App\Models\UserWidget;
 use App\Models\Teacher;
 use App\Models\Country;
 use Illuminate\Support\Facades\Auth;
@@ -120,6 +122,10 @@ class SettingsController extends Controller
             $number_of_coaches = 0;
         }
 
+        //Widgets
+        $widgets = Widget::all();
+        $userWidgets = UserWidget::where('user_id', Auth::id())->pluck('is_active', 'widget_id')->toArray();
+
 
         // dd($relationalData);
         return view('pages.calendar.settings')->with(compact('levels',
@@ -131,6 +137,8 @@ class SettingsController extends Controller
         'school',
         'eventLastLocaId',
         'eventCat',
+        'widgets', 
+        'userWidgets',
         'InvoicesTaxData',
         'eventLastCatId','teacher','relationalData','countries','genders','schoolId','schoolName','eventCategory','lessonPrices','ltprice', 'isInEurope', 'calendarSettings'));
     }

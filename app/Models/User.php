@@ -360,6 +360,14 @@ class User extends Authenticatable
         return $this->hasMany(PaymentMethod::class);
     }
 
+     /**
+     * Relation belongsToMany pour les widgets.
+     */
+    public function widgets()
+    {
+        return $this->belongsToMany(Widget::class, 'user_widgets')->withPivot('is_active');
+    }
+
     /**
      * Vérifie si l'utilisateur a des méthodes de paiement.
      *

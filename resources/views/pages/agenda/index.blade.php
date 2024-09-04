@@ -28,6 +28,67 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
 <!-- end the assets area -->
+<style>
+.wrapper{
+  background: #fafbfb;
+  padding: 5px;;
+  border-radius: 7px;
+  padding-top:15px;
+}
+
+.sessions{
+  margin-top: 1.9rem;
+  border-radius: 12px;
+  position: relative;
+
+  li {
+  padding-bottom: 1.5rem;
+  border-left: 1px solid #0075bf;
+  position: relative;
+  padding-left: 20px;
+  margin-right: 10px;
+  list-style-type: none;
+}
+
+li:last-child {
+  border: 0px;
+  padding-bottom: 0;
+}
+
+li:before {
+  content: '';
+  width: 15px;
+  height: 15px;
+  background: white;
+  border: 1px solid #0075bf;
+  box-shadow: 2px 2px 0px #CCC;
+  border-radius: 50%;
+  position: absolute;
+  left: -8px;
+  top: 0px;
+}
+
+/* Style for ongoing events */
+.current-event:before {
+  background-color: #0075bf; /* Change this color as needed */
+}
+.time{
+  color: #2a2839;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+}
+p{
+  color: #4f4f4f;
+  font-family: sans-serif;
+  line-height: 1.5;
+  margin-top:0.4rem;
+  font-size:12px;
+}
+}
+  .datetimepicker table tr td.active.active, .datetimepicker table tr td.active.disabled.active, .datetimepicker table tr td.active.disabled:active, .datetimepicker table tr td.active.disabled:hover.active, .datetimepicker table tr td.active.disabled:hover:active, .datetimepicker table tr td.active:active, .datetimepicker table tr td.active:hover.active, .datetimepicker table tr td.active:hover:active {
+	background-color: #0075bf;
+  }
+  </style>
 @endsection
 
 @section('content')
@@ -250,6 +311,17 @@
                                     <div id="loadingSearch" class="text-center"></div>
                                     <div id="resultSearch" class="p-2"></div>
                                     <div id="listEventsSearch"></div>
+
+                     
+                                    @if(isset($userWidgets['timeline']) && $userWidgets['timeline'])
+                                        <div class="wrapper mb-3" style="display: flex; display: none;" id="wrapperTimeline">
+                                            <b style="position:absolute; left:30px; top:30px; color:#333;">Today Timeline</b>
+                                            <b style="position:absolute; right:30px; top:30px; color:#0075bf;"><i class="fa fa-close"></i></b>
+                                            <ul class="sessions" id="todayNewTimeline"></ul>
+                                        </div>
+                                    @endif
+
+                                    <div id="todayNewList"></div>
 
                                  <div id="allFilters" style="display:none;">
 
@@ -1280,18 +1352,18 @@ $('.close-icon').on('click', function() {
         if (search_text.length > 0) {
             var eventIds = [];
             // Effacer le délai précédent s'il y en a un
-            clearTimeout(typingTimer);
+            //clearTimeout(typingTimer);
             // Définir un nouveau délai
             typingTimer = setTimeout(function() {
-                toastr.options = {
+                /*toastr.options = {
                     "positionClass": "toast-bottom-full-width",
                     "timeOut": "2000",
-                }
+                }*/
 
                 var eventCount = $('.fc-event').length || $('.fc-list-item').length;
                 if (eventCount > 0) {
                     if (search_text.length > 3) {
-                        toastr.info(eventCount + ' results according to your criteria');
+                        //toastr.info(eventCount + ' results according to your criteria');
                     }
                     $("#allFilters").hide();
                     $("#listEventsSearch").show();
@@ -1368,7 +1440,7 @@ $('.close-icon').on('click', function() {
 
 
                 } else {
-                    toastr.info('No results according to your criteria');
+                    //toastr.info('No results according to your criteria');
                     $("#allFilters").show();
                     $('#listEventsSearch').html("");
                     $("#resultSearch").html("No results according to your criteria");
@@ -1377,7 +1449,7 @@ $('.close-icon').on('click', function() {
                     }
                 }
                 if (search_text.length < 2) {
-                    toastr.info('No results according to your criteria');
+                    //toastr.info('No results according to your criteria');
                     $("#resultSearch").hide();
                     $("#allFilters").show();
                     $('#listEventsSearch').html("");
@@ -3428,6 +3500,8 @@ $('.close-icon').on('click', function() {
         var p_event_school_id=document.getElementById("event_school_id").value;
         var p_event_location_id= getLocationIDs();
         var p_event_type = getEventIDs();
+
+
        // console.log('p_event_type' + p_event_type + 'toutcollé');
         document.getElementById("prevnext").value = '';
         var json_events = @json($events);
@@ -3441,6 +3515,7 @@ $('.close-icon').on('click', function() {
             data: 'type=fetch&location_id='+p_event_location_id+'&event_type='+p_event_type+'&school_id='+p_event_school_id+'&start_date='+start_date+'&end_date='+end_date+'&zone='+zone+'&p_view='+p_view+'&list_student_id='+list_student_id,
             async: true,
             success: function(s){
+                $('#eventInProgress').hide();
                 //console.log(JSON.parse(s));
                 recentFreshEventsList = JSON.parse(s);
                 SetEventCookies();
@@ -3559,13 +3634,11 @@ $('.close-icon').on('click', function() {
                     var eventEndDetect = moment.utc(v.end, 'YYYY-MM-DDTHH:mm:00').subtract(2, 'hours').tz(myTimezoneDetect);
                     if (eventStartDetect.isBefore(nowDetect) && eventEndDetect.isAfter(nowDetect) && v.event_type == 10) {
                         $('#eventInProgress').css('display','inline-block');
-                    }
+                    } 
                     // OBJECT is created when processing response
                     eventsToPut.push(v);
                 });
                 //console.log('test', json_events);
-
-
 
                 $('#calendar').fullCalendar('addEventSource',JSON.parse(json_events), true);
                 //$("#agenda_table tr:gt(0)").remove();
@@ -3616,6 +3689,7 @@ $('.close-icon').on('click', function() {
                 }
                 hideExtraRowInMonthView();
                 $("#pageloader").fadeOut();
+                getTodayTimeline();
             },
             error: function(ts) {
                 //errorModalCall('getFreshEvents:'+ts.responseText+' '+GetAppMessage('error_message_text'));
@@ -3624,6 +3698,135 @@ $('.close-icon').on('click', function() {
                 console.error(ts.responseText);
             }
         });
+    }
+
+    function getTodayTimeline() {
+        $('#wrapperTimeline').hide();
+        var today = new Date();
+        var month = today.getMonth() + 1;
+        var day = today.getDate();
+        var year = today.getFullYear();
+        var todayDate = year + '-' + (month < 10? '0' + month : month) + '-' + (day < 10? '0' + day : day);
+        var todayStart = todayDate + 'T00:00:00';
+        var todayEnd = todayDate + 'T23:59:59';
+        $('#todayNewTimeline').html('');
+        var eventIds = [];
+        var cal_view_mode = $('#calendar').fullCalendar('getView');
+        let getClassForSearch = "";
+        if (cal_view_mode.name == 'listMonth' || cal_view_mode.name == 'timeGridThreeDay') {
+            getClassForSearch = '.fc-list-item';
+            $('.fc-list-item-title a').each(function() {
+                var text = $(this).text();
+                if (text.indexOf('all-day') > -1) {
+                    text = text.replace('all-day', 'all-day ');
+                }
+            });
+        }
+        else {
+            getClassForSearch = '.fc-event';
+            $('.fc-event').each(function() {
+                var text = $(this).text();
+            });
+        }
+        $(getClassForSearch).each(function() {
+            var id = $(this).data('event-id');
+            eventIds.push(id);
+        });
+        var todayNewList = document.getElementById('todayNewTimeline');
+        var jsonEvents = recentFreshEventsList;
+        eventIds.forEach(function(eventId) {
+        var matchedEvent = jsonEvents.find(function(event) {
+            return event.id === eventId;
+        });
+        if (matchedEvent) {
+    // Set your desired timezone
+    const myTimezone = 'America/New_York'; // Example timezone, change to your required timezone
+
+    // Convert event start and end times to the specified timezone
+    const startDate = moment.tz(matchedEvent.start, myTimezone);
+    const endDate = moment.tz(matchedEvent.end, myTimezone);
+    const startHourMinute = startDate.format('HH:mm'); // Format to HH:MM
+    const endHourMinute = endDate.format('HH:mm');
+
+    let iconSearchResult = matchedEvent.action_type == "view" ? 'fa-solid fa-eye' : 'fa-solid fa-pen-to-square';
+
+    // Get the current time in the same timezone
+    const now = moment.tz(myTimezone);
+
+    // Check if the event is ongoing
+    const isEventCurrent = now.isBetween(startDate, endDate);
+
+    // Check if the event is today in the given timezone
+    if (startDate.isSame(now, 'day')) {
+        // Add 'current-event' class if the event is ongoing
+        var liClass = isEventCurrent ? 'current-event' : '';
+
+        var html = `<li class="${liClass}">
+            <div class="time">${startHourMinute} - ${endHourMinute}</div>
+            <div class="title">
+                <span style="width:10px; height:10px; background-color:${matchedEvent.backgroundColor}; border-radius:50px; display:inline-block;"></span> 
+                ${matchedEvent.content}
+            </div>
+        </li>`;
+
+        $('#todayNewTimeline').append(html);
+        $('#wrapperTimeline').fadeIn();
+    }
+}
+        });
+
+    }
+
+    function getTodayEventsList() {
+        $('#todayNewList').html("");
+        var eventIds = [];
+        var cal_view_mode = $('#calendar').fullCalendar('getView');
+        let getClassForSearch = "";
+        if (cal_view_mode.name == 'listMonth' || cal_view_mode.name == 'timeGridThreeDay') {
+            getClassForSearch = '.fc-list-item';
+            $('.fc-list-item-title a').each(function() {
+                var text = $(this).text();
+                if (text.indexOf('all-day') > -1) {
+                    text = text.replace('all-day', 'all-day ');
+                }
+            });
+        }
+        else {
+            getClassForSearch = '.fc-event';
+            $('.fc-event').each(function() {
+                var text = $(this).text();
+            });
+        }
+        $(getClassForSearch).each(function() {
+            var id = $(this).data('event-id');
+            eventIds.push(id);
+        });
+        var todayNewList = document.getElementById('todayNewList');
+        var jsonEvents = recentFreshEventsList;
+        eventIds.forEach(function(eventId) {
+        var matchedEvent = jsonEvents.find(function(event) {
+            return event.id === eventId;
+        });
+        if (matchedEvent) {
+            const startDate = new Date(matchedEvent.start);
+            const endDate = new Date(matchedEvent.end);
+            const startHourMinute = startDate.toTimeString().split(' ')[0].slice(0, 5); // HH:MM
+            const endHourMinute = endDate.toTimeString().split(' ')[0].slice(0, 5); // HH:MM
+            let iconSearchResult = matchedEvent.action_type == "view" ? 'fa-solid fa-eye' : 'fa-solid fa-pen-to-square';
+            var html = `
+                <div style="padding:10px; background-color:#F5F5F5; border-radius:15px; margin-bottom:10px; font-size:12px; position:relative;">
+                <b><i class="fa solid fa-calendar"></i> ${startDate.toISOString().split('T')[0]}</b>
+                [ <i style="font-size:10px;" class="fa-regular fa-clock"></i> ${startHourMinute} - ${endHourMinute} ]
+                <div class="title"><span style="width:10px; height:10px; background-color:${matchedEvent.backgroundColor}; border-radius:50px; display:inline-block;"></span> ${matchedEvent.content}</div>
+                <div style="border-top:1px solid #EEE; padding-top:10px;"><table>${matchedEvent.title_for_modal}</table></div>
+                <a href="${matchedEvent.url}"><i class="fa ${iconSearchResult}" style="cursor:pointer; position:absolute; right:10px; top:10px; cursor:pointer;"></i></a>
+                </div>
+            `;
+                $('#todayNewList').append(html);
+        }
+        });
+        //todayNewList.innerHTML = 'ID: ' + p_event_type;
+
     }
 
     function first() {

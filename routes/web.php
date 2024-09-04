@@ -405,7 +405,7 @@ Route::group(['middleware' => ['auth']], function () {
   Route::post('update-school-logo', ['as' =>'school.update_logo','uses' =>'SchoolsController@logoUpdate' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
   Route::post('delete-school-logo', ['as' =>'school.delete_logo','uses' =>'SchoolsController@logoDelete' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
-
+  Route::post('/widgets/save', [App\Http\Controllers\WidgetController::class, 'saveUserWidgets'])->name('widgets.saveUserWidgets');
 
   Route::middleware(['select_role'])->group(function () {
 

@@ -24,6 +24,8 @@ use App\Models\Currency;
 use App\Models\School;
 use Carbon\Carbon;
 use App\Models\AgendaImport as AgendaImportModel;
+use App\Models\Widget;
+use App\Models\UserWidget;
 
 class AgendaController extends Controller
 {
@@ -196,8 +198,17 @@ class AgendaController extends Controller
 
         //$events = json_encode($events);
         //unset($event_types[10]);
+        $userId = Auth::id();
+        $widgets = Widget::all();
+        $userWidgets = UserWidget::join('widgets', 'user_widgets.widget_id', '=', 'widgets.id')
+        ->where('user_widgets.user_id', $userId)
+        ->where('user_widgets.is_active', 1) // Only active subscriptions
+        ->pluck('user_widgets.is_active', 'widgets.id_unique') // Key by id_unique
+        ->toArray();
 
-        return view('pages.agenda.index')->with(compact('settingUser', 'counterDataImported', 'schools','school','schoolId','user_role','coach_user','students','teachers','locations','alllanguages','events','event_types','event_types_all','eventCategoryList','professors','studentsbySchool','lessonPrice','currency', 'myCurrentTimeZone'));
+        
+
+        return view('pages.agenda.index')->with(compact('settingUser', 'widgets', 'userWidgets', 'counterDataImported', 'schools','school','schoolId','user_role','coach_user','students','teachers','locations','alllanguages','events','event_types','event_types_all','eventCategoryList','professors','studentsbySchool','lessonPrice','currency', 'myCurrentTimeZone'));
 
     }
 

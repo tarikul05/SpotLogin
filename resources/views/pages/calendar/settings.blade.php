@@ -50,6 +50,10 @@
                 @include('pages.settings.agenda')
             </div>
 
+            <div class="tab-pane fade" id="tab_6" role="tabpanel" aria-labelledby="tab_6">
+                @include('pages.settings.widgets')
+            </div>
+
             <div class="tab-pane fade" id="tab_2" role="tabpanel" aria-labelledby="tab_2">
                 @include('pages.settings.prices')
             </div>

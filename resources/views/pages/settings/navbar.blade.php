@@ -35,7 +35,12 @@
             <button class="nav-link" id="nav-parameters-tab" data-bs-toggle="tab" data-bs-target="#tab_5" type="button" role="tab" aria-controls="nav-parameters" aria-selected="false">
             {{ __('Schedule Settings')}}
             </button>
-            @endif
+        @endif
+        @if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacher() || $AppUI->isSchoolAdmin())
+            <button class="nav-link" id="nav-widgets-tab" data-bs-toggle="tab" data-bs-target="#tab_6" type="button" role="tab" aria-controls="nav-widgets" aria-selected="false">
+            {{ __('Widgets')}}
+        </button>
+        @endif
         @endcan
     </div>
 </nav>

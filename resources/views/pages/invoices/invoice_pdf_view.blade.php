@@ -340,7 +340,11 @@
                             @if ($event_key == 10)
                             {!! !empty($item->caption) ? $item->caption : ''; !!}
                             @else
+                            @if($invoice_data->invoice_type === 0)
+                            {{!empty($item->caption) ? '' . $item->caption : 'Event'; }}
+                            @else
                             Event {{!empty($item->title) ? ': ' . $item->title : ''; }}
+                            @endif
                             @endif
                             <?php
                             $event = \App\Models\Event::find($item->event_id);
