@@ -120,9 +120,8 @@ nav {
 
 #manual_invoice_page tbody,
 #manual_invoice_page tr,
-#manual_invoice_page th,
 #manual_invoice_page td {
-	border-color: #bdbdbd;
+	border-color: #EEE;
 	border-style: solid;
 	border-width: 1px;
 	padding: 10px;

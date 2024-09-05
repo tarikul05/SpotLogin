@@ -13,21 +13,15 @@
 
 @section('content')
 <div class="content" id="manual_invoice_page">
-	<div class="container-fluid body">
-		<header class="panel-heading" style="border: none;">
-			<div class="row panel-row" style="margin:0; padding-top:15px;">
-				<div class="col-sm-6 col-xs-12 header-area" style="padding-bottom:25px;">
-					<div class="page_header_class">
-						<h5 id="page_header" name="page_header"><i class="fa-solid fa-file-invoice"></i> {{__('Manual Invoice')}}</h5>
-					</div>
-				</div>
-                <div class="col-sm-6 col-xs-12 btn-area pt-1">
-                    <div class="float-end btn-group save-button ">
-                       <button id="save_btn" style="display: block;" name="save_btn" class="btn btn-sm btn-primary invoice_save_btn">{{ __('Save') }}</button>
-                    </div>
-                </div>
-			</div>
-		</header>
+	<div class="container">
+
+        <div class="row justify-content-center pt-3 pb-3">
+            <div class="col-md-10">
+
+        <div class="page_header_class pt-1" style="position: static;">
+            <h5 class="titlePage">{{ __("Manual invoice") }}</h5>
+        </div>
+
         <?php //echo '<pre>' ; print_r($InvoicesExpData); exit; ?>
         <div class="row mb-5" style="margin:0;">
             <div class="col-lg-12">
@@ -50,52 +44,58 @@
                         <label style="display:none;" id="bank_caption" name="bank_caption">Bank</label>
                         <label style="display:none;" id="holder_cap" name="holder_cap">Account Holder</label>
                         <fieldset>
-                            <table id="table_header" class="table table-stripped" width="100%" style="background:rgb(223, 228, 230);">
-                                <tbody>
-                                    <tr>
-                                        <td colspan="2" align="center">
-                                            <label class="gilroy-semibold light-blue-txt" id="lbl_detail_hdr">Informations sur les factures</label>
-                                        </td>
-                                        <td colspan="1" align="center">
-                                            <label id="payment_status_label" class="gilroy-semibold light-blue-txt">Payment Status:</label>
-                                            <label id="payment_status_text"></label>
-                                        </td>
-                                        <td colspan="1" align="center"> <span>
-                                            <label id="invoice_status" class="gilroy-semibold light-blue-txt">{{ __('Invoice Status') }}: {{ __('New') }}</label>
-                                            <button style="display: none;" id="button_unlock" class="btn btn-xs btn-warning">Unlock</button>
-                                            </span> </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="row_hdr_invoice_name">
-                                            <label id="row_hdr_invoice_name" class="txtdarkblue gilroy-semibold text-right">{{ __('Invoice Name') }}</label>
-                                        </td>
-                                        <td class="invoice_name">
-                                            <input id="invoice_name" name="invoice_name" type="text" class="form-control" placeholder="{{ __('Invoice Name') }}" tabindex="0" maxlength="150">
-                                        </td>
-                                        <td class="lbl_date_invoice" align="center">
-                                            <label id="lbl_date_invoice" class="txtdarkblue gilroy-semibold text-right">{{ __('Date of invoice') }}</label>
-                                        </td>
-                                        <td class="date_invoice_div">
-                                            <div class="input-group datepicker" id="date_invoice_div">
-                                                <!--<input id="date_invoice" name="date_invoice" type="text" class="form-control datepicker" /> -->
-                                                <input id="date_invoice" name="date_invoice" type="text" placeholder="Date of invoice" class="form-control datetimepicker">
-                                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <!-- client info -->
-                            <div class="section_header_class">
-								<label class="invoice_subtitle">{{__('Client Information') }}:</label>
-							</div>
+
+                            <div class="card2" style="margin-bottom:25px;">
+                                <div class="card-header titleCardPage">{{ __('Invoice Information') }}</div>
+                                <div class="card-body">
+
+
+                                <div class="row">
+
+                                    <div class="col-md-6">
+
+                                    <div class="form-group row">
+                                    <label id="row_hdr_invoice_name" class="col-lg-3 col-sm-3 text-left">{{ __('Invoice Name') }}</label>
+                                    <div class="col-sm-7">
+                                    <input id="invoice_name" name="invoice_name" type="text" class="form-control" placeholder="{{ __('Invoice Name') }}" tabindex="0" maxlength="150">
+                                    </div>
+                                    </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                    <div class="form-group row">
+                                    <label id="lbl_date_invoice" class="col-lg-3 col-sm-3 text-left">{{ __('Date of invoice') }}</label>
+                                    <div class="col-sm-7">
+                                    <div class="input-group datepicker" id="date_invoice_div">
+                                        <input id="date_invoice" name="date_invoice" type="text" placeholder="Date of invoice" class="form-control datetimepicker">
+                                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                    </div>
+                                    </div>
+                                    </div>
+                                    </div>
+
+                                </div>
+                               
+                     
+
+                                </div>
+                            </div>
+
+
+                            <div class="card2" style="margin-bottom:25px;">
+                                <div class="card-header titleCardPage">{{ __('Client Information') }}</div>
+                                <div class="card-body">
+
                             <?php //echo '<pre>'; print_r($students);exit; ?>
                             <div id="client_detail_id" open="">
                                 <div id="table_client">
-                                    <div class="card">
+                                    <div class="card2">
                                         <div class="card-body bg-tertiary">
-                                    <div class="row">
-                                        <div class="col-sm-9 col-md-3" style="margin-bottom: 15px;">
+                                            <div class="text-center">
+                                            {{ __('Choose an user to auto populate fields') }}
+                                           <br>
+                                            </div>
+                                    <div class="row mt-1">
+                                        <div class="col-sm-9 col-md-5" style="margin-bottom: 35px; margin:0 auto;">
                                             <div class="input-group"> <span class="input-group-addon"><i class="fa fa-search" aria-hidden="true"></i></span>
                                                 <input id="client_list_id" class="form-control" list="client_seller_datalist" name="client_list_id" onchange="get_client_seller_info(this)" autocomplete="on">
                                                 <datalist id="client_seller_datalist">
@@ -110,7 +110,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row" id="table_client_detail">
+                                    <div class="row mt-5" id="table_client_detail">
                                         <div class="col-md-6">
                                             <div class="form-group row" style="display: none;">
                                                 <input type="hidden" id="client_id" name="client_id" value="EC7E9C27-1B10-11EC-9CF6-067B4964D503">
@@ -183,14 +183,13 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- client info END -->
-                            <!-- Seller info -->
-                            <div class="section_header_class">
-								<label class="invoice_subtitle">{{__('Account Invoicing') }}:</label>
-							</div>
 
-                            <div class="card">
-                                <div class="card-body bg-tertiary">
+                        </div>
+                    </div>
+
+                    <div class="card2" style="margin-bottom:25px;">
+                        <div class="card-header titleCardPage">{{ __('Account Invoicing') }}</div>
+                        <div class="card-body">
 
                             <div id="seller_detail_id" open="">
                                 <!-- <summary></summary> -->
@@ -301,12 +300,9 @@
                             <!-- Seller info END -->
                             <!-- Payment Bank info for Seller -->
                             @if ($isInEurope)
-                            <div class="section_header_class">
-								<label class="invoice_subtitle">{{__('Payment Bank Information') }}:</label>
-							</div>
-
-                            <div class="card">
-                                <div class="card-body bg-tertiary">
+                            <div class="card2" style="margin-bottom:25px;">
+                                <div class="card-header titleCardPage">{{ __('Payment Bank Information') }}</div>
+                                <div class="card-body">
 
                             <div id="" open="">
                                 <div class="row" id="payment_bank_info">
@@ -396,17 +392,19 @@
                                 </div>
                             </div>
                             @else
-                            <div class="section_header_class">
-								<label class="invoice_subtitle">{{__('Payment Information') }}:</label>
-							</div>
-                            <div class="card">
-                                <div class="card-body bg-tertiary">
+                          
+                            <div class="card2" style="margin-bottom:25px;">
+                                <div class="card-header titleCardPage">{{ __('Payment Information') }}</div>
+                                <div class="card-body">
+
                             <div id="" open="">
+                                <div class="row">
+                                    <div class="col-md-6">
                                 <div class="row" id="payment_bank_info">
                                     <div class="col-md-12">
                                         <div class="form-group row">
-                                            <label id="payment_bank_account_name_cap" name="payment_bank_account_name_cap" for="payment_bank_account_name" class="col-lg-12 col-sm-12 text-left">{{ __('Payment preference') }}</label>
-                                            <div class="col-sm-12">
+                                            <label id="payment_bank_account_name_cap" name="payment_bank_account_name_cap" for="payment_bank_account_name" class="col-lg-4 col-sm-4 text-left">{{ __('Payment preference') }}</label>
+                                            <div class="col-sm-6">
                                                 <input type="text" class="form-control" id="payment_bank_account_name" name="payment_bank_account_name" value="" placeholder="" maxlength="100">
                                             </div>
                                         </div>
@@ -422,14 +420,19 @@
                                             <input type="hidden" class="form-control" id="payment_phone" name="payment_phone" value="" placeholder="" maxlength="150">
                                     </div>
                                 </div>
-                                <div class="row" id="payment_bank_info_canada">
+
+                                    </div>
                                     <div class="col-md-6">
+
+                                <div class="row" id="payment_bank_info_canada">
+                                    <div class="col-md-12">
                                         <div class="form-group row">
-                                            <label id="e_transfer_email_caption" for="e_transfer_email" class="col-lg-12 col-sm-12 text-left">E-transfer e-mail</label>
-                                            <div class="col-sm-12">
+                                            <label id="e_transfer_email_caption" for="e_transfer_email" class="col-lg-3 col-sm-3 text-left">E-transfer e-mail</label>
+                                            <div class="col-sm-7">
                                                 <input type="email" class="form-control" id="e_transfer_email" name="e_transfer_email" value="" placeholder="E-transfer e-mail" maxlength="100"> </div>
                                         </div>
                                     </div>
+
                                     <div class="col-md-6" style="display: none;">
                                         <div class="form-group row">
                                             <label id="name_for_checks_caption" for="name_for_checks" class="col-lg-3 col-sm-3 text-left">Name for Checks</label>
@@ -438,40 +441,48 @@
                                         </div>
                                     </div>
                                 </div>
+                                    </div>
+                                </div>
                             </div>
                                 </div>
                             </div>
                             @endif
                             <!-- Payment Bank info for Seller -->
                             <!-- Transaction Detail info -->
-                            <div class="section_header_class">
-								<label class="invoice_subtitle">{{__('Invoice Detail Information') }}:</label>
-							</div>
+                            
+                            <div class="card2" style="margin-bottom:25px;">
+                                <div class="card-header titleCardPage">{{ __('Invoice Detail Information') }}</div>
+                                <div class="card-body">
+
                             <div id="details_transaction" open="">
                                 <!-- <summary><h4></h4></summary> -->
-                                <table id="details_tbl" class="table table-stripped" width="100%" cellpadding="0" cellspacing="0" style="background:rgb(223, 228, 230);">
+
+                                <div class="mb-3">
+                                    <select class="form-control" id="price_currency" name="price_currency">
+                                       @foreach($currency as $key => $curr)
+                                       @if($curr->currency_code == $school_currency)
+                                       <option value="{{$curr->currency_code}}" selected>{{$curr->currency_code}}</option>
+                                        @else
+                                            <option value="{{$curr->currency_code}}">{{$curr->currency_code}}</option>
+                                        @endif
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                
+                                <table id="details_tbl" class="table table-bordered" width="100%" cellpadding="0" cellspacing="0" style="background-color: #fafafa;">
                                     <thead>
                                         <tr>
                                             <th style="display: none;" width="0%">#</th>
-                                            <th class="manual_inv_date">
+                                            <th width="20%" style="text-align:center;">
                                                 <label id="row_hdr_date" name="row_hdr_date" class="gilroy-semibold light-blue-txt">Date</label>
                                             </th>
                                             <th width="manual_inv_txt">
-                                                <label id="item_particular_caption" name="item_particular_caption" class="gilroy-semibold light-blue-txt">Description/Detail</label>
+                                                <label id="item_particular_caption" name="item_particular_caption" class="gilroy-semibold light-blue-txt">Detail</label>
                                             </th>
-                                            <th width="10%" style="text-align:center;">
-                                                <label id="row_hdr_amount" name="row_hdr_amount" class="gilroy-semibold light-blue-txt">{{ __('Currency') }}</label>
-                                                <div class="selectdiv">
-                                                    <select class="form-control" id="price_currency" name="price_currency">
-                                                       @foreach($currency as $key => $curr)
-                                                       @if($curr->currency_code == $school_currency)
-                                                       <option value="{{$curr->currency_code}}" selected>{{$curr->currency_code}}</option>
-                                                        @else
-                                                            <option value="{{$curr->currency_code}}">{{$curr->currency_code}}</option>
-                                                        @endif
-                                                        @endforeach
-                                                    </select>
-                                                </div>
+                                            <th width="20%" style="text-align:center;">
+                                                <label id="row_hdr_amount" name="row_hdr_amount" class="gilroy-semibold light-blue-txt">{{ __('Price') }}</label>
+                                                
                                             </th>
                                             <th width="2%" align="center"></th>
                                         </tr>
@@ -480,19 +491,25 @@
                                         <tr id="tr_row_id" class="detail_row">
                                             <td style="display: none;">1</td>
                                             <td>
-                                                <div class="input-group datetimepicker" id="date_div">
-                                                    <input id="date" name="date[]" type="text" class="form-control datetimepicker" value="">
+                                                <div class="input-group" id="date_div">
                                                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                                    <input id="date" name="date[]" type="text" class="form-control datetimepicker" value="">
                                                 </div>
                                             </td>
                                             <td>
+                                                  <div class="input-group">
+                                                    <span class="input-group-addon"><i class="fa fa-edit"></i></span>
                                                 <input type="text" id="caption" name="caption[]" placeholder="" class="form-control">
+                                                  </div>
                                             </td>
                                             <td class="row_item_value">
+                                                <div class="input-group">
+                                                <span class="input-group-addon"><i class="fa fa-arrow-right"></i></span>
                                                 <input type="text" pattern="[0-9.]" id="total_item1" name="total_item[]" placeholder="" style="text-align: right;" class="form-control numeric float item_value">
+                                                </div>
                                             </td>
                                             <td>
-                                                <button tabindex="-1" onclick="remove_rows(this)" type="button" id="del" class="btn btn-theme-warn delete_row">
+                                                <button tabindex="-1" onclick="remove_rows(this)" type="button" id="del" class="btn btn-danger delete_row">
                                                 <i class="fa fa-remove"></i></button>
                                             </td>
                                         </tr>
@@ -506,12 +523,14 @@
                                             <th></th>
                                         </tr>
                                         <tr>
-                                            <th colspan="5" style="text-align:right;">
-                                                <button type="button" class="btn btn-theme-success add-row"><em class="glyphicon glyphicon-plus"></em>{{ __('Add invoice item') }}</button>
+                                            <th colspan="5" style="text-align:center;">
+                                                <button type="button" class="btn btn-outline-primary add-row"><em class="glyphicon glyphicon-plus"></em>{{ __('Add invoice item') }}</button>
                                             </th>
                                         </tr>
                                     </tfoot>
                                 </table>
+                            </div>
+                                </div>
                             </div>
                             <!-- Transaction Detail info END -->
 
@@ -520,6 +539,7 @@
 
                                 <?php $count = count($RegisterTaxData); ?>
                                 <?php if($count > 0) { ?>
+
                                 <div class="section_header_class">
                                     <label class="invoice_subtitle">{{__('Taxes') }}:</label>
                                 </div>
@@ -533,11 +553,10 @@
 
                                 {{$count > 1 ? __('taxes') : __('tax')}}
                                 <?php } else { ?>
-                                    <div class="section_header_class">
-                                        <label class="invoice_subtitle">{{__('Add taxes') }}:</label>
-                                    </div>
-                                    <div class="card mb-2">
-                                    <div class="card-body bg-tertiary">
+                                     <div class="card2" style="margin-bottom:25px;">
+                                <div class="card-header titleCardPage">{{ __('Add taxes') }}</div>
+                                <div class="card-body">
+                                    <div class="border p-3">
                                         <span class="badge bg-info">new</span>
                                     <div class="add_more_tax_row row">
                                         <div class="col-md-6">
@@ -564,6 +583,7 @@
                                                     <input type="text" class="form-control tax_amount" name="tax_amount[]" value="" placeholder="Tax Amount" maxlength="100"> </div>
                                             </div>
                                         </div>
+                                    </div>
                                     </div></div>
                                     </div>
                                 <?php } ?>
@@ -601,7 +621,7 @@
                                                     <input type="text" class="form-control tax_amount" name="tax_amount[]" value="" placeholder="{{ __('Tax Amount') }}" maxlength="100">
                                                 </div>
                                                 <div class="col-sm-1">
-                                                    <button type="button" class="btn btn-theme-warn delete_tax"><i class="fa-solid fa-trash"></i></button>
+                                                    <button type="button" class="btn btn-danger delete_tax"><i class="fa-solid fa-trash"></i></button>
                                                 </div>
                                             </div>
                                         </div>
@@ -612,18 +632,18 @@
 
 
                                 <div id="add_more_tax_div"></div>
-                                <div class="row col-md-12 mt-3 mb-5">
-                                    <button id="add_more_tax_btn" type="button" class="btn btn-theme-success"><em class="glyphicon glyphicon-plus"></em>Add Tax</button>
+                                <div class="col-md-12 mt-3 mb-5 text-center">
+                                    <button id="add_more_tax_btn" type="button" class="btn btn-sm btn-outline-primary"><em class="glyphicon glyphicon-plus"></em>Add Tax</button>
                                 </div>
                             </div>
 
 
                             <div id="add_expense_div" open="">
-                                <div class="section_header_class">
-                                    <label class="invoice_subtitle">{{__('Add Expenses') }}:</label>
-                                </div>
-                                <div class="card mb-2">
-                                    <div class="card-body bg-tertiary">
+                               
+                                <div class="card2" style="margin-bottom:25px;">
+                                    <div class="card-header titleCardPage">{{ __('Add Expenses') }}</div>
+                                    <div class="card-body">
+                                        <div class="border p-3">
                                         <span class="badge bg-info">{{ __('new') }}</span>
                                 <div class="add_more_expense_row row">
                                     <div class="col-md-6">
@@ -641,6 +661,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                        </div>
                             </div>
                         </div>
                                 <div id="add_more_expense_div"></div>
@@ -648,13 +669,27 @@
                             </div></fieldset>
                             </div>
                                 </div>
-                                <div class="row col-md-12 mt-3 mb-5">
-                                    <button id="add_more_expense_btn" type="button" class="btn btn-theme-success"><em class="glyphicon glyphicon-plus"></em>Add Another Expense</button>
+                                <div class="col-md-12 mt-3 mb-5 text-center">
+                                    <button id="add_more_expense_btn" type="button" class="btn btn-outline-primary"><em class="glyphicon glyphicon-plus"></em>Add Another Expense</button>
 
 
                         </fieldset>
+                      
+
+                         
+
+
                     </form>
                 </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center" style="position:fixed; bottom:0; z-index=99999!important;opacity:1!important; width:100%;">
+    <div class="col-md-12 mt-3 pt-3 pb-3 card-header text-center" style="opacity:0.8!important; background-color:#DDDD!important;">
+        <button id="save_btn" type="submit" class="btn btn-success">{{ __('Generate invoice') }}</button>
     </div>
 </div>
 
@@ -669,8 +704,9 @@ var isInEurope = {{ $isInEurope ? 'true' : 'false' }};
 
 $(document).on('click','#add_more_tax_btn',function(){
 
-    var resultHtml = `<div class="add_more_tax_row card mb-2">
+    var resultHtml = `<div class="add_more_tax_row card2 mb-3">
                 <div class="card-body bg-tertiary">
+                     <div class="border p-3">
                     <span class="badge bg-info">new</span>
                     <div class="row">
             <div class="col-md-6">
@@ -701,8 +737,10 @@ $(document).on('click','#add_more_tax_btn',function(){
                         <input type="text" class="form-control tax_amount" name="tax_amount[]" value="" placeholder="Tax Amount" maxlength="100">
                     </div>
                     <div class="col-sm-1">
-                        <button type="button" class="btn btn-theme-warn delete_tax"><i class="fa-solid fa-trash"></i></button>
+                        <br>
+                        <button type="button" class="btn btn-danger delete_tax"><i class="fa-solid fa-trash"></i></button>
                     </div>
+                </div>
                 </div>
             </div>
         </div></div>
@@ -718,8 +756,9 @@ $(document).on('click','.delete_tax',function(){
 
 $(document).on('click','#add_more_expense_btn',function(){
 
-var resultHtml = `<div class="card add_more_expense_row mb-2">
+var resultHtml = `<div class="card2 add_more_expense_row mb-3">
     <div class="card-body bg-tertiary">
+                 <div class="border p-3">
         <span class="badge bg-info">new</span>
         <div class="row">
         <div class="col-md-6">
@@ -739,8 +778,10 @@ var resultHtml = `<div class="card add_more_expense_row mb-2">
                     <input type="text" class="form-control" name="expense_amount[]" value="" placeholder="Expense Amount" maxlength="100">
                 </div>
                 <div class="col-sm-1">
-                        <button type="button" class="btn btn-theme-warn delete_expense"><i class="fa-solid fa-trash"></i></button>
+                    <br>
+                        <button type="button" class="btn btn-danger delete_expense"><i class="fa-solid fa-trash"></i></button>
                     </div>
+            </div>
             </div>
         </div></div>
     </div>
@@ -758,10 +799,10 @@ $(".add-row").click(function(){
     var i =document.getElementById("details_tbl").rows.length-2;
 
     var markup = '<tr id="tr_row_id" class="detail_row"><td style="display: none;">'+i+'</td>';
-    markup+='<td><div class="input-group datetimepicker" id="date_div"> <input name="date[]" type="text" class="form-control date_picker" value=""/><span class="input-group-addon"><i class="fa fa-calendar"></i></span></div></td>';
+    markup+='<td><div class="input-group" id="date_div"><span class="input-group-addon"><i class="fa fa-calendar"></i></span><input name="date[]" type="text" class="form-control date_picker datetimepicker" value=""/></div></td>';
     markup+='<td><input type="text" id="caption" name="caption[]" placeholder="" class="form-control"></td>';
     markup+='<td class="row_item_value"><input type="text" pattern="[0-9.]" id="total_item'+i+'" name="total_item[]" placeholder="" style="text-align: right;" pattern="^[0-9]\d{0,9}(\.\d{1,3})?%?$" class="form-control numeric float item_value"></td>';
-    markup+='<td><button tabIndex="-1" onclick="remove_rows(this)" type="button" id="del" class="btn btn-theme-warn delete_row"><i class="fa fa-remove"></i></button></td>';
+    markup+='<td><button tabIndex="-1" onclick="remove_rows(this)" type="button" id="del" class="btn btn-danger delete_row"><i class="fa fa-remove"></i></button></td>';
     //markup+='<td><button tabIndex="-1" onclick="remove_rows(this)" type="button" id="del" class="delete_row">X</button></td>';
     markup+='</tr>';
 
@@ -873,7 +914,7 @@ document.getElementById("grand_total").innerHTML=mtotal.toFixed(2);
     var month = now.getMonth()+1;
     var day = now.getDate();
     var current_date = ((''+day).length<2 ? '0' : '') + day+ '.' +((''+month).length<2 ? '0' : '') + month + '.'+ now.getFullYear();
-    $("#date_invoice").val( current_date );
+    $("#date_invoice").val(current_date);
 
  });
 
