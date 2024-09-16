@@ -3428,7 +3428,7 @@ $('.close-icon').on('click', function() {
                     $('#agenda_select').trigger('change');
                     $('#Title').val('');
                     //resetStudentList();
-                    getAwayStudent();
+                    //getAwayStudent();
                 }
                 @endif
 
@@ -4429,7 +4429,7 @@ $(function() {
 
   $('#start_date').on('change', function(e) {
    // resetStudentList();
-    getAwayStudent();
+    //getAwayStudent();
 });
 
 
@@ -5519,7 +5519,7 @@ $( document ).ready(function() {
             $('#agenda_select').trigger('change');
             $('#Title').val('');
            // resetStudentList();
-            getAwayStudent();
+            //getAwayStudent();
         }
 
     });

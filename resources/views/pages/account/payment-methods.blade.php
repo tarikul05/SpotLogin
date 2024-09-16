@@ -1,4 +1,7 @@
 
+@section('head_links')
+<meta name="csrf-token" content="{{ csrf_token() }}">
+@endsection
 
     <div class="row justify-content-center pt-3">
     <div class="col-md-12">
@@ -92,7 +95,7 @@
                             <option value="Bank">Bank information</option>
                             <option value="IBAN">IBAN/SWIFT</option>
                             <option value="E-Transfer">E-Transfer</option>
-                            <option value="Stripe">Stripe</option>
+                            <!--<option value="Stripe">Stripe</option>-->
                             <option value="PayPal">PayPal</option>
                             </select>
                             </div>
@@ -110,6 +113,8 @@
     </div>
 
 </div>
+
+
 
 
 

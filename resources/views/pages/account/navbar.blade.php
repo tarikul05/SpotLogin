@@ -38,26 +38,37 @@
         container.innerHTML = ''; // Reset the container
 
         if (this.value === 'Stripe') {
-            container.innerHTML += `
+            var is_stripe_account = "{{!empty($AppUI->stripe_account_id) ? $AppUI->stripe_account_id : 'none'}}";
+            console.log('Stripe Account', is_stripe_account);
+            if(is_stripe_account === 'none') {
+                container.innerHTML += `
+                <div class="form-group">
+                    <label for="account_number" style="font-size:11px;">Stripe Account Number</label><br>
+                    <label for="account_number">Please create your stripe account ID by clicking the link below.</label>
+                </div>
+               <a id="create-stripe-account" class="btn btn-outline-success" href="#">Create</a>`;
+            } else {
+                container.innerHTML += `
                 <div class="form-group">
                     <label for="account_number" style="font-size:11px;">Stripe Account Number</label>
                     <input type="text" name="details[account_number]" class="form-control">
                 </div>
-                 <button type="submit" class="btn btn-outline-success">Save</button>`;
+                <button type="submit" class="btn btn-outline-success">Change</button>`;
+            }
         } else if (this.value === 'PayPal') {
             container.innerHTML += `
                 <div class="form-group">
                     <label for="paypal_address" style="font-size:11px;">PayPal Address</label>
                     <input type="email" name="details[paypal_address]" class="form-control">
                 </div>
-                 <button type="submit" class="btn btn-outline-success">Save</button>`;
+                <button type="submit" class="btn btn-outline-success">Save</button>`;
         } else if (this.value === 'Cash') {
             container.innerHTML += `
                 <div class="form-group">
                     <label for="paypal_address" style="font-size:11px;">Get pay by Cash</label>
                     <input type="text" name="details[cash]" class="form-control">
                 </div>
-                 <button type="submit" class="btn btn-outline-success">Save</button>`;
+                <button type="submit" class="btn btn-outline-success">Save</button>`;
         } else if (this.value === 'IBAN') {
             container.innerHTML += `
                 <div class="form-group">
@@ -67,16 +78,14 @@
                     <label for="paypal_address" style="font-size:11px;">SWIFT A/c No</label>
                     <input type="text" name="details[swift_number]" class="form-control">
                 </div>
-                 <button type="submit" class="btn btn-outline-success">Save</button>`;
-
-      
+                <button type="submit" class="btn btn-outline-success">Save</button>`;      
                 } else if (this.value === 'E-Transfer') {
             container.innerHTML += `
                 <div class="form-group">
                     <label for="paypal_address" style="font-size:11px;">E-Transfer Email</label>
                     <input type="email" name="details[e_transfer_number]" class="form-control">
                 </div>
-                 <button type="submit" class="btn btn-outline-success">Save</button>`;
+                <button type="submit" class="btn btn-outline-success">Save</button>`;
 
         } else if (this.value === 'Swift') {
             container.innerHTML += `
@@ -84,7 +93,7 @@
                     <label for="paypal_address" style="font-size:11px;">SWIFT A/c No</label>
                     <input type="text" name="details[swift_number]" class="form-control">
                 </div>
-                 <button type="submit" class="btn btn-outline-success">Save</button>`;
+                <button type="submit" class="btn btn-outline-success">Save</button>`;
         } else if (this.value === 'Bank') {
             container.innerHTML += `
                 <div id="cash-fields">
@@ -104,7 +113,7 @@
                     </div>
                 </div>
                 <button type="button" id="add-field" class="btn btn-primary">Add Field</button>
-                 <button type="submit" class="btn btn-outline-success">Save</button>`;
+                <button type="submit" class="btn btn-outline-success">Save</button>`;
             
             document.getElementById('add-field').addEventListener('click', function () {
                 const cashFields = document.getElementById('cash-fields');
@@ -140,6 +149,7 @@
 var payment_info_checkbox = "{{ $teacher->payment_info_checkbox ?? '' }}";
 
 $(document).ready(function() {
+
     if (payment_info_checkbox === '2') {
         $('#payment_info_div').hide();
         $('#payment_info_div2').show();
@@ -157,6 +167,7 @@ $(document).ready(function() {
             $('#payment_info_div2').hide();
         }
     })
+});
 
     $(document).ready(function() {
     // Fonction pour copier le contenu d'un champ vers un autre
@@ -180,6 +191,42 @@ $(document).ready(function() {
     });
 });
 
+
+
+$(document).ready(function() {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    // Détection du clic sur le lien avec l'ID 'create-stripe-account', même s'il est ajouté dynamiquement
+    $(document).on('click', '#create-stripe-account', function(e) {
+        e.preventDefault(); // Empêche le comportement par défaut du lien
+
+        // Appel AJAX pour créer le compte Stripe
+        $.ajax({
+            url: BASE_URL + '/create-stripe-bank-account', // URL de votre route Laravel
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                // Ajoutez ici les données à envoyer si nécessaire
+            },
+            success: function(response) {
+                console.log(response); // Affichez la réponse dans la console
+                if (response.success) {
+                    alert('Lien de création de compte envoyé avec succès !');
+                    // Redirige vers le lien généré, par exemple :
+                    window.location.href = response.accountLink; // Assurez-vous que 'accountLink' contient le lien de Stripe
+                } else {
+                    alert('Une erreur est survenue : ' + response.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error(error); // Affichez l'erreur dans la console
+                alert('Erreur lors de la création du compte Stripe.');
+            }
+        });
+    });
 });
 </script>
 

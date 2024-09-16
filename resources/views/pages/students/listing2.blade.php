@@ -54,7 +54,7 @@
                                         </a>
                                         @endif
                                         <a class="text-reset text-decoration-none" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditStudent',['school'=> $schoolId,'student'=> $student->id]) : route('editStudent',['student' => $student->id]) }}">
-                                            {{ $student->full_name; }} @if($student->user) <!--<br><span class="titleFieldPage">ID: {{$student->user->username}}</span>-->@endif<br>
+                                            {{ $student->full_name; }} @if($student->user) <span class="titleFieldPage" style="font-size:11px;">(ID: {{$student->user->username}})</span>@endif<br>
                                         </a>
                                         <span class="titleFieldPage">{{ $student->email; }}</span>
                                     </td>
