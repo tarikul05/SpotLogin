@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PlanController extends Controller
 {
@@ -73,5 +74,21 @@ class PlanController extends Controller
         } catch (\Exception $e) {
             return redirect()->route('plans.create')->with('error', 'Erreur lors de la création du plan : ' . $e->getMessage());
         }
+    }
+
+    public function stripe_bank_account(Request $request)
+    {
+        $user = Auth::user();
+        $account = $this->stripe->accountLinks->create([
+            'account' => 'acct_1Mt0CORHFI4mz9Rw',
+            'refresh_url' => 'https://sportlogin.app/account',
+            'return_url' => 'https://sportlogin.app/account',
+            'type' => 'account_onboarding',
+          ]);
+
+          return response()->json($account);
+        
+        //$user->stripe_account_id = $account->id;
+        //$user->save();
     }
 }
