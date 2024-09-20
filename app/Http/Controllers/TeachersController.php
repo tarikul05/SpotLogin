@@ -612,6 +612,14 @@ class TeachersController extends Controller
 
     }
 
+        $is_conneced_account_charges_enabled = false;
+        $is_connected_account = false;
+        $stripeConnectedAccount = null;
+        if($user->stripe_account_id){
+            $is_connected_account = true;
+            $stripeConnectedAccount = $this->stripe->accounts->retrieve($user->stripe_account_id, []);
+            $is_conneced_account_charges_enabled = $stripeConnectedAccount->charges_enabled;
+        }
 
 
         // dd($relationalData);
@@ -624,7 +632,10 @@ class TeachersController extends Controller
         'eventCat',
         'InvoicesTaxData',
         'eventLastCatId','teacher','relationalData','countries','genders','schoolId','schoolName','eventCategory','lessonPrices','ltprice', 'isInEurope',
-        'subscription', 'product_object', 'subscriber', 'invoice_url', 'user', 'invoices', 'last_past_subscription'
+        'subscription', 'product_object', 'subscriber', 'invoice_url', 'user', 'invoices', 'last_past_subscription',
+        'is_conneced_account_charges_enabled',
+        'is_connected_account',
+        'stripeConnectedAccount'
     ));
     }
 

@@ -33,7 +33,12 @@
                             </td>
                             <td>
                                 @if ($paymentMethod->type === 'Stripe')
-                                    <span>{{ $paymentMethod->details['account_number'] ?? 'N/A' }}</span>
+                                    <span>{{ $paymentMethod->details['account_number'] ?? 'N/A' }}</span> 
+                                    @if($is_conneced_account_charges_enabled)
+                                        (ready to be used)
+                                    @else
+                                        <span class="text-danger" style="cursor:pointer;" id="continueStripeAccount"><i class="fa fa-warning"></i> require informations</span>
+                                    @endif
                                 @elseif ($paymentMethod->type === 'PayPal')
                                     <span>{{ $paymentMethod->details['paypal_address'] ?? 'N/A' }}</span>
                                 @elseif ($paymentMethod->type === 'IBAN')
@@ -58,10 +63,10 @@
                                     <small>{{__('Created at')}}: {{ $paymentMethod->created_at->format('d/m/Y H:i') }}</small>-->
                             </td>
                             <td style="width:50px; text-align:center;">
-                                <form action="{{ route('payment_methods.destroy', $paymentMethod->id) }}" method="POST" style="display:inline;">
+                                <form id="deleteForm{{ $paymentMethod->id }}" action="{{ route('payment_methods.destroy', $paymentMethod->id) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" style="background:none; border:none; cursor:pointer; color:#FF0000;">
+                                    <button type="button" onclick="confirmDelete({{ $paymentMethod->id }})" style="background:none; border:none; cursor:pointer; color:#FF0000;">
                                         <i class="fa fa-trash" style="float:right;"></i>
                                     </button>
                                 </form>
@@ -84,8 +89,8 @@
                             <div class="card-header titleCardPage">
                             <div class="card-title">
                                 {{ __('Add a Payment Method') }}
-                                <span class="d-block d-sm-none" style="color:red; font-size:11px;">{{ __('Optional - this information will appear on the invoice') }} </span> 
-                                <span class="d-none d-sm-inline" style="padding-left: 10px; color:red; font-size:11px;">[ {{ __('Optional - this information will appear on the invoice') }} ]</span>
+                                <span class="d-block d-sm-none text-danger" style="font-size:11px;">{{ __('Optional - this information will appear on the invoice') }} </span> 
+                                <span class="d-none d-sm-inline text-danger" style="padding-left: 10px; font-size:11px;">[ {{ __('Optional - this information will appear on the invoice') }} ]</span>
                             </div>
                    
                             <div class="form-group">
@@ -95,7 +100,7 @@
                             <option value="Bank">Bank information</option>
                             <option value="IBAN">IBAN/SWIFT</option>
                             <option value="E-Transfer">E-Transfer</option>
-                            <!--<option value="Stripe">Stripe</option>-->
+                            <option value="Stripe">Stripe</option>
                             <option value="PayPal">PayPal</option>
                             </select>
                             </div>

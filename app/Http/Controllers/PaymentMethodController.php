@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+
 use Illuminate\Http\Request;
 use App\Models\PaymentMethod;
 
@@ -50,7 +52,15 @@ class PaymentMethodController extends Controller
 
         $paymentMethod->delete();
 
-        return redirect()->back()->with('success', 'Payment method deleted successfully!');
+        if($paymentMethod->type === "Stripe") 
+        {
+        $user = User::find($paymentMethod->user_id);
+        $user->stripe_account_id = null;
+        $user->save();
+        }
+
+        return redirect()->route('updateTeacher', ['tab' => 5])->with('success', 'Payment method deleted successfully!');
+        //return redirect()->back()->with('success', 'Payment method deleted successfully!');
     }
 }
 

@@ -86,8 +86,28 @@ p{
 }
 }
   .datetimepicker table tr td.active.active, .datetimepicker table tr td.active.disabled.active, .datetimepicker table tr td.active.disabled:active, .datetimepicker table tr td.active.disabled:hover.active, .datetimepicker table tr td.active.disabled:hover:active, .datetimepicker table tr td.active:active, .datetimepicker table tr td.active:hover.active, .datetimepicker table tr td.active:hover:active {
-	background-color: #0075bf;
+	background-color: #DDD;
   }
+  .modal-body {
+    max-height: calc(100vh - 200px); /* Hauteur maximale basée sur la taille de l'écran */
+    overflow-y: auto; /* Permettre le défilement vertical */
+    scrollbar-width: thin; /* Pour Firefox: définit la largeur de la scrollbar */
+    scrollbar-color: #DDD #f1f1f1; /* Pour Firefox: couleur de la barre et du fond */
+}
+
+/* Custom scrollbar for WebKit browsers (Chrome, Safari, Edge) */
+.modal-body::-webkit-scrollbar {
+    width: 8px; /* Largeur de la scrollbar */
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background-color: #DDD; /* Couleur de la barre de défilement */
+    border-radius: 10px; /* Coins arrondis de la barre de défilement */
+}
+
+.modal-body::-webkit-scrollbar-track {
+    background-color: #f1f1f1; /* Couleur de l'arrière-plan de la scrollbar */
+}
   </style>
 @endsection
 
@@ -834,9 +854,9 @@ p{
                 </div>
             </div>
 
-                <div class="modal-footer pt-0" style="background-color: #152245;">
-                    <button id="save_btn_more" class="btn btn-info">{{ __('Save & add more') }} </button>
-                    <button id="save_btn" class="btn btn-theme-success">{{ __('Save') }} </button>
+                <div class="modal-footer pt-0" style="background-color: #152245; max-heigth:60px!important; padding-top:0px!important;">
+                    <button id="save_btn_more" class="btn btn-outline-success">{{ __('Save & add more') }} </button>
+                    <button id="save_btn" class="btn btn-success">{{ __('Save') }} </button>
                 </div>
             </form>
         </div>
@@ -914,7 +934,7 @@ p{
                             <!-- <button type="button" id="btn_confirm_unlock" onclick="confirm_event(true)" class="btn btn-theme-success" data-dismiss="modal" style="width:100px;">
                                 <span id="event_btn_confirm_unlock_text">Unlock<span>
                             </button> -->
-                            <a type="button" id="btn_edit_view" onclick="view_edit_event()" class="btn btn-theme-warn" data-dismiss="modal" style="width:100px;">
+                            <a type="button" id="btn_edit_view" onclick="view_edit_event()" class="btn btn-outline-primary" data-dismiss="modal" style="width:100px;">
                                 <span id="event_btn_edit_text">{{ __('View') }}<span>
                             </a>
 

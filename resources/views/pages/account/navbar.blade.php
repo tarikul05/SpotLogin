@@ -32,28 +32,92 @@
 
 
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Récupérer l'URL actuelle
+        const urlParams = new URLSearchParams(window.location.search);
+
+        // Vérifier si le paramètre 'tab' est présent
+        const tabId = urlParams.get('tab');
+
+        if (tabId) {
+            // Sélectionner l'onglet correspondant à l'ID
+            const tabButton = document.querySelector(`[data-bs-target="#tab_${tabId}"]`);
+
+            if (tabButton) {
+                // Créer une instance du composant Tab de Bootstrap
+                const bootstrapTab = new bootstrap.Tab(tabButton);
+
+                // Activer l'onglet avec la méthode Bootstrap
+                bootstrapTab.show();
+            }
+        }
+    });
+</script>
+
+<script>
+    function confirmDelete(paymentMethodId) {
+        Swal.fire({
+            title: "{{ __('Are you sure?') }}",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: "{{ __('Yes, delete it!') }}",
+            cancelButtonText: "{{ __('Cancel') }}",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('deleteForm' + paymentMethodId).submit();
+            }
+        })
+    }
+</script>
+
+<script>
     $(document).ready(function() {
-    document.getElementById('type').addEventListener('change', function () {
+        $(document).on('click', '#continueStripeAccount', function(e) {
+        e.preventDefault(); 
+        $('#type').val('Stripe');
+        $('#type').trigger('change');
+    });
+
+     $('#type').on('change', function() {
         const container = document.getElementById('details-container');
         container.innerHTML = ''; // Reset the container
 
         if (this.value === 'Stripe') {
-            var is_stripe_account = "{{!empty($AppUI->stripe_account_id) ? $AppUI->stripe_account_id : 'none'}}";
-            console.log('Stripe Account', is_stripe_account);
+            var is_stripe_account = "{{$is_connected_account ? $AppUI->stripe_account_id : 'none'}}";
+            var is_conneced_account_charges_enabled = "{{$is_conneced_account_charges_enabled ? 'true' : 'false'}}";
             if(is_stripe_account === 'none') {
                 container.innerHTML += `
-                <div class="form-group">
-                    <label for="account_number" style="font-size:11px;">Stripe Account Number</label><br>
-                    <label for="account_number">Please create your stripe account ID by clicking the link below.</label>
+                <div class="form-group" id="askUrlStripeAccountLink">
+                    <br>
+                    <label for="account_number" style="font-size:11px;">Stripe Account Information</label><br>
+                    <label for="account_number">Please create your stripe connected account link by clicking the button below.</label>
+                    <br>
+                     <a id="create-stripe-account" class="btn btn-outline-primary" href="#">Create</a>
                 </div>
-               <a id="create-stripe-account" class="btn btn-outline-success" href="#">Create</a>`;
+                <div id="urlStripeAccountLink" class="form-group"></div>
+              `;
             } else {
+                if(is_conneced_account_charges_enabled === 'true') {
+                        container.innerHTML += `
+                        <div class="form-group" id="askUrlStripeAccountLink">
+                            <br>
+                            <label>Account ID: <b>${is_stripe_account}</b></label><br>
+                            Your Stripe connected account is ready to be used
+                        </div>`
+                } else {
                 container.innerHTML += `
-                <div class="form-group">
-                    <label for="account_number" style="font-size:11px;">Stripe Account Number</label>
-                    <input type="text" name="details[account_number]" class="form-control">
+                <div class="form-group" id="askUrlStripeAccountLink">
+                    <br>
+                    <label for="account_number" style="font-size:11px;">Stripe Account Information</label><br>
+                    Account ID: <b>${is_stripe_account}</b><br>
+                    <label for="account_number">Some fields are necessary to complete the creation of your connected account.</label>
+                     <br>
+                     <a id="continue-stripe-account" class="btn btn-outline-primary" href="#">Continue</a>
                 </div>
-                <button type="submit" class="btn btn-outline-success">Change</button>`;
+                <div id="urlStripeAccountLink" class="form-group"></div>`;
+                }
             }
         } else if (this.value === 'PayPal') {
             container.innerHTML += `
@@ -199,27 +263,22 @@ $(document).ready(function() {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
-    // Détection du clic sur le lien avec l'ID 'create-stripe-account', même s'il est ajouté dynamiquement
     $(document).on('click', '#create-stripe-account', function(e) {
-        e.preventDefault(); // Empêche le comportement par défaut du lien
-
-        // Appel AJAX pour créer le compte Stripe
+        e.preventDefault(); 
+        $("#pageloader").fadeIn();
         $.ajax({
-            url: BASE_URL + '/create-stripe-bank-account', // URL de votre route Laravel
+            url: BASE_URL + '/create-stripe-bank-account', 
             type: 'POST',
             dataType: 'json',
-            data: {
-                // Ajoutez ici les données à envoyer si nécessaire
-            },
+            data: {},
             success: function(response) {
-                console.log(response); // Affichez la réponse dans la console
-                if (response.success) {
-                    alert('Lien de création de compte envoyé avec succès !');
-                    // Redirige vers le lien généré, par exemple :
-                    window.location.href = response.accountLink; // Assurez-vous que 'accountLink' contient le lien de Stripe
-                } else {
-                    alert('Une erreur est survenue : ' + response.message);
-                }
+              
+                $('#askUrlStripeAccountLink').hide();
+
+                $('#urlStripeAccountLink').html('<br>Click on secure link below to create your connected account via Stripe:<br><small>(you will be automatically redirect to Sportlogin after your request)</small><br><br><i class="fa fa-arrow-right"><i/> <a style="font-size:12px; font-family:Arial;" href="'+response.url+'">' + response.url + '</a>');
+
+                $("#pageloader").hide();
+
             },
             error: function(xhr, status, error) {
                 console.error(error); // Affichez l'erreur dans la console
@@ -228,7 +287,36 @@ $(document).ready(function() {
         });
     });
 });
+$(document).ready(function() {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    $(document).on('click', '#continue-stripe-account', function(e) {
+        e.preventDefault(); 
+        $("#pageloader").fadeIn();
+        $.ajax({
+            url: BASE_URL + '/continue-stripe-bank-account', 
+            type: 'POST',
+            dataType: 'json',
+            data: {},
+            success: function(response) {
+              
+                $('#askUrlStripeAccountLink').hide();
+
+                $('#urlStripeAccountLink').html('<br>Click on secure link below to finish the creation of your connected account via Stripe:<br><small>(you will be automatically redirect to Sportlogin after your request)</small><br><br><i class="fa fa-arrow-right"><i/> <a style="font-size:12px; font-family:Arial;" href="'+response.url+'">' + response.url + '</a>');
+
+                $("#pageloader").hide();
+
+            },
+            error: function(xhr, status, error) {
+                console.error(error); // Affichez l'erreur dans la console
+                alert('Erreur lors de la création du compte Stripe.');
+            }
+        });
+    });
+});
+
 </script>
-
-
 @endsection
