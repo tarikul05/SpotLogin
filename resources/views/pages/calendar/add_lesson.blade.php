@@ -23,60 +23,67 @@ use App\Helpers\Helper;
 
 @section('content')
   <div class="content">
-	<div class="container-fluid">
-		<header class="panel-heading" style="border: none;">
-			<div class="row panel-row" style="margin:0;">
-				<div class="col-sm-6 col-xs-12 header-area">
-					<div class="page_header_class">
-						<label id="page_header" class="page_header bold" name="page_header">{{ __('Lesson') }} : <i class="fa fa-plus-square" aria-hidden="true"></i></label>
-					</div>
-				</div>
-			</div>
-		</header>
-		<!-- Tabs navs -->
+	<div class="container">
 
-		<nav>
-			<div class="nav nav-tabs" id="nav-tab" role="tablist">
-				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Contact Information') }}</button>
-			</div>
-		</nav>
-		<!-- Tabs navs -->
 
-		<!-- Tabs content -->
-		<div class="tab-content" id="ex1-content">
-			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 				<form class="form-horizontal" id="add_lesson" method="post" action="{{ route('lesson.createAction',[$schoolId]) }}"  name="add_lesson" role="form">
 					@csrf
+
+					<div class="row justify-content-center pt-5 pb-5">
+						<div class="col-md-10">
+			
+					<div class="page_header_class pt-1 pb-3" style="position: static;">
+						<h5 class="titlePage">{{ __('Lesson Information') }}</h5>
+					</div>
+
+					<div class="row">
+						<div class="col-lg-12">
+
 					<input id="save_btn_value" name="save_btn_more" type="hidden" class="form-control" value="0">
-					<fieldset>
-						<div class="section_header_class">
-							<label id="teacher_personal_data_caption">{{ __('Lesson information') }}</label>
-						</div>
+				
+					<div class="card2">
+				
+					<div class="card-header titleCardPage">{{ __('Add lesson') }}</div>
+					<div class="card-body bg-tertiary">
+					<div class="row">
+						<div class="col-md-12">
+
+					
 						<div class="row">
-							<div class="col-md-7 offset-md-2">
+						
+								@if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin())	
+								<div class="form-group row">
+									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Category type') }} :</label>
+									<div class="col-sm-7">
+											<select class="form-control" id="event_invoice_type" name="event_invoice_type">
+												<option value="">{{__('Select Type') }}</option>
+												<option value="T" @if(session('event_invoice_type') == "T") selected @endif>{{__('Teacher invoice')}}</option>
+												<option value="S" @if(session('event_invoice_type') == "S") selected @endif>{{__('School invoice')}}</option>
+											</select>
+									</div>
+								</div>
+								@else
+								<input style="opacity: 0; visibility: hidden; height: 0 !important" type="text" id="event_invoice_type" name="event_invoice_type"  value="T">
+								@endif
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Category') }} :</label>
 									<div class="col-sm-7">
-										<div class="selectdiv">
 											<select class="form-control" id="category_select" name="category_select">
 												@foreach($eventCategory as $key => $eventcat)
 													<option data-invoice="{{ $eventcat->invoiced_type }}" data-s_thr_pay_type="{{ $eventcat->s_thr_pay_type }}" data-s_std_pay_type="{{  $eventcat->s_std_pay_type }}" data-t_std_pay_type="{{  $eventcat->t_std_pay_type }}" value="{{ $eventcat->id }}" {{!empty($lessonData->event_category) ? (old('category_select', $lessonData->event_category) == $eventcat->id ? 'selected' : '') : (old('category_select') == $eventcat->id ? 'selected' : '')}}>{{ $eventcat->title }}</option>
 												@endforeach
 											</select>
-										</div>
 									</div>
 								</div>
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Location') }} :</label>
 									<div class="col-sm-7">
-										<div class="selectdiv">
 											<select class="form-control" id="location" name="location">
 												<option value="">{{__('Select Location') }}</option>
 												@foreach($locations as $key => $location)
 													<option value="{{ $location->id }}" {{!empty($lessonData->location_id) ? (old('location', $lessonData->location_id) == $location->id ? 'selected' : '') : (old('location') == $location->id ? 'selected' : '')}}>{{ $location->title }}</option>
 												@endforeach
 											</select>
-										</div>
 									</div>
 								</div>
 								<div class="form-group row">
@@ -95,22 +102,21 @@ use App\Helpers\Helper;
 										@if($AppUI->isTeacherAdmin())
 											<input type="hidden" name="teacher_select" class="form-control" value="{{ $lessonData->teacher_id; }}" readonly>
 										@else
-										<div class="selectdiv">
 											<select class="form-control" id="teacher_select" name="teacher_select">
 													<option value="">{{__('Select Professor') }}</option>
 												@foreach($professors as $key => $professor)
 													<option value="{{ $professor->teacher_id }}" {{!empty($lessonData->teacher_id) ? (old('teacher_select', $lessonData->teacher_id) == $professor->teacher_id ? 'selected' : '') : (old('teacher_select') == $professor->teacher_id ? 'selected' : '')}}>{{ $professor->full_name }}</option>
 												@endforeach
 											</select>
-										</div>
 										@endif
 									</div>
 								</div>
 
+
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student') }} :</label>
 									<div class="col-sm-7">
-										<div class="selectdiv student_list">
+										<div class="student_list">
 											<select class="form-control" id="student" name="student[]" multiple="multiple">
 												@foreach($students as $sub)
 													<option value="{{ $sub->student_id }}"  @foreach($studentOffList as $sublist){{$sublist->student_id == $sub->student_id ? 'selected': ''}}   @endforeach> {{ $sub->nickname }}</option>
@@ -185,30 +191,25 @@ use App\Helpers\Helper;
 								<div class="form-group row" id="teacher_type_billing">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher type of billing') }} :</label>
 									<div class="col-sm-7">
-										<div class="selectdiv">
 											<select class="form-control" id="sis_paying" name="sis_paying">
 												<option value="0">Hourly rate</option>
 												<option value="1">Fixed price</option>
 											</select>
-										</div>
 									</div>
 								</div>
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student type of billing') }} :</label>
 									<div class="col-sm-7">
-										<div class="selectdiv">
 											<select class="form-control" id="student_sis_paying" name="student_sis_paying">
 												<option value="0">Hourly rate</option>
 												<option value="1">Fixed price</option>
 												<option value="2">Packaged</option>
 											</select>
-										</div>
 									</div>
 								</div>
 								<div class="form-group row" id="hourly" style="display:none">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Number of students') }} :</label>
 									<div class="col-sm-7">
-										<div class="selectdiv">
 											<select class="form-control" id="sevent_price" name="sevent_price">
 												@foreach($lessonPrice as $key => $lessprice)
 													<option value="{{ $lessprice->lesson_price_student }}" {{ old('sevent_price') == $lessprice->lesson_price_student ? 'selected' : ''}}>
@@ -220,18 +221,15 @@ use App\Helpers\Helper;
 													</option>
 												@endforeach
 											</select>
-										</div>
 									</div>
 								</div>
 								<div id="price_per_student" style="display:none;">
-								<div class="form-group row">
+								<!--<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Currency') }} :</label>
 									<div class="col-sm-4">
-										<div class="selectdiv">
 											<input type="text" class="form-control" id="sprice_currency" name="sprice_currency" value="{{$lessonData->price_currency}}" readonly>
-										</div>
 									</div>
-								</div>
+								</div>-->
 								<div class="form-group row">
 									<!--<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price (per class)') }} :</label>-->
 									<div class="col-sm-4">
@@ -243,7 +241,7 @@ use App\Helpers\Helper;
 										</div>
 									</div>
 								</div>
-								<div class="form-group row">
+								<!--<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student price (student/hour)') }} :</label>
 									<div class="col-sm-4">
 										<div class="input-group" id="sprice_amount_sell_div">
@@ -253,13 +251,13 @@ use App\Helpers\Helper;
 											<input id="sprice_amount_sell" name="sprice_amount_sell" type="text" class="form-control" value="{{old('sprice_amount_sell')}}" autocomplete="off" readonly>
                                         </div>
 									</div>
+								</div>-->
 								</div>
-								</div>
+							
+							<div class="mt-5 mb-3">
+								<div class="card-header titleCardPage">{{ __('Optional information') }}</div>
 							</div>
-							<div class="section_header_class">
-								<label id="teacher_personal_data_caption">{{ __('Optional information') }}</label>
-							</div>
-							<div class="col-md-7 offset-md-2">
+							<div class="col-md-11" style="margin:0 auto;">
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Description') }} :</label>
 									<div class="col-sm-7">
@@ -270,15 +268,35 @@ use App\Helpers\Helper;
 								</div>
 							</div>
 						</div>
-					</fieldset>
-					<div class="btn_area">
+
+						<br>
 						<a class="btn btn-theme-outline" href="<?= $BASE_URL;?>/agenda">Back</a>
-						<button id="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save') }} </button>
-                    	<button id="save_btn_more" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save & add more') }} </button>
+						<br><br><br><br>
+
+						</div>
 					</div>
-				</form>
+					</div>
+				</div>
+					
+			
 			</div>
 		</div>
+	</div>
+</div>
+</div>
+
+
+<div class="row justify-content-center" style="position:fixed; bottom:0; z-index=99999!important;opacity:1!important; width:100%;">
+	<div class="col-md-12 mt-3 pt-3 pb-3 card-header text-center" style="opacity:0.99!important; background-color:#fbfbfb!important; border:1px solid #fcfcfc;">
+	   
+        <button id="save_btn_more" class="btn btn-outline-success">{{ __('Save & add more') }}</button>
+		<button id="save_btn" class="btn btn-success">{{ __('Save') }}</button>
+
+	</div>
+</div>
+
+</form>
+</div>
 	</div>
 
 	<!-- success modal-->
@@ -294,8 +312,7 @@ use App\Helpers\Helper;
 					<button type="button" id="modalClose" class="btn btn-primary" data-bs-dismiss="modal">{{ __('Ok') }}</button>
 				</div>
 			</div>
-		</div>
-	</div>
+
 	<!-- End Tabs content -->
 @endsection
 
@@ -336,7 +353,73 @@ $('#student').on('change', function(event) {
 		document.getElementById("sevent_price").value='price_'+cnt;
 	}
 
-})
+});
+
+
+$('#event_invoice_type').on('change', function() {
+	var event_invoice_type = $("#event_invoice_type option:selected").val();
+	var teacher = "{{$AppUI->person_id}}";
+	console.log(event_invoice_type, teacher);
+	getCategoryByType('{{ $schoolId }}', event_invoice_type, teacher);
+
+});
+
+function getCategoryByType(school_id=null, type=null, teacher=null) {
+
+if (school_id !=null) {
+    var menuHtml='';
+    var data = 'school_id='+school_id+'&type='+type+'&teacher='+teacher+'';
+    $('#category_select').html('');
+
+    $.ajax({
+        url: BASE_URL + '/get_event_category_by_type',
+        data: data,
+        type: 'POST',
+        dataType: 'json',
+        //async: false,
+        beforeSend: function( xhr ) {
+            $("#pageloader").show();
+        },
+        success: function(data) {
+          $("#pageloader").hide();
+            if (data.length >0) {
+                var resultHtml ="";
+                resultHtml+='<option data-s_thr_pay_type="0" data-s_std_pay_type="0" data-t_std_pay_type="0" data-invoice="T" value="0">Select Category</option>';
+                var i='0';
+                $.each(data, function(key,value){
+                    var isAdmin = "{{ $AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() }}";
+                    let textAdmin = "";
+                    if(isAdmin) {
+                        textAdmin = "<span class='text-danger'>("+value.invoiced_type+")</span> ";
+                    }
+                    var lastCat = '{{ session('last_cat') }}';
+                    resultHtml+='<option data-s_thr_pay_type="'+value.s_thr_pay_type+'" data-s_std_pay_type="'+value.s_std_pay_type+'" data-t_std_pay_type="'+value.t_std_pay_type+'" value="'+value.id+'" data-invoice="'+value.invoiced_type+'" ' + ((lastCat && lastCat == value.id) ? 'selected' : '') + '>'+textAdmin+''+value.title+'</option>';
+                });
+                $('#category_select').html(resultHtml);
+                $('#category_select').change();
+
+            } else {
+
+                var resultHtml ="";
+                resultHtml+='<option value="">No category found</option>';
+                $('#category_select').html(resultHtml);
+                $('#category_select').change();
+
+            }
+
+        },   //success
+        complete: function( xhr ) {
+          $("#pageloader").hide();
+        },
+        error: function(ts) {
+            console.log(ts);
+            errorModalCall('Populate Event Type:'+GetAppMessage('error_message_text'));
+        }
+    }); // Ajax
+}
+
+}
+
 
 $( document ).ready(function() {
 	// var zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -445,7 +528,7 @@ $( document ).ready(function() {
 			else{
 				el_duration.val(recalculate_duration(el_start.val(), el_end.val()));
 			}
-            getLatestPrice()
+           // getLatestPrice()
 		}
 
 	function recalculate_end_time(start_value, duration) {
@@ -617,7 +700,7 @@ $('#add_lesson').on('submit', function(e) {
 
 
 $("body").on('change', '#category_select', function(event) {
-    console.log('changeeee')
+
 	var datainvoiced = $("#category_select option:selected").data('invoice');
 	var s_thr_pay_type = $("#category_select option:selected").data('s_thr_pay_type');
 	var s_std_pay_type = $("#category_select option:selected").data('s_std_pay_type');
@@ -685,15 +768,15 @@ $("body").on('change', '#category_select', function(event) {
         $("#price_per_student").hide();
     }
 
-	getLatestPrice();
+	//getLatestPrice();
 });
 
 $("#student, #teacher_select").on('change', function(event) {
-    getLatestPrice()
+   // getLatestPrice()
 });
 
 	function getLatestPrice() {
-        console.log('getLatestPrice')
+
 	    var agendaSelect = +$("#agenda_select").val();
 	    var categoryId = +$("#category_select").val();
 	    //var teacherSelect = +$("#teacher_select").val();
@@ -728,13 +811,13 @@ $("#student, #teacher_select").on('change', function(event) {
 	            type: 'POST',
 	            dataType: 'json',
 	            success: function(response){
-                    console.log(response);
+                   
 	                if(response){
 	                    if (response.status == 1) {
 	                        $("#sprice_amount_buy").val(response.lessonPriceTeacher['price_buy'])
 	                        $("#sprice_amount_sell").val(response.lessonPriceTeacher['price_sell'])
 
-                            console.log('new price',  response.lessonPriceTeacher['price_sell']);
+                           
                             var newDuration = $("#duration").val();
 
                             var $sellPriceCal = (response.lessonPriceTeacher['price_sell']*(newDuration/60));
@@ -780,32 +863,6 @@ $( document ).ready(function() {
            $("#save_btn_value"). val(3);
         });
     });
-});
-
-	$(window).scroll(function() {
-		var scroll = $(window).scrollTop();
-		if (scroll >= 80) {
-				$("#add_lesson .btn_area").addClass("btn_area_fixed");
-		} else {
-			$("#add_lesson .btn_area").removeClass("btn_area_fixed");
-		}
-	});
-
-
-    document.addEventListener("DOMContentLoaded", function() {
-    setTimeout(function() {
-        var priceAmountSell = @json($lessonData ? $lessonData->price_amount_sell : null);
-        console.log('price', priceAmountSell);
-
-        var inputElem = document.getElementById('sprice_amount_sell');
-        if(inputElem) {
-            inputElem.removeAttribute('disabled');
-            inputElem.value = priceAmountSell;
-           // inputElem.setAttribute('disabled', 'disabled');
-        } else {
-            console.error('Element #sprice_amount_sell not found');
-        }
-    }, 1500); // 4000 millisecondes = 4 secondes
 });
 
 </script>

@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\PaymentMethod;
+use App\Models\Invoice;
+use App\Models\User;
 
 class PlanController extends Controller
 {
@@ -79,16 +82,92 @@ class PlanController extends Controller
     public function stripe_bank_account(Request $request)
     {
         $user = Auth::user();
-        $account = $this->stripe->accountLinks->create([
-            'account' => 'acct_1Mt0CORHFI4mz9Rw',
+
+          $accountCreate = $this->stripe->accounts->create([
+            'country' => 'CH',
+            'company' => [
+                'name' => $user->firstname . ' ' . $user->lastname,
+            ],
+            'individual' => [
+                'first_name' => $user->firstname,
+                'last_name' => $user->lastname,
+                'email' => $user->email,
+            ],
+            'type' => 'express',
+            'capabilities' => [
+              'card_payments' => ['requested' => true],
+              'transfers' => ['requested' => true],
+            ],
+            'business_type' => 'individual',
+            'business_profile' => ['url' => 'https://sportlogin.app/account'],
+          ]);
+
+          $account = $this->stripe->accountLinks->create([
+            'account' => $accountCreate->id,
+            'refresh_url' => 'https://sportlogin.app/account',
+            'return_url' => 'https://sportlogin.app/account',
+            'type' => 'account_onboarding',
+          ]);
+
+          $user->stripe_account_id = $accountCreate->id;
+          $user->save();
+
+        PaymentMethod::create([
+            'type' => 'Stripe',
+            'details' => [
+                'account_number' => $accountCreate->id
+            ],
+            'user_id' => $user->id,
+        ]);
+
+          return response()->json($account);
+    }
+
+    public function continue_stripe_bank_account(Request $request)
+    {
+        $user = Auth::user();
+
+        $account_id = $user->stripe_account_id;
+
+          $account = $this->stripe->accountLinks->create([
+            'account' => $account_id,
             'refresh_url' => 'https://sportlogin.app/account',
             'return_url' => 'https://sportlogin.app/account',
             'type' => 'account_onboarding',
           ]);
 
           return response()->json($account);
-        
-        //$user->stripe_account_id = $account->id;
-        //$user->save();
+
+    }
+
+    
+    public function createPaymentIntentForCoach(Request $request)
+    {
+        $user = Auth::user();
+
+        if (!$request->stripe_payment_method_id) {
+            return response()->json(['error' => 'No payment method found'], 400);
+        }
+
+        $invoice = Invoice::find($request->invoice_id);
+        $coachOfInvoice = User::Where(['person_type' => 'App\Models\Teacher', 'person_id' => $invoice->seller_id])->first();
+
+        $paymentIntent = $this->stripe->paymentIntents->create([
+            'amount' => $invoice->total_amount * 100,
+            'currency' => $invoice->invoice_currency,
+            'payment_method' => $request->stripe_payment_method_id,
+            'payment_method_types' => ['card'],
+            'confirm' => true, 
+            'transfer_data' => [
+                'destination' => $coachOfInvoice->stripe_account_id, 
+            ],
+        ]);
+
+        if($paymentIntent->status === 'succeeded') {
+            $invoice->payment_status = 1;
+            $invoice->save();
+        }
+
+        return response()->json(['clientSecret' => $paymentIntent->client_secret]);
     }
 }

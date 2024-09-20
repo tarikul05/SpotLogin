@@ -37,11 +37,13 @@ use Log;
 
 class InvoiceController extends Controller
 {
+    protected $stripe;
     use UserRoleTrait;
 
     public function __construct()
     {
         parent::__construct();
+        $this->stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
     }
 
     /**
@@ -1643,10 +1645,23 @@ class InvoiceController extends Controller
 
         $genders = config('global.gender');
         $countries = Country::active()->get();
+
+        //Get coach emthods payments
+        $coachOfInvoice = User::Where(['person_type' => 'App\Models\Teacher', 'person_id' => $invoice->seller_id])->first();
+        $coachPaymentMethods = $coachOfInvoice->paymentMethods()->get();
+        $is_conneced_account_charges_enabled = false;
+        $is_connected_account = false;
+        $stripeConnectedAccount = null;
+        if($coachOfInvoice->stripe_account_id){
+            $is_connected_account = true;
+            $stripeConnectedAccount = $this->stripe->accounts->retrieve($coachOfInvoice->stripe_account_id, []);
+            $is_conneced_account_charges_enabled = $stripeConnectedAccount->charges_enabled;
+        }
+
         return view('pages.invoices.invoice_modification', [
             'title' => 'Invoice',
             'pageInfo' => ['siteTitle' => '']
-        ])->with(compact('timeZone','genders','invoice_status_all', 'invoice_type_all','countries', 'provinces','invoice', 'RegisterTaxData'));
+        ])->with(compact('timeZone','genders','invoice_status_all', 'invoice_type_all','countries', 'provinces','invoice', 'RegisterTaxData', 'coachPaymentMethods', 'is_conneced_account_charges_enabled'));
     }
 
     /**

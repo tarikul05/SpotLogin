@@ -207,10 +207,12 @@ function confirmDeleteModalCall(p_event_id,title,function_name,showWarning=true)
         <div class="modal-dialog modal-lg modal-dialog-centered mt-5">
             <div class="modal-content">
                 <div class="modal-body text-center p-4">
-                    <h5 class="light-blue-txt gilroy-bold">`+v_title+`</h5>
+                    <h6 class="light-blue-txt gilroy-bold">`+v_title+`</h6>
+                    <p>Please confirm you want to delete this Event/Lesson.</p>
                     <br>
-                    <button id="confirm_ok_btn" type="button" class="btn btn-primary gilroy-medium" data-bs-dismiss="modal" style="width:188px;" onclick="`+function_name+`">`+ok_btn_text+`</button>
-                    <button id="confirm_cancel_btn" type="button" class="btn btn-default gilroy-medium" aria-label="Close" style="width:188px;" data-bs-dismiss="modal">`+cancel_btn_text+`</button><br><br>`;
+                    <button id="confirm_cancel_btn" type="button" class="btn btn-outline-primary gilroy-medium" aria-label="Close" style="width:188px;" data-bs-dismiss="modal">`+cancel_btn_text+`</button> 
+                    <button id="confirm_ok_btn" type="button" class="btn btn-danger gilroy-medium" data-bs-dismiss="modal" style="width:188px;" onclick="`+function_name+`">`+ok_btn_text+`</button><br><br>`;
+                    
                     if (showWarning)  modalHtml +=`<div class="alert alert-warning" role="alert">Only un-validated events/lessons will be deleted</div><br>`;
                     if (p_event_id.length!=0) {
                         modalHtml += `<div class="row">`;

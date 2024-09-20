@@ -7,6 +7,20 @@
 <link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.min.css')}}"/>
 <!-- color wheel -->
 <script src="{{ asset('ckeditor/ckeditor.js')}}"></script>
+<style>
+    /* Optionnel: Personnalisation de l'apparence du formulaire Stripe */
+    .StripeElement {
+        background-color: white;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-bottom: 10px;
+    }
+
+    #payment-form {
+        display: none;
+    }
+</style>
 @endsection
 <?php
     $invoiceIssued = ($invoice->invoice_status == 10);
@@ -48,7 +62,7 @@
 						<form role="form" id="form_main" class="form-horizontal" method="post" action="">
                         <fieldset class="section_header_class">
                             @if ($invoice->seller_country_id != 'CA' && $invoice->seller_country_id != 'US')
-                                <span style="font-size:12px;">{{ $invoice->invoice_header }}</span><br><br>
+                                <span style="font-size:13px;">{{ $invoice->invoice_header }}</span><br><br>
                             @endif
                             <table class="table table-stripped table-hover" id="invoice_list_item" name="invoice_list_item" style="font-size:1em;">
 
@@ -1025,14 +1039,77 @@
         </div>
 
 
-        
+
+        @if($invoice->payment_status == 1)
+        <div style="text-align:center; width:100%; padding:10px; border-radius:8px; margin-bottom:15px;">
+            <b class="text-success"><i class="fa fa-check"></i> {{ __('Invoice was paid') }}</b>
+        </div>
+        @endif
+
+
+        @if($invoice->payment_status == 0 && ($AppUI->isStudent() || $AppUI->isParent()))
+        <div class="card2" style="margin-bottom:55px;">
+            <div class="card-header titleCardPage">{{ __('Payment Methods Accepted') }}</div>
+            <div class="card-body">
+
+                @if($is_conneced_account_charges_enabled)
+                    <div style="background-color:#f1f1f1;  width:100%; max-width:500px; padding:10px; border-radius:8px; margin-bottom:15px;">
+                        <b style="color:#0075bf;">{{__('pay_by_card')}}</b>
+                        <div id="example4-card"></div>
+                        <div id="confirmPaymentByStripe" style="display:none;" class="text-center">
+                            <div class="form-group text-center mt-2 mb-3">
+                                <label><input type="checkbox" id="terms_condition" name="terms_condition"> {{ __('I agree with the') }} <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal2">{{ __('terms and conditions') }}</a></label>
+                            </div>
+                            <a href="#" id="btnConfirmPaymentByStripe" class="btn btn-primary">{{__('confirm_payment')}}</a>
+                        </div>
+                    </div>
+                @endif
+
+
+                @foreach ($coachPaymentMethods as $paymentMethod)
+                  @if($paymentMethod->type !== "Stripe")
+                  <div style="background-color:#f1f1f1;  width:100%; max-width:500px; padding:10px; border-radius:8px; margin-bottom:15px;">
+      
+                  <b style="color:#0075bf;">{{ $paymentMethod->type }}</b>: 
+           
+                        @if ($paymentMethod->type === 'PayPal')
+                            <span>{{ $paymentMethod->details['paypal_address'] ?? 'N/A' }}</span>
+                        @elseif ($paymentMethod->type === 'IBAN')
+                            <span>IBAN N°: {{ $paymentMethod->details['iban_number'] ?? 'N/A' }}</span>
+                            <br><span>SWIFT N°: {{ $paymentMethod->details['swift_number'] ?? 'N/A' }}</span>
+                        @elseif ($paymentMethod->type === 'Swift')
+                            <span>{{ $paymentMethod->details['swift_number'] ?? 'N/A' }}</span>
+                        @elseif ($paymentMethod->type === 'Cash')
+                            <span>{{ $paymentMethod->details['cash'] ?? 'N/A' }}</span>
+                        @elseif ($paymentMethod->type === 'E-Transfer')
+                            <span>{{ $paymentMethod->details['e_transfer_number'] ?? 'N/A' }}</span>
+                        @elseif ($paymentMethod->type === 'Bank')
+                            <ul>
+                                @forelse ($paymentMethod->details['custom_fields'] ?? [] as $field)
+                                    <li><strong>{{ $field['name'] }}:</strong> {{ $field['value'] }}</li>
+                                @empty
+                                    <li>No custom fields added.</li>
+                                @endforelse
+                            </ul>
+                        @endif
+                    
+                    </div>
+                    @endif
+                @endforeach
+            </div>
+        </div>
+        @endif
+
+
+
+
+
 
 
 
             </div>
         </div>
 
-        
 
 		</form>
 	</div>
@@ -1076,6 +1153,7 @@
                 </a>
                 @endif
 
+
             @else
                 <a id="issue_inv_btn" name="issue_inv_btn" class="btn btn-sm btn-success" target="">
                     <i class="fa-solid fa-check"></i> <span class="d-none d-sm-inline-block">{{__('Generate invoice')}}</span>
@@ -1090,11 +1168,27 @@
 
         </div>
 
+        
+
             <a id="save_btn" name="save_btn" class="btn btn-success" style="display: none; max-width:200px; margin:0 auto;"><i class="fa-solid fa-check"></i> <span class="d-none d-sm-inline-block">{{__('Update invoice')}}</span></a>
 
 
         </div>
 
+</div>
+
+
+<div class="modal pay_now" id="pay_now">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+             pay now the truc
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="modalClose" class="btn btn-primary" data-bs-dismiss="modal">PAY</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 
@@ -2007,4 +2101,134 @@ function extractExtraCharges($inputString) {
 
     }
 </script>
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+    (function() {
+      "use strict";
+      let cardSaved = "";
+      const stripe = Stripe('<?= env('STRIPE_KEY') ?>', { locale: 'en' });
+      var elements = stripe.elements({
+        disableLink:true,
+        fonts: [
+          {
+            cssSrc: "https://rsms.me/inter/inter.css"
+          }
+        ],
+        locale: window.__exampleLocale,
+      });
+    
+      /**
+       * Card Element
+      */
+      var card = elements.create("card", {
+        hidePostalCode: true,
+        style: {
+          base: {
+            color: "#32325D",
+            fontWeight: 400,
+            fontFamily: "Inter, Open Sans, Segoe UI, sans-serif",
+            fontSize: "13px",
+            fontSmoothing: "antialiased",
+    
+            "::placeholder": {
+              color: "#888"
+            }
+          },
+          invalid: {
+            color: "#E25950"
+          }
+        }
+      });
+    
+      card.mount("#example4-card");
+    
+      const errorDiv = document.querySelector('.errorStripe');
+    
+    // Lorsqu'il y a une erreur
+    card.on('change', function(event) {
+        console.log(event);
+     if(event.complete) {
+        $('#confirmPaymentByStripe').show();
+      } else {
+        $('#confirmPaymentByStripe').hide();
+      }
+      if (event.error) {
+        // Afficher l'erreur dans le div
+        errorDiv.textContent = event.error.message;
+        errorDiv.style.display = 'block';
+      } else {
+        // Masquer le div si pas d'erreur
+        errorDiv.style.display = 'none';
+      }
+
+    });
+    
+      $("#btnConfirmPaymentByStripe").click(function(e){
+        e.preventDefault(); 
+        $('#pageloader').show();
+            stripe.createPaymentMethod({
+            type: 'card',
+            card: card,
+            }).then(function(result) {
+            if (result.error) {
+                $('#pageloader').hide();
+                Swal.fire({
+                icon: 'error',
+                title: "{{ __('Payment error') }}",
+                text:result.error.message,
+                });
+            } else {
+
+                var is_terms_condition = $("#terms_condition").prop('checked');
+
+                if(is_terms_condition) {
+
+                    $('#pageloader').hide();
+                    var theInvoiceId = "{{$invoice->id}}";
+
+                    $.ajax({
+                        url: BASE_URL + '/payment/invoice', 
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {stripe_payment_method_id:result.paymentMethod.id,invoice_id:theInvoiceId},
+                        success: function(response) {
+                            $("#pageloader").hide();
+                            Swal.fire({
+                                icon: 'success',
+                                title: "Payment successful",
+                            });
+                            setTimeout(() => {
+                                //reload page
+                                location.reload();
+                            }, 1000);
+                        },
+                        error: function(xhr, status, error) {
+                            $('#pageloader').hide();
+                            Swal.fire({
+                                icon: 'error',
+                                title: "{{ __('Payment error') }}",
+                                text: "An error occurred. The payment could not be completed. You were not charged."
+                            });
+                        }
+                    });
+
+                } else {
+                    $('#pageloader').hide();
+                    Swal.fire({
+                        icon: 'error',
+                        title: "{{ __('Payment error') }}",
+                        text: "An error occurred. The payment could not be completed. You were not charged."
+                    });
+                }
+    
+            }
+            });
+        });
+    
+    
+    })();
+    
+    const paymentButton = document.getElementById('payment-button');
+    
+    </script>
 @endsection

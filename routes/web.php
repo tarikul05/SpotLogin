@@ -134,6 +134,9 @@ Route::post('get_student_lessons', [App\Http\Controllers\InvoiceController::clas
 //AJAX get teacher lessons for invoice
 Route::post('get_teacher_lessons', [App\Http\Controllers\InvoiceController::class, 'getTeacherLessons'])->name('get_teacher_lessons.submit')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
+//Payment Stripe for Coach
+Route::post('/payment/invoice', [App\Http\Controllers\PlanController::class, 'createPaymentIntentForCoach'])->name('payment.stripe_coach')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
 //AJAX generate teacher invoice
 Route::post('generate_teacher_invoice', [App\Http\Controllers\InvoiceController::class, 'generateTeacherInvoice'])->name('generate_teacher_invoice.submit')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
@@ -150,7 +153,6 @@ Route::post('update_invoice_info', [App\Http\Controllers\InvoiceController::clas
 //AJAX update teacher discount
 Route::post('teacher_update_discount_perc', [App\Http\Controllers\TeachersController::class, 'updateDiscountPerc'])->name('teacher_update_discount_perc.submit')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
-
 Route::post('/payment-methods', [PaymentMethodController::class, 'store'])->name('payment_methods.store');
 Route::get('/payment-methods', [PaymentMethodController::class, 'index'])->name('payment_methods.index');
 Route::delete('/payment-methods/{id}', [PaymentMethodController::class, 'destroy'])->name('payment_methods.destroy');
@@ -159,7 +161,6 @@ Route::delete('/payment-methods/{id}', [PaymentMethodController::class, 'destroy
 Route::get('/template_variables', [App\Http\Controllers\EmailTemplateController::class, 'templateVariables'])->name('email.template_variables');
 Route::post('/fetch_email_template', [App\Http\Controllers\EmailTemplateController::class, 'getEmailTemplate'])->name('email.fetch_email_template');
 Route::post('/fetch_tc_cms_template', [App\Http\Controllers\TermCondController::class, 'getTcTemplate'])->name('tc.fetch_cms_template');
-
 
 //confirm event AJAX
 Route::post('confirm_event', [App\Http\Controllers\AgendaController::class, 'confirmEvent'])->name('confirm_event.submit')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
@@ -466,6 +467,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('teacher-user-update/{user}', ['as' =>'teacher.user_update','uses' =>'TeachersController@userUpdate' ]);
 
     Route::post('/create-stripe-bank-account', [App\Http\Controllers\PlanController::class, 'stripe_bank_account'] )->name('plan.stripe-bank-account')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+    Route::post('/continue-stripe-bank-account', [App\Http\Controllers\PlanController::class, 'continue_stripe_bank_account'] )->name('plan.continue-stripe-bank-account')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
 
     // Route::post('/{school}/add-student-action', [App\Http\Controllers\TeachersController::class, 'AddTeacher'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
