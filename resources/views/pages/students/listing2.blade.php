@@ -1,5 +1,4 @@
 
-
 <form method="POST" action="{{ route('students.delete') }}">
     @csrf
     
@@ -16,7 +15,7 @@
                 <input name="schoolId" type="hidden" value="{{$schoolId}}">
 
 
-                    <table class="table table-stripped table-hover" id="students1" style="width:100%">
+                    <table id="students1" style="width:100%">
                         <thead>
                         <tr>
                             <th style="width: 10px!important;" class="text-left">

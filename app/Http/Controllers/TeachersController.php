@@ -1005,6 +1005,75 @@ public function selfPriceUpdate(Request $request)
         }
     }
 
+    /**
+     * send invitation.
+     *
+     * @param
+     * @return \Illuminate\Http\Response
+     */
+    public function teacherPasswordGet(Request $request)
+    {
+        $schoolId = $request->route('school');
+        $studentId = $request->route('teacher');
+        try {
+            $schoolStudent = SchoolTeacher::where(['school_id'=>$schoolId, 'teacher_id'=>$studentId])->first();
+            //->update(['is_sent_invite'=>$is_sent_invite]);
+
+            $school = School::find($schoolId);
+            $student = Teacher::find($studentId);
+            if ($student && !empty($student->email)) {
+                $this->passwordSet($school, $schoolStudent, $student, 'App\Models\Teacher');
+                return redirect()->back()->with('success', 'Invitation sent successfully');
+            }else{
+                return redirect()->back()->with('error', __('Email not found'));
+            }
+
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+        }
+    }
+
+    public function passwordSet($school, $alldata, $person, $type = 'App\Models\Student')
+    {
+        //sending activation email after successful signed up
+        try {
+            $schoolId = $school->id;
+            if (config('global.email_send') == 1) {
+                $data = [];
+                $user = User::where('person_id', $person->id)->first(); 
+                $data['email'] = $person->email;
+                $data['username'] = $user->firstname . ' ' . $user->lastname;
+                $data['school_name'] = $school->school_name;
+
+                $verifyUser = [
+                    'school_id' => $schoolId,
+                    'person_id' => $person->id,
+                    'person_type' => $type,
+                    'token' => Str::random(40),
+                    'token_type' => 'VERIFY_RESET_PASSWORD',
+                    'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
+                ];
+                $verifyUser = VerifyToken::create($verifyUser);
+                $data['token'] = $verifyUser->token;
+                $data['url'] = route('reset_password.email', $data['token']);
+                $data['username_login'] = $user->username;
+
+                if ($this->emailSend($data, 'forgot_password_email')) {
+                    $data = [];
+                    $data['is_sent_invite'] = 1;
+                    $alldata->update($data);
+
+                    //$msg = __('We sent you an activation link. Check your email and click on the link to verify.');
+                } else {
+                    return false;
+                }
+                return true;
+            }
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
 
     /**
      *  AJAX action to send email to school admin
