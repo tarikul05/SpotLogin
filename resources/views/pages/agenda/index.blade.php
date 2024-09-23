@@ -3252,14 +3252,14 @@ $('.close-icon').on('click', function() {
                     var momentTargetStart = moment(target_start_date, "YYYY-MM-DD");
                     var momentTargetEnd = moment(target_end_date, "YYYY-MM-DD");
 
-                    if (momentSourceEnd.isBefore(momentTargetStart)) {
-                        document.getElementById("btn_goto_planning").style.display = "none";
-                        document.getElementById("btn_goto_planning_mobile").style.display = "none";
-                        showMessage('Your cannot copy your events or lessons in the past.', 'danger');
-                    } else {
+                    //if (momentSourceEnd.isBefore(momentTargetStart)) {
+                    //    document.getElementById("btn_goto_planning").style.display = "none";
+                     //   document.getElementById("btn_goto_planning_mobile").style.display = "none";
+                     //   showMessage('You cannot copy your events or lessons in the past.', 'danger');
+                    //} else {
                         document.getElementById("btn_goto_planning").style.display = "block";
                         document.getElementById("btn_goto_planning_mobile").style.display = "block";
-                    }
+                    //}
                 }
 
                 target_start_date=document.getElementById("date_from").value;
@@ -4263,7 +4263,7 @@ $('.close-icon').on('click', function() {
        // console.log('view_mode', view_mode);
 
         var data='location_id='+p_event_location_id+'&view_mode='+view_mode+'&source_start_date='+source_start_date+'&source_end_date='+source_end_date+'&target_start_date='+target_start_date+'&target_end_date='+target_end_date+'&school_id='+event_school+'&event_type='+event_type+'&student_id='+student_id+'&teacher_id='+teacher_id+'&zone='+zone;
-        //console.log(data);
+        console.log(data);
         //return false;
         e.preventDefault();
         $.ajax({
@@ -4286,8 +4286,15 @@ $('.close-icon').on('click', function() {
                     document.getElementById("copy_week_day").value = '';
                     document.getElementById("copy_month_day").value = '';
                     //window.location.reload(false);
-
                     getFreshEvents();      //refresh calendar
+                    setTimeout(() => {
+                        showMessage('Schedule of current week view is pasted!', 'success');
+                        Swal.fire({
+                            title: "{{__('Successfully pasted') }}",
+                            text: "{{__('Schedule of current week view is pasted') }}",
+                            icon: "success"
+                        });
+                    }, 800);
                 }
                 else
                 {
