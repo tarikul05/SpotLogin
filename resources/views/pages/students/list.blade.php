@@ -17,7 +17,26 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
-@endsection
+
+    <style>
+        #students1_table td {
+            border:none!important;
+            border-bottom:2px solid #EEE!important;
+            padding-bottom:10px;
+        }
+        #students1_table tr:hover {
+            border:1px solid #EEE!important;
+            background-color:#fcfcfc!important;
+        }
+        #students1_table th {
+            border:none!important;
+            border-bottom:3px solid #EEE!important;
+            text-align: left!important;
+            font-size:20px;
+        }
+        </style>
+
+    @endsection
 
 @section('content')
     <div class="container">

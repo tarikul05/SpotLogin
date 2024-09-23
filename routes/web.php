@@ -438,6 +438,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('invoices/{invoiceId}/download', [App\Http\Controllers\InvoiceController::class, 'downloadInvoicePdf'])->name('invoices.download');
 
+    Route::get('/{school}/teacher_password_send/{teacher}', [App\Http\Controllers\TeachersController::class, 'teacherPasswordGet'])->name('teacherPasswordGet');
+
     Route::get('/account', [App\Http\Controllers\TeachersController::class, 'self_edit'])->name('updateTeacher');
     Route::post('/update-teacher', [App\Http\Controllers\TeachersController::class, 'self_update'])->name('updateTeacherAction');
 
