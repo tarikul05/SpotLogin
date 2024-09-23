@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use App\Models\AgendaImport as AgendaImportModel;
 use App\Models\Widget;
 use App\Models\UserWidget;
+use DateTime;
 
 class AgendaController extends Controller
 {
@@ -406,111 +407,48 @@ class AgendaController extends Controller
      * @author Mamun <lemonpstu09@gmail.com>
      * @version 0.1 written in 2022-04-14
      */
-    public function copyPasteEvent(Request $request,$schoolId = null, Event $event)
+    public function copyPasteEvent(Request $request, Event $event)
     {
-        $user = Auth::user();
         $data = $request->all();
-        // $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ;
-        // $school = School::active()->find($schoolId);
-        // if (empty($school)) {
-        //     return redirect()->route('schools')->with('error', __('School is not selected'));
-        // }
 
-        $result = array(
-            "status"     => 1,
+        $result = [
+            "status" => 1,
             'message' => __('failed to send email'),
-        );
+        ];
+
         try {
-
             $timeZone = $data['zone'];
+            $source_start_date = new DateTime(trim($data['source_start_date']));
+            $target_start_date = new DateTime(trim($data['target_start_date']));
 
-            // $p_app_id=$_SESSION['global_app_id'];
-            // $p_school_id=$_SESSION['global_school_id'];
-            // $p_lang_id=$_SESSION['Language'];
+            $day_diff = $target_start_date->diff($source_start_date)->days;
 
-
-            $data['location_id'] = trim($data['location_id']);
-            $data['school_id'] = trim($data['school_id']);
-            $data['event_type']= trim($data['event_type']);
-            $data['teacher_id']= trim($data['teacher_id']);
-            $data['student_id']= trim($data['student_id']);
-            $view_mode= trim($data['view_mode']);
-
-            //dd($data);
-            //$query = new Event;
-            $eventData = $event->filter_for_copy($data);
-
-            $eventData = $eventData->get();
-
-
-
-            $target_start_date= trim($data['target_start_date']);
-            // exit();
-            // $target_end_date= trim($data['target_end_date']);
-
-            $target_start_date = str_replace('/', '-', $target_start_date);
-            // exit();
-            // $target_end_date = str_replace('/', '-', $target_end_date);
-
-            $source_start_date= trim($data['source_start_date']);
-            $source_end_date= trim($data['source_end_date']);
-
-            if ($view_mode =='AGENDADAY') {
-                $day_diff = 0;
-
-
-            } else {
-                $now = strtotime($target_start_date);
-                $your_date = strtotime($source_start_date);
-                $datediff = $now - $your_date;
-                $day_diff = round($datediff / (60 * 60 * 24));
-
-                //$day_diff = $target_start_date-$source_start_date; //= 10
+            if ($target_start_date < $source_start_date) {
+                $day_diff = -$day_diff;
             }
 
+            $eventData = $event->filter_for_copy($data)->get();
 
+            foreach ($eventData as $fetch) {
+                if (in_array($fetch->event_type, [50, 51, 100])) continue;
 
-            // $zone= trim($data['zone']);
+                $fetch->date_start = $this->formatDateTimeZone($fetch->date_start, 'long', 'UTC', $timeZone);
+                $fetch->date_end = $this->formatDateTimeZone($fetch->date_end, 'long', 'UTC', $timeZone);
 
+                $date_start = new DateTime($fetch->date_start);
+                $date_end = new DateTime($fetch->date_end);
 
+                $date_start->modify("{$day_diff} days");
+                $date_end->modify("{$day_diff} days");
 
-            // $events = array();
-            foreach ($eventData as $key => $fetch) {
-                if (in_array($fetch->event_type, [50,51,100])) continue;
+                $date_start = $this->formatDateTimeZone($date_start->format('Y-m-d H:i:s'), 'long', $timeZone, 'UTC');
+                $date_end = $this->formatDateTimeZone($date_end->format('Y-m-d H:i:s'), 'long', $timeZone, 'UTC');
 
-                $fetch->date_start = $this->formatDateTimeZone($fetch->date_start, 'long', 'UTC',$timeZone);
-                $fetch->date_end = $this->formatDateTimeZone($fetch->date_end, 'long', 'UTC',$timeZone);
-                if ($day_diff ==0) {
-                    $date_start = strtotime($fetch->date_start);
-                    $date_start =$target_start_date.' '.date('H:i:s', $date_start);
-
-                    $date_end = strtotime($fetch->date_end);
-                    $date_end =$target_start_date.' '.date('H:i:s', $date_end);
-                }
-                else { // $day_diff add
-
-                    //$myDate = "2014-01-16";
-                    $nDays = $day_diff;
-                    $date_start = strtotime($fetch->date_start . '+ '.$nDays.'days');
-                    $date_start = date('Y-m-d H:i:s', $date_start); //format new date
-                    $nDays = $day_diff;
-                    $date_end = strtotime($fetch->date_end . '+ '.$nDays.'days');
-                    $date_end = date('Y-m-d H:i:s', $date_end); //format new date
-
-
-                    // $date_start = strtotime($fetch->date_start);
-                    // $date_start =$target_start_date.' '.date('H:i:s', $date_start);
-
-                    // $date_end = strtotime($fetch->date_end);
-                    // $date_end =$target_start_date.' '.date('H:i:s', $date_end);
-                }
-                $date_start = $this->formatDateTimeZone($date_start, 'long', $timeZone,'UTC',);
-                $date_end = $this->formatDateTimeZone($date_end, 'long',$timeZone,'UTC');
                 $data = [
                     'title' => $fetch->title,
                     'school_id' => $fetch->school_id,
                     'event_type' => $fetch->event_type,
-                    'event_category' =>$fetch->event_category,
+                    'event_category' => $fetch->event_category,
                     'date_start' => $date_start,
                     'date_end' => $date_end,
                     'duration_minutes' => $fetch->duration_minutes,
@@ -523,60 +461,38 @@ class AgendaController extends Controller
                     'location_id' => $fetch->location_id,
                     'teacher_id' => $fetch->teacher_id,
                     'event_price' => $fetch->event_price,
-                    'event_price' => $fetch->event_price,
                     'no_of_students' => $fetch->no_of_students,
                 ];
+
                 $eventData = Event::create($data);
 
-                $eventDetailsStudentId = EventDetails::active()->where('event_id', $fetch->id)->get()->toArray();
+                $eventDetailsStudentId = EventDetails::active()
+                    ->where('event_id', $fetch->id)
+                    ->get()
+                    ->toArray();
 
-
-                foreach($eventDetailsStudentId as $std){
+                foreach ($eventDetailsStudentId as $std) {
                     $dataDetails = [
-                        'event_id'   => $eventData->id,
+                        'event_id' => $eventData->id,
                         'teacher_id' => $fetch->teacher_id,
                         'student_id' => $std['student_id'],
                         'buy_price' => $fetch->price_amount_buy,
                         'sell_price' => $fetch->price_amount_sell,
                     ];
-                    $eventDetails = EventDetails::create($dataDetails);
+                    EventDetails::create($dataDetails);
                 }
-
-
             }
-            //dd($eventData);
 
-
-
-
-
-
-
-            // $event = Event::create($data);
-
-
-
-            //$p_event_auto_id = $data['p_event_auto_id'];
-            // $data['school_id']
-            // $p_user_id = Auth::user()->id;
-
-
-
-
-                $result = array(
-                    "status"     => 0,
-                    'message' => __('Confirmed'),
-                );
-
+            $result = [
+                "status" => 0,
+                'message' => __('Confirmed'),
+            ];
 
             return response()->json($result);
-
         } catch (Exception $e) {
-            //return error message
             $result['message'] = __('Internal server error');
             return response()->json($result);
         }
-
     }
 
 
