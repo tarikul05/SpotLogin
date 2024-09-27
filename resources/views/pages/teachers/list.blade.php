@@ -4,7 +4,7 @@
 <link href="//cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css" rel="stylesheet">
 <script src="//cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
 <link href="//cdn.datatables.net/rowreorder/1.2.8/css/rowReorder.dataTables.min.css" rel="stylesheet">
-<link href="//cdn.datatables.net/responsive/2.3.0/css/responsive.dataTables.min.css" rel="stylesheet">
+
 <script src="//cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
 <script src="//cdn.datatables.net/rowreorder/1.2.8/js/dataTables.rowReorder.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
@@ -14,7 +14,9 @@
             border:none!important;
             border-bottom:1px solid #EEE!important;
             font-size:15px;
-            margin-bottom:10px;
+            margin-bottom:15px!important;
+            padding-top:7px!important;
+            padding-bottom:7px!important;
         }
         #teacher_table td img {
             height:30px!important;
@@ -27,7 +29,7 @@
         #teacher_table th {
             border:none!important;
             border-bottom:3px solid #EEE!important;
-            font-size:15px;
+            font-size:13px;
             font-weight:bold;
         }
         </style>
@@ -41,12 +43,16 @@
     <div class="col-md-10">
 
     <div class="page_header_class pt-1" style="position: static;">
-        <h5 class="titlePage">{{ __("Teacher\"s List") }}</h5>
+        <h5 class="titlePage">{{ __("Teachers of the school") }}</h5>
     </div>
+
+    
 
     @include('pages.teachers.navbar')
 
-    <div class="tab-content" id="ex1-content">
+    <div class="tab-content" id="ex1-content" style="position: relative;">
+
+  
 
 <div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 
@@ -63,9 +69,9 @@
                 <!--<th>{{ __('#') }}</th>-->
                 <th>&nbsp;</th>
                 <th class="titleFieldPage p-0 text-left">{{ __('Name of the Teacher') }}</th>
-                <th class="titleFieldPage p-0 text-left">{{ __('Email') }}</th>
-                <th class="titleFieldPage p-0 text-left">{{ __('User Account') }}</th>
-                <th class="titleFieldPage p-0 text-left">{{ __('Status') }}</th>
+                <th class="titleFieldPage d-none d-lg-table-cell p-0 text-left">{{ __('Email') }}</th>
+                <th class="titleFieldPage d-none d-lg-table-cell p-0 text-left">{{ __('User Account') }}</th>
+                <th class="titleFieldPage d-none d-lg-table-cell p-0 text-left">{{ __('Status') }}</th>
                 <th class="titleFieldPage p-0 text-center">{{ __('Action') }}</th>
             </tr>
         </thead>
@@ -83,10 +89,12 @@
                     <?php endif; ?>
                 </td>
                 <td class="p-0 text-left">
-                    <a class="text-reset text-decoration-none" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditTeacher',['school'=> $schoolId,'teacher'=> $teacher->id]) : route('editTeacher',['teacher' => $teacher->id]) }}">{{ $teacher->full_name }}</a>
+                    <a class="text-reset text-decoration-none" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditTeacher',['school'=> $schoolId,'teacher'=> $teacher->id]) : route('editTeacher',['teacher' => $teacher->id]) }}">
+                        <span style="cursor:pointer; border-bottom:1px dashed #a1a0a0;">{{ $teacher->full_name }}</span>
+                    </a>
                 </td>
-                <td class="p-0 text-left">{{ $teacher->email; }}</td>
-                <td class="p-0 text-left">
+                <td class="p-0 text-left d-none d-lg-table-cell">{{ $teacher->email; }}</td>
+                <td class="p-0 text-left d-none d-lg-table-cell">
                     @if(!$teacher->user)
                         <span>{{ __('No') }}</span>
                         <form method="post" style="display: inline;" class="form-inline" action="{{route('teacherInvitation',['school'=>$teacher->pivot->school_id,'teacher'=>$teacher->id])}}">
@@ -102,7 +110,13 @@
                          <span class="">{{$teacher->user->username}}</span>
                     @endif
                 </td>
-                <td class="p-0 text-left">{{ !empty($teacher->pivot->is_active) ? 'Active' : 'Inactive'; }}</td>
+                <td class="p-0 text-left d-none d-lg-table-cell">
+                    @if (!empty($teacher->pivot->is_active))
+                        Active
+                    @else
+                        <span class="badge bg-warning switch-teacher-btn" data-status="{{ $teacher->pivot->is_active }}" data-school="{{ $teacher->pivot->school_id }}" data-teacher="{{ $teacher->id }}" style="cursor:pointer;">Inactive</span>
+                    @endif
+                </td>
                 @if($teacher->pivot->deleted_at)
                     <td>{{__('Deleted')}}</td>
                 @else
@@ -113,49 +127,45 @@
                         </a>
                         <div class="dropdown-menu list action text-left">
                             @can('teachers-update')
-                            <form method="get" action="{{ auth()->user()->isSuperAdmin() ? route('adminEditTeacher',['school'=> $schoolId,'teacher'=> $teacher->id]) : route('editTeacher',['teacher' => $teacher->id]) }}">
-                                @csrf
-                                <button class="dropdown-item" type="submit" ><i class="fa fa-pencil txt-grey"></i> {{__('Edit Info')}}</button>
-                            </form>
+
+                            <a class="dropdown-item text-primary" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditTeacher',['school'=> $schoolId,'teacher'=> $teacher->id]) : route('editTeacher',['teacher' => $teacher->id]) }}">
+                                <i class="fa-solid fa-pen-to-square"></i> {{ __('Edit')}}
+                            </a>
+
                             @endcan
 
+
+
                             @if(!$teacher->user)
-                              <form method="post" action="{{route('teacherInvitation',['school'=>$teacher->pivot->school_id,'teacher'=>$teacher->id])}}">
-                                @method('post')
-                                @csrf
-                                @if(!$teacher->pivot->is_sent_invite)
-                                    <button class="dropdown-item" type="submit" title="Send invitation"><i class="fa fa-envelope txt-grey"></i> Send invite</button>
-                                @else
-                                    <button class="dropdown-item" type="submit" title="Resend invitation" ><i class="fa fa-envelope txt-grey"></i> Re-Send invite</button>
-                                @endif
-                              </form>
+
+                            <a href="javascript:void(0)" class="dropdown-item send-invite-btn text-primary" data-email="{{ $teacher->email }}" data-school="{{ $schoolId }}" data-teacher="{{ $teacher->id }}" title="{{ __("Send invitation") }}">
+                                <i class="fa-solid fa-envelope"></i>
+                                {{ __('Send invite') }}
+                            </a>
+
+                            @else
+
+                            <a href="javascript:void(0)" class="dropdown-item send-password-btn text-primary" data-email="{{ $teacher->email }}" data-school="{{ $schoolId }}" data-teacher="{{ $teacher->id }}" title="{{ __("Send invitation") }}">
+                                <i class="fa-solid fa-envelope"></i>
+                                {{ __('Resend password') }}
+                            </a>
+
                             @endif
 
-                            @if($teacher->user)
-                              <form method="get" action="{{route('teacherPasswordGet',['school'=>$teacher->pivot->school_id,'teacher'=>$teacher->id])}}">
-                                @method('get')
-                                @csrf
-                                    <button class="dropdown-item" type="submit" title="Send password"><i class="fa fa-envelope txt-grey"></i> {{ __('Resend password') }}</button>          
-                              </form>
-                            @endif
+
+
+                            <a href="javascript:void(0)" disabled data-status="{{ $teacher->pivot->is_active }}" data-school="{{ $teacher->pivot->school_id }}" data-teacher="{{ $teacher->id }}" class="switch-teacher-btn dropdown-item text-primary" href="#">
+                                <i class="fa-solid fa-retweet"></i> {{ !empty($teacher->pivot->is_active) ? __('Switch to inactive')  : __('Switch to active') ; }}
+                            </a>
 
                             @can('teachers-delete')
                             <form method="post" onsubmit="return confirm('{{ __("Are you sure want to delete ?")}}')" action="{{route('teacherDelete',['school'=>$teacher->pivot->school_id,'teacher'=>$teacher->id])}}">
                                 @method('delete')
                                 @csrf
-                                <button class="dropdown-item" type="submit" ><i class="fa fa-trash txt-grey"></i> {{__('Delete')}}</button>
+                                <button class="dropdown-item text-danger" type="submit" ><i class="fa fa-trash text-danger"></i> {{__('Delete')}}</button>
                             </form>
                             @endcan
-                            <form method="post" onsubmit="return confirm('{{ __("Are you sure want to change the status ?")}}')" action="{{route('teacherStatus',['school'=>$teacher->pivot->school_id,'teacher'=>$teacher->id])}}">
-                                @method('post')
-                                @csrf
-                                <input type="hidden" name="status" value="{{ $teacher->pivot->is_active }}">
-                                @if($teacher->pivot->is_active)
-                                    <button class="dropdown-item" type="submit" ><i class="fa fa-envelope txt-grey"></i> {{__('Switch to inactive')}}</button>
-                                @else
-                                    <button class="dropdown-item" type="submit" ><i class="fa fa-envelope txt-grey"></i> {{__('Switch to active')}}</button>
-                                @endif
-                            </form>
+                           
                         </div>
                     </div>
                 </td>
@@ -173,19 +183,44 @@
     </div>
 </div></div>
   </div>
-@endsection
+
+  <div class="row justify-content-center" style="position:fixed; bottom:0; z-index=99999!important;opacity:1!important; width:100%;">
+    <div class="col-md-12 mt-3 pt-3 pb-3 card-header text-center" style="opacity:0.99!important; background-color:#fbfbfb!important; border:1px solid #fcfcfc;">
+        <a class="btn btn-outline-primary" href="{{ auth()->user()->isSuperAdmin() ? route('admin.teachers.create',['school'=> $schoolId]) : route('teachers.create') }}">
+            <i class="fa fa-plus"></i> {{ __('Add new teacher') }} ({{ $teachers->where('pivot.role_type', '!=', 'school_admin')->count() }}/{{ $number_of_coaches > 0 ? $number_of_coaches : 1 }})
+        </a>
+    </div>
+</div>
 
 @include('layouts.elements.modal_csv_teacher_import')
+
+@endsection
+
+
 @section('footer_js')
 <script type="text/javascript">
     $(document).ready( function () {
-        var table =  $('#teacher_table').DataTable({
-            dom: '<"top"f>rt<"bottom"lp><"clear">',
-            ordering: false,
-            searching: true,
-            paging: true,
-            info: false,
-        });
+    var table = $('#teacher_table').DataTable({
+    dom: '<"top"f>rt<"bottom"lp><"clear">',
+    ordering: false,
+    searching: true,
+    paging: true,
+    info: false,
+    pagingType: 'simple', 
+    drawCallback: function (settings) {
+        var api = this.api();
+        var pageInfo = api.page.info();
+
+            if (pageInfo.recordsTotal <= pageInfo.length) {
+                $('.dataTables_paginate').hide();
+                $('.dataTables_length').hide();  
+            } else {
+                $('.dataTables_paginate').show();
+                $('.dataTables_length').show();  
+            }
+        }
+    });
+
         $('#search_text').on('keyup change', function () {
             table.search($(this).val()).draw();
         });
@@ -219,4 +254,172 @@
         });
     } );
 </script>
+
+
+<script>
+    $(document).ready(function() {
+        $(document).on('click', '.send-password-btn', function(event) {
+            event.preventDefault();
+            $("#pageloader").fadeIn("fast");
+    
+            var schoolId = $(this).attr('data-school');
+            var teacherId = $(this).attr('data-teacher');
+    
+            //if (confirm('Are you sure want to send an invitation to reset the password of this student ?')) {
+                var redirectUrl = '{{ route('teacherPasswordGet', ['school' => ':school', 'teacher' => ':teacher']) }}';
+                redirectUrl = redirectUrl.replace(':school', schoolId).replace(':teacher', teacherId);
+    
+                // Sending an AJAX request
+                $.ajax({
+                    url: redirectUrl,
+                    method: 'GET',
+                    success: function(response) {
+                        $("#pageloader").fadeOut("fast");
+                        //$('#sendMailOk').modal('show');
+                        Swal.fire(
+                            'Successfully sended',
+                            'Your teacher will receive an email with instructions to reset his password',
+                           'success'
+                        )
+                    },
+                    error: function(error) {
+                        $("#pageloader").fadeOut("fast");
+                        console.log(error);
+                        alert('Error occurred while sending the password reset invitation. Please try again.');
+                        Swal.fire(
+                            'Sorry,',
+                            'Error occurred while sending the password reset invitation. Please try again.',
+                           'error'
+                        )
+    
+                    }
+                });
+            //} else {
+            //    $("#pageloader").fadeOut("fast");
+            //}
+        });
+    });
+        </script>
+<script>
+    $(document).ready(function() {
+        $(document).on('click', '.send-invite-btn', function(event) {
+            event.preventDefault();
+            $("#pageloader").fadeIn("fast");
+            var schoolId = $(this).attr('data-school');
+            var teacherId = $(this).attr('data-teacher');
+            //if (confirm('Are you sure want to send an invitation to this student ?')) {
+                var redirectUrl = '{{ route('teacherInvitation', ['school' => ':school', 'teacher' => ':teacher']) }}';
+                redirectUrl = redirectUrl.replace(':school', schoolId).replace(':teacher', teacherId);
+    
+                // Sending an AJAX request
+                $.ajax({
+                    url: redirectUrl,
+                    method: 'GET',
+                    success: function(response) {
+                        $("#pageloader").fadeOut("fast");
+                        //$('#sendMailOk').modal('show');
+    
+                        Swal.fire(
+                            'Successfully sended',
+                            'Your teacher will receive an email with instructions',
+                            'success'
+                        )
+    
+                    },
+                    error: function(error) {
+                        $("#pageloader").fadeOut("fast");
+                        alert('Error occurred while sending the invitation. Please try again.');
+                    }
+                });
+            //}
+        });
+    });
+    </script>
+
+<script>
+    $(document).ready(function() {
+        $(document).on('click', '.switch-teacher-btn', function(event) {
+            event.preventDefault();
+
+            var schoolId = $(this).attr('data-school');
+            var teacherId = $(this).attr('data-teacher');
+            var currentStatus = $(this).attr('data-status');
+
+            var redirectUrl = '{{ route('teacherStatus', ['school' => ':school', 'teacher' => ':teacher']) }}';
+            redirectUrl = redirectUrl.replace(':school', schoolId).replace(':teacher', teacherId);
+
+            Swal.fire({
+            title: currentStatus === '1' ? 'Are you sure to switch this teacher to inactive status ?' : 'Are you sure to switch this teacher to active status ?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, change it!'
+            }).then((result) => {
+            if (result.isConfirmed) {
+
+                var formData = new FormData();
+                formData.append('status', currentStatus);
+
+                $.ajax({
+                url: redirectUrl,
+                method: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                success: function (response) {
+                    console.log(response);
+                    $("#pageloader").fadeOut("fast");
+                    if (response.status === "success") {
+                        
+                        let timerInterval;
+                        Swal.fire({
+                        icon: "success",
+                        title: currentStatus === "1" ? "Teacher desactivated" : "Teacher activated",
+                        html: "One moment...",
+                        timer: 2000,
+                        timerProgressBar: true,
+                        didOpen: () => {
+                            Swal.showLoading();
+                            const timer = Swal.getPopup().querySelector("b");
+                            timerInterval = setInterval(() => {
+                            }, 100);
+                        },
+                        willClose: () => {
+                            clearInterval(timerInterval);
+                        }
+                        }).then((result) => {
+                        if (result.dismiss === Swal.DismissReason.timer) {
+                            location.reload();
+                        }
+                        });
+
+                    } else {
+                        Swal.fire(
+                            'Error!',
+                            'An error occurred while updating the status.',
+                            'error'
+                        )
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                    $("#pageloader").fadeOut("fast");
+                    Swal.fire(
+                        'Error!',
+                        'An error occurred while updating the status.',
+                        'error'
+                    )
+                }
+            });
+
+                }
+                })
+        });
+    });
+    </script>
+
 @endsection

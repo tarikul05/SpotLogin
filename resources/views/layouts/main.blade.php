@@ -64,13 +64,13 @@
 
       let loader = $('#pageloader');
 
-      window.addEventListener('load', function() {
+      /*window.addEventListener('load', function() {
         $("#pageloader").fadeOut('fast');
         $("#loaderFilters").fadeOut('fast');
         setTimeout(() => {
           $("#allFilters").fadeIn('fast');
         }, 1000);
-      });
+      });*/
 
       setTimeout(() => {
         $("#pageloader").fadeOut('fast');

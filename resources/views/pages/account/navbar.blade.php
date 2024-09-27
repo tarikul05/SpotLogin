@@ -38,6 +38,7 @@
 
         // Vérifier si le paramètre 'tab' est présent
         const tabId = urlParams.get('tab');
+        const confirmation = urlParams.get('confirmation');
 
         if (tabId) {
             // Sélectionner l'onglet correspondant à l'ID
@@ -50,6 +51,14 @@
                 // Activer l'onglet avec la méthode Bootstrap
                 bootstrapTab.show();
             }
+        }
+
+        if (confirmation === "stripe") {
+            Swal.fire({
+                title: "{{ __('Stripe account connected successfully!') }}",
+                icon:'success',
+                confirmButtonText: "{{ __('Ok') }}",
+            });
         }
     });
 </script>
@@ -83,6 +92,7 @@
      $('#type').on('change', function() {
         const container = document.getElementById('details-container');
         container.innerHTML = ''; // Reset the container
+        $('#details-container').fadeIn();
 
         if (this.value === 'Stripe') {
             var is_stripe_account = "{{$is_connected_account ? $AppUI->stripe_account_id : 'none'}}";
@@ -91,10 +101,24 @@
                 container.innerHTML += `
                 <div class="form-group" id="askUrlStripeAccountLink">
                     <br>
-                    <label for="account_number" style="font-size:11px;">Stripe Account Information</label><br>
-                    <label for="account_number">Please create your stripe connected account link by clicking the button below.</label>
-                    <br>
-                     <a id="create-stripe-account" class="btn btn-outline-primary" href="#">Create</a>
+                    <label class="text-primary" for="account_number">Stripe Account Information</label><br>
+                    <img src="{{asset('img/powered_by_stripe.png')}}" width="90"><br><br>
+                    <span for="account_number" class="text-primary">You can create a Stripe connected account to be paid directly online by credit card.</span><br>
+                       <ul style="font-size:12px;">
+                        <li>Choose your bank account / Credit Card country</li>
+                        <li>Generate the link to your account</li>
+                        <li>Click on the generated link and enter your banking information</li>
+                       </ul>
+                       <div class="form-group custom-selection">
+                            <select class="selectpicker" data-live-search="true" id="stripe_country_code" name="stripe_country_code" required style="border:1px solid #4460b0; color:#4460b0;">
+                                <option value="">{{ __('Select Country')}}</option>
+                                @foreach ($countries as $key => $country)
+                                    <option
+                                    value="{{ $country->code }}">{{ $country->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    <a id="create-stripe-account" class="btn btn-outline-primary" href="#">Create link</a>
                 </div>
                 <div id="urlStripeAccountLink" class="form-group"></div>
               `;
@@ -110,7 +134,7 @@
                 container.innerHTML += `
                 <div class="form-group" id="askUrlStripeAccountLink">
                     <br>
-                    <label for="account_number" style="font-size:11px;">Stripe Account Information</label><br>
+                    <label for="account_number">Stripe Account Information</label><br>
                     Account ID: <b>${is_stripe_account}</b><br>
                     <label for="account_number">Some fields are necessary to complete the creation of your connected account.</label>
                      <br>
@@ -176,8 +200,14 @@
                         </div>
                     </div>
                 </div>
-                <button type="button" id="add-field" class="btn btn-primary">Add Field</button>
-                <button type="submit" class="btn btn-outline-success">Save</button>`;
+                <div class="row">
+                <div class="col-md-12">
+                <div class="form-group p-2">
+                <button type="button" id="add-field" class="btn btn-outline-primary">Add field</button>
+                <button type="submit" class="btn btn-outline-success">Save</button>
+                </div>
+                </div>
+                </div>`;
             
             document.getElementById('add-field').addEventListener('click', function () {
                 const cashFields = document.getElementById('cash-fields');
@@ -201,6 +231,8 @@
 
                 cashFields.insertAdjacentHTML('beforeend', newFieldHTML);
             });
+        } else {
+            $('#details-container').hide();
         }
     });
 });
@@ -265,12 +297,25 @@ $(document).ready(function() {
     });
     $(document).on('click', '#create-stripe-account', function(e) {
         e.preventDefault(); 
+
+        //get select id stripe_country_code value and verify if not empty
+        var stripe_country_code = $('#stripe_country_code').val();
+        if (stripe_country_code === '') {
+            Swal.fire({
+                title: "Payment Methods",
+                text: "Please select the country of your bank account or card you will use to be paid online.",
+                icon: "error"
+            });
+            return false;
+        } 
+        
+
         $("#pageloader").fadeIn();
         $.ajax({
             url: BASE_URL + '/create-stripe-bank-account', 
             type: 'POST',
             dataType: 'json',
-            data: {},
+            data: {country_code:stripe_country_code},
             success: function(response) {
               
                 $('#askUrlStripeAccountLink').hide();

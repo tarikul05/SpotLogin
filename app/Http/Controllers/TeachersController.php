@@ -741,8 +741,9 @@ class TeachersController extends Controller
         $status = isset($alldata['status']) && ($alldata['status'] == 1 ) ? 0 : 1 ;
         // dd($schoolId,$teacherId);
         SchoolTeacher::where(['school_id'=>$schoolId, 'teacher_id'=>$teacherId])->update(['is_active'=>$status]);
-        return redirect()->back()
-            ->with('success', 'status updated successfully');
+
+        return response()->json(['status'=>'success']);
+
     }
 
     /**

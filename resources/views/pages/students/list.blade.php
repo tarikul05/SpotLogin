@@ -19,23 +19,56 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
 
     <style>
-        #students1_table td {
+        #students1 td {
             border:none!important;
-            border-bottom:2px solid #EEE!important;
-            padding-bottom:10px;
+            border-bottom:1px solid #EEE!important;
+            font-size:13px;
+            margin-bottom:15px!important;
+            padding-top:7px!important;
+            padding-bottom:7px!important;
         }
-        #students1_table tr:hover {
+        #students1 td img {
+            height:30px!important;
+            width:30px!important;
+        }
+        #students1 tr:hover {
             border:1px solid #EEE!important;
             background-color:#fcfcfc!important;
         }
-        #students1_table th {
+        #students1 th {
             border:none!important;
             border-bottom:3px solid #EEE!important;
-            text-align: left!important;
-            font-size:20px;
+            font-size:13px;
+            font-weight:bold;
         }
         </style>
 
+<style>
+    #example2 td {
+        border:none!important;
+        border-bottom:1px solid #EEE!important;
+        font-size:15px;
+        margin-bottom:15px!important;
+        padding-top:7px!important;
+        padding-bottom:7px!important;
+    }
+    #example2 td img {
+        height:30px!important;
+        width:30px!important;
+    }
+    #example2 tr:hover {
+        border:1px solid #EEE!important;
+        background-color:#fcfcfc!important;
+    }
+    #example2 th {
+        border:none!important;
+        border-bottom:3px solid #EEE!important;
+        font-size:13px;
+        font-weight:bold;
+    }
+    </style>
+
+       
     @endsection
 
 @section('content')
@@ -51,41 +84,21 @@
 
         @include('pages.students.navbar')
 
-        <div class="tab-content" id="ex1-content">
-
-
-
-            <div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
-                @include('pages.students.listing2')
-            </div>
-
-            <div class="tab-pane fade" id="tab_2" role="tabpanel" aria-labelledby="tab_2">
-                @include('pages.students.import_export')
-            </div>
-
-            <div class="tab-pane fade" id="tab_3" role="tabpanel" aria-labelledby="tab_3">
-                @include('pages.students.add_new')
-            </div>
-
-            <div class="tab-pane fade" id="family" role="tabpanel" aria-labelledby="family">
-                @include('pages.students.create_family')
-            </div>
-
-            <div class="tab-pane fade" id="family-list" role="tabpanel" aria-labelledby="family">
-                @include('pages.students.families')
-            </div>
-
-        </div>
+      
     </div>
 
     </div>
 </div>  
 
+@include('layouts.elements.modal_csv_import')
+
 @endsection
 
 
-@include('layouts.elements.modal_csv_import')
+
 @section('footer_js')
+
+
 
 <script>
 
@@ -210,11 +223,35 @@ $('#principal_email_family').append($('<option>', { value: 'custom', text: "{{__
     $(document).ready(function () {
 
         var table = $('#students1').DataTable({
-            dom: '<"top"f>rt<"bottom"lp><"clear">',
-            ordering: false,
-            searching: true,
-            paging: true,
-            info: false,
+        dom: '<"top"f>rt<"bottom"lp><"clear">',
+        ordering: false,
+        searching: true,
+        paging: true,
+        processing:true, 
+        info: false,
+        pagingType: 'simple_numbers', 
+        drawCallback: function (settings) {
+            var api = this.api();
+            var pageInfo = api.page.info();
+            console.log(pageInfo);
+
+            // Vérifier si les valeurs sont numériques
+            var totalRecords = parseInt(pageInfo.recordsTotal, 10);
+            var pageLength = parseInt(pageInfo.length, 10);
+
+            if (!isNaN(totalRecords) && !isNaN(pageLength)) {
+                // Vérifier si le nombre total d'enregistrements est supérieur à la taille de la page
+                if (totalRecords > pageLength) {
+                    $('.dataTables_paginate').show();
+                    $('.dataTables_length').show();  
+                } else {
+                    $('.dataTables_paginate').hide();
+                    $('.dataTables_length').hide();  
+                }
+            } else {
+                console.log('Valeurs non numériques détectées :', pageInfo);
+            }
+            }
         });
 
         $('#search_text').on('keyup change', function () {
@@ -228,11 +265,24 @@ $('#principal_email_family').append($('<option>', { value: 'custom', text: "{{__
 <script>
     $(document).ready(function () {
         var table = $('#example2').DataTable({
-            dom: '<"top"f>rt<"bottom"lp><"clear">',
-            ordering: false,
-            searching: true,
-            paging: true,
-            info: false,
+        dom: '<"top"f>rt<"bottom"lp><"clear">',
+        ordering: false,
+        searching: true,
+        paging: true,
+        info: false,
+        pagingType: 'first_last_numbers', 
+        drawCallback: function (settings) {
+            var api = this.api();
+            var pageInfo = api.page.info();
+
+                if (pageInfo.recordsTotal <= pageInfo.length) {
+                    $('#example2 .dataTables_paginate').hide();
+                    $('#example2 .dataTables_length').hide();  
+                } else {
+                    $('#example2 .dataTables_paginate').show();
+                    $('#example2 .dataTables_length').show();  
+                }
+            }
         });
 
         $('#search_text_families').on('keyup change', function () {
@@ -351,11 +401,28 @@ $('#principal_email_family').append($('<option>', { value: 'custom', text: "{{__
                         console.log(response);
                         $("#pageloader").fadeOut("fast");
                         if (response.status === "success") {
-                            Swal.fire(
-                                'Status updated!',
-                                'The student has been updated successfully.',
-                                'success'
-                            )
+                            
+                            let timerInterval;
+                            Swal.fire({
+                            icon: "success",
+                            title: currentStatus === "1" ? "Student desactivated" : "Student activated",
+                            html: "One moment...",
+                            timer: 2000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading();
+                                const timer = Swal.getPopup().querySelector("b");
+                                timerInterval = setInterval(() => {
+                                }, 100);
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval);
+                            }
+                            }).then((result) => {
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                location.reload();
+                            }
+                            });
 
                         } else {
                             Swal.fire(
@@ -391,7 +458,7 @@ $(document).ready(function() {
         var email = $(this).attr('data-email');
 
         if(email === null || email === "") {
-            $("#pageloader").fadeOut("fast");
+            $("#pageloader").hide();
             Swal.fire({
             icon: "error",
             title: "Oops...",
@@ -411,7 +478,7 @@ $(document).ready(function() {
                 url: redirectUrl,
                 method: 'GET',
                 success: function(response) {
-                    $("#pageloader").fadeOut("fast");
+                    $("#pageloader").hide();
                     //$('#sendMailOk').modal('show');
 
                     Swal.fire(
@@ -422,7 +489,7 @@ $(document).ready(function() {
 
                 },
                 error: function(error) {
-                    $("#pageloader").fadeOut("fast");
+                    $("#pageloader").hide();
                     alert('Error occurred while sending the invitation. Please try again.');
                 }
             });

@@ -8,6 +8,7 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ContactFormController;
 use App\Http\Controllers\AvailabilityController;
 use App\Http\Controllers\PaymentMethodController;
+use App\Http\Controllers\StripeTransactionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -147,6 +148,7 @@ Route::post('generate_student_invoice', [App\Http\Controllers\InvoiceController:
 Route::post('update_invoice_discount', [App\Http\Controllers\InvoiceController::class, 'updateInvoiceDiscount'])->name('update_invoice_status.submit')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
 
+
 // update_payment_status AJAX
 Route::post('update_invoice_info', [App\Http\Controllers\InvoiceController::class, 'updateInvoiceInfo'])->name('update_invoice_info.submit')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
@@ -260,6 +262,8 @@ Route::group(['middleware' => ['auth']], function () {
 
   Route::get('/congratulations', [App\Http\Controllers\SubscriptionController::class, 'mySubscription'])->name('mySubscription.congratulations');
 
+  Route::get('/transactions/{userId}', [StripeTransactionController::class, 'index'])->name('transactions.index');
+  
   Route::get('/subscription/cancel-plan', [App\Http\Controllers\SubscriptionController::class, 'cancelPlan'])->name('subscription.cancelPlan');
 
     Route::get('/user/disable', [App\Http\Controllers\UserController::class, 'disable_user'])->name('user.disable_user');
@@ -434,7 +438,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::delete('/{school}/teacher/{teacher}', [App\Http\Controllers\TeachersController::class, 'destroy'])->name('teacherDelete');
 
     Route::post('/{school}/teacher/{teacher}', [App\Http\Controllers\TeachersController::class, 'changeStatus'])->name('teacherStatus');
-    Route::post('/{school}/teacher_email_send/{teacher}', [App\Http\Controllers\TeachersController::class, 'teacherInvitation'])->name('teacherInvitation');
+    Route::get('/{school}/teacher_email_send/{teacher}', [App\Http\Controllers\TeachersController::class, 'teacherInvitation'])->name('teacherInvitation');
 
     Route::get('invoices/{invoiceId}/download', [App\Http\Controllers\InvoiceController::class, 'downloadInvoicePdf'])->name('invoices.download');
 

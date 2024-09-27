@@ -10,9 +10,33 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
 
     <style type="text/css">
-    #example1 {
-        font-size:13px;
-    }
+    </style>
+    <style>
+        #example1 {
+            width: 100%;
+        }
+        #example1 td {
+            border:none!important;
+            border-top:1px solid #EEE!important;
+            font-size:13px!important;
+            margin-bottom:15px!important;
+            padding-top:7px!important;
+            padding-bottom:7px!important;
+        }
+        #example1 td img {
+            height:30px!important;
+            width:30px!important;
+        }
+        #example1 tr:hover {
+            border:1px solid #EEE!important;
+            background-color:#fcfcfc!important;
+        }
+        #example1 th {
+            border:none!important;
+            border-bottom:3px solid #EEE!important;
+            font-size:13px;
+            font-weight:bold;
+        }
     </style>
 @endsection
 
@@ -72,17 +96,17 @@
             <option value="1">{{ __('Paid') }}</option>
             <option value="0">{{ __('Unpaid') }}</option>
         </select>
-        <table id="example1" class="table table-stripped table-hover" style="width:100%">
+        <table id="example1" style="width:100%">
             <thead>
                 <tr>
-                <th class="mobile-hide titleFieldPage">{{ __('Date') }}</th>
-                <th class="sp_only titleFieldPage">{{ __('Client') }}</th>
-                <th class="mobile-hide titleFieldPage">{{ __('Type') }}</th>
-                <th class="mobile-hide titleFieldPage">{{ __('Invoice Name') }}</th>
-                <th class="mobile-hide titleFieldPage">N°</th>
-                <th class="titleFieldPage">{{ __('Amount') }}</th>
-                <th class="mobile-hide titleFieldPage">{{ __('Status') }}</th>
-                <th class="mobile-hide titleFieldPage"></th>
+                <th class="mobile-hide titleFieldPage text-primary">{{ __('Date') }}</th>
+                <th class="sp_only titleFieldPage text-primary">{{ __('Client') }}</th>
+                <th class="mobile-hide titleFieldPage text-primary">{{ __('Type') }}</th>
+                <th class="mobile-hide titleFieldPage text-primary">{{ __('Invoice Name') }}</th>
+                <th class="mobile-hide titleFieldPage text-primary">N°</th>
+                <th class="titleFieldPage text-primary">{{ __('Amount') }}</th>
+                <th class="mobile-hide titleFieldPage text-primary">{{ __('Status') }}</th>
+                <th class="mobile-hide titleFieldPage text-primary"></th>
                 <th></th>
                 </tr>
             </thead>
@@ -132,12 +156,16 @@
                             {{ $date->format('d-m-Y') }}
                         </td>
                         <td class="sp_only responsive-td" data-sort="{{ strtotime($invoice->date_invoice) }}">
-                            <span class="d-block d-sm-none">
+                            <span class="d-block d-sm-none pt-2">
                             @php
                             $date = new DateTime($invoice->date_invoice);
                             @endphp
-                            <?= $invoice->client_name ?> <br><span style="font-size:11px;">{{ $date->format('d-m-Y') }}</span>
-                            </span> #{{$key+1}}
+                            
+                            @if(!$AppUI->isStudent() && !$AppUI->isParent())
+                            <?= $invoice->client_name ?><br>
+                            @endif
+                            <b style="font-size:11px;">{{ $date->format('d-m-Y') }}</b>
+                            </span>[ #{{$key+1}} ]
                         </td>
                         @php
                         if($invoice->invoice_type == 0){
@@ -151,19 +179,17 @@
                         }
                         $invoice_name = $invoice->invoice_name;
                         if($invoice->invoice_type ==1){
-                            $invoice_name .= '-'.$invoice->client_name;
+                            $invoice_name .= ' - '.$invoice->client_name;
                         } else {
-                            $invoice_name .= '-'.$invoice->client_name;
+                            $invoice_name .= ' - '.$invoice->client_name;
                         }
                         @endphp
                         <td class="responsive-td mobile-hide">
-                            @if ($invoice->invoice_status > 1)
-                            <a href="{{ $edit_view_url }}">
+                            @if ($invoice->invoice_status > 1) @endif
+                            <a href="{{ $edit_view_url }}" style="cursor:pointer; border-bottom:1px dashed #a1a0a0; color:#111;">
                             {{ $invoice_name}}
                             </a>
-                            @else
-                            {{ $invoice_name}}
-                            @endif
+                
                         </td>
                         <td class="responsive-td mobile-hide">
                             #{{$key+1}}
@@ -175,7 +201,7 @@
                             @if(!$AppUI->isStudent() && !$AppUI->isParent())
                                 <span class="small txt-grey pull-left">
                                     <i class="fa fa-credit-card" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i>
-                                    <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="payment_btn"><span class="text-warn gilroy-semibold">{{__($payment_status_all[$invoice->payment_status])}}</span></span>
+                                    <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="payment_btn"><span class="text-warning gilroy-semibold">{{__($payment_status_all[$invoice->payment_status])}}</span></span>
                                 </span>
                                 @endif
                                 @if($AppUI->isStudent() || $AppUI->isParent())
@@ -188,24 +214,28 @@
 
                         </td>
                         @else
-                        <td class="responsive-td">{{ $invoice->invoice_currency }} <b>{{ number_format($invoice->total_amount, 2) }}</b>
+                        <td class="responsive-td">
+                            <span class="small txt-success pull-left">
+                                {{ $invoice->invoice_currency }} <b>{{ number_format($invoice->total_amount, 2) }}</b>
+                            </span>
 
                             <div class="d-block d-sm-none">
                                 @if(!$AppUI->isStudent() && !$AppUI->isParent())
-                                    <span class="small txt-grey pull-left">
+                                    <span class="small text-success pull-left">
                                         @if($invoice->payment_status < 1)
-                                        <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="payment_btn"><span class="text-warn gilroy-semibold">{{__($payment_status_all[$invoice->payment_status])}}</span></span>
+                                        <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="payment_btn"><span class="text-warning gilroy-semibold">{{__($payment_status_all[$invoice->payment_status])}}</span></span>
                                         @else
-                                        <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="payment_btn"><span class="text-suces gilroy-semibold">{{__($payment_status_all[$invoice->payment_status])}}</span></span>
+                                        <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="payment_btn"><span class="text-success gilroy-semibold">{{__($payment_status_all[$invoice->payment_status])}}</span></span>
                                         @endif
                                     </span>
                                 @endif
                                 @if($AppUI->isStudent() || $AppUI->isParent())
-                                    <span class="small txt-grey pull-left">
+                                    <span class="small text-warning pull-left">
                                         @if($invoice->payment_status < 1)
-                                        <span class="text-warn gilroy-semibold">{{__($payment_status_all[$invoice->payment_status])}}</span>
+                                        <span class="text-warning gilroy-semibold">{{__($payment_status_all[$invoice->payment_status])}}</span>
+                                        <br><a class="badge bg-primary" href="/{{$schoolId}}/modification-invoice/{{$invoice->id}}/?pay=request">{{__("Pay now")}}</a>
                                         @else
-                                        <span class="text-suces gilroy-semibold">{{$payment_status_all[$invoice->payment_status]}}</span>
+                                        <span class="text-success gilroy-semibold">{{$payment_status_all[$invoice->payment_status]}}</span>
                                         @endif
                                     </span>
                                 @endif
@@ -218,16 +248,17 @@
                             <td class="responsive-td mobile-hide text-left">
                                 <div id="status_{{$invoice->id}}">
                                     @if(!$AppUI->isStudent() && !$AppUI->isParent())
-                                    <span class="small txt-grey pull-left">
+                                    <span class="small text-warning pull-left">
                                         <i class="fa fa-credit-card" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i>
-                                        <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="payment_btn"><span class="text-warn gilroy-semibold">{{__($payment_status_all[$invoice->payment_status])}}</span></span>
+                                        <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="payment_btn"><span class="text-warning gilroy-semibold">{{__($payment_status_all[$invoice->payment_status])}}</span></span>
                                     </span>
                                     @endif
                                     @if($AppUI->isStudent() || $AppUI->isParent())
-                                        <span class="small txt-grey pull-left">
+                                        <span class="small text-warning gilroy-semibold pull-left">
                                             <i class="fa fa-credit-card" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i>
                                             {{__($payment_status_all[$invoice->payment_status])}}
                                         </span>
+                                        <br><a class="badge bg-primary" href="/{{$schoolId}}/modification-invoice/{{$invoice->id}}/?pay=request">{{__("Pay now")}}</a>
                                     @endif
                                 </div>
                             </td>
@@ -235,15 +266,15 @@
                             <td class="responsive-td mobile-hide text-left" width="150">
                                 <div id="status_{{$invoice->id}}">
                                 @if(!$AppUI->isStudent() && !$AppUI->isParent())
-                                    <span class="small txt-grey pull-left">
+                                    <span class="small text-success pull-left">
                                         <i class="fa fa-credit-card" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i>
-                                        <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="payment_btn"><span class="text-suces gilroy-semibold">{{__($payment_status_all[$invoice->payment_status])}}</span></span>
+                                        <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="payment_btn"><span class="text-success gilroy-semibold">{{__($payment_status_all[$invoice->payment_status])}}</span></span>
                                     </span>
                                 @endif
                                 @if($AppUI->isStudent() || $AppUI->isParent())
                                     <span class="small txt-grey pull-left">
                                         <i class="fa fa-credit-card text-success" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i>
-                                        <span class="text-suces gilroy-semibold">{{$payment_status_all[$invoice->payment_status]}}</span>
+                                        <span class="text-success gilroy-semibold">{{$payment_status_all[$invoice->payment_status]}}</span>
                                     </span>
                                 @endif
                                 </div>
@@ -265,11 +296,17 @@
                                 @endphp
 
                                 @if($existingEntry)
-                                <i class="fa-solid fa-envelope-open-text"></i> <span style="font-size:11px;"><!--{{ __('sent') }}--><span class="text-success" style="font-size:10px;"> {{ \Carbon\Carbon::parse($existingEntry->created_at)->timezone($school->timezone)->format('d M, Y  H:i') }}</span></span><br>
-                                <button id="approved_btn" target="" href="" class="btn btn-link" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><span class="d-none d-sm-inline" style="font-size:10px;">{{__('Re-Send by email')}}</span></button>
-                                @else
-                                <span style="font-size:11px;">{{ __('Invoice not sent') }}</span>
+                                <!--<i class="fa-solid fa-envelope-open-text"></i> <span style="font-size:11px;"><span class="text-success" style="font-size:10px;"> {{ \Carbon\Carbon::parse($existingEntry->created_at)->timezone($school->timezone)->format('d M, Y  H:i') }}</span></span><br>-->
                                 <button id="approved_btn" target="" href="" class="btn btn-link" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><span class="d-none d-sm-inline" style="font-size:10px;">{{__('Send by email')}}</span></button>
+                                <span style="font-size:12px;" class="text-success" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ __('sent') }} {{ \Carbon\Carbon::parse($existingEntry->created_at)->timezone($school->timezone)->format('d M, Y  H:i') }}">
+                                    <i class="fa fa-info-circle"></i>
+                                </span>
+                                @else
+                                <!--<span style="font-size:11px;">{{ __('Invoice not sent') }}</span>-->
+                                <button id="approved_btn" target="" href="" class="btn btn-link" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><span class="d-none d-sm-inline" style="font-size:10px;">{{__('Send by email')}}</span></button>
+                                <span style="font-size:12px;" class="text-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ __('Invoice not sent') }}">
+                                    <i class="fa fa-info-circle"></i>
+                                </span>
                                 @endif
                             </td>
                             @else
