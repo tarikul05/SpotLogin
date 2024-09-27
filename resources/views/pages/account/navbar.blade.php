@@ -104,13 +104,13 @@
                     <label class="text-primary" for="account_number">Stripe Account Information</label><br>
                     <img src="{{asset('img/powered_by_stripe.png')}}" width="90"><br><br>
                     <span for="account_number" class="text-primary">You can create a Stripe connected account to be paid directly online by credit card.</span><br>
-                       <ul style="font-size:12px;">
+                       <ul style="font-size:12px;" class="mt-2">
                         <li>Choose your bank account / Credit Card country</li>
                         <li>Generate the link to your account</li>
                         <li>Click on the generated link and enter your banking information</li>
                        </ul>
-                       <div class="form-group custom-selection">
-                            <select class="selectpicker" data-live-search="true" id="stripe_country_code" name="stripe_country_code" required style="border:1px solid #4460b0; color:#4460b0;">
+                       <div class="form-group custom-selection mb-3">
+                            <select class="selectpicker" data-live-search="true" id="stripe_country_code" name="stripe_country_code" required style="border:1px solid #4460b0; color:#4460b0; width:100%;">
                                 <option value="">{{ __('Select Country')}}</option>
                                 @foreach ($countries as $key => $country)
                                     <option
