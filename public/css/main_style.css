@@ -74,7 +74,7 @@ body {
     background-color: #fff;
 }
 ::-webkit-scrollbar-thumb {
-    background-color: #0075bf;
+    background-color: #4460b0;
     border-radius: 3px;
 }
 .row {
@@ -160,7 +160,7 @@ p {
     outline: 0;
 }
 .login-signup-modal .forgot_password_btn {
-    color: #0075bf !important;
+    color: #4460b0 !important;
     cursor: pointer;
 }
 
@@ -228,10 +228,10 @@ footer .txtdarkblue {
     text-decoration: none;
 }
 .light-blue-bg {
-    background: #0075bf;
+    background: #4460b0;
 }
 .light-blue-txt {
-    color: #0075bf;
+    color: #4460b0;
 }
 .light-grey-bg {
     background: rgb(21 34 69 / 5%);
@@ -305,7 +305,7 @@ section.why-sportlogin {
 .sportlogin-feature .sportlogin-feature-icon {
     width: 154px;
     height: 154px;
-    background: #0075bf;
+    background: #4460b0;
     border-radius: 50%;
     display: grid;
     align-items: center;
@@ -318,7 +318,7 @@ section.why-sportlogin {
     height: 68px;
 }
 .sportlogin-feature h4 {
-    color: #0075bf;
+    color: #4460b0;
 }
 .about-us p {
     font-size: 22px;

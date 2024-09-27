@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Invoice;
 use Illuminate\Support\Carbon;
 use Stripe\Stripe;
 use Stripe\Webhook;
@@ -99,6 +100,15 @@ class StripeWebhookController extends Controller
                 $user->save();
             }
         }
+
+
+        elseif ($event->type == 'payment_intent.succeeded') {
+            $paymentObject = $event->data->object;
+            $invoice = Invoice::find($paymentObject->metadata->invoice_id);
+            $invoice->payment_status = 1;
+            $invoice->save();
+        }
+
 
         return response()->json(['received' => true]);
     }

@@ -465,11 +465,12 @@
                                         <td colspan="2" style="text-align:right"><b>Total</b></td>
                                         <td></td>
                                         <?php $grandTotalFinal = $totaux + $countAllTaxes + $invoice->extra_1 + $invoice->extra_2 + $invoice->extra_expenses; ?>
-                                        <td style="text-align: right"><span id="grand_total_cap"><b>{{ number_format($grandTotalFinal,'2') }}</b></span></td>
+                                        <td style="text-align: right">({{$invoice->invoice_currency}}) <span id="grand_total_cap"><b>{{ number_format($grandTotalFinal,'2') }}</b></span></td>
                                         <td></td>
                                     </tr>
                                 </tbody>
                             </table>
+
 
                             <?php $grandTotalFinal = $totaux + $countAllTaxes + $invoice->extra_expenses; ?>
 
@@ -1043,65 +1044,6 @@
         @endif
 
 
-        @if($invoice->payment_status == 0 && ($AppUI->isStudent() || $AppUI->isParent()))
-        <div class="card2" style="margin-bottom:55px;">
-            <div class="card-header titleCardPage">{{ __('Payment Methods Accepted') }}</div>
-            <div class="card-body">
-
-                @if($is_conneced_account_charges_enabled)
-                    <div style="background-color:#f1f1f1;  width:100%; max-width:500px; padding:10px; border-radius:8px; margin-bottom:15px;">
-                        <b style="color:#0075bf;">{{__('pay_by_card')}}</b>
-                        <div id="example4-card"></div>
-                        <div id="confirmPaymentByStripe" style="display:none;" class="text-center">
-                            <div class="form-group text-center mt-2 mb-3">
-                                <label><input type="checkbox" id="terms_condition" name="terms_condition"> {{ __('I agree with the') }} <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal2">{{ __('terms and conditions') }}</a></label>
-                            </div>
-                            <a href="#" id="btnConfirmPaymentByStripe" class="btn btn-primary">{{__('confirm_payment')}}</a>
-                        </div>
-                    </div>
-                @endif
-
-
-                @foreach ($coachPaymentMethods as $paymentMethod)
-                  @if($paymentMethod->type !== "Stripe")
-                  <div style="background-color:#f1f1f1;  width:100%; max-width:500px; padding:10px; border-radius:8px; margin-bottom:15px;">
-      
-                  <b style="color:#0075bf;">{{ $paymentMethod->type }}</b>: 
-           
-                        @if ($paymentMethod->type === 'PayPal')
-                            <span>{{ $paymentMethod->details['paypal_address'] ?? 'N/A' }}</span>
-                        @elseif ($paymentMethod->type === 'IBAN')
-                            <span>IBAN N°: {{ $paymentMethod->details['iban_number'] ?? 'N/A' }}</span>
-                            <br><span>SWIFT N°: {{ $paymentMethod->details['swift_number'] ?? 'N/A' }}</span>
-                        @elseif ($paymentMethod->type === 'Swift')
-                            <span>{{ $paymentMethod->details['swift_number'] ?? 'N/A' }}</span>
-                        @elseif ($paymentMethod->type === 'Cash')
-                            <span>{{ $paymentMethod->details['cash'] ?? 'N/A' }}</span>
-                        @elseif ($paymentMethod->type === 'E-Transfer')
-                            <span>{{ $paymentMethod->details['e_transfer_number'] ?? 'N/A' }}</span>
-                        @elseif ($paymentMethod->type === 'Bank')
-                            <ul>
-                                @forelse ($paymentMethod->details['custom_fields'] ?? [] as $field)
-                                    <li><strong>{{ $field['name'] }}:</strong> {{ $field['value'] }}</li>
-                                @empty
-                                    <li>No custom fields added.</li>
-                                @endforelse
-                            </ul>
-                        @endif
-                    
-                    </div>
-                    @endif
-                @endforeach
-            </div>
-        </div>
-        @endif
-
-
-
-
-
-
-
 
             </div>
         </div>
@@ -1116,45 +1058,49 @@
         <div class="col-md-12 mt-3 pt-3 pb-3 card-header text-center" style="opacity:0.8!important; background-color:#DDDD!important;">
 
         <div id="otherButtons">
-            @if($invoice->invoice_status ==10)
+            @if($invoice->invoice_status == 10)
+
+            @if(($AppUI->isStudent() || $AppUI->isParent()) && $invoice->payment_status == 0)
+                <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">{{__("Pay now")}}</a>
+            @endif
 
             @if(!$AppUI->isStudent() && !$AppUI->isParent())
                 @if($invoice->payment_status == 0)
-                    <a id="payment_btn" target href="#" class="btn btn-theme-warn">
+                    <a id="payment_btn" target href="#" class="btn btn-outline-success">
                         <i class="fa-solid fa-hand-holding-dollar"></i>  <span class="d-none d-sm-inline-block">{{__('Flag as Paid')}}</span>
                     </a>
                 @endif
                 @if($invoice->payment_status == 1)
-                    <a id="payment_btn" target href="#" class="btn btn-theme-success"><i class="fa fa-money" aria-hidden="true"></i>
+                    <a id="payment_btn" target href="#" class="btn btn-success"><i class="fa fa-money" aria-hidden="true"></i>
                         <i class="fa-solid fa-hand-holding-dollar"></i> <span class="d-none d-sm-inline-block">{{__('Paid')}}</span>
                     </a>
                 @endif
                 @if($invoice->payment_status == 2)
-                <a id="payment_btn" target href="#" class="btn btn-theme-success"><i class="fa fa-money" aria-hidden="true"></i>
+                <a id="payment_btn" target href="#" class="btn btn-success"><i class="fa fa-money" aria-hidden="true"></i>
                     <i class="fa-solid fa-hand-holding-dollar"></i> <span class="d-none d-sm-inline-block">{{__('Paid in cash')}}</span>
                 </a>
                 @endif
-                <button id="approved_btn" target="" href="" class="btn btn-theme-outline" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><label><i class="fa-solid fa-envelope-open-text"></i> <span class="d-none d-sm-inline-block">{{__('Send by email')}}</span></label></button>
+                <button id="approved_btn" target="" href="" class="btn btn-outline-primary" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><i class="fa-solid fa-envelope-open-text"></i> <span class="d-none d-sm-inline-block">{{__('Send by email')}}</span></button>
                 @endif
 
                 @if($invoice->payment_status !== 0)
-                <a id="download_pdf_btn_a" target="_blank" href="{{ route('generateInvoicePDF',['invoice_id'=> $invoice->id, 'type' => 'print_view']) }}" class="btn btn-theme-outline">
-                    <label name="download_pdf_btn d-none d-sm-block" id="download_pdf_btn"><i class="fa-solid fa-file-pdf"></i> <span class="d-none d-sm-inline-block"> {{__('View PDF')}}</span></label>
+                <a id="download_pdf_btn_a" target="_blank" href="{{ route('generateInvoicePDF',['invoice_id'=> $invoice->id, 'type' => 'print_view']) }}" class="btn btn-outline-primary">
+                    <span name="download_pdf_btn d-none d-sm-block" id="download_pdf_btn"><i class="fa-solid fa-file-pdf"></i> <span class="d-none d-sm-inline-block"> {{__('View PDF')}}</span></span>
                 </a>
                 @endif
 
                 @if($invoice->payment_status == 0)
-                <a id="download_pdf_btn_a" href="{{ route('invoices.download', $invoice->id) }}" class="btn btn-theme-outline">
-                    <label name="download_pdf_btn d-none d-sm-block" id="download_pdf_btn"><i class="fa-solid fa-file-pdf"></i> <span class="d-none d-sm-inline-block"> {{__('Download PDF')}}</span></label>
+                <a id="download_pdf_btn_a" href="{{ route('invoices.download', $invoice->id) }}" class="btn btn-outline-primary">
+                    <span name="download_pdf_btn d-none d-sm-block" id="download_pdf_btn"><i class="fa-solid fa-file-pdf"></i> <span class="d-none d-sm-inline-block"> {{__('Download PDF')}}</span></span>
                 </a>
                 @endif
 
 
             @else
-                <a id="issue_inv_btn" name="issue_inv_btn" class="btn btn-sm btn-success" target="">
+                <a id="issue_inv_btn" name="issue_inv_btn" class="btn btn-sm btn-outline-success" target="">
                     <i class="fa-solid fa-check"></i> <span class="d-none d-sm-inline-block">{{__('Generate invoice')}}</span>
                 </a>
-                <a id="print_preview_btn" href="{{ route('generateInvoicePDF',['invoice_id'=> $invoice->id, 'type' => 'print_view']) }}" name="print_preview_btn" class="btn btn-theme-outline" target="_blank"><i class="fa-solid fa-file-pdf"></i> <span class="d-none d-sm-inline-block">{{__('Print Preview')}}</span></a>
+                <a id="print_preview_btn" href="{{ route('generateInvoicePDF',['invoice_id'=> $invoice->id, 'type' => 'print_view']) }}" name="print_preview_btn" class="btn btn-outline-primary" target="_blank"><i class="fa-solid fa-file-pdf"></i> <span class="d-none d-sm-inline-block">{{__('Print Preview')}}</span></a>
 
             @endif
 
@@ -1174,18 +1120,84 @@
 </div>
 
 
-<div class="modal pay_now" id="pay_now">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-body">
-             pay now the truc
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="modalClose" class="btn btn-primary" data-bs-dismiss="modal">PAY</button>
-            </div>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">   
+        <div class="modal-header text-white" style="background-color: #152245; heigth:85px!important; padding:8px!important;">
+          <span class="modal-title p-1" id="exampleModalLabel">
+          {{__("Invoice")}}<br>
+          <span style="font-size:11px;">{{$invoice->invoice_header}}</span>
+          </span>
+          <button type="button" data-dismiss="modal" aria-label="Close" id="modalClose" class="close" data-bs-dismiss="modal" style="font-size:23px; background-color:transparent!important; border:none!important;">
+            <i class="fa-solid fa-circle-xmark fa-lg text-white"></i>
+        </button>
         </div>
+        <div class="modal-body">
+
+            <div class="text-center pb-2">
+                <b>{{__("Amount to pay")}}: <small>{{$invoice->invoice_currency}}</small> {{$invoice->total_amount}}</b><br>
+            </div>
+
+            @if($is_conneced_account_charges_enabled)
+                    <div style="width:100%; max-width:500px; padding:10px;  margin-bottom:1px;">
+                        <b class="text-primary">{{__('pay_by_card')}}</b>
+                        <div id="example4-card"></div>
+                        <div class="text-end" style="width:100%;">
+                            <img src="{{asset('img/powered_by_stripe.png')}}" width="90">
+                        </div>
+                        <div id="confirmPaymentByStripe" class="text-center" style="display:none; margin-top:10px; background-color:#fafafa!important; padding:5px!important; border-radius:8px!important; padding-bottom:15px!important;">
+                            <div class="form-group text-center mt-2 mb-3">
+                                <label><input type="checkbox" id="terms_condition" name="terms_condition"> {{ __('I agree with the') }} <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal2" class="text-primary">{{ __('terms and conditions') }}</a></label>
+                            </div>
+                            <a href="#" id="btnConfirmPaymentByStripe" class="btn btn-outline-success">{{__('confirm_payment')}}</a>
+                        </div>
+                    </div>
+                @endif
+
+
+                @foreach ($coachPaymentMethods as $paymentMethod)
+                  @if($paymentMethod->type !== "Stripe")
+                  <div style="border-bottom: 1px solid #f1f1f1; width:100%; max-width:500px; padding:12px;">
+      
+                  <b class="text-primary">{{ $paymentMethod->type }}</b>: 
+           
+                        @if ($paymentMethod->type === 'PayPal')
+                            <span>{{ $paymentMethod->details['paypal_address'] ?? 'N/A' }}</span><br><span style="font-size:12px;">Enter this email address in your Paypal account</span>
+                        @elseif ($paymentMethod->type === 'IBAN')
+                            <span>IBAN N°: {{ $paymentMethod->details['iban_number'] ?? 'N/A' }}</span>
+                            <br><span>SWIFT N°: {{ $paymentMethod->details['swift_number'] ?? 'N/A' }}</span>
+                        @elseif ($paymentMethod->type === 'Swift')
+                            <span>{{ $paymentMethod->details['swift_number'] ?? 'N/A' }}</span>
+                        @elseif ($paymentMethod->type === 'Cash')
+                            <span>{{ $paymentMethod->details['cash'] ?? 'N/A' }}</span>
+                        @elseif ($paymentMethod->type === 'E-Transfer')
+                            <span>{{ $paymentMethod->details['e_transfer_number'] ?? 'N/A' }}</span><br><span style="font-size:12px;">Enter this email address in your E-Transfer account</span>
+                        @elseif ($paymentMethod->type === 'Bank')
+                            <ul>
+                                @forelse ($paymentMethod->details['custom_fields'] ?? [] as $field)
+                                    <li><strong>{{ $field['name'] }}:</strong> {{ $field['value'] }}</li>
+                                @empty
+                                    <li>No custom fields added.</li>
+                                @endforelse
+                            </ul>
+                        @endif
+                    
+                    </div>
+                    @endif
+                @endforeach
+                
+                <p style="font-size:12px;" class="pt-4">
+                    {{__("due_date_of_invocie")}}: {{ \Carbon\Carbon::parse($invoice->date_due)->timezone($zone)->format('d/m/Y') }}
+                </p>
+
+        </div>
+        <div class="modal-footer" style="background-color: #fafafa;">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{__("Cancel")}}</button>
+          <!--<button type="button" class="btn btn-primary">PAY</button>-->
+        </div>
+      </div>
     </div>
-</div>
+  </div>
 
 
 	<!-- success modal-->
@@ -2178,8 +2190,6 @@ function extractExtraCharges($inputString) {
                 var is_terms_condition = $("#terms_condition").prop('checked');
 
                 if(is_terms_condition) {
-
-                    $('#pageloader').hide();
                     var theInvoiceId = "{{$invoice->id}}";
 
                     $.ajax({
@@ -2188,15 +2198,61 @@ function extractExtraCharges($inputString) {
                         dataType: 'json',
                         data: {stripe_payment_method_id:result.paymentMethod.id,invoice_id:theInvoiceId},
                         success: function(response) {
+                        if(response.status === "succeeded") {
                             $("#pageloader").hide();
                             Swal.fire({
                                 icon: 'success',
                                 title: "Payment successful",
                             });
                             setTimeout(() => {
-                                //reload page
-                                location.reload();
-                            }, 1000);
+                                window.location.href = "{{ route('transactions.index', ['userId' => $AppUI->id]) }}";
+                            }, 800);
+                        } else {
+                            if(response.status === "requires_action") {
+                            //$("#pageloader").hide();
+                            stripe.confirmCardPayment(response.clientSecret,
+                            {
+                                return_url: 'https://sportlogin.app/invoices'
+                            },
+                            {handleActions: true}
+                            ).then(function(result) {
+                                console.log(result);
+                            if(result && result.paymentIntent && result.paymentIntent.status === "succeeded") {
+                                $("#pageloader").hide();
+                                Swal.fire({
+                                icon: 'success',
+                                title: "Payment successful",
+                            });
+                                setTimeout(() => {
+                                    window.location.href = "{{ route('transactions.index', ['userId' => $AppUI->id]) }}";
+                                }, 800);
+                            } else {
+                                if(result.error && result.error.code === "payment_intent_authentication_failure") {
+                                    $("#pageloader").hide();
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: "{{ __('Payment error') }}",
+                                        text: "{{__('payment_intent_authentication_failure')}}"
+                                    });
+                                } else {
+                                    $("#pageloader").hide();
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: "{{ __('Payment error') }}",
+                                        text: result.error.message
+                                    });
+                                }
+                            }
+                            });
+                        } else {
+                            $("#pageloader").hide();
+                            Swal.fire({
+                                icon: 'error',
+                                title: "{{ __('Payment error') }}",
+                                text: response.status
+                            });
+                        }
+                        }
                         },
                         error: function(xhr, status, error) {
                             $('#pageloader').hide();
@@ -2213,7 +2269,7 @@ function extractExtraCharges($inputString) {
                     Swal.fire({
                         icon: 'error',
                         title: "{{ __('Payment error') }}",
-                        text: "An error occurred. The payment could not be completed. You were not charged."
+                        text: "Please accept terms and conditions to continue."
                     });
                 }
     
@@ -2227,4 +2283,18 @@ function extractExtraCharges($inputString) {
     const paymentButton = document.getElementById('payment-button');
     
     </script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Récupérer les paramètres de l'URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const payRequest = urlParams.get('pay');
+        
+        // Si le paramètre 'pay' est 'request', on ouvre le modal
+        if (payRequest === 'request') {
+            var myModal = new bootstrap.Modal(document.getElementById('exampleModal'));
+            myModal.show();
+        }
+    });
+</script>
 @endsection

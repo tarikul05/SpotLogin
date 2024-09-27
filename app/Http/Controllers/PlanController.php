@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\PaymentMethod;
 use App\Models\Invoice;
+use App\Models\School;
 use App\Models\User;
 
 class PlanController extends Controller
@@ -82,9 +83,13 @@ class PlanController extends Controller
     public function stripe_bank_account(Request $request)
     {
         $user = Auth::user();
+        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId();
+        $school = School::active()->find($schoolId);
+        $country_code = $request->country_code;
 
           $accountCreate = $this->stripe->accounts->create([
-            'country' => 'CH',
+            'country' => $country_code,
+            'email' => $user->email,
             'company' => [
                 'name' => $user->firstname . ' ' . $user->lastname,
             ],
@@ -93,19 +98,24 @@ class PlanController extends Controller
                 'last_name' => $user->lastname,
                 'email' => $user->email,
             ],
+            'metadata' => [
+                'user_id' => $user->id,
+                'school_id' => $schoolId,
+                'type' => 'coach',
+            ],
             'type' => 'express',
             'capabilities' => [
               'card_payments' => ['requested' => true],
               'transfers' => ['requested' => true],
             ],
             'business_type' => 'individual',
-            'business_profile' => ['url' => 'https://sportlogin.app/account'],
+            'business_profile' => ['url' => 'https://sportlogin.app/account/?tab=5'],
           ]);
 
           $account = $this->stripe->accountLinks->create([
             'account' => $accountCreate->id,
-            'refresh_url' => 'https://sportlogin.app/account',
-            'return_url' => 'https://sportlogin.app/account',
+            'refresh_url' => 'https://sportlogin.app/account/?tab=5',
+            'return_url' => 'https://sportlogin.app/account/?tab=5&confirmation=stripe',
             'type' => 'account_onboarding',
           ]);
 
@@ -131,8 +141,8 @@ class PlanController extends Controller
 
           $account = $this->stripe->accountLinks->create([
             'account' => $account_id,
-            'refresh_url' => 'https://sportlogin.app/account',
-            'return_url' => 'https://sportlogin.app/account',
+            'refresh_url' => 'https://sportlogin.app/account?tab=5',
+            'return_url' => 'https://sportlogin.app/account?tab=5&confirmation=stripe',
             'type' => 'account_onboarding',
           ]);
 
@@ -144,6 +154,8 @@ class PlanController extends Controller
     public function createPaymentIntentForCoach(Request $request)
     {
         $user = Auth::user();
+        $schoolId = $user->selectedSchoolId();
+        $school = School::active()->find($schoolId);
 
         if (!$request->stripe_payment_method_id) {
             return response()->json(['error' => 'No payment method found'], 400);
@@ -155,9 +167,16 @@ class PlanController extends Controller
         $paymentIntent = $this->stripe->paymentIntents->create([
             'amount' => $invoice->total_amount * 100,
             'currency' => $invoice->invoice_currency,
+            'customer' => $user->stripe_id,
             'payment_method' => $request->stripe_payment_method_id,
             'payment_method_types' => ['card'],
             'confirm' => true, 
+            'metadata' => [
+                'user_id' => $user->id,
+                'school_id' => $schoolId,
+                'invoice_id' => $invoice->id,
+                'type' => 'coach',
+            ],
             'transfer_data' => [
                 'destination' => $coachOfInvoice->stripe_account_id, 
             ],
@@ -168,6 +187,6 @@ class PlanController extends Controller
             $invoice->save();
         }
 
-        return response()->json(['clientSecret' => $paymentIntent->client_secret]);
+        return response()->json(['clientSecret' => $paymentIntent->client_secret, 'status' => $paymentIntent->status]);
     }
 }

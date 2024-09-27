@@ -83,7 +83,7 @@ body {
     background-color: #fff;
 }
 ::-webkit-scrollbar-thumb {
-    background-color: #0075bf;
+    background-color: #4460b0;
     border-radius: 3px;
 }
 .row {
@@ -171,20 +171,19 @@ header.panel-heading {
 
 
 .titlePage{
-    color:#0075bf;
-    font-size:30px;
-    text-shadow:rgba(0, 0, 0, 0.5);
+    color:#3b75bf;
+    font-size:25px;
 }
 
 .titleCardPage{
-    color:#0075bf;
+    color:#3b75bf;
     font-size:15px;
     text-shadow:rgba(0, 0, 0, 0.5);
 
 }
 
 .titleFieldPage{
-    color:#0075bf;
+    color:#3b75bf;
     font-size:14px;
     text-shadow:rgba(0, 0, 0, 0.5);
 
@@ -204,12 +203,12 @@ header.panel-heading {
 }
 
 .card2 input:checked[type=radio] {
-    background-color: #0075bf;
+    background-color: #4460b0;
 }
 
 .card2 .category_bg_color_agenda {
     border-radius:50px;
-    border-color:#0075bf;
+    border-color:#4460b0;
 }
 
 .card2 #students1.table-stripped {
@@ -218,20 +217,20 @@ header.panel-heading {
 }
 
 .card2 .dataTables_length label,select {
-    color:#0075bf!important;
+    color:#4460b0!important;
     font-size:15px!important;
 }
 .card2 .dataTables_length select {
-    border:1px solid #0075bf!important;
+    border:1px solid #4460b0!important;
 }
 #students1 .card2 a {
-    color:#0075bf!important;
+    color:#4460b0!important;
     border:none!important;
     font-size:11px!important;
 }
 
 .card2 label {
-    color:#0075bf!important;
+    color:#4460b0!important;
 }
 
 .form-control {
@@ -239,13 +238,11 @@ header.panel-heading {
 }
 /* Optionally, make sure table-bordered is not affecting your table */
 
-.text-primary {
-    color:#0075bf!important;
-}
+
 
 @media (max-width: 576px) {
     .titlePage{
-        color:#0075bf;
+        color:#4460b0;
         font-size:22px;
         text-shadow:rgba(0, 0, 0, 0.5);
         /*add bold*/
@@ -254,7 +251,7 @@ header.panel-heading {
     }
     
     .titleCardPage{
-        color:#0075bf;
+        color:#4460b0;
         font-size:12px;
         text-shadow:rgba(0, 0, 0, 0.5);
         font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
@@ -321,20 +318,8 @@ header.panel-heading {
     border-color: #ff8000;
     color: #fff;
 }
-.btn-primary {
-    color: #fff;
-    background-color: #0075bf;
-    border-color: #0075bf;
-}
-.btn-outline-primary {
-    color: #0075bf;
-    border-color: #0075bf;
-}
-.btn-outline-primary:hover {
-    color: #fff;
-    background-color: #0075bf;
-    border-color: #0075bf;
-}
+
+
 .form-group {
     margin-bottom: 0.5rem;
 }
@@ -362,7 +347,7 @@ select::-ms-expand {
     font-family: FontAwesome;
     content: "\f078";
     line-height: 1;
-    color: #0075bf;
+    color: #4460b0;
     background: transparent;
     width: 25px;
     height: 33px;
@@ -433,7 +418,7 @@ li.light-blue-txt.gilroy-bold {
     outline: 0;
 }
 .login-signup-modal .forgot_password_btn {
-    color: #0075bf !important;
+    color: #4460b0 !important;
     cursor: pointer;
 }
 
@@ -508,14 +493,96 @@ li.light-blue-txt.gilroy-bold {
 .bgdarkblue {
     background: #152245;
 }
+
+.badge.bg-info {
+    background-color: #4460b0!important;
+    border: 1px solid #2a3e76!important;
+}
+.badge.bg-info:hover {
+    background-color: #2a3e76!important;
+    border: 1px solid #4460b0!important;
+}
+
+.btn-primary {
+    background-color: #2a3e76!important;
+    border: 1px solid #4460b0!important;
+}
+.btn-primary:hover {
+    background-color: #4460b0!important;
+    border: 1px solid #2a3e76!important;
+}
+.btn-outline-primary {
+    border: 1px solid #4460b0!important;
+    color: #4460b0!important;
+}
+.btn-outline-primary:hover {
+    background-color: #4460b0!important;
+    border: 1px solid #2a3e76!important;
+    color:#FFF!important;
+}
+.text-success {
+    color: #1ca98a!important;
+}
+.btn-success {
+    background-color: #1ca98a!important;
+}
+.btn-success:hover {
+    background-color: #2dd2ae!important;
+}
+.btn-outline-success {
+    border: 1px solid #1ca98a!important;
+    color: #1ca98a!important;
+}
+.btn-outline-success:hover {
+    background-color: #2dd2ae!important;
+    color:#FFF!important;
+}
+
+.btn-danger {
+    background-color: #902245!important;
+    border:1px solid #ae2e56!important;
+}
+.btn-danger:hover {
+    background-color: #ae2e56!important;
+    border:1px solid #902245!important;
+}
+.btn-outline-danger {
+    border: 1px solid #902245!important;
+    color: #ae2e56!important;
+}
+.btn-outline-danger:hover {
+    background-color: #ae2e56!important;
+    border: 1px solid #902245!important;
+    color:#FFF!important;
+}
+
+.alert-info {
+    background-color: #f4f4f4!important;
+    border:#EEE!important;
+    color: #4460b0!important;
+}
+
+.text-primary {
+    color: #4460b0!important;
+}
+
+.bg-primary {
+    background-color: #2a3e76!important;
+}
+.bg-primary:hover {
+    background-color: #4460b0!important;
+    color:#FFF!important;
+}
+
+
 .txtdarkblue {
     color: #152245;
 }
 .light-blue-bg {
-    background: #0075bf;
+    background: #4460b0;
 }
 .light-blue-txt {
-    color: #0075bf;
+    color: #4460b0;
 }
 .light-grey-bg {
     background: rgb(21 34 69 / 5%);
@@ -542,10 +609,10 @@ footer .txtdarkblue {
     text-decoration: none;
 }
 .light-blue-bg {
-    background: #0075bf;
+    background: #4460b0;
 }
 .light-blue-txt {
-    color: #0075bf;
+    color: #4460b0;
 }
 .light-grey-bg {
     background: rgb(21 34 69 / 5%);
@@ -609,7 +676,7 @@ footer .txtdarkblue {
     font-family: FontAwesome;
     content: "\f078";
     line-height: 1;
-    color: #0075bf;
+    color: #4460b0;
     background: #fff;
     width: 25px;
     height: 33px;
@@ -647,7 +714,7 @@ section.why-sportlogin {
 .sportlogin-feature .sportlogin-feature-icon {
     width: 154px;
     height: 154px;
-    background: #0075bf;
+    background: #4460b0;
     border-radius: 50%;
     display: grid;
     align-items: center;
@@ -660,7 +727,7 @@ section.why-sportlogin {
     height: 68px;
 }
 .sportlogin-feature h4 {
-    color: #0075bf;
+    color: #4460b0;
 }
 .about-us p {
     font-size: 22px;
@@ -736,7 +803,8 @@ section.why-sportlogin {
     position: fixed;
     top: 40%;
     left: 50%;
-    width: 10%;
+    width: 30%;
+    max-width: 130px;
     transform: translate(-50%, -45%);
 }
 /* Mamun 16 February,2022 pageloader design -------------------------------------------------- */
@@ -799,33 +867,6 @@ input#shas_user_account {
     appearance: none;
     border-radius: 0.25rem;
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-}
-#button_lock_and_save_div {
-    color: #31708f;
-    background-color: #d9edf7;
-    border-color: #bce8f1;
-}
-button#button_lock_and_save {
-    padding: 0.75rem;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 0.25;
-    height: 35px;
-    color: #fff;
-    background-color: #5bc0de;
-    border-color: #46b8da;
-}
-.button_lock_and_save {
-    padding: 0.75rem;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 0.25;
-    height: 35px;
-    color: #fff;
-    background-color: #5bc0de;
-    border-color: #46b8da;
-    text-decoration: none;
-    border-radius: 5px;
 }
 ul.dropdown-menu.show {
     max-width: 260px !important;
@@ -924,7 +965,8 @@ div#calendar thead th {
 }
 .fc-list-heading td,
 .fc-list-item:hover td {
-    background-color: #b3d6ec !important;
+    background-color: #f4f4f4 !important;
+    color: #4460b0!important;
 }
 .fc-day-number {
     width: 100%;
@@ -985,13 +1027,13 @@ div#calendar thead th {
     content: "\f053";
     font: normal normal normal 14px/1 FontAwesome;
     position: relative;
-    color: #0075bf;
+    color: #4460b0;
 }
 #datepicker_month .datetimepicker table th.next::after {
     content: "\f054";
     font: normal normal normal 14px/1 FontAwesome;
     position: relative;
-    color: #0075bf;
+    color: #4460b0;
 }
 #datepicker_month th {
     line-height: 2;
@@ -1165,11 +1207,7 @@ button.btn.btn-sm.btn-warning {
 #modal_lesson_price p#modal_alert_body {
     font-size: 18px;
 }
-.btn-success {
-    color: #fff;
-    background-color: #5cb85c;
-    border-color: #4cae4c;
-}
+
 .course_week_header {
     font-size: 16px;
     line-height: 1.5em;
@@ -1767,7 +1805,7 @@ label#currency_alert_text {
   }
 
   .fc-day-header.fc-today span {
-    background-color: #0075bf;
+    background-color: #4460b0;
     border-radius:8px;
     padding: 4px;
     color: white;
@@ -1784,7 +1822,7 @@ label#currency_alert_text {
 }
 
   .fc-day-top.fc-today span {
-    background-color: #0075bf;
+    background-color: #4460b0;
     border-radius: 50%;
     padding: 2px;
     margin-top:1px;
@@ -1846,8 +1884,9 @@ label#currency_alert_text {
 
     .navbar-nav .nav-item {
       height: 45px;
-      padding-bottom: 10px;
+      padding-bottom: 15px;
       border-bottom: 1px solid #1c255a;
+      font-size:17px;
     }
     .navbar-nav.user-area a.user_profile {
         padding-top: 13px !important;
@@ -1938,13 +1977,14 @@ label#currency_alert_text {
   }
 
   .paginate_button .current {
-    border-radius:20px!important;
+    border-radius:50%!important;
+    background-color: #FFF;
   }
 
   .current {
     border-radius:50px!important;
-    color:#0075bf!important;
-    border:1px solid #0075bf!important;
+    color:#4460b0!important;
+    border:1px solid #4460b0!important;
   }
 
   .dataTables_wrapper select {
@@ -1952,18 +1992,25 @@ label#currency_alert_text {
   }
 
   .dataTables_wrapper .dataTables_paginate .paginate_button {
-    color:#0075bf!important;
-    border-radius:10px!important;
+    color:#4460b0!important;
+    border-radius:50px!important;
   }
-  .dataTables_wrapper .dataTables_paginate .paginate_button {
-    color:#0075bf!important;
-    border-radius:20px!important;
+  .dataTables_wrapper .dataTables_paginate:hover .paginate_button:hover {
+    background:#EEE!important;
+    color:#333!important;
+    border-radius:50px!important;
+    border:1px solid #4460b0!important;
   }
   .dataTables_wrapper .dataTables_paginate .paginate_button .current,.next,.previous {
-    border:1px solid #EEE!important;
-    color:#AAA!important;
-    opacity:.7!important;
-    border-radius:20px!important;
+    opacity:.9!important;
+    border-radius:50%!important;
+  }
+  .dataTables_wrapper .dataTables_paginate .current {
+    opacity:1!important;
+    background-color: #4460b0;
+  }
+  .dataTables_wrapper .dataTables_paginate .paginate_button:hover .current:hover,.next:hover,.previous:hover {
+    background-color: #EEE;
   }
   .dataTables_length {
     margin-top:7px!important;

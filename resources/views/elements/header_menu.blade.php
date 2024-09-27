@@ -115,7 +115,7 @@
 
                     @can('students-list')
                         @if($AppUI['person_type'] != 'SUPER_ADMIN')
-                           <a href="{{ route('studentHome') }}" class="nav-item nav-link text-center mr-2"><i class="fa-solid fa-users"></i> <span class="d-none d-sm-block"></span> {{ __('Students') }}</a>
+                           <a href="{{ route('studentHome') }}" class="nav-item nav-link text-center mr-2"><i class="fa-solid fa-users-gear"></i> <span class="d-none d-sm-block"></span> {{ __('Students') }}</a>
                         @endif
                     @endcan
                     @if($AppUI['person_type'] != 'SUPER_ADMIN')
@@ -383,6 +383,12 @@
     $(document).ready(function() {
     $('.activeLoaderLink a:not(.dropdown-toggle)').on('click', function() {
         $("#pageloader").fadeIn('fast');
+    });
+
+    $(window).on("pageshow", function(event) {
+        if (event.originalEvent.persisted) {
+            $("#pageloader").fadeOut('fast'); 
+        }
     });
 });
 </script>

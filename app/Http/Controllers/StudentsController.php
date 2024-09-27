@@ -1643,7 +1643,7 @@ public function index(Request $request, $schoolId = null)
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function exportExcel($schoolId = null, Request $request, Student $student)
+    public function exportExcel(Request $request)
     {
         $user = Auth::user();
         $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId();
@@ -1657,16 +1657,17 @@ public function index(Request $request, $schoolId = null)
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function importExcel($schoolId = null, Request $request, Student $student)
+    public function importExcel(Request $request)
     {
         $alldata = $request->all();
         $user = Auth::user();
+
         if ($user->isSuperAdmin()) {
             $school = School::active()->find($schoolId);
             if (empty($school)) {
                 return [
                     'status' => 1,
-                    'message' =>  __('School not selected')
+                    'message' => __('School not selected'),
                 ];
             }
             $schoolId = $school->id;
@@ -1682,17 +1683,9 @@ public function index(Request $request, $schoolId = null)
             $msg = $userImport->getMessage();
             return back()->with('success', __($msg));
         } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
-            //  $failures = $e->failures();
-            //  $errMsg = '';
-            //  foreach ($failures as $failure) {
-            //      $failure->row(); // row that went wrong
-            //      $failure->attribute(); // either heading key (if using heading row concern) or column index
-            //      $failure->errors(); // Actual error messages from Laravel validator
-            //      $failure->values(); // The values of the row that has failed.
-            //      $errMsg .= "Column {$failure->attribute()} value {$failure->values()} error: $failure->errors()<br/> ";
-            //  }
-            // return redirect()->back()->with('error', __($errMsg));
+            // Handle the validation exception if needed
         }
+
         return redirect()->back()->with('error', __('Internal server error'));
     }
 

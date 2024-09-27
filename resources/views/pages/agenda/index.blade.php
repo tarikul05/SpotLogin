@@ -43,7 +43,7 @@
 
   li {
   padding-bottom: 1.5rem;
-  border-left: 1px solid #0075bf;
+  border-left: 1px solid #4460b0;
   position: relative;
   padding-left: 20px;
   margin-right: 10px;
@@ -60,7 +60,7 @@ li:before {
   width: 15px;
   height: 15px;
   background: white;
-  border: 1px solid #0075bf;
+  border: 1px solid #4460b0;
   box-shadow: 2px 2px 0px #CCC;
   border-radius: 50%;
   position: absolute;
@@ -70,7 +70,7 @@ li:before {
 
 /* Style for ongoing events */
 .current-event:before {
-  background-color: #0075bf; /* Change this color as needed */
+  background-color: #4460b0; /* Change this color as needed */
 }
 .time{
   color: #2a2839;
@@ -201,23 +201,23 @@ p{
                                         <div class="dropdown" id="dropdownActions" style="margin-top:0; padding-top:0;">
                                         <span class="btn btn-theme-outline">Actions <i class="fa fa-caret-down"></i></span>
                                         <div class="dropdown-content">
-                                            <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_validate_events" class="btn btn-sm btn-info m-1 mb-2"><i class="fa-solid fa-lock"></i> <span id ="btn_validate_events_cap">{{__('Validate All')}}</span></a>
-                                            <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_delete_events" class="btn btn-sm btn-theme-warn m-1 mb-2"><i class="fas fa-trash"></i> <span id ="btn_delete_events_cap">{{__('Delete All')}}</span></a>
+                                            <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_validate_events" class="btn btn-sm btn-success m-1 mb-2"><i class="fa-solid fa-lock"></i> <span id ="btn_validate_events_cap">{{__('Validate All')}}</span></a>
+                                            <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_delete_events" class="btn btn-sm btn-danger m-1 mb-2"><i class="fas fa-trash"></i> <span id ="btn_delete_events_cap">{{__('Delete All')}}</span></a>
 
-                                            <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_copy_events" class="btn btn-theme-outline m-1 mb-2"><i class="far fa-copy"></i> <span id ="btn_copy_events_cap">{{__('Copy All')}}</span></a>
-                                            <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_goto_planning" class="btn btn-theme-outline m-1 mb-2"><em class="glyphicon glyphicon-fast-forward"></em> <span id ="btn_goto_planning_cap">{{__('Paste')}}</span></a>
+                                            <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_copy_events" class="btn btn-outline-primary m-1 mb-2"><i class="far fa-copy"></i> <span id ="btn_copy_events_cap">{{__('Copy All')}}</span></a>
+                                            <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_goto_planning" class="btn btn-primary m-1 mb-2"><em class="glyphicon glyphicon-fast-forward"></em> <span id ="btn_goto_planning_cap">{{__('Paste')}}</span></a>
 
                                             @if($AppUI->isTeacherAdmin())
                                             @if($counterDataImported > 0)
-                                            <a style="display:inline-block; min-width: 190px;" href="{{route('import.getLessons')}}" class="btn btn-theme-outline m-1" id="importStudents"><img src="{{ asset('img/excel_icon.png') }}"  width="17" height="auto"/> Import Agenda <span class="badge bg-info">{{$counterDataImported}}</span</a>
+                                            <a style="display:inline-block; min-width: 190px;" href="{{route('import.getLessons')}}" class="btn btn-outline-primary m-1" id="importStudents"><img src="{{ asset('img/excel_icon.png') }}"  width="12" height="auto"/> Import Agenda <span class="badge bg-info">{{$counterDataImported}}</span</a>
                                             @else
-                                            <a style="display:inline-block; min-width: 190px;" href="#" data-bs-toggle="modal" data-bs-target="#importModal" id="csv_btn_import" class="btn btn-theme-outline m-1" id="importStudents"><img src="{{ asset('img/excel_icon.png') }}"  width="17" height="auto"/> Import Agenda</a>
+                                            <a style="display:inline-block; min-width: 190px;" href="#" data-bs-toggle="modal" data-bs-target="#importModal" id="csv_btn_import" class="btn btn-outline-primary m-1" id="importStudents"><img src="{{ asset('img/excel_icon.png') }}"  width="12" height="auto"/> Import Agenda</a>
                                             @endif
                                             @endif
 
                                             @if(!$AppUI->isStudent() && !$AppUI->isParent())
-                                            <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_export_events" target="_blank" class="btn btn-theme-outline m-1"><img src="{{ asset('img/excel_icon.png') }}"  width="17" height="auto"/>
-                                                <span id ="btn_export_events_cap">Export Agenda</span></a>
+                                            <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_export_events" target="_blank" class="btn btn-outline-primary m-1"><img src="{{ asset('img/excel_icon.png') }}"  width="12" height="auto"/>
+                                                <span id="btn_export_events_cap">Export Agenda</span></a>
                                             @endif
 
                                             @if($AppUI->isStudent() || $AppUI->isParent())
@@ -291,12 +291,12 @@ p{
                                                 <button type="button" class="btn btn-default w-100 btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                     {{__('Actions')}} <i class="fa fa-caret-down"></i>
                                                 </button>
-                                                <div class="dropdown-menu" aria-labelledby="calendar_dropdown" style="padding-top:0; padding-bottom:0;">
-                                                    <button class="dropdown-item calendar_buttons text-success" id="add_lesson_btn_mobile" type="button" style="font-size:14px;"><i class="fa-regular fa-plus"></i> Add new</button>
-                                                    <button class="dropdown-item calendar_buttons" id="btn_copy_events_mobile" type="button" style="font-size:14px;"><i class="fa-regular fa-copy"></i> {{__('Copy')}}</button>
-                                                    <button class="dropdown-item calendar_buttons" id="btn_goto_planning_mobile" type="button"><i class="fa-regular fa-paste"></i> {{__('Paste')}}</button>
-                                                    <button class="dropdown-item calendar_buttons badge-info" id="btn_validate_events_mobile" type="button"><i class="fa-solid fa-lock"></i> {{__('Validate All')}}</button>
-                                                    <button class="dropdown-item calendar_buttons badge-warning" id="btn_delete_events_mobile" type="button"><i class="fas fa-trash"></i> {{__('Delete All')}}</button>
+                                                <div class="dropdown-menu" aria-labelledby="calendar_dropdown" style="padding-top:0; padding-bottom:0; margin-right:8px; padding:15px; text-align:center;">
+                                                    <button class="dropdown-item calendar_buttons_mobile btn btn-outline-primary" id="add_lesson_btn_mobile" type="button" style="font-size:14px;"><i class="fa-regular fa-plus"></i> Add new</button>
+                                                    <button class="dropdown-item calendar_buttons_mobile btn btn-outline-primary" id="btn_copy_events_mobile" type="button" style="font-size:14px;"><i class="fa-regular fa-copy"></i> {{__('Copy')}}</button>
+                                                    <button class="dropdown-item calendar_buttons_mobile btn btn-outline-primary" id="btn_goto_planning_mobile" type="button"><i class="fa-regular fa-paste"></i> {{__('Paste')}}</button>
+                                                    <button class="dropdown-item calendar_buttons_mobile btn btn-outline-success" id="btn_validate_events_mobile" type="button"><i class="fa-solid fa-lock"></i> {{__('Validate All')}}</button>
+                                                    <button class="dropdown-item calendar_buttons_mobile btn btn-outline-danger" id="btn_delete_events_mobile" type="button"><i class="fas fa-trash"></i> {{__('Delete All')}}</button>
                                                 </div>
                                             @else
                                                 <a href="../{{$schoolId}}/student-off" title="" class="btn btn-sm btn-theme-success" style="border-radius: 4px!important; max-width: 80px; height: 35px;"><i class="glyphicon glyphicon-plus"></i> {{ __("Add") }}</a>
@@ -336,7 +336,7 @@ p{
                                     @if(isset($userWidgets['timeline']) && $userWidgets['timeline'])
                                         <div class="wrapper mb-3" style="display: flex; display: none;" id="wrapperTimeline">
                                             <b style="position:absolute; left:30px; top:30px; color:#333;">Today Timeline</b>
-                                            <b style="position:absolute; right:30px; top:30px; color:#0075bf;"><i class="fa fa-close"></i></b>
+                                            <b style="position:absolute; right:30px; top:30px; color:#4460b0;"><i class="fa fa-close"></i></b>
                                             <ul class="sessions" id="todayNewTimeline"></ul>
                                         </div>
                                     @endif
@@ -927,7 +927,7 @@ p{
                             <h4 class="light-blue-txt gilroy-bold" style="font-size: 17px; line-height: 2"><span id="event_modal_title">{{ __('Title') }}</span></h4>
                             <p style="font-size: 20px;"></p>
 
-                            <button type="button" id="btn_confirm" onclick="confirm_event()" class="btn btn-sm btn-info button_lock_and_save" data-dismiss="modal" style="width:100px;">
+                            <button type="button" id="btn_confirm" onclick="confirm_event()" class="btn btn-sm btn-outline-success button_lock_and_save" data-dismiss="modal" style="width:100px;">
                             <span id="event_btn_confirm_text"><i class="fa-solid fa-lock"></i> {{ __('Validate') }}<span>
                             </button>
 
@@ -1253,7 +1253,7 @@ $('.close-icon').on('click', function() {
 
             // cours - events - PopulateButtonMenuList
             if ((value.value == 10) && user_role != 'student' && user_role != 'parent'){
-                menuHtml += '<button type="button" id="add_lesson_btn" class="btn btn-theme-success d-none d-md-block" style="border-radius: 4px!important; max-width: 80px; height: 35px;"><i class="fa-solid fa-plus"></i></button>';
+                menuHtml += '<button type="button" id="add_lesson_btn" class="btn btn-outline-success d-none d-md-block" style="border-radius: 4px!important; max-width: 80px; height: 35px;"><i class="fa-solid fa-plus"></i></button>';
                 // menuHtml+='<button title="" type="button" class="btn btn-theme-success dropdown-toggle" style="margin-left:0!important;height:35px;border-radius:0 4px 4px 0!important;" data-toggle="dropdown">';
                 // menuHtml+='<span class="caret"></span><span class="sr-only">Plus...</span></button>' ;
                 // menuHtml+='<ul class="dropdown-menu" role="menu">';

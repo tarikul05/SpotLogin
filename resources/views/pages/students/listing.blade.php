@@ -301,19 +301,7 @@ $(document).ready(function() {
     });
 });
     </script>
-<script>
-    document.getElementById('select-all').addEventListener('change', function () {
-        var checkboxes = document.querySelectorAll('input[name="selected_students[]"]');
-        for (var checkbox of checkboxes) {
-            checkbox.checked = this.checked;
-        }
 
-        if (this.checked) {
-            var deleteButton = document.getElementById('delete-selected');
-            deleteButton.scrollIntoView({ behavior: 'smooth' });
-        }
-    });
-</script>
 <script type="text/javascript">
     $(document).ready( function () {
         $('#example').DataTable({
@@ -390,5 +378,7 @@ $(document).ready(function() {
             }
         });
     });
+    
+    
 </script>
 @endsection

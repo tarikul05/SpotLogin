@@ -45,7 +45,7 @@
 }
 
 .subscription_info .text-success .text a {
-    color: #0075BF;
+    color: #4460b0;
     text-decoration: underline;
     font-size: 18px;
     padding-left: 3px;
@@ -477,7 +477,7 @@
     font-weight: 700;
     font-size: 30px;
     line-height: 36px;
-    color: #0075BF;
+    color: #4460b0;
 }
 
 .my_subscription_billing tr {
@@ -662,7 +662,7 @@
     font-weight: 700;
     font-size: 30px;
     line-height: 36px;
-    color: #0075BF;
+    color: #4460b0;
 }
 
 .my_subscription tr {

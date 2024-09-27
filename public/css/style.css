@@ -63,7 +63,7 @@ img.admin_student {
 
 label#page_header,
 #cal_title {
-	color: #0075bf;
+	color: #4460b0;
 	float: left;
 	font-size: 18px;
 	padding: 0;
@@ -188,7 +188,7 @@ button#add_more_expense_btn {
 	font-size: 14px;
 	font-weight: 400;
 	line-height: 1;
-	color: #0075bf;
+	color: #4460b0;
 	text-align: center;
 	background-color: #b3d6ec;
 	border: 1px solid #b3d6ec;
@@ -216,12 +216,15 @@ button#add_more_expense_btn {
 }
 
 .search_text_box {
-	background-image: url("../img/search_icon.png") !important;
-	background-position: right !important;
-	background-repeat: no-repeat !important;
-	border-radius: 10px;
+    background-image: url("../img/search_icon.png") !important;
+    background-position: right 10px center !important; 
+    background-repeat: no-repeat !important;
+    background-size: 24px !important; 
+    border-radius: 10px;
     width: 300px;
-    border:#CCC 1px solid;
+    height: 40px;
+    border: #CCC 1px solid;
+    padding-right: 30px;
 }
 
 .search_box_agenda {
@@ -395,7 +398,7 @@ table#attn_tbl {
 	font-family: FontAwesome;
 	content: "\f078";
 	line-height: 1;
-	color: #0075bf;
+	color: #4460b0;
 	width: 25px;
 	height: 33px;
 	right: 1%;
@@ -529,7 +532,7 @@ table.tc_template .detail_header {
 .navbar-nav.user-area a.user_profile.active,
 .navbar-nav.user-area a.user_profile:hover,
 .navbar-nav.user-area a.user_profile:focus {
-	background: #0075bf;
+	background: #4460b0;
 	margin-right:5px;
 	color: #152245;
 	display: block;
@@ -556,7 +559,7 @@ table.tc_template .detail_header {
 
 .dropdown-menu.header a,
 .dropdown-menu.list a {
-	font-size: 12px;
+	font-size: 13px;
 	padding: 12px;
 	-webkit-transition: all 0.3s ease;
 	-moz-transition: all 0.3s ease;
@@ -564,7 +567,7 @@ table.tc_template .detail_header {
 	-ms-transition: all 0.3s ease;
 	transition: all 0.3s ease;
 	color: #aeb2b7;
-	line-height: 20px;
+	line-height: 15px;
 	text-align: right;
 	padding-top: 10px;
 	padding-bottom: 10px;
@@ -582,15 +585,20 @@ table.tc_template .detail_header {
 
 .dropdown-menu.header a:hover,
 .dropdown-menu.list a:hover {
-	color: #479ccf;
+	color: #FFF;
 	-webkit-transition: all 0.3s ease;
 	-moz-transition: all 0.3s ease;
 	-o-transition: all 0.3s ease;
 	-ms-transition: all 0.3s ease;
 	transition: all 0.3s ease;
 	display: block;
-	background: #0075bf;
-	border-radius: 0 0 8px 8px;
+	background: #4460b0;
+	width: 95%;
+	border-radius:5px;
+	margin:0 auto;
+	margin-bottom:5px;
+	margin-bottom:5px;
+	font-size:14px;
 }
 
 .dropdown-toggle::after {
@@ -604,7 +612,7 @@ table.tc_template .detail_header {
 
 .modal_parameter .modal-content p {
 	font-size: 22px;
-	color: #0075bf;
+	color: #4460b0;
 	text-align: center;
 	font-weight: bold;
 	margin-top: 20px;
@@ -1021,6 +1029,12 @@ button#save_btn_more i {
         margin:2px;
     }
 
+	.calendar_buttons_mobile {
+        padding: 5px;
+        margin:2px;
+		margin-bottom:12px;
+    }
+
     .area-container {
         padding: 0;
     }
@@ -1336,12 +1350,7 @@ table.dataTable {
 	background-position: 158px 11px !important;
 }
 
-.dataTables_wrapper .paginate_button .current {
-    width: 1px!important;
-    height: 1px!important;
-    background-color: #152245!important;
-    color:#FFFFFF!important;
-}
+
 
 .dataTables_length {
     padding-top: 0px !important;
@@ -1692,7 +1701,7 @@ a.btn.btn-theme-success.add_teacher_btn {
 }
 
 .subscription_info .text-success .text a {
-    color: #0075BF;
+    color: #4460b0;
     text-decoration: underline;
     font-size: 15px;
     padding-left: 3px;
@@ -2164,7 +2173,7 @@ a.btn.btn-theme-success.add_teacher_btn {
     font-weight: 700;
     font-size: 30px;
     line-height: 36px;
-    color: #0075BF;
+    color: #4460b0;
 }
 
 .my_subscription_billing tr {
@@ -2349,7 +2358,7 @@ a.btn.btn-theme-success.add_teacher_btn {
     font-weight: 700;
     font-size: 30px;
     line-height: 36px;
-    color: #0075BF;
+    color: #4460b0;
 }
 
 .my_subscription tr {
@@ -2607,6 +2616,7 @@ background-color: #ffffff;
 	.custom-collapse {
 		position: fixed;
 		top: 60px;
+		padding-top:50px;
 		left: 0;
 		height: 100vh;
 		width: 100%;
@@ -2618,14 +2628,12 @@ background-color: #ffffff;
 	.custom-collapse.show {
 		display: flex;
 		flex-direction: column;
-		justify-content: center;
-		align-items: center;
 		background-color: #152245; /* Couleur de fond du menu */
-		animation: fadeIn 0.3s ease;
+		animation: fadeIn 0.2s ease;
 	}
 
 	.custom-collapse.hide {
-		animation: fadeOut 0.3s ease forwards;
+		animation: fadeOut 0.1s ease forwards;
 	}
 
 	@keyframes fadeIn {

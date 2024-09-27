@@ -63,9 +63,9 @@
 							<!--<div class="d-block d-sm-none">-->
 								@if($lessonData->eventcategory)
 								@if(strtotime($date_end) < strtotime($current_time))
-								<div id="button_lock_and_save_div" class="alert alert-info mt-5 mb-1 text-center" role="alert" style="position: relative; display: block;  margin:0 auto;"><label id="button_lock_and_save_help_text"><i class="fa-regular fa-bell fa-bounce"></i> Please validate the event to make it available for invoicing</label>
+								<div id="button_lock_and_save_div" class="alert alert-info mt-5 mb-1 text-center" role="alert" style="position: relative; display: block;  margin:0 auto;"><label id="button_lock_and_save_help_text"> <span class="text-primary"><i class="fa-regular fa-bell fa-bounce"></i> Please validate the event to make it available for invoicing</span></label>
 									<div class="save_and_more_area mt-1" style="width:100%; max-width:190px; margin:0 auto;">
-									<input type="submit" class="btn btn-sm btn-info button_lock_and_save w-100" name="validate" value="Validate">
+									<input type="submit" class="btn btn-sm btn-primary button_lock_and_save w-100" name="validate" value="Validate">
 									<i class="fa-solid fa-lock"></i>
 									</div>
 								</div>
@@ -333,7 +333,7 @@
 										<div class="form-group row">
 											<div class="col-sm-12">
 												<div class="table-responsive">
-													<table id="attn_tbl" class="table">
+													<table id="attn_tbl" class="table table-stripped">
 														<tbody>
 															<tr>
 																<!--<th width="5%" style="text-align:left"></th>-->
@@ -341,7 +341,7 @@
 																	<!--<span>{{ __('Student') }}</span>-->
 																</th>
 																<th width="15%" style="text-align:left">
-																	<button id="mark_present_btn" class="btn btn-sm btn-outline-success" type="button" style="display: block;">Mark all present</button>
+																	<button id="mark_present_btn" class="btn btn-xs btn-outline-primary" type="button" style="display: block;">Mark all present</button>
 																</th>
 																@if($showPrice)
 																@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())

@@ -1,5 +1,33 @@
 @extends('layouts.main')
-
+@section('head_links')
+<style>
+    #paymentMethod_table {
+        width: 100%;
+    }
+    #paymentMethod_table td {
+        border:none!important;
+        border-bottom:1px solid #EEE!important;
+        font-size:15px;
+        margin-bottom:15px!important;
+        padding-top:7px!important;
+        padding-bottom:7px!important;
+    }
+    #paymentMethod_table td img {
+        height:30px!important;
+        width:30px!important;
+    }
+    #paymentMethod_table tr:hover {
+        border:1px solid #EEE!important;
+        background-color:#fcfcfc!important;
+    }
+    #paymentMethod_table th {
+        border:none!important;
+        border-bottom:3px solid #EEE!important;
+        font-size:13px;
+        font-weight:bold;
+    }
+</style>
+@endsection
 @section('content')
     <div class="container">
 
