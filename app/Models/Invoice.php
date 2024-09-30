@@ -355,7 +355,8 @@ class Invoice extends BaseModel
                     'event_details.participation_id as participation_id',
                     'event_details.is_buy_invoiced as is_buy_invoiced',
                     'event_details.is_sell_invoiced as is_sell_invoiced',
-                    'teachers.id as teacher_id'
+                    'teachers.id as teacher_id',
+                    'events.price_currency as price_currency',
                 )
                 ->selectRaw("ifnull(event_details.costs_2,0) AS costs_2")
                 ->selectRaw("ifnull(events.extra_charges,0) AS extra_charges")
@@ -364,7 +365,8 @@ class Invoice extends BaseModel
                 ->selectRaw("ifnull(events.no_of_students,0) AS count_name")
                 ->selectRaw("ifnull(event_details.costs_1,0) AS costs_1")
                 ->selectRaw("ifnull(events.duration_minutes,0) AS duration_minutes")
-                ->selectRaw("ifnull(event_details.price_currency,'CAD') AS price_currency")
+                ->join('schools', 'schools.id', '=', 'events.school_id')
+                ->selectRaw("ifnull(events.price_currency, schools.default_currency_code) AS price_currency")
                 ->selectRaw("if((events.event_type = 100),'Event','Lesson') AS price_name")
                 ->selectRaw("CONCAT_WS('', students.firstname, students.middlename, students.lastname)  AS student_name")
                 ->selectRaw("CONCAT_WS(' ', teachers.firstname, teachers.lastname) AS teacher_name")
