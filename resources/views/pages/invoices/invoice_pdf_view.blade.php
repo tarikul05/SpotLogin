@@ -687,7 +687,7 @@
                     <li class="list-group-item txt" style="border-radius:6px; background-color:#d8e7ef; opacity:.7;">
                         <b>{{ $paymentMethod->type }}</b> : 
                         @if ($paymentMethod->type === 'Stripe')
-                            <span>{{ $paymentMethod->details['account_number'] ?? 'N/A' }}</span>
+                           {{__("Payment by Card available")}}
                         @elseif ($paymentMethod->type === 'PayPal')
                             <span>{{ $paymentMethod->details['paypal_address'] ?? 'N/A' }}</span>
                         @elseif ($paymentMethod->type === 'IBAN')
@@ -716,7 +716,7 @@
 
         </div>
 
-        @else
+        @endif
 
 
         <div class="payment-info p-2">
@@ -816,7 +816,7 @@
             </table>
             @endif
         </div>
-        @endif
+    
     </footer>
 </body>
 
