@@ -562,6 +562,7 @@
     "Families\"s List":"Groupes / Familles",
     "Amount to pay":"Montant à payer",
     "Pay now": "Payer maintenant",
+    "Payment by Card available":"Paiement par carte bancaire (via votre compte)",
     "Paste":"coller",
     "payment_intent_authentication_failure":"Nous ne sommes pas en mesure d'authentifier votre mode de paiement. Veuillez choisir un autre mode de paiement et réessayer.",
     "View": "Voir",

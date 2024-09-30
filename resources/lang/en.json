@@ -570,6 +570,7 @@
     "invoice_iban_no": "IBAN : ",
     "invoice_pay_by": "Pay By : ",
     "Pay ow": "Pay now",
+    "Payment by Card available":"Payment by Card available on your account",
     "payment_intent_authentication_failure":"We are unable to authenticate your payment method. Please choose a different payment method and try again.",
     "invoice_payment_subtitle": "For payment by E-Transfer ",
     "invoice_payment_subtitle_2": "For payment by check ",
