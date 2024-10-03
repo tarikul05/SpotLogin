@@ -90,6 +90,12 @@ class PlanController extends Controller
           $accountCreate = $this->stripe->accounts->create([
             'country' => $country_code,
             'email' => $user->email,
+            'controller' => [
+                'stripe_dashboard' => ['type' => 'none'],
+                'fees' => ['payer' => 'account'],
+                'losses' => ['payments' => 'stripe'],
+                'requirement_collection' => 'stripe',
+            ],
             'company' => [
                 'name' => $user->firstname . ' ' . $user->lastname,
             ],
@@ -103,13 +109,14 @@ class PlanController extends Controller
                 'school_id' => $schoolId,
                 'type' => 'coach',
             ],
-            'type' => 'express',
+            //'type' => 'express',
             'capabilities' => [
               'card_payments' => ['requested' => true],
               'transfers' => ['requested' => true],
             ],
             'business_type' => 'individual',
-            'business_profile' => ['url' => 'https://sportlogin.app/account/?tab=5'],
+            'business_profile' => ['url' => 'https://sportlogin.app/account/?tab=5', 'name' => $user->firstname . ' ' . $user->lastname],
+            'settings' => ['payments' => ['statement_descriptor' => $user->firstname . ' ' . $user->lastname]],
           ]);
 
           $account = $this->stripe->accountLinks->create([
