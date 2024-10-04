@@ -1,13 +1,15 @@
 @extends('layouts.main')
 
 @section('head_links')
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
+
     <link href="//cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css" rel="stylesheet">
+    <script src="//cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
     <link href="//cdn.datatables.net/rowreorder/1.2.8/css/rowReorder.dataTables.min.css" rel="stylesheet">
     <link href="//cdn.datatables.net/responsive/2.3.0/css/responsive.dataTables.min.css" rel="stylesheet">
-    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
     <script src="//cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
     <script src="//cdn.datatables.net/rowreorder/1.2.8/js/dataTables.rowReorder.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
+
     <script src="{{ asset('js/bootstrap-datetimepicker.min.js')}}"></script>
     <link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.min.css')}}"/>
     <script src="{{ asset('js/jquery.wheelcolorpicker.min.js')}}"></script>
@@ -19,23 +21,23 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
 
     <style>
-        #students1 td {
+        #example1 td {
             border:none!important;
             border-bottom:1px solid #EEE!important;
-            font-size:13px;
+
             margin-bottom:15px!important;
             padding-top:7px!important;
             padding-bottom:7px!important;
         }
-        #students1 td img {
+        #example1 td img {
             height:30px!important;
             width:30px!important;
         }
-        #students1 tr:hover {
+        #example1 tr:hover {
             border:1px solid #EEE!important;
             background-color:#fcfcfc!important;
         }
-        #students1 th {
+        #example1 th {
             border:none!important;
             border-bottom:3px solid #EEE!important;
             font-size:13px;
@@ -47,7 +49,6 @@
     #example2 td {
         border:none!important;
         border-bottom:1px solid #EEE!important;
-        font-size:15px;
         margin-bottom:15px!important;
         padding-top:7px!important;
         padding-bottom:7px!important;
@@ -222,43 +223,24 @@ $('#principal_email_family').append($('<option>', { value: 'custom', text: "{{__
 <script>
     $(document).ready(function () {
 
-        var table = $('#students1').DataTable({
+        var table = $('#example1').DataTable({
+        stateSave: true,
         dom: '<"top"f>rt<"bottom"lp><"clear">',
-        ordering: false,
-        searching: true,
-        paging: true,
-        processing:true, 
-        info: false,
-        pagingType: 'simple_numbers', 
-        drawCallback: function (settings) {
-            var api = this.api();
-            var pageInfo = api.page.info();
-            console.log(pageInfo);
-
-            // Vérifier si les valeurs sont numériques
-            var totalRecords = parseInt(pageInfo.recordsTotal, 10);
-            var pageLength = parseInt(pageInfo.length, 10);
-
-            if (!isNaN(totalRecords) && !isNaN(pageLength)) {
-                // Vérifier si le nombre total d'enregistrements est supérieur à la taille de la page
-                if (totalRecords > pageLength) {
-                    $('.dataTables_paginate').show();
-                    $('.dataTables_length').show();  
-                } else {
-                    $('.dataTables_paginate').hide();
-                    $('.dataTables_length').hide();  
-                }
-            } else {
-                console.log('Valeurs non numériques détectées :', pageInfo);
-            }
-            }
-        });
+        ordering: true, // Disable column sorting
+        searching: true, // Enable searching with the search input
+        paging: true, // Disable pagination
+        info: false, // Disable information display
+        columnDefs: [
+        { targets: [2,5,6], orderable: true }, // Autoriser le tri pour les colonnes 0 et 4
+        { targets: '_all', orderable: false } // Désactiver le tri pour toutes les autres colonnes
+        ]
+    });
 
         $('#search_text').on('keyup change', function () {
             table.search($(this).val()).draw();
         });
 
-        $("#students1_filter").hide();
+        $("#example1_filter").hide();
     });
 </script>
 

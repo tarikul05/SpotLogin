@@ -2,7 +2,7 @@
 <form method="POST" action="{{ route('students.delete') }}">
     @csrf
     
-    <div class="row justify-content-center pt-1">
+    <div class="row justify-content-center pt-1 mb-3">
     <div class="col-md-12">
 
         <div class="card2" style="border-radius:10px;">
@@ -15,8 +15,8 @@
 
                 <input name="schoolId" type="hidden" value="{{$schoolId}}">
 
-
-                    <table id="students1" style="width:100%; position:relative!important;">
+                <div class="table-responsive11">
+                    <table id="example1" style="width:100%;">
                         <thead>
                         <tr>
                             <th style="width: 10px!important;" class="text-left">
@@ -34,7 +34,7 @@
 
                         </tr>
                         </thead>
-                        <tbody style="position: relative!important;">
+                        <tbody>
                             @foreach($students as $student)
                                 <tr class="add_more_level_row mobile_list_student" id="row_{{ $student->id }}">
                                 <td style="width: 10px!important; text-align:center!important;" class="align-middle"><input type="checkbox" name="selected_students[]" value="{{ $student->id }}"></td>
@@ -51,7 +51,7 @@
                                     </td>
                                     <td style="position: relative;" class="align-middle p-0 text-left">
                                         <a class="text-reset text-decoration-none" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditStudent',['school'=> $schoolId,'student'=> $student->id]) : route('editStudent',['student' => $student->id]) }}">
-                                            <span style="cursor:pointer; border-bottom:1px dashed #a1a0a0;">{{ $student->full_name; }}</span>
+                                            <span style="cursor:pointer; border-bottom:1px dashed #a1a0a0; font-size:15px;">{{ $student->full_name; }}</span>
                                         </a>
                                     </td>
                                     <td class="d-none d-lg-table-cell">
@@ -138,7 +138,7 @@
                             @endforeach
                         </tbody>
                     </table>
-
+                </div>
             </div>
         </div>
 

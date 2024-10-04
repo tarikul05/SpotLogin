@@ -218,7 +218,7 @@ header.panel-heading {
 
 .card2 .dataTables_length label,select {
     color:#4460b0!important;
-    font-size:15px!important;
+    font-size:13px!important;
 }
 .card2 .dataTables_length select {
     border:1px solid #4460b0!important;
@@ -1990,7 +1990,9 @@ label#currency_alert_text {
   .dataTables_wrapper select {
     border-radius:20px!important;
   }
-
+  .dataTables_wrapper .dataTables_paginate {
+    font-size:13px!important;
+  }
   .dataTables_wrapper .dataTables_paginate .paginate_button {
     color:#4460b0!important;
     border-radius:50px!important;

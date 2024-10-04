@@ -18,7 +18,6 @@
         #example1 td {
             border:none!important;
             border-top:1px solid #EEE!important;
-            font-size:13px!important;
             margin-bottom:15px!important;
             padding-top:7px!important;
             padding-bottom:7px!important;
@@ -78,7 +77,7 @@
     </nav>
     @endif
 
-    <div class="row justify-content-center pt-1 mb-5">
+    <div class="row justify-content-center pt-1 mb-3">
         <div class="col-md-12">
         <div class="card2" style="border-radius:10px;">
             <div class="card-header titleCardPage d-flex justify-content-between align-items-center">
@@ -106,7 +105,7 @@
                 <th class="mobile-hide titleFieldPage text-primary">N°</th>
                 <th class="titleFieldPage text-primary">{{ __('Amount') }}</th>
                 <th class="mobile-hide titleFieldPage text-primary">{{ __('Status') }}</th>
-                <th class="mobile-hide titleFieldPage text-primary"></th>
+                <!--<th class="mobile-hide titleFieldPage text-primary"></th>-->
                 <th></th>
                 </tr>
             </thead>
@@ -155,17 +154,18 @@
                             @endphp
                             {{ $date->format('d-m-Y') }}
                         </td>
-                        <td class="sp_only responsive-td" data-sort="{{ strtotime($invoice->date_invoice) }}">
-                            <span class="d-block d-sm-none pt-2">
+                        <td class="sp_only responsive-td position-relative" data-sort="{{ strtotime($invoice->date_invoice) }}">
+                            <span class="d-block d-sm-none pt-3">
                             @php
                             $date = new DateTime($invoice->date_invoice);
                             @endphp
                             
                             @if(!$AppUI->isStudent() && !$AppUI->isParent())
-                            <?= $invoice->client_name ?><br>
+                            <span style="font-size:14px;"><?= $invoice->client_name ?></span><br>
                             @endif
                             <b style="font-size:11px;">{{ $date->format('d-m-Y') }}</b>
-                            </span>[ #{{$key+1}} ]
+                            </span>
+                            <span style="position:absolute;top:5px; left:5px; font-size:10px; color:#AAA;">[ #{{$key+1}} ]</span>
                         </td>
                         @php
                         if($invoice->invoice_type == 0){
@@ -216,6 +216,7 @@
                         @else
                         <td class="responsive-td">
                             <span class="small txt-success pull-left">
+                                <div class="d-block d-sm-none" style="padding-top:4px;"></div>
                                 {{ $invoice->invoice_currency }} <b>{{ number_format($invoice->total_amount, 2) }}</b>
                             </span>
 
@@ -263,7 +264,7 @@
                                 </div>
                             </td>
                         @else
-                            <td class="responsive-td mobile-hide text-left" width="150">
+                            <td class="responsive-td mobile-hide text-left">
                                 <div id="status_{{$invoice->id}}">
                                 @if(!$AppUI->isStudent() && !$AppUI->isParent())
                                     <span class="small text-success pull-left">
@@ -280,14 +281,10 @@
                                 </div>
                             </td>
                         @endif
-                        @if ($invoice->invoice_status > 1)
+
+                        <!--@if ($invoice->invoice_status > 1)
                             @if(!$AppUI->isStudent() && !$AppUI->isParent())
                             <td class="responsive-td text-center mobile-hide">
-                                <!--<i style="display: none; margin-right:5px; margin-top:3px;" id="loaderStatusPayment" class="fa fa-spinner fa-lg mr-1 light-blue-txt pull-left" aria-hidden="true"></i>
-                                <i class="fa fa-credit-card fa-lg mr-1 light-blue-txt pull-left" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i>
-                                <span class="small txt-grey pull-left">
-                                      <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="change_button">{{ __('Change')}}</span>
-                                </span>-->
                                 @php
                                     $existingEntry = DB::table('invoice_sended')
                                     ->where('invoice_id', $invoice->id)
@@ -296,13 +293,14 @@
                                 @endphp
 
                                 @if($existingEntry)
-                                <!--<i class="fa-solid fa-envelope-open-text"></i> <span style="font-size:11px;"><span class="text-success" style="font-size:10px;"> {{ \Carbon\Carbon::parse($existingEntry->created_at)->timezone($school->timezone)->format('d M, Y  H:i') }}</span></span><br>-->
+                              
                                 <button id="approved_btn" target="" href="" class="btn btn-link" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><span class="d-none d-sm-inline" style="font-size:10px;">{{__('Send by email')}}</span></button>
                                 <span style="font-size:12px;" class="text-success" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ __('sent') }} {{ \Carbon\Carbon::parse($existingEntry->created_at)->timezone($school->timezone)->format('d M, Y  H:i') }}">
                                     <i class="fa fa-info-circle"></i>
                                 </span>
+
                                 @else
-                                <!--<span style="font-size:11px;">{{ __('Invoice not sent') }}</span>-->
+                                
                                 <button id="approved_btn" target="" href="" class="btn btn-link" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><span class="d-none d-sm-inline" style="font-size:10px;">{{__('Send by email')}}</span></button>
                                 <span style="font-size:12px;" class="text-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ __('Invoice not sent') }}">
                                     <i class="fa fa-info-circle"></i>
@@ -315,12 +313,12 @@
                             @endif
                         @else
                             <td class="mobile-hide"></td>
-                        @endif
+                        @endif-->
 
                         <td class="text-center pt-3">
                             <div class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fa fa-ellipsis-h txt-dark fa-lg"></i>
+                                    <i class="fa fa-ellipsis-h text-primary"></i>
                                 </a>
                                 <div class="dropdown-menu list action text-left">
                                     @if ($invoice->invoice_status > 1)
@@ -340,7 +338,23 @@
                                     @endif
 
                                     @if (($invoice->payment_status == 0) && (!$AppUI->isStudent()) && (!$AppUI->isParent()))
-                                        <a class="dropdown-item txt-grey send_email" href="javascript:void(0)" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><i class="fa fa-envelope txt-grey"></i> {{__('Send reminder email')}}</a>
+                                        @php
+                                            $existingEntry = DB::table('invoice_sended')
+                                            ->where('invoice_id', $invoice->id)
+                                            ->latest()
+                                            ->first();
+                                        @endphp
+                                        <a class="dropdown-item txt-grey send_email" href="javascript:void(0)" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><i class="fa fa-envelope txt-grey"></i> {{__('Send by email')}} 
+                                            @if($existingEntry)
+                                            <span style="font-size:12px; margin-left:4px;" class="text-success" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ __('sent') }} {{ \Carbon\Carbon::parse($existingEntry->created_at)->timezone($school->timezone)->format('d M, Y  H:i') }}">
+                                                <i class="fa fa-info-circle"></i>
+                                            </span>
+                                            @else
+                                            <span style="font-size:12px; margin-left:4px;" class="text-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ __('Invoice not sent') }}">
+                                                <i class="fa fa-info-circle"></i>
+                                            </span>
+                                            @endif
+                                        </a>
                                     @endif
                                 </div>
                             </div>
@@ -365,19 +379,20 @@
 
 <div class="modal fade confirm-modal" id="email_list_modal" tabindex="-1" aria-hidden="true"
         aria-labelledby="email_list_modal" name="email_list_modal">
-        <div class="modal-dialog modal-dialog-centered mt-5" role="document">
+        <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
 
-            <div class="modal-header d-block text-center border-0">
-              <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> -->
-              <h3 class="modal-title light-blue-txt gilroy-bold mt-4" id="signupModalLabel">{{ __('Send the invoice') }}</h3>
-                <a href="#" class="close" id="modalClose" data-bs-dismiss="modal" style="position: absolute; right: 10px; top: 10px; border-radius:50%!important; padding:3px; font-size:23px;">
-                    <i class="fa-solid fa-circle-xmark fa-lg" style="color:#0075bf;"></i>
-                </a>
+            <div class="modal-header text-white" style="background-color: #152245; heigth:85px!important; padding:8px!important;">
+                <h6 class="modal-title" style="font-size:17px; padding-top:5px;">
+                    <i class="fa fa-file-pdf"></i>  {{ __('Send the invoice') }}
+                </h6>
+                <button type="button" data-dismiss="modal" aria-label="Close" id="modalClose" class="close" data-bs-dismiss="modal" style="margin-top:4px; background-color:transparent; border:none; font-size:23px;">
+                    <i class="fa-solid fa-circle-xmark fa-lg text-white"></i>
+                </button>
             </div>
 
  
-                <div class="modal-body" style="margin: 0 auto;padding-top: 0;">
+                <div class="modal-body mt-2">
                     <!-- <form id="email_list_form" name="email_list_form" method="POST"> -->
                         <div class="alert alert-info" style="height: 70px; font-size:13px;">
                             <div class="form-group col-md-12">
@@ -434,13 +449,12 @@
                             </div>
                         </div>
 
-                        <div class="form-group col-sm-12 mt-3 text-center">
-                                <button type="submit" id="email_send" class="btn btn-sm btn-theme-success email_send_btn">{{ __('Send') }}</button>
-                        </div>
-
-                    <!-- </form> -->
-
                 </div>
+
+                <div class="modal-footer pt-2" style="background-color: #fdfdfd; heigth:85px!important; padding:8px!important;">
+                    <a href="#" id="email_send" class="btn btn-success">{{ __('Send') }}</a>
+                </div>
+
             </div>
         </div>
 @endsection
