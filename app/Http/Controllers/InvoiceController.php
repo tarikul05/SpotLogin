@@ -430,25 +430,33 @@ class InvoiceController extends Controller
      * @return Response
      */
     public function downloadInvoicePdf($invoiceId)
-    {
-        $invoice = Invoice::findOrFail($invoiceId);
+{
+    $invoice = Invoice::findOrFail($invoiceId);
 
-        if (!$invoice->invoice_filename) {
-            abort(404, 'Le fichier PDF de la facture n\'existe pas.');
-        }
-
-        $filePath = public_path(str_replace(url('/'), '', $invoice->invoice_filename));
-
-        if (!file_exists($filePath)) {
-            abort(404, 'Le fichier PDF de la facture n\'existe pas.');
-        }
-
-        $fileName = last(explode('/', $invoice->invoice_filename));
-
-        return response()->download($filePath, $fileName, [
-            'Content-Type' => 'application/pdf',
-        ]);
+    if (!$invoice->invoice_filename) {
+        abort(404, 'Le fichier PDF de la facture n\'existe pas.');
     }
+
+    // Vérifier que l'URL est valide
+    if (!filter_var($invoice->invoice_filename, FILTER_VALIDATE_URL)) {
+        abort(404, 'L\'URL de la facture est invalide.');
+    }
+
+    // Récupérer le contenu du fichier depuis l'URL
+    $fileContent = file_get_contents($invoice->invoice_filename);
+
+    if ($fileContent === false) {
+        abort(404, 'Impossible de télécharger la facture.');
+    }
+
+    // Extraire le nom du fichier depuis l'URL
+    $fileName = basename($invoice->invoice_filename);
+
+    // Retourner une réponse de téléchargement avec le contenu du fichier
+    return response($fileContent)
+        ->header('Content-Type', 'application/pdf')
+        ->header('Content-Disposition', 'attachment; filename="'.$fileName.'"');
+}
 
 
     /**
