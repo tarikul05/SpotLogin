@@ -439,9 +439,9 @@ class InvoiceController extends Controller
 
         $filePath = public_path(str_replace(url('/'), '', $invoice->invoice_filename));
 
-        /*if (!file_exists($filePath)) {
+        if (!file_exists($filePath)) {
             abort(404, 'Le fichier PDF de la facture n\'existe pas.');
-        }*/
+        }
 
         $fileName = last(explode('/', $invoice->invoice_filename));
 
