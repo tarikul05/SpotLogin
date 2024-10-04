@@ -430,25 +430,36 @@ class InvoiceController extends Controller
      * @return Response
      */
     public function downloadInvoicePdf($invoiceId)
-    {
-        $invoice = Invoice::findOrFail($invoiceId);
+{
+    $invoice = Invoice::findOrFail($invoiceId);
 
-        if (!$invoice->invoice_filename) {
-            abort(404, 'Le fichier PDF de la facture n\'existe pas.');
-        }
-
-        $filePath = public_path(str_replace(url('/'), '', $invoice->invoice_filename));
-
-        if (!file_exists($filePath)) {
-            abort(404, 'Le fichier PDF de la facture n\'existe pas.');
-        }
-
-        $fileName = last(explode('/', $invoice->invoice_filename));
-
-        return response()->download($filePath, $fileName, [
-            'Content-Type' => 'application/pdf',
-        ]);
+    if (!$invoice->invoice_filename) {
+        abort(404, 'Le fichier PDF de la facture n\'existe pas.');
     }
+
+    // Vérifier si le chemin contient l'URL complète et la retirer si nécessaire
+    if (strpos($invoice->invoice_filename, url('/')) !== false) {
+        $relativePath = str_replace(url('/'), '', $invoice->invoice_filename);
+    } else {
+        // Si c'est déjà un chemin relatif
+        $relativePath = $invoice->invoice_filename;
+    }
+
+    // Générer le chemin complet du fichier sur le serveur
+    $filePath = public_path($relativePath);
+
+    // Vérifier si le fichier existe
+    if (!file_exists($filePath)) {
+        abort(404, 'Le fichier PDF de la facture n\'existe pas.');
+    }
+
+    // Obtenir le nom du fichier
+    $fileName = basename($invoice->invoice_filename);
+
+    return response()->download($filePath, $fileName, [
+        'Content-Type' => 'application/pdf',
+    ]);
+}
 
 
     /**
