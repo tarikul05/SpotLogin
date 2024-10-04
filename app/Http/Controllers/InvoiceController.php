@@ -437,13 +437,19 @@ class InvoiceController extends Controller
             abort(404, 'Le fichier PDF de la facture n\'existe pas.');
         }
 
-        $filePath = public_path(str_replace(url('/'), '', $invoice->invoice_filename));
+        // Retirer la partie de l'URL si elle est présente dans `invoice_filename`
+        $relativePath = str_replace(url('/'), '', $invoice->invoice_filename);
 
+        // Générer le chemin absolu du fichier
+        $filePath = public_path($relativePath);
+
+        // Vérifier si le fichier existe
         if (!file_exists($filePath)) {
             abort(404, 'Le fichier PDF de la facture n\'existe pas.');
         }
 
-        $fileName = last(explode('/', $invoice->invoice_filename));
+        // Extraire le nom du fichier
+        $fileName = basename($invoice->invoice_filename);
 
         return response()->download($filePath, $fileName, [
             'Content-Type' => 'application/pdf',
