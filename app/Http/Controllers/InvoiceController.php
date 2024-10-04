@@ -430,33 +430,89 @@ class InvoiceController extends Controller
      * @return Response
      */
     public function downloadInvoicePdf($invoiceId)
-{
-    $invoice = Invoice::findOrFail($invoiceId);
+    {
+        $invoice = Invoice::findOrFail($invoiceId);
 
-    if (!$invoice->invoice_filename) {
-        abort(404, 'Le fichier PDF de la facture n\'existe pas.');
+        if (auth()->user()->person_id == $invoice->client_id) {
+            // Vérification pour le client
+            if(auth()->user()->person_type !== "App\Models\Student") {
+                abort(403, __("not allowed to download invoice"));
+            }
+        } elseif (auth()->user()->person_id == $invoice->seller_id) {
+            // Vérification pour le vendeur
+            if(auth()->user()->person_type !== "App\Models\Teacher") {
+                abort(403, __("not allowed to download invoice"));
+            }
+        } else {
+            // Si l'utilisateur n'est ni le client ni le vendeur
+            abort(403, __("not allowed to download invoice"));
+        }
+
+
+        
+        //debug local
+        /*if (strpos($invoice->invoice_filename, url('/')) !== false) {
+            $relativePath = str_replace(url('/'), '', $invoice->invoice_filename);
+        } else {
+            $relativePath = $invoice->invoice_filename;
+        }
+        $filePath = public_path($relativePath);
+        if (!file_exists($filePath)) {
+            abort(404, 'Le fichier PDF de la facture n\'existe pas.');
+        }
+        $fileName = basename($invoice->invoice_filename);
+        return response()->download($filePath, $fileName, [
+            'Content-Type' => 'application/pdf',
+        ]);*/
+
+        
+        if (!$invoice->invoice_filename || !filter_var($invoice->invoice_filename, FILTER_VALIDATE_URL)) {
+            abort(404, 'L\'URL de la facture est invalide ou n\'existe pas.');
+        }
+
+        $fileContent = file_get_contents($invoice->invoice_filename);
+
+        if ($fileContent === false) {
+            abort(404, 'Impossible de télécharger la facture.');
+        }
+
+        $fileName = basename($invoice->invoice_filename);
+
+        return response($fileContent)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'attachment; filename="'.$fileName.'"');
+        
     }
 
-    // Vérifier que l'URL est valide
-    if (!filter_var($invoice->invoice_filename, FILTER_VALIDATE_URL)) {
-        abort(404, 'L\'URL de la facture est invalide.');
-    }
+    /*public function downloadInvoicePdf($invoiceId)
+    {
+        $invoice = Invoice::findOrFail($invoiceId);
 
-    // Récupérer le contenu du fichier depuis l'URL
-    $fileContent = file_get_contents($invoice->invoice_filename);
+        if (!$invoice->invoice_filename) {
+            abort(404, 'Le fichier PDF de la facture n\'existe pas.');
+        }
 
-    if ($fileContent === false) {
-        abort(404, 'Impossible de télécharger la facture.');
-    }
+        // Vérifier que l'URL est valide
+        if (!filter_var($invoice->invoice_filename, FILTER_VALIDATE_URL)) {
+            abort(404, 'L\'URL de la facture est invalide.');
+        }
 
-    // Extraire le nom du fichier depuis l'URL
-    $fileName = basename($invoice->invoice_filename);
+        // Récupérer le contenu du fichier depuis l'URL
+        $fileContent = file_get_contents($invoice->invoice_filename);
 
-    // Retourner une réponse de téléchargement avec le contenu du fichier
-    return response($fileContent)
-        ->header('Content-Type', 'application/pdf')
-        ->header('Content-Disposition', 'attachment; filename="'.$fileName.'"');
-}
+        if ($fileContent === false) {
+            abort(404, 'Impossible de télécharger la facture.');
+        }
+
+        // Extraire le nom du fichier depuis l'URL
+        $fileName = basename($invoice->invoice_filename);
+
+        // Retourner une réponse de téléchargement avec le contenu du fichier
+        return response($fileContent)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'attachment; filename="'.$fileName.'"');
+    }*/
+    
 
 
     /**
