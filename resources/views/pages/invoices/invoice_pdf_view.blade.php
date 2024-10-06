@@ -569,17 +569,30 @@
                     <?php
                         if($invoice_data->invoice_type > 0)
                                     foreach ($InvoicesTaxData as $item) {
+
+                                        $sub_total_event = floatval($sub_total_event);
+                                        $extra_expenses = floatval($invoice_data->extra_expenses);
+                                        $total_lesson = floatval($sub_total_lesson - $totalDiscount);
+                                        $tax_percentage = floatval($item['tax_percentage']); 
+                                        $tax_amount = (($sub_total_event - $extra_expenses) + $total_lesson) * ($tax_percentage / 100);
+
                                         echo '<tr class="extra_col">';
-                                        echo '<td style="text-align:right" colspan="2" class="text"><b>' . $item['tax_name'] . '</b> <span style="font-size:11px;">[ N° ' . $item['tax_number'] . ' ]</span></td>';
+
+                                        if($item['tax_number']) {
+                                            echo '<td style="text-align:right" colspan="2" class="text"><b>' . $item['tax_name'] . '</b> <span style="font-size:11px;">[ N° ' . $item['tax_number'] . ' ]</span></td>';
+                                        }else {
+                                            echo '<td style="text-align:right" colspan="2" class="text"><b>' . $item['tax_name'] . '</b> <span style="font-size:11px;"></span></td>';
+                                        }
+                                        
                                         echo '<td style="text-align:right; font-size:13px;" class="text">' . $item['tax_percentage'] . '%</td>';
-                                        echo '<td style="text-align:right" colspan="1" class="price"><b>' . number_format( ((($sub_total_event-$invoice_data->extra_expenses)+$total_lesson) * $item['tax_percentage']) /100, '2') . '</b></td>';
+                                        echo '<td style="text-align:right" colspan="1" class="price"><b>' . number_format($tax_amount, '2') . '</b></td>';
                                         echo '<td></td>';
                                         echo '</tr>';
                                         //((($sub_total_event-$invoice_data->extra_expenses)+$total_lesson)*$item['tax_percentage'])/100;
-                                        $totalTaxesSupp = ($totalTaxesSupp + ((($sub_total_event-$invoice_data->extra_expenses)+$total_lesson) * $item['tax_percentage']) /100);
+                                        $totalTaxesSupp = number_format($tax_amount, '2');
                                     }
                         else {
-                            foreach ($InvoicesTaxData as $item) {
+                                    foreach ($InvoicesTaxData as $item) {
                                         echo '<tr class="extra_col">';
                                         echo '<td style="text-align:right" colspan="2" class="text"><b>' . $item['tax_name'] . '</b> <span style="font-size:11px;">[ N° ' . $item['tax_number'] . ' ]</span></td>';
                                         echo '<td style="text-align:right; font-size:13px;" class="text">' . $item['tax_percentage'] . '%</td>';
