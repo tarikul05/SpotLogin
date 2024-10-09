@@ -707,8 +707,8 @@
 								<div class="col-sm-8">
 									<fieldset>
 										<div class="profile-image-cropper responsive">
-										<?php if (!empty($teacher->profileImage->path_name)): ?>
-											<img id="profile_image_user_account" src="{{ $teacher->profileImage->path_name }}"
+										<?php if (!empty($teacher->user->profileImage->path_name)): ?>
+											<img id="profile_image_user_account" src="{{ $teacher->user->profileImage->path_name }}"
 													height="128" width="128" class="img-circle"
 													style="margin-right:10px;">
 										<?php else: ?>

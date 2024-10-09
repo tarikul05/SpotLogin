@@ -1036,27 +1036,33 @@ $("#student, #teacher_select, #duration").on('change', function(event) {
 	                }*/
                     if (response.status == 1) {
 
-						const isSchoolorTeacherAdmin = "{{$AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin()}}";
+						const isSchoolorTeacherAdmin = "{{$AppUI->isSchoolAdmin() || $AppUI->isTeacherMinimum() || $AppUI->isTeacherMedium() || $AppUI->isTeacherAll()}}";
 
 					if(isSchoolorTeacherAdmin) {
-
-						if(response.eventPrice['isFixed'] === 1) {
-                            $("#sprice_amount_buy").val(response.eventPrice['price_buy'])
-                    	    var newDuration = $("#duration").val();
-							if(response.eventPrice['isFixed'] === 2) {
-								$(".priceByTeacher").text(response.sellPriceCal.toFixed(2));
-								$(".priceByStudent").text(response.newPrice); //eventPrice['price_sell']
+						if(response.categoryPrice['invoiced_type'] === "S") {
+							if(response.eventPrice['isFixed'] === 1) {
+								$("#sprice_amount_buy").val(response.eventPrice['price_buy'])
+								var newDuration = $("#duration").val();
+								if(response.eventPrice['isFixed'] === 2) {
+									$(".priceByTeacher").text(response.sellPriceCal.toFixed(2));
+									$(".priceByStudent").text(response.newPrice); //eventPrice['price_sell']
+								} else {
+									$(".priceByTeacher").text(response.sellPriceCal.toFixed(2));
+									$(".priceByStudent").text(response.newPrice); //eventPrice['price_sell']
+								}
 							} else {
+								$("#sprice_amount_sell").val(response.eventPrice['price_buy'])
+								$("#sprice_amount_buy").val(response.buyPriceCal)
+								var newDuration = $("#duration").val();
+								$(".priceByStudent").text(response.newPrice); //eventPrice['price_buy']
 								$(".priceByTeacher").text(response.sellPriceCal.toFixed(2));
-                            	$(".priceByStudent").text(response.newPrice); //eventPrice['price_sell']
 							}
-                        } else {
-							$("#sprice_amount_sell").val(response.eventPrice['price_buy'])
-							$("#sprice_amount_buy").val(response.buyPriceCal)
-                    	    var newDuration = $("#duration").val();
-                            $(".priceByStudent").text(response.newPrice); //eventPrice['price_buy']
-							$(".priceByTeacher").text(response.sellPriceCal.toFixed(2));
-
+						} else {
+							$("#sprice_amount_buy").val(response.eventPrice['price_sell'])
+                            $("#sprice_amount_sell").val(response.eventPrice['price_sell'])
+                            var newDuration = $("#duration").val();
+                            $(".priceByStudent").text(response.eventPrice['price_sell']);
+                            $(".priceByTeacher").text(response.sellPriceCal.toFixed(2));
 						}
 
 					} else {

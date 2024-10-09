@@ -82,8 +82,8 @@
             @endphp
             <tr>
                 <td class="text-center" style="width:30px!important; margin: 0 auto; padding:4px;">
-                    <?php if (!empty($teacher->profileImage->path_name)): ?>
-                        <img src="{{ $teacher->profileImage->path_name }}" class="admin_logo" id="admin_logo">
+                    <?php if (!empty($teacher->user->profileImage->path_name)): ?>
+                        <img src="{{ $teacher->user->profileImage->path_name }}" class="admin_logo" id="admin_logo">
                     <?php else: ?>
                         <img src="{{ asset('img/photo_blank.jpg') }}" class="admin_logo" id="admin_logo">
                     <?php endif; ?>
