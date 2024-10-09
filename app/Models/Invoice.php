@@ -166,7 +166,70 @@ class Invoice extends BaseModel
      * @param array $params
      * @return $query
      */
-    public function getStudentInvoiceList($user,$schoolId,$user_role,$invoice_type,$timezone)
+    public function getStudentInvoiceList($user, $schoolId, $user_role, $invoice_type, $timezone)
+{
+    $studentEvents = DB::table('events')
+        ->join('event_details', 'events.id', '=', 'event_details.event_id')
+        ->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')
+        ->leftJoin('school_student', 'school_student.student_id', '=', 'event_details.student_id')
+        ->leftJoin('students', 'students.id', '=', 'event_details.student_id')
+        ->leftJoin('users', function($join) {
+            $join->on('users.person_id', '=', 'event_details.student_id')
+                ->where('users.person_type', '=' , 'App\Models\Student');
+        })
+        ->leftJoin('invoice_items', function ($join) { 
+            $join->on('invoice_items.event_id', '=', 'event_details.event_id')
+                 ->on('invoice_items.student_id', '=', 'event_details.student_id')
+                 ->whereNull('invoice_items.deleted_at');
+        })
+        ->select(
+            'events.id as event_id',
+            'event_details.student_id as person_id',
+            'users.profile_image_id as profile_image_id'
+        )
+        ->selectRaw("CONCAT_WS(' ', students.firstname, students.lastname) AS student_name")
+        ->where([
+            'events.school_id' => $schoolId,
+            'event_details.billing_method' => "E",
+            'events.is_active' => 1
+        ])
+        ->where('event_details.is_sell_invoiced', '=', 0)
+        ->whereNull('event_details.sell_invoice_id')
+        ->whereNull('events.deleted_at')
+        ->whereNull('event_details.deleted_at');
+
+    // Filtrage basé sur l'utilisateur et le type d'invoice
+    if (in_array($user_role, ['admin_teacher', 'teacher_minimum', 'teacher_all'])) {
+        $studentEvents->whereRaw("IF(events.event_type != 100, event_categories.invoiced_type, events.event_invoice_type) = ?", [$invoice_type]);
+    } elseif ($user_role == 'teacher') {
+        $studentEvents->whereRaw("IF(events.event_type != 100, event_categories.invoiced_type, events.event_invoice_type) = ?", [$invoice_type])
+                      ->where('events.teacher_id', $user->person_id);
+    }
+
+    // Exclure les événements déjà facturés
+    $studentEvents->whereNull('invoice_items.event_id')
+                  ->whereRaw("IF(events.event_type != 100, event_categories.s_std_pay_type, 1) != 2");
+
+    // Filtre par date
+    $dateActuelle = Carbon::now()->format('Y-m-d H:i:s');
+    $studentEvents->where('events.date_start', '<=', $dateActuelle);
+
+    // Limiter les résultats pour optimiser la requête
+    $studentEvents->distinct('events.id');
+
+    // Exécuter la requête et regrouper les résultats
+    return $allEvents = DB::table(DB::raw('(' . $studentEvents->toSql() . ') as custom_table'))
+        ->select(
+            'custom_table.person_id as person_id',
+            'custom_table.student_name as student_name',
+            'custom_table.profile_image_id as profile_image_id'
+        )
+        ->selectRaw('count(custom_table.event_id) as invoice_items')
+        ->mergeBindings($studentEvents)
+        ->groupBy('custom_table.person_id')
+        ->get();
+}
+    /*public function getStudentInvoiceList($user,$schoolId,$user_role,$invoice_type,$timezone)
     {
         $studentEvents = DB::table('events')
             ->join('event_details', 'events.id', '=', 'event_details.event_id')
@@ -240,7 +303,7 @@ class Invoice extends BaseModel
             ->mergeBindings($studentEvents)
             ->groupBy('custom_table.person_id')
             ->get();
-    }
+    }*/
 
 
     /**
