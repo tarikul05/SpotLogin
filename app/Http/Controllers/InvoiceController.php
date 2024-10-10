@@ -470,7 +470,7 @@ class InvoiceController extends Controller
             abort(404, 'L\'URL de la facture est invalide ou n\'existe pas.');
         }
 
-        $fileContent = file_get_contents($invoice->invoice_filename);
+        $fileContent = @file_get_contents($invoice->invoice_filename);
 
         if ($fileContent === false) {
             abort(404, 'Impossible de télécharger la facture.');
