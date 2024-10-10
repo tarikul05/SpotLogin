@@ -480,7 +480,7 @@ class InvoiceController extends Controller
 
         return response($fileContent)
             ->header('Content-Type', 'application/pdf')
-            ->header('Content-Disposition', 'attachment; filename="'.$fileName.'"');
+            ->header('Content-Disposition', 'attachment; filename*=utf-8"'.$fileName.'"');
         
     }
 
