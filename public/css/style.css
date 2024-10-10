@@ -2628,11 +2628,11 @@ background-color: #ffffff;
 		display: flex;
 		flex-direction: column;
 		background-color: #152245; /* Couleur de fond du menu */
-		animation: fadeIn 0.2s ease;
+		animation:none!important;
 	}
 
 	.custom-collapse.hide {
-		animation: fadeOut 0.1s ease forwards;
+		animation:none!important;
 	}
 
 	@keyframes fadeIn {
@@ -2641,15 +2641,6 @@ background-color: #ffffff;
 		}
 		to {
 			opacity: 1;
-		}
-	}
-
-	@keyframes fadeOut {
-		from {
-			opacity: 1;
-		}
-		to {
-			opacity: 0;
 		}
 	}
 
@@ -2958,3 +2949,40 @@ background-color: #ffffff;
         padding-top:35px!important;
     }
 
+	.navbar-toggler .icon-bar {
+		display: block;
+		width: 25px;
+		height: 2px;
+		margin: 5px auto;
+		background-color: #EEE;
+	}
+	
+	/* Styles pour le bouton de fermeture (croix) */
+	.closeburger {
+		display:none; 
+		position: fixed !important; 
+		top: -4px!important; 
+		right: 18px; 
+		z-index: 100000;
+		color: #EEE;
+		text-decoration: none;
+		font-size: 50px!important;
+		cursor: pointer;
+		right:25px;
+	}
+
+	.maintenanceMessage {
+		background-color: #d1d411; text-align:center; padding:2px; border-radius:0px; top:70px; font-size:11px; width:100%; position:fixed; z-index:999;
+	}
+
+	@media (max-width: 767px) {
+		.maintenanceMessage {
+			top: 60px!important; /* Ajuste ici si nécessaire */
+		}
+	}
+	
+	@media (max-width: 480px) {
+		.maintenanceMessage {
+			top: 60px!important; /* Ajuste ici si nécessaire */
+		}
+	}

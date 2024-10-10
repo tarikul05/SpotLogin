@@ -12,12 +12,12 @@
     <div class="container">
         <div class="row justify-content-center align-items-center min-vh-100">
             <div class="col-md-6 d-flex align-items-center">
-                <div class="card">
+                <div class="card2">
                     <div class="card-body text-center">
                         <img src="https://sportlogin.app/img/logo-blue.png" width="90px" />
                         <h1 class="card-title">Maintenance in progress</h1>
                         <p class="card-text">{{$message}}</p>
-                        <p class="card-text">Maintenance start date : {{$date}}</p>
+                        <p class="card-text">Started : {{$date}} (UTC)</p>
 
                         @if($isSuperAdmin)
                         <a href="{{ route('admin.maintenance.update') }}" class="btn btn-primary">Modifier les paramètres de maintenance</a>

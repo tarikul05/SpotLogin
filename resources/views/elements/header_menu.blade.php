@@ -1,5 +1,5 @@
 <div class="container-fluid">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-fixed-top" style="padding-left:1%!important; padding-right:4.5%!important; width:100%!important; margin:0 auto!important;">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-fixed-top" style="padding-left:1%!important; padding-right:4.5%!important; width:100%!important; margin:0 auto!important;margin-bottom:25px!important;">
         <!--<div class="snowflakes"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>-->
         <div class="container-fluid paddingLogo headerLinks">
             <div class="position-relative d-none d-sm-block pt-1 pl-1">
@@ -14,16 +14,16 @@
 
                             @if( $is_subscribed )
                             @if($plan->stripe_status == 'active' || $plan->stripe_status == 'trialing')
-                            <span class="badge bg-success p-1" style="position: absolute; left:38px; top:3px; padding:2px!important;">premium</span>
+                            <span class="badge bg-primary p-1" style="position: absolute; left:38px; top:3px; padding:2px!important;">premium</span>
                             @else
-                            <span class="badge bg-info p-1" style="position: absolute; left:38px; top:3px; padding:2px!important;">basic</span>
+                            <span class="badge bg-primary p-1" style="position: absolute; left:38px; top:3px; padding:2px!important;">basic</span>
                             @endif
                             @endif
                             @if( !$is_subscribed )
                                 <?php if( !empty($user->trial_ends_at) && ($today_date <= $ends_at) ){ ?>
-                                    <span class="badge bg-info p-1" style="position: absolute; left:38px; top:3px; padding:2px!important;">basic</span>
+                                    <span class="badge bg-primary p-1" style="position: absolute; left:38px; top:3px; padding:2px!important;">basic</span>
                                 <?php } else { ?>
-                                    <span class="badge bg-warning p-1" style="position: absolute; left:38px; top:3px; padding:2px!important;">basic</span>
+                                    <span class="badge bg-primary p-1" style="position: absolute; left:38px; top:3px; padding:2px!important;">basic</span>
                                 <?php } ?>
                             @endif
                         <?php if (!empty($AppUI->profileImage->path_name)): ?>
@@ -41,13 +41,15 @@
                 </div>
 
 
+                <button id="navbar-toggler" type="button" class="navbar-toggler custom-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-expanded="false" style="z-index:99999!important; padding-right:0!important;margin-right:0!important; width:45px!important;">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
 
-            <button type="button" class="navbar-toggler custom-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" style="z-index:99999!important;">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
+                <a id="closeBtn" href="#" class="closeburger">×</a>
+
 
          <div class="collapse navbar-collapse custom-collapse" id="navbarCollapse">
                 <div class="navbar-nav activeLoaderLink">
@@ -149,7 +151,7 @@
                                     <a href="{{ $urlTeacherInvoice.'/school' }}" class="dropdown-item text-danger"><i class="fa-solid fa-file-invoice"></i> {{ __("Teacher's Invoice") }}</a>
                                 @endif
                                 <a href="{{ $manualInvoice }}" class="dropdown-item text-danger"><i class="fa-solid fa-file-invoice"></i> {{ __('Manual Invoice') }}</a>
-                                <a href="{{ route('invoiceReport', $schoolId) }}" class="dropdown-item text-danger"><i class="fa-solid fa-file-invoice"></i> {{ __('Report') }} <span class="badge bg-info">beta</span></a>
+                                <a href="{{ route('invoiceReport', $schoolId) }}" class="dropdown-item text-danger"><i class="fa-solid fa-file-invoice"></i> {{ __('Report') }} <span class="badge bg-primary">beta</span></a>
                             <?php } ?>
 
 
@@ -158,7 +160,7 @@
                             @if(!$AppUI->isTeacherReadOnly())
                             <?php if(($is_subscribed && ($plan->stripe_status == 'active' || $plan->stripe_status == 'trialing')) || (!empty($user->trial_ends_at) && ($today_date <= $ends_at))){  ?>
                                     <a href="{{ $manualInvoice }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __('Manual Invoice') }}</a>
-                                    <a href="{{ route('invoiceReport', $schoolId) }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __('Report') }} <span class="badge bg-info">beta</span></a>
+                                    <a href="{{ route('invoiceReport', $schoolId) }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __('Report') }} <span class="badge bg-primary">beta</span></a>
                              <?php } ?>
                             @endif
                         @else
@@ -251,14 +253,14 @@
                                 {{ $AppUI->schools()->first()->contact_firstname }} {{ $AppUI->schools()->first()->contact_lastname }}
                                 @if( $is_subscribed )
                                 @if($plan->stripe_status == 'active' || $plan->stripe_status == 'trialing')
-                                    <span class="badge bg-success d-sm-none">premium</span>
+                                    <span class="badge bg-primary d-sm-none">premium</span>
                                     @else
-                                    <span class="badge bg-info d-sm-none">basic</span>
+                                    <span class="badge bg-primary d-sm-none">basic</span>
                                     @endif
                                 @endif
                                 @if( !$is_subscribed )
                                     <?php if( !empty($user->trial_ends_at) && ($today_date <= $ends_at) ){ ?>
-                                        <span class="badge bg-info d-sm-none">basic</span>
+                                        <span class="badge bg-primary d-sm-none">basic</span>
                                     <?php } else { ?>
                                         <span class="badge bg-warning d-sm-none">basic</span>
                                     <?php } ?>
@@ -269,14 +271,14 @@
                                 <?php echo !empty($AppUI['firstname']) ? $AppUI['firstname'] . ' ' . $AppUI['lastname'] : $AppUI['nickname'];?>
                                 @if( $is_subscribed )
                                 @if($plan->stripe_status == 'active' || $plan->stripe_status == 'trialing')
-                                    <span class="badge bg-success d-sm-none">premium</span>
+                                    <span class="badge bg-primary d-sm-none">premium</span>
                                     @else
-                                    <span class="badge bg-info d-sm-none">basic</span>
+                                    <span class="badge bg-primary d-sm-none">basic</span>
                                     @endif
                                 @endif
                                 @if( !$is_subscribed )
                                     <?php if( !empty($user->trial_ends_at) && ($today_date <= $ends_at) ){ ?>
-                                        <span class="badge bg-info d-sm-none">basic</span>
+                                        <span class="badge bg-primary d-sm-none">basic</span>
                                     <?php } else { ?>
                                         <span class="badge bg-warning d-sm-none">basic</span>
                                     <?php } ?>
@@ -288,14 +290,14 @@
                                 @if(!$AppUI->isStudent() && !$AppUI->isParent())
                                     @if( $is_subscribed )
                                     @if($plan->stripe_status == 'active' || $plan->stripe_status == 'trialing')
-                                    <span class="badge bg-success p-1 d-none d-sm-block" style="position: absolute; right:-12px; top:-4px;">Premium</span>
+                                    <span class="badge bg-primary p-1 d-none d-sm-block" style="position: absolute; right:-12px; top:-4px;">Premium</span>
                                     @else
-                                    <span class="badge bg-info p-1 d-none d-sm-block" style="position: absolute; right:0px;">basic</span>
+                                    <span class="badge bg-primary p-1 d-none d-sm-block" style="position: absolute; right:0px;">basic</span>
                                     @endif
                                     @endif
                                     @if( !$is_subscribed )
                                         <?php if( !empty($user->trial_ends_at) && ($today_date <= $ends_at) ){ ?>
-                                            <span class="badge bg-info d-none d-sm-block" style="position: absolute; right:0;">basic</span>
+                                            <span class="badge bg-primary d-none d-sm-block" style="position: absolute; right:0;">basic</span>
                                         <?php } else { ?>
                                             <span class="badge bg-warning d-none d-sm-block" style="position: absolute; right:0;">basic</span>
                                         <?php } ?>
@@ -364,11 +366,13 @@
     </nav>
 </div>
 
+
 @if ($message = Session::get('maintenance'))
 
-<div style="background-color: #eed285; text-align: center; padding: 10px; border-radius: 0px; bottom:0px; width: 100%; position:fixed; z-index:9999;">
+<div class="maintenanceMessage">
     <strong>{{ $message }}</strong>
 </div>
+<br>
 
 @endif
 
@@ -391,4 +395,25 @@
         }
     });
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+            var navbarToggler = document.getElementById('navbar-toggler');
+            var closeBtn = document.getElementById('closeBtn');
+            var navbarCollapse = document.getElementById('navbarCollapse'); // Le menu à afficher/masquer
+
+            // Afficher le menu et la croix
+            navbarToggler.addEventListener('click', function() {
+                navbarToggler.style.display = 'none'; // Cacher le burger
+                closeBtn.style.display = 'block'; // Afficher la croix
+                navbarCollapse.classList.add('show'); // Afficher le menu
+            });
+
+            // Cacher le menu et remettre le burger
+            closeBtn.addEventListener('click', function() {
+                closeBtn.style.display = 'none'; // Cacher la croix
+                navbarToggler.style.display = 'block'; // Afficher le burger
+                navbarCollapse.classList.remove('show'); // Cacher le menu
+            });
+        });
+
 </script>

@@ -108,7 +108,20 @@ p{
 .modal-body::-webkit-scrollbar-track {
     background-color: #f1f1f1; /* Couleur de l'arrière-plan de la scrollbar */
 }
-  </style>
+
+.custom-tooltip {
+    position: fixed;
+    background-color: #4460b0;
+    color: #fff;
+    padding: 4px;
+    border-radius: 8px;
+    font-size: 12px;
+    display: none;
+    z-index: 1000;
+    width: auto;
+    text-align: center;
+}
+</style>
 @endsection
 
 @section('content')
@@ -119,7 +132,6 @@ p{
             <header class="panel-heading" style="border: none;">
 				<div class="row panel-row pt-2" style="margin:0;">
 					<div class="col-md-5 col-xs-12 header-area">
-
 							<div class="page_header_class pt-1" style="position: static;">
                                 <h1 for="calendar" class="titleCalendar text-dynamic" id="cal_title" style="display: block;">
                                   {{__('Agenda')}} :
@@ -199,7 +211,7 @@ p{
                                 <div class="styledropdownActions d-none d-md-block" style="display:inline-block; z-index:999;">
                                     <div class="btn-group">
                                         <div class="dropdown" id="dropdownActions" style="margin-top:0; padding-top:0;">
-                                        <span class="btn btn-theme-outline">Actions <i class="fa fa-caret-down"></i></span>
+                                        <span class="btn btn-outline-primary">Actions <i class="fa fa-caret-down"></i></span>
                                         <div class="dropdown-content">
                                             <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_validate_events" class="btn btn-sm btn-success m-1 mb-2"><i class="fa-solid fa-lock"></i> <span id ="btn_validate_events_cap">{{__('Validate All')}}</span></a>
                                             <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_delete_events" class="btn btn-sm btn-danger m-1 mb-2"><i class="fas fa-trash"></i> <span id ="btn_delete_events_cap">{{__('Delete All')}}</span></a>
@@ -309,7 +321,15 @@ p{
                                         </div>
                                         </div>
                                     </div>
+
+
+                                    
                                     <div id="calendar" class="calendarContent"></div>
+                                    <div class="custom-tooltip" id="tooltip"></div>
+
+
+
+
                                     <div style="margin-top: 15px;" class="agendaContent2">
                                         <div class="btn-group" style="margin-right:5px;">
                                             <button type="button" class="btn btn-sm calendar_buttons" id="btn_prev"><i class="fa fa-chevron-left" style="color: #3b75bf;"></i></button>
@@ -854,7 +874,7 @@ p{
                 </div>
             </div>
 
-                <div class="modal-footer pt-0" style="background-color: #152245; max-heigth:60px!important; padding-top:0px!important;">
+                <div class="modal-footer pt-0" style="background-color: #f6f6f6; max-heigth:60px!important; padding-top:0px!important;">
                     <button id="save_btn_more" class="btn btn-outline-success">{{ __('Save & add more') }} </button>
                     <button id="save_btn" class="btn btn-success">{{ __('Save') }} </button>
                 </div>
@@ -5779,4 +5799,32 @@ $( document ).ready(function() {
 });
 </script>
 
+<script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var calendarEl = document.getElementById('calendar');
+            var tooltip = document.getElementById('tooltip');
+
+            // Cibler les cellules horaires (cases)
+            document.querySelectorAll('tr[data-time]').forEach(function (row) {
+                row.addEventListener('mousemove', function (event) {
+                    // Récupérer l'heure depuis l'attribut data-time
+                    var timeRange = row.getAttribute('data-time');
+
+                    // Afficher la bulle d'info à côté du curseur
+                    tooltip.innerHTML = timeRange ? timeRange.split(':').slice(0, 2).join(':') : "Pas d'heure disponible";
+                    tooltip.style.display = 'block';
+
+                    // Positionner l'info-bulle à côté du curseur
+                    tooltip.style.left = (event.pageX + 10) + 'px'; // Ajoute un décalage de 10px à droite
+                    tooltip.style.top = (event.pageY + 10) + 'px'; // Ajoute un décalage de 10px en bas
+                });
+
+                row.addEventListener('mouseout', function () {
+                    // Masquer la bulle d'info
+                    tooltip.style.display = 'none';
+                });
+            });
+        });
+    </script>
+    
 @endsection
