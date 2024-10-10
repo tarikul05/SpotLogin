@@ -469,24 +469,18 @@ class InvoiceController extends Controller
         if (!$invoice->invoice_filename || !filter_var($invoice->invoice_filename, FILTER_VALIDATE_URL)) {
             abort(404, 'L\'URL de la facture est invalide ou n\'existe pas.');
         }
-        
-        // Encoder l'URL pour gérer les caractères spéciaux
-        $encodedUrl = urlencode($invoice->invoice_filename);
-        $fileContent = @file_get_contents($encodedUrl); // Utiliser l'opérateur @ pour éviter les avertissements
-        
+
+        $fileContent = file_get_contents($invoice->invoice_filename);
+
         if ($fileContent === false) {
-            abort(404, 'Impossible de télécharger la facture. Vérifiez que le fichier existe et que l\'URL est accessible.');
+            abort(404, 'Impossible de télécharger la facture.');
         }
-        
+
         $fileName = basename($invoice->invoice_filename);
-        
-        // Échapper les caractères spéciaux dans le nom de fichier pour Content-Disposition
-        $escapedFileName = str_replace('"', '%22', $fileName); // Échapper les guillemets
-        $escapedFileName = str_replace("'", '%27', $escapedFileName); // Échapper les apostrophes
-        
+
         return response($fileContent)
             ->header('Content-Type', 'application/pdf')
-            ->header('Content-Disposition', 'attachment; filename="'.$escapedFileName.'"');
+            ->header('Content-Disposition', 'attachment; filename="'.$fileName.'"');
         
     }
 
