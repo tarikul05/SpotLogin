@@ -454,21 +454,21 @@ class InvoiceController extends Controller
 
         
         //debug local
-        if (strpos($invoice->invoice_filename, url('/')) !== false) {
+        /*if (strpos($invoice->invoice_filename, url('/')) !== false) {
             $relativePath = str_replace(url('/'), '', $invoice->invoice_filename);
         } else {
             $relativePath = $invoice->invoice_filename;
         }
         $filePath = public_path($relativePath);
         if (!file_exists($filePath)) {
-            abort(404, 'Invoice not found.');
+            abort(404, 'Le fichier PDF de la facture n\'existe pas.');
         }
         $fileName = basename($invoice->invoice_filename);
         return response()->download($filePath, $fileName, [
             'Content-Type' => 'application/pdf', 
-        ]);
+        ]);*/
         
-        /*if (!$invoice->invoice_filename || !filter_var($invoice->invoice_filename, FILTER_VALIDATE_URL)) {
+        if (!$invoice->invoice_filename || !filter_var($invoice->invoice_filename, FILTER_VALIDATE_URL)) {
             abort(404, 'Invoice not found. Please wait for maintenance to complete.');
         }
 
@@ -482,7 +482,7 @@ class InvoiceController extends Controller
 
         return response($fileContent)
             ->header('Content-Type', 'application/pdf')
-            ->header('Content-Disposition', 'attachment; filename="'.$fileName.'"');*/
+            ->header('Content-Disposition', 'attachment; filename="'.$fileName.'"');
         
     }
 
