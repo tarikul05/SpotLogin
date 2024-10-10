@@ -464,16 +464,15 @@ class InvoiceController extends Controller
         return response()->download($filePath, $fileName, [
             'Content-Type' => 'application/pdf', 
         ]);*/
-
         
-        /*if (!$invoice->invoice_filename || !filter_var($invoice->invoice_filename, FILTER_VALIDATE_URL)) {
-            abort(404, 'L\'URL de la facture est invalide ou n\'existe pas.');
-        }*/
+        if (!$invoice->invoice_filename || !filter_var($invoice->invoice_filename, FILTER_VALIDATE_URL)) {
+            abort(404, 'Invoice not found. Please wait for maintenance to complete.');
+        }
 
         $fileContent = file_get_contents($invoice->invoice_filename);
 
         if ($fileContent === false) {
-            abort(404, 'Impossible de télécharger la facture.');
+            abort(404, 'Unable to download invoice.');
         }
 
         $fileName = basename($invoice->invoice_filename);
