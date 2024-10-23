@@ -836,7 +836,9 @@ class AgendaController extends Controller
 
                         $student->dates = $futureEvent;
                         if ($futureEvent) {
+                            if ($user->isSchoolAdmin() || $user->isTeacher()) {
                             $e['tooltip'] .= '<br><span class="badge bg-warning"><i class="fa-solid fa-circle-info text-white" style="color:orange;"></i> ' . $student->firstname . ' is away</span>';
+                            }
                         }
                         array_push($studentsbySchool, $student);
                     }

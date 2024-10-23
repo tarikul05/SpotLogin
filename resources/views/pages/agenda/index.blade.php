@@ -2874,7 +2874,9 @@ $('.close-icon').on('click', function() {
                     }
                 }
                 if (hasStudentWithFutureDate) {
-                    $(el).find('.fc-time').after(icon2);
+                    if((user_role == 'admin_teacher' || user_role == 'school_admin_teacher') ){
+                        $(el).find('.fc-time').after(icon2);
+                    }
                 }
 
                 //if valid
