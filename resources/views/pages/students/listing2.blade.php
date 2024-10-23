@@ -231,6 +231,14 @@
 </div>
 
 
+<script>
+    document.getElementById('search_text').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault(); // Empêche la soumission du formulaire
+    }
+});
+</script>
+
 
 <script>
     // Fonction pour vérifier si au moins une case est cochée
