@@ -235,6 +235,7 @@
     document.getElementById('search_text').addEventListener('keydown', function(event) {
     if (event.key === 'Enter') {
         event.preventDefault(); // Empêche la soumission du formulaire
+        this.blur();
     }
 });
 </script>
