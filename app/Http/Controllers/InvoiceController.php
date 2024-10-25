@@ -2006,6 +2006,7 @@ class InvoiceController extends Controller
 
         //Get coach emthods payments
         $coachOfInvoice = User::Where(['person_type' => 'App\Models\Teacher', 'person_id' => $invoice->seller_id])->first();
+        if($coachOfInvoice) {
         $coachPaymentMethods = $coachOfInvoice->paymentMethods()->get();
         $is_conneced_account_charges_enabled = false;
         $is_connected_account = false;
@@ -2014,6 +2015,12 @@ class InvoiceController extends Controller
             $is_connected_account = true;
             $stripeConnectedAccount = $this->stripe->accounts->retrieve($coachOfInvoice->stripe_account_id, []);
             $is_conneced_account_charges_enabled = $stripeConnectedAccount->charges_enabled;
+        }
+        } else {
+            $coachPaymentMethods = collect([]);
+            $is_conneced_account_charges_enabled = false;
+            $is_connected_account = false;
+            $stripeConnectedAccount = null;
         }
 
         return view('pages.invoices.invoice_modification', [

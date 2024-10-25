@@ -63,7 +63,7 @@
                 {{ __('Invoices') }}
             </button>
 
-            @if($AppUI->isSchoolAdmin())
+            @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherAll())
             <button onclick="addFilter('Teacher')" class="nav-link" id="nav-import_export-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
                 {{ __('Teacher invoices') }}
             </button>

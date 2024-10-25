@@ -99,7 +99,7 @@
                         <a href="{{ route('calendar.settings') }}" class="nav-item nav-link text-center mr-2"><i class="fa-solid fa-gear"></i> <span class="d-none d-sm-block"></span> {{ __('School Settings') }}</a>
                     @endif
 
-                    @if($AppUI->isSuperAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin())
+                    @if($AppUI->isSuperAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAll())
                         @can('teachers-list')
                             @if($AppUI['person_type'] != 'SUPER_ADMIN')
                                <a href="{{ route('teacherHome') }}" class="nav-item nav-link text-center mr-2"><i class="fa-solid fa-users-gear"></i> <span class="d-none d-sm-block"></span> {{ __('Teachers') }}</a>
@@ -126,7 +126,7 @@
                         <div class="dropdown-menu header">
                         @if(!$AppUI->isStudent() && !$AppUI->isParent())
 
-                        @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin())
+                        @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAll())
                         <a href="{{ $urlInvoice.'/school' }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("Invoices generated") }}</a>
                         @else
                             <a href="{{ $urlInvoice }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("Invoices generated") }}</a>
@@ -141,13 +141,13 @@
                                         <a href="{{ $urlStudentInvoice }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("To be invoiced") }}</a>
                                     @endif
                                 @endif
-                                @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin())
+                                @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAll())
                                     <a href="{{ $urlTeacherInvoice.'/school' }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("Teacher's Invoice") }}</a>
                                 @endif
                             <?php } else { ?>
                                 <!--<span class="badge bg-danger w-90 text-center" style="font-size:10px; width:90% margin:0 auto; padding:5px; margin-left:20px; margin-right:3px;">Only with Premium Access</span>-->
                                 <a href="{{ $urlStudentInvoice }}" class="dropdown-item text-danger"><i class="fa-solid fa-file-invoice"></i> {{ __("To be invoiced") }}</a>
-                                @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin())
+                                @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAll())
                                     <a href="{{ $urlTeacherInvoice.'/school' }}" class="dropdown-item text-danger"><i class="fa-solid fa-file-invoice"></i> {{ __("Teacher's Invoice") }}</a>
                                 @endif
                                 <a href="{{ $manualInvoice }}" class="dropdown-item text-danger"><i class="fa-solid fa-file-invoice"></i> {{ __('Manual Invoice') }}</a>
@@ -230,10 +230,16 @@
                     <?php if (!empty($AppUI['id'])): ?>
                     <div class="d-flex align-items-center position-relative">
 
-                            @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAll())
+                            @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin())
                             <span class="admin_name" style="position:absolute; top:24px; left:10px; font-size:11px; color:#AAA;">
                             <!--<b>({{$AppUI->role_type}})</b>-->
                             School Admin
+                            </span>
+                            @endif
+                            @if($AppUI->isTeacherAll())
+                            <span class="admin_name" style="position:absolute; top:24px; left:10px; font-size:11px; color:#AAA;">
+                            <!--<b>({{$AppUI->role_type}})</b>-->
+                            School All Access
                             </span>
                             @endif
 
@@ -243,7 +249,7 @@
                                     <b style="position:absolute; top:-8px; left:10px; font-size:12px;">{{ $AppUI->schools()->first()->school_name }}</b>
                                 </span>
                             @endif
-                            @if($AppUI->isTeacherSchoolAdmin())
+                            @if($AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAll())
                                 <span class="admin_name">
                                     <b style="position:absolute; top:-8px; left:10px; font-size:12px;">{{$AppUI->schools()->first()->school_name}}</b>
                                 </span>

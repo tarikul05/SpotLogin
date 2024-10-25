@@ -15,7 +15,7 @@
                     </div>
                 @endif-->
 
-                @if($AppUI->isTeacherSchoolAdmin())
+                @if($AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAll())
 
                 {{__('Your are connected as a Teacher administrator. You can create categories and setup prices for your school')}}.<br>
                 {{__('If you want to create categories for yourself')}}, <a href="{{route('calendar.teacher.settings')}}">{{__('please go to your settings')}}</a>.

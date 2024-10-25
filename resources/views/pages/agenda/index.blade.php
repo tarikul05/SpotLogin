@@ -353,6 +353,12 @@ p{
                                     <div id="listEventsSearch"></div>
 
                      
+                                    
+
+                                    <div id="todayNewList"></div>
+
+                                 <div id="allFilters" style="display:none;">
+
                                     @if(isset($userWidgets['timeline']) && $userWidgets['timeline'])
                                         <div class="wrapper mb-3" style="display: flex; display: none;" id="wrapperTimeline">
                                             <b style="position:absolute; left:30px; top:30px; color:#333;">Today Timeline</b>
@@ -360,10 +366,6 @@ p{
                                             <ul class="sessions" id="todayNewTimeline"></ul>
                                         </div>
                                     @endif
-
-                                    <div id="todayNewList"></div>
-
-                                 <div id="allFilters" style="display:none;">
 
 
                                     <div style="margin-bottom:40px;" id="datepicker_month"></div>
