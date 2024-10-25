@@ -96,16 +96,12 @@
                 <td class="p-0 text-left d-none d-lg-table-cell">{{ $teacher->email; }}</td>
                 <td class="p-0 text-left d-none d-lg-table-cell">
                     @if(!$teacher->user)
-                        <span>{{ __('No') }}</span>
-                        <form method="post" style="display: inline;" class="form-inline" action="{{route('teacherInvitation',['school'=>$teacher->pivot->school_id,'teacher'=>$teacher->id])}}">
-                          @method('post')
-                          @csrf
-                          @if(!$teacher->pivot->is_sent_invite)
-                              <button class="badge bg-info text-white" style="border:none;" type="submit" title="Send invitation" ><i class="fa-solid fa-envelope"></i> Send invite</button>
-                          @else
-                              <button class="badge bg-info text-white" style="border:none;" type="submit" title="Resend invitation"><i class="fa-solid fa-envelope"></i> Re-Send invite</button>
-                          @endif
-                        </form>
+                    {{__("No")}}
+                        @if(!$teacher->pivot->is_sent_invite)
+                            <button class="badge bg-info text-white send-invite-btn" data-email="{{ $teacher->email }}" data-school="{{ $schoolId }}" data-teacher="{{ $teacher->id }}" style="border:none;" type="submit" title="Send invitation" ><i class="fa-solid fa-envelope"></i> Send invite</button>
+                        @else
+                            <button class="badge bg-info text-white send-invite-btn" data-email="{{ $teacher->email }}" data-school="{{ $schoolId }}" data-teacher="{{ $teacher->id }}" style="border:none;" type="submit" title="Resend invitation"><i class="fa-solid fa-envelope"></i> Re-Send invite</button>
+                        @endif
                     @else
                          <span class="">{{$teacher->user->username}}</span>
                     @endif
@@ -304,6 +300,15 @@
     $(document).ready(function() {
         $(document).on('click', '.send-invite-btn', function(event) {
             event.preventDefault();
+            var initTeacher = $(this).attr('data-email');
+            console.log(initTeacher);
+            if(initTeacher == "") {
+              return  Swal.fire(
+                        'Invitation',
+                        '{{__("Teacher needs to have an email to send the invitation")}}',
+                        'error'
+                        )
+            }
             $("#pageloader").fadeIn("fast");
             var schoolId = $(this).attr('data-school');
             var teacherId = $(this).attr('data-teacher');
