@@ -219,7 +219,7 @@ p{
                                             <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_copy_events" class="btn btn-outline-primary m-1 mb-2"><i class="far fa-copy"></i> <span id ="btn_copy_events_cap">{{__('Copy All')}}</span></a>
                                             <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_goto_planning" class="btn btn-primary m-1 mb-2"><em class="glyphicon glyphicon-fast-forward"></em> <span id ="btn_goto_planning_cap">{{__('Paste')}}</span></a>
 
-                                            @if($AppUI->isTeacherAdmin())
+                                            @if($AppUI->isTeacherAdmin() || $AppUI->isTeacherAll())
                                             @if($counterDataImported > 0)
                                             <a style="display:inline-block; min-width: 190px;" href="{{route('import.getLessons')}}" class="btn btn-outline-primary m-1" id="importStudents"><img src="{{ asset('img/excel_icon.png') }}"  width="12" height="auto"/> Import Agenda <span class="badge bg-info">{{$counterDataImported}}</span</a>
                                             @else
@@ -543,11 +543,11 @@ p{
 
                                 <div class="col-md-10 offset-md-1">
 
-                                @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin())
+                                @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAll())
                                 <div class="row show_coach_off show_teacher_off hide_on_off mt-4 mb-4">
                                 <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher') }} :</label>
                                 @endif
-                                @if(!$AppUI->isSchoolAdmin() && !$AppUI->isTeacherSchoolAdmin())
+                                @if(!$AppUI->isSchoolAdmin() && !$AppUI->isTeacherSchoolAdmin() && !$AppUI->isTeacherAll())
                                 <input style="opacity: 0 !important; visibility: hidden !important; height: 0 !important" type="text" name="teacher_select" value="{{ $AppUI->person_id }}" readonly>
                                 @else
                                 <div class="col-sm-9">
@@ -569,7 +569,7 @@ p{
                                 @endif
 
 
-                                @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin())
+                                @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAll())
                                 <div class="row event show_coach_off hide_on_off mb-4">
                                     <label class="col-lg-3 col-sm-3 text-left" for="event_invoice_type" id="invoice_cat_type_id">{{__('Category type') }} :</label>
                                     <div class="col-sm-9">
@@ -606,7 +606,7 @@ p{
                                             <span class="input-group-addon">
                                                 <i class="fa-solid fa-list-ul"></i>
                                             </span>
-                                            <select class="form-control" id="category_select" name="category_select" @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin()) disabled @endif>
+                                            <select class="form-control" id="category_select" name="category_select" @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAll()) disabled @endif>
                                                 @foreach($eventCategoryList as $key => $eventcat)
                                                     <option s_thr_pay_type="{{ $eventcat->s_thr_pay_type }}" s_std_pay_type="{{  $eventcat->s_std_pay_type }}" t_std_pay_type="{{  $eventcat->t_std_pay_type }}" value="{{ $eventcat->id }}" category_type="{{ $eventcat->invoiced_type }}" @if(session('last_cat') == $eventcat->id) selected @endif>{{ $eventcat->title }}</option>
                                                 @endforeach
@@ -4696,7 +4696,7 @@ $('#add_lesson').on('submit', function(e) {
 	var endTime = $('#end_time').val();
 	var errMssg = '';
 	var type = $("#agenda_select").val();
-    var isAdmin = "{{ $AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() }}";
+    var isAdmin = "{{ $AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAll() }}";
 
 
     var selected_school_ids = [];
@@ -5010,7 +5010,7 @@ $(document).ready(function() {
 });
 
 $("body").on('change', '#teacher_select', function(event) {
-    var isAdmin = "{{ $AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() }}";
+    var isAdmin = "{{ $AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAll() }}";
     if(isAdmin)
     {
     var teacherSelect = +$("#teacher_select").val();
@@ -5026,7 +5026,7 @@ $("body").on('change', '#teacher_select', function(event) {
 });
 
 $("body").on('change', '#event_invoice_type', function(event) {
-    var isAdmin = "{{ $AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() }}";
+    var isAdmin = "{{ $AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAll() }}";
     if(isAdmin)
     {
     var event_invoice_type = +$("#teacher_select").val();
@@ -5076,8 +5076,8 @@ $("body").on('change', '#category_select, #teacher_select', function(event) {
     //console.log('No teacher found with ID ', teacherSelect, '.');
     }
 
-    var isSchoolAdmin = +"{{$AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin()}}";
-    var isTeacherAdmin = +"{{$AppUI->isTeacherAdmin()}}";
+    var isSchoolAdmin = +"{{$AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAll()}}";
+    var isTeacherAdmin = +"{{$AppUI->isTeacherAdmin() || $AppUI->isTeacherAll()}}";
     var isTeacher = +"{{$AppUI->isTeacher()}}";
 
     if (agendaSelect != 1 ) { return }
@@ -5296,7 +5296,7 @@ $('#agenda_select').on('change', function() {
             }
 
             //change display
-            var isAdmin = +"{{$AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherAll() }}";
+            var isAdmin = +"{{$AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherAll() || $AppUI->isTeacherAll() }}";
             if(isAdmin) {
                 $('.not_teacher').show();
             }
@@ -5321,7 +5321,7 @@ $('#agenda_select').on('change', function() {
             $('.show_coach_off.hide_on_off').hide();
             $(".event-text").show();
 
-            var isSchoolAdmin = +"{{$AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin()}}";
+            var isSchoolAdmin = +"{{$AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAll()}}";
             if(isSchoolAdmin){
                 $(".show_teacher_off").fadeIn();
             }
@@ -5402,16 +5402,16 @@ $('#agenda_select').on('change', function() {
         }
     }
 
-    var isSchoolAdmin = +"{{$AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin()}}";
-    var isTeacherAdmin = +"{{$AppUI->isTeacherAdmin()}}";
+    var isSchoolAdmin = +"{{$AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAll()}}";
+    var isTeacherAdmin = +"{{$AppUI->isTeacherAdmin() || $AppUI->isTeacherAll()}}";
     var isTeacher = +"{{$AppUI->isTeacher()}}";
     var datainvoiced = $("#category_select option:selected").data('invoice');
     var event_invoice_type = "";
 
-    @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin())
+    @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAll())
     event_invoice_type = $("#event_invoice_type option:selected").val();
     @endif
-    @if($AppUI->isTeacherAdmin())
+    @if($AppUI->isTeacherAdmin() || $AppUI->isTeacherAll())
     event_invoice_type = $("#event_invoice_type").val();
     @endif
 
@@ -5452,18 +5452,18 @@ $('#teacher_select').on('change', function() {
 
 $('#event_invoice_type').on('change', function() {
 
-    var isSchoolAdmin = +"{{$AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin()}}";
-    var isTeacherAdmin = +"{{$AppUI->isTeacherAdmin()}}";
-    var isTeacherSchoolAdmin = +"{{$AppUI->isTeacherSchoolAdmin()}}";
+    var isSchoolAdmin = +"{{$AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAll()}}";
+    var isTeacherAdmin = +"{{$AppUI->isTeacherAdmin() || $AppUI->isTeacherAll()}}";
+    var isTeacherSchoolAdmin = +"{{$AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAll()}}";
     var isTeacher = +"{{$AppUI->isTeacher()}}";
     var event_invoice_type = "";
     var teacher =  $("#teacher_select option:selected").val();
 
 
-    @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin())
+    @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAll())
     event_invoice_type = $("#event_invoice_type option:selected").val();
     @endif
-    @if($AppUI->isTeacherAdmin())
+    @if($AppUI->isTeacherAdmin() || $AppUI->isTeacherAll())
     event_invoice_type = $("#event_invoice_type").val();
     @endif
 
@@ -5512,7 +5512,7 @@ if (school_id !=null) {
                 resultHtml+='<option data-s_thr_pay_type="0" data-s_std_pay_type="0" data-t_std_pay_type="0" data-invoice="T" value="0">Select Category</option>';
                 var i='0';
                 $.each(data, function(key,value){
-                    var isAdmin = "{{ $AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() }}";
+                    var isAdmin = "{{ $AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAll() }}";
                     let textAdmin = "";
                     if(isAdmin) {
                         textAdmin = "<span class='text-danger'>("+value.invoiced_type+")</span> ";
