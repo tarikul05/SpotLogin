@@ -40,6 +40,7 @@ class InvoiceItem extends BaseModel
         'unit_type',
         'event_extra_expenses',
         'is_active',
+        'item_type',
         'created_at',
         'modified_at',
         'deleted_at',

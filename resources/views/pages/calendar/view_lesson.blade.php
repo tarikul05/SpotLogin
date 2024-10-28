@@ -37,7 +37,7 @@
 					
 						@if((($AppUI->person_id == $lessonData->teacher_id) || (($lessonData->eventcategory->invoiced_type == 'S') && ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()))) && ($lessonData->is_locked ==1))
 							<div class="alert alert-warning">
-								<label>{{ __('This lesson is blocked, but it can still be modified by first clicking the unlock button') }}.</label>
+								<label><i class="fa fa-info-circle"></i> {{ __('This lesson is blocked, but it can still be modified by first clicking the unlock button') }}.</label>
 								<!--<button class="btn btn-sm btn-warning" onclick="confirm_event(true)"><i class="fa-solid fa-lock-open"></i> Unlock</button>-->
 							</div>
 						@endif
@@ -47,35 +47,46 @@
                             //$invoiceExists = DB::table('invoices')->where('id', $invoiceId)->whereNull('invoices.deleted_at')->exists();
 						@endphp
 
-						@php
-						$invoiceIds = DB::table('invoice_items')
-										->where('event_id', $lessonlId)
-										->whereNull('deleted_at')
-										->pluck('invoice_id');
+@php
+$invoiceIds = DB::table('invoice_items')
+				->where('event_id', $lessonlId)
+				->whereNull('deleted_at')
+				->pluck('invoice_id');
 
-						$invoices = DB::table('invoices')
-									->whereIn('id', $invoiceIds)
-									->whereNull('invoices.deleted_at')
-									->get();
-						@endphp
+$invoices = DB::table('invoices')
+			  ->whereIn('id', $invoiceIds)
+			  ->whereNull('invoices.deleted_at')
+			  ->get();
+@endphp
 
-						@if ($invoices->isNotEmpty())
-						<div class="alert alert-warning">
-							<label>{{ __('This lesson has invoices attached to it') }}:</label>
-							<ul>
-								@foreach ($invoices as $invoice)
-									@php
-										$studentName = DB::table('students')
-														->where('id', DB::table('invoice_items')
-																		->where('invoice_id', $invoice->id)
-																		->value('student_id'))
-														->value(DB::raw("CONCAT_WS(' ', firstname, lastname) AS student_name"));
-									@endphp
-									<li>{{ $studentName }} {{ __('is billed for this event') }}. <a href="{{ route('adminmodificationInvoice', [$schoolId, $invoice->id]) }}">See invoice #{{ $invoice->id }}</a></li>
-								@endforeach
-							</ul>
-						</div>
-						@endif
+@if ($invoices->isNotEmpty())
+<div class="alert alert-warning">
+	<label><i class="fa fa-file-pdf"></i> {{ __('This lesson has invoices attached to it') }}:</label>
+	<ul>
+		@foreach ($invoices as $invoice)
+			@php
+				// Récupérer le student_id, le nom de l'étudiant et le type d'item pour chaque facture
+				$invoiceItem = DB::table('invoice_items')
+								->where('invoice_id', $invoice->id)
+								->where('event_id', $lessonlId)
+								->whereNull('deleted_at')
+								->first(['student_id', 'item_type']);
+
+				$studentName = DB::table('students')
+								->where('id', $invoiceItem->student_id)
+								->value(DB::raw("CONCAT_WS(' ', firstname, lastname) AS student_name"));
+
+				// Définir le type d'item en fonction de item_type
+				$itemTypeLabel = $invoiceItem->item_type === 'teacher' ? __('The teacher') : __('The student');
+				$itemTypeVerif = $invoiceItem->item_type === 'teacher' ? "1" : "2";
+			@endphp
+			<li>{{ __($itemTypeLabel) }} <i>{{ /*$studentName*/ $invoice->client_name }}</i> {{ $itemTypeVerif === "1" ? __('billed the school') : __('is billed') }}. 
+				[<a href="{{ route('adminmodificationInvoice', [$schoolId, $invoice->id]) }}">{{__("Go to invoice")}}</a>]
+			</li>
+		@endforeach
+	</ul>
+</div>
+@endif
 
 
 						<div class="card2">

@@ -1472,7 +1472,7 @@ class InvoiceController extends Controller
                         $eventData = $query->updateEventDetail($value->detail_id,$invoiceData->id,'buy_invoice_id');
                     }
 
-
+                    $invoiceItemData['item_type'] = "teacher";
                     $invoiceItemDataI = InvoiceItem::create($invoiceItemData);
                 } catch (Exception $e) {
                     echo $e->getMessage();
@@ -1796,7 +1796,7 @@ class InvoiceController extends Controller
 
 
 
-
+                    $invoiceItemData['item_type'] = "student";
                     $invoiceItemDataI = InvoiceItem::create($invoiceItemData);
 
                 } catch (Exception $e) {

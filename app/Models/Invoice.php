@@ -207,8 +207,17 @@ class Invoice extends BaseModel
     }
 
     // Exclure les événements déjà facturés
-    $studentEvents->whereNull('invoice_items.event_id')
-                  ->whereRaw("IF(events.event_type != 100, event_categories.s_std_pay_type, 1) != 2");
+    $studentEvents->where(function ($query) {
+        $query->where(function ($subQuery) {
+            $subQuery->whereNull('invoice_items.event_id')
+                     ->where('invoice_items.item_type', 'student');
+        })
+        ->orWhere(function ($subQuery) {
+            $subQuery->where('invoice_items.item_type', '!=', 'student')
+                      ->orWhereNull('invoice_items.item_type'); // Inclure aussi les éléments avec item_type NULL
+        });
+    })
+    ->whereRaw("IF(events.event_type != 100, event_categories.s_std_pay_type, 1) != 2");
 
     // Filtre par date
     $dateActuelle = Carbon::now()->format('Y-m-d H:i:s');
@@ -324,6 +333,11 @@ class Invoice extends BaseModel
                 $join->on('users.person_id', '=', 'event_details.teacher_id')
                     ->where('users.person_type', '=' , 'App\Models\Teacher');
              })
+             ->leftJoin('invoice_items', function ($join) { 
+                $join->on('invoice_items.event_id', '=', 'event_details.event_id')
+                     ->on('invoice_items.teacher_id', '=', 'event_details.teacher_id')
+                     ->whereNull('invoice_items.deleted_at');
+            })
             ->select(
                 'event_details.id as detail_id',
                 'events.id as event_id',
@@ -358,12 +372,28 @@ class Invoice extends BaseModel
         $teacherEvents->whereNull('events.deleted_at');
         $teacherEvents->whereNull('event_details.deleted_at');
 
+        $teacherEvents->where(function ($query) {
+            $query->where(function ($subQuery) {
+                $subQuery->whereNull('invoice_items.event_id')
+                         ->where('invoice_items.item_type', 'teacher');
+            })
+            ->orWhere(function ($subQuery) {
+                $subQuery->where('invoice_items.item_type', '!=', 'teacher')
+                          ->orWhereNull('invoice_items.item_type'); // Inclure aussi les éléments avec item_type NULL
+            });
+        })
+        ->whereRaw("IF(events.event_type != 100, event_categories.s_std_pay_type, 1) != 2");
 
-        $dateS = Carbon::now()->startOfMonth()->subMonth(1)->format('Y-m-d');
+
+        /*$dateS = Carbon::now()->startOfMonth()->subMonth(1)->format('Y-m-d');
         $dateEnd = Carbon::now()->subMonth(0)->format('Y-m-d');
-        $qq = "events.date_start BETWEEN '" . $dateS . "' AND '" . $dateEnd . "'";
+        $qq = "events.date_start BETWEEN '" . $dateS . "' AND '" . $dateEnd . "'";*/
+        //$teacherEvents->whereRaw($qq);
 
-        $teacherEvents->whereRaw($qq);
+        // Filtre par date
+        $dateActuelle = Carbon::now()->format('Y-m-d H:i:s');
+        $teacherEvents->where('events.date_start', '<=', $dateActuelle);
+
         $teacherEvents->distinct('event_details.id');
         $teacherEvents->groupBy('event_details.event_id');
 
@@ -484,7 +514,17 @@ class Invoice extends BaseModel
             $qq = "events.date_start BETWEEN '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $p_billing_period_end_date))) ."'";
             $studentEvents->whereRaw($qq);
 
-            $studentEvents->whereNull('invoice_items.event_id');
+            //$studentEvents->whereNull('invoice_items.event_id');
+            $studentEvents->where(function ($query) {
+                $query->where(function ($subQuery) {
+                    $subQuery->whereNull('invoice_items.event_id')
+                             ->where('invoice_items.item_type', 'student');
+                })
+                ->orWhere(function ($subQuery) {
+                    $subQuery->where('invoice_items.item_type', '!=', 'student')
+                              ->orWhereNull('invoice_items.item_type'); // Inclure aussi les éléments avec item_type NULL
+                });
+            });
             //$studentEvents->where('events.date_start', '>=', $dateS);
 
             $studentEvents->whereNull('events.deleted_at');
@@ -518,6 +558,11 @@ class Invoice extends BaseModel
                     $join->on('lesson_price_teachers.event_category_id', '=', 'events.event_category')
                          ->on('lesson_price_teachers.teacher_id', '=', 'events.teacher_id')
                          ->where('lesson_price_teachers.lesson_price_student', '=', 'price_fix');
+                })
+                ->leftJoin('invoice_items', function ($join) { 
+                    $join->on('invoice_items.event_id', '=', 'event_details.event_id')
+                         ->on('invoice_items.student_id', '=', 'event_details.student_id')
+                         ->whereNull('invoice_items.deleted_at'); 
                 })
                 ->select(
                     'events.id as event_id',
@@ -597,6 +642,18 @@ class Invoice extends BaseModel
                 $teacherEvents->where('events.teacher_id', $user->person_id);
             } else {
             }*/
+
+            $teacherEvents->where(function ($query) {
+                $query->where(function ($subQuery) {
+                    $subQuery->whereNull('invoice_items.event_id')
+                             ->where('invoice_items.item_type', 'teacher');
+                })
+                ->orWhere(function ($subQuery) {
+                    $subQuery->where('invoice_items.item_type', '!=', 'teacher')
+                              ->orWhereNull('invoice_items.item_type'); // Inclure aussi les éléments avec item_type NULL
+                });
+            });
+
             $teacherEvents->whereNull('events.deleted_at');
             $teacherEvents->whereNull('event_details.deleted_at');
             //$studentEvents->where('events.is_paying', '>', 0);
