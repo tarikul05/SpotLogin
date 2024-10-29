@@ -667,8 +667,51 @@ class Event extends BaseModel
 
 
     /** Get Coach Time Off */
-
     public function filterTeacher($params)
+    {
+        $query = $this->newQuery();
+
+        if (empty($params) || !is_array($params)) {
+            return $query;
+        }
+
+        // Traitement des dates
+        $fromFilterDate = $params['start_date'] ?? now();
+        $toFilterDate = $params['end_date'];
+        
+        // Gestion du fuseau horaire
+        $timeZone = 'UTC';
+        if (!empty($params['school_id'])) {
+            $school = School::active()->find($params['school_id']);
+            if (!empty($school->timezone)) {
+                $timeZone = $school->timezone;
+            }
+        }
+
+        // Formatage des dates
+        $fromFilterDate = $this->formatDateTimeZone($fromFilterDate.' 00:00:00', 'long', $timeZone, 'UTC');
+        $toFilterDate = $this->formatDateTimeZone($toFilterDate.' 23:59:59', 'long', $timeZone, 'UTC');
+
+        // Ajouter les conditions pour filtrer uniquement les événements des enseignants
+        $query->where('events.event_type', 50)
+            ->where('events.teacher_id', $params['person_id']);
+
+        // Crée une clause pour les événements basés sur les dates
+        $qq = "(events.date_start BETWEEN '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $fromFilterDate))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $toFilterDate))) . "')
+            OR (events.date_start < '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $fromFilterDate))) . "' 
+            AND (events.date_end BETWEEN '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $fromFilterDate))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $toFilterDate))) . "' OR events.date_end > '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $toFilterDate))) . "'))
+            AND events.school_id = '" . $params['school_id'] . "'";
+
+        // Applique la clause Raw tout en s'assurant de filtrer sur le type d'événement
+        $query->whereRaw($qq);
+
+        // Exclut les événements de type 51
+        $query->where('events.event_type', '!=', 51);
+
+        return $query;
+    }
+
+    /*public function filterTeacher($params)
     {
         $query = $this->newQuery();
 
@@ -708,7 +751,7 @@ class Event extends BaseModel
         $query->whereRaw($qq);
         return $query;
 
-    }
+    }*/
 
 
      /**
