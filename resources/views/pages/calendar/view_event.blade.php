@@ -10,7 +10,7 @@
 	$initDate = new Helper();
 	$date_start = $initDate->formatDateTimeZone($eventData->date_start, 'long','UTC',$zone);
 	$date_end = $initDate->formatDateTimeZone($eventData->date_end, 'long','UTC', $zone);
-	$priceShow = ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()) && ($eventData->event_invoice_type == 'S') || ($AppUI->isTeacher() && ($eventData->event_invoice_type == 'T')) 
+	$priceShow = ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin() || $AppUI->isTeacherAll()) && ($eventData->event_invoice_type == 'S') || ($AppUI->isTeacher() && ($eventData->event_invoice_type == 'T')) 
 @endphp
 @section('content')
   <div class="content">
@@ -30,7 +30,7 @@
 		<div class="tab-content view_part" id="ex1-content">
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 					<fieldset>
-						@if((($AppUI->person_id == $eventData->teacher_id) || (  ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()))) && ($eventData->is_locked ==1))
+						@if((($AppUI->person_id == $eventData->teacher_id) || (  ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAll() || $AppUI->isTeacherAdmin()))) && ($eventData->is_locked ==1))
 							<div class="alert alert-warning">
 								<label>This event is blocked, but it can still be modified by first clicking the unlock button.</label>
 								<!--<button class="btn btn-warning" onclick="confirm_event(true)"><i class="fa-solid fa-lock-open"></i> Unlock</button>-->
@@ -58,6 +58,14 @@
 										  <th class="col-lg-3 col-sm-3 text-left titleFieldPage">{{__('Professor') }} :</th>
 										  <td class="col-sm-7">{{ !empty($professors->full_name) ? $professors->full_name : '-' }}</td>
 										</tr>
+
+										@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherAll() || $AppUI->isTeacherMinimum() || $AppUI->isTeacherMedium() || $AppUI->isTeacherAll())
+										<tr>
+											<th class="col-lg-3 col-sm-3 text-left titleFieldPage">{{__('Invoice type') }} :</th>
+											<td class="col-sm-7">{{ $eventData->event_invoice_type === "T" ? "Teacher" : 'School' }}</td>
+										</tr>
+										@endif
+
 										<tr>
 										  <th class="col-lg-3 col-sm-3 text-left titleFieldPage">{{__('Student') }} :</th>
 										  <td class="col-sm-7">
@@ -89,16 +97,16 @@
 										  <th class="col-lg-3 col-sm-3 text-left titleFieldPage">{{__('Currency') }} :</th>
 										  <td class="col-sm-7">{{ !empty($eventData->price_currency) ? $eventData->price_currency : '-' }}</td>
 										</tr>
-										@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
+										@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherAll())
 										<tr>
 										  <th class="col-lg-3 col-sm-3 text-left titleFieldPage">{{__('Teacher price (per event)') }} :</th>
 										  <td class="col-sm-7">{{ !empty($eventData->buy_total) ? $eventData->buy_total : '-' }}</td>
 										</tr>
 										@endif
-										@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
+										@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherAll())
 										<tr>
 											<th class="col-lg-3 col-sm-3 text-left titleFieldPage">{{__('Student price (per student)') }} :</th>
-											<td class="col-sm-7">{{ !empty($eventData->price_amount_buy) ? $eventData->price_amount_buy : '-' }}</td>
+											<td class="col-sm-7">{{ !empty($eventData->price_amount_sell) ? number_format($eventData->price_amount_sell,2) : '-' }}</td>
 										</tr>
 										@else
 										<tr>
@@ -128,7 +136,7 @@
 																<th width="15%" style="text-align:left"></th>
 															
 																	<th width="15%" style="text-align:center;">
-																		@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherMinimum() || $AppUI->isTeacherMedium())
+																		@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherAll() || $AppUI->isTeacherMinimum() || $AppUI->isTeacherMedium())
 																		<label  name="row_hdr_buy">{{ __('Teacher') }}</label>
 																		@endif
 																	</th>
@@ -149,7 +157,7 @@
 																<td>Present</td>
 														
 																	<td style="text-align:center">
-																		@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherMinimum() || $AppUI->isTeacherMedium())
+																		@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherAll() || $AppUI->isTeacherMinimum() || $AppUI->isTeacherMedium())
 																		{{ number_format($student->price_amount_buy, 2) }}  {{ $student->price_currency }}
 																		@endif
 																	</td>

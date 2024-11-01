@@ -19,7 +19,7 @@
 	$date_end = $initDate->formatDateTimeZone($eventData->date_end, 'long','UTC', $zone);
 	$current_time = $initDate->formatDateTimeZone(now(), 'long','UTC', $zone);
 
-	$priceShow = ((($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()) && ($eventData->event_invoice_type == 'S')) || ($AppUI->isTeacher() && ($eventData->event_invoice_type == 'T')));
+	$priceShow = ((($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAll() || $AppUI->isTeacherAdmin()) && ($eventData->event_invoice_type == 'S')) || ($AppUI->isTeacher() && ($eventData->event_invoice_type == 'T')));
 @endphp
 @section('content')
 
@@ -102,6 +102,24 @@
 									</div>
 									@endif
 								</div>
+
+
+								@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAll() || $AppUI->isSchoolAdmin())
+									<div class="form-group row">
+										<label class="col-lg-4 col-sm-3 text-left" for="invoice_type" id="visibility_label_id">{{ __('Invoice type') }} :</label>
+										<div class="col-sm-7">
+											<div class="selectdiv">
+												<select class="form-control" id="event_invoice_type" name="event_invoice_type">
+													<option value="S" {{ old('event_invoice_type', $eventData->event_invoice_type) == 'S' ? 'selected' : '' }}>{{ __('School Invoice') }}</option>
+													<option value="T" {{ old('event_invoice_type', $eventData->event_invoice_type) == 'T' ? 'selected' : '' }}>{{ __('Teacher Invoice') }}</option>
+												</select>
+											</div>
+										</div>
+									</div>
+								@endif
+
+
+
 								<div class="form-group row">
 									<label class="col-lg-4 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student') }} :</label>
 									<div class="col-sm-7">
@@ -190,7 +208,7 @@
 											</div>
 										</div>
 									</div>
-									<?php if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherMinimum() || $AppUI->isTeacherMedium()){ ?>
+									<?php if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherAll() || $AppUI->isTeacherMinimum() || $AppUI->isTeacherMedium()){ ?>
 									<div class="form-group row">
 										<label class="col-lg-4 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price (per event)') }} :</label>
 										<div class="col-sm-4">
@@ -250,7 +268,7 @@
 																	<button id="mark_present_btn" class="btn btn-xs btn-outline-success btn-sm" type="button" style="display: block;">Mark all present</button>
 																</th>
 														
-																@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherMinimum() || $AppUI->isTeacherMedium() || $AppUI->isTeacherAll())
+																@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherAll() || $AppUI->isTeacherMinimum() || $AppUI->isTeacherMedium() || $AppUI->isTeacherAll())
 																	<th width="15%" style="text-align:right;">
 																		<label id="row_hdr_buy" name="row_hdr_buy">{{ __('Teacher') }}</label>
 																	</th>
@@ -282,7 +300,7 @@
 																</td>
 
 															
-																	@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherMinimum() || $AppUI->isTeacherMedium() || $AppUI->isTeacherAll())
+																	@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAll() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherMinimum() || $AppUI->isTeacherMedium() || $AppUI->isTeacherAll())
 																	<td style="text-align:right"> {{ ($relationData->price_currency) }} {{ ($student->price_amount_buy) }}</td>
 																	@endif
 																	<td style="text-align:right"> {{ ($relationData->price_currency) }} {{ !empty($eventData->price_amount_sell) ? $eventData->price_amount_sell : ''; }} </td>
@@ -330,7 +348,7 @@
 								<a class="btn btn-theme-warn" href="#" id="delete_btn"  style="display: block !important;">Delete</a>
 							@endcan
 						@else
-							@if(($eventData->event_invoice_type == 'S') && ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()))
+							@if(($eventData->event_invoice_type == 'S') && ($AppUI->isSchoolAdmin() || $AppUI->isTeacherAll() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()))
 								<a class="btn btn-theme-warn" href="#" id="delete_btn"  style="display: block !important;">Delete</a>
 							@else
 							@can('self-delete-event')
@@ -363,7 +381,7 @@
 					<a class="btn btn-outline-danger" href="#" id="delete_btn" style="display: inline-block !important;">Delete</a>
 				@endcan
 			@else
-				@if(($eventData->event_invoice_type == 'S') && ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()))
+				@if(($eventData->event_invoice_type == 'S') && ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAll() || $AppUI->isTeacherAdmin()))
 					<a class="btn btn-outline-danger" href="#" id="delete_btn" style="display: inline-block !important;">Delete</a>
 				@else
 					@can('self-delete-event')

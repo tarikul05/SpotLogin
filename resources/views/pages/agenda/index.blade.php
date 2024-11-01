@@ -570,7 +570,7 @@ p{
 
 
                                 @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAll())
-                                <div class="row event show_coach_off hide_on_off mb-4">
+                                <div class="row event show_coach_off hide_on_off school_cat_type_choose school_cat_type_choose mb-4">
                                     <label class="col-lg-3 col-sm-3 text-left" for="event_invoice_type" id="invoice_cat_type_id">{{__('Category type') }} :</label>
                                     <div class="col-sm-9">
                                         <div class="selectdiv">
@@ -5324,6 +5324,7 @@ $('#agenda_select').on('change', function() {
             var isSchoolAdmin = +"{{$AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAll()}}";
             if(isSchoolAdmin){
                 $(".show_teacher_off").fadeIn();
+                $(".school_cat_type_choose").fadeIn();
             }
 
             // $('#event_invoice_type').trigger('change');
@@ -5363,6 +5364,7 @@ $('#agenda_select').on('change', function() {
             $('.show_coach_off.hide_on_off').show();
              $("#std-check-div").css('display', 'none');
             // $('#category_select').trigger('change');
+            $(".school_cat_type_choose").hide();
         }
 
 	}else{

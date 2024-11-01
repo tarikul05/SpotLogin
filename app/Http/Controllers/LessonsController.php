@@ -269,6 +269,10 @@ class LessonsController extends Controller
                     'no_of_students' => !empty($stu_num) ? $stu_num : null,
                 ];
 
+                if($user->isSchoolAdmin() || $user->isTeacherSchoolAdmin() || $user->isTeacherAll()){
+                    $data['event_invoice_type'] = isset($eventData['event_invoice_type']) ? $eventData['event_invoice_type'] : "T";
+                }
+
                 $event = Event::where('id', $eventId)->update($data);
                 EventDetails::where('event_id',$eventId)->forceDelete();
                 foreach($eventData['student'] as $std){
