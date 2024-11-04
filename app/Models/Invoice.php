@@ -207,7 +207,7 @@ class Invoice extends BaseModel
     }
 
      // Exclure les événements déjà facturés
-    if ($user->isTeacherSchoolAdmin()) {
+    if ($user->isTeacherAdmin()) {
 
         $studentEvents->whereNull('invoice_items.event_id');
 
@@ -523,7 +523,7 @@ class Invoice extends BaseModel
             $qq = "events.date_start BETWEEN '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $p_billing_period_end_date))) ."'";
             $studentEvents->whereRaw($qq);
 
-            if ($user->isTeacherSchoolAdmin()) {
+            if ($user->isTeacherAdmin()) {
 
                 $studentEvents->whereNull('invoice_items.event_id');
 
