@@ -837,14 +837,12 @@
 
 <?php
 function extractExtraCharges($inputString) {
-    // Utilisation d'une expression régulière pour rechercher le motif "Extra charges" suivi d'un espace et d'un ou plusieurs chiffres
-    $pattern = '/Extra charges (\d+)/';
+    // Expression régulière pour capturer un nombre entier ou décimal après "Extra charges"
+    $pattern = '/Extra charges (\d+(\.\d{1,2})?)/';
 
     // Utilisation de la fonction preg_match pour chercher le motif dans le string $inputString
     if (preg_match($pattern, $inputString, $matches)) {
-        // $matches[0] contient la chaîne correspondant au motif entier (par exemple, "Extra charges 50")
-        // $matches[1] contient le premier groupe capturé par les parenthèses dans l'expression régulière (dans ce cas, le chiffre)
-        // On retourne le chiffre extrait
+        // $matches[1] contient le nombre entier ou décimal extrait
         return $matches[1];
     } else {
         // Si le motif n'a pas été trouvé, on peut retourner false ou une valeur par défaut selon les besoins
