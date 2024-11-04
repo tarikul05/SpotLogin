@@ -206,19 +206,28 @@ class Invoice extends BaseModel
                       ->where('events.teacher_id', $user->person_id);
     }
 
-    // Exclure les événements déjà facturés
-    $studentEvents->where(function ($query) {
-        $query->where(function ($subQuery) {
-            $subQuery->whereNull('invoice_items.event_id')
-                     ->where('invoice_items.item_type', 'student');
-        })
-        ->orWhere(function ($subQuery) {
-            $subQuery->where('invoice_items.item_type', '!=', 'student')
-                      ->orWhereNull('invoice_items.item_type'); // Inclure aussi les éléments avec item_type NULL
-        });
-    })
-    ->whereRaw("IF(events.event_type != 100, event_categories.s_std_pay_type, 1) != 2");
+     // Exclure les événements déjà facturés
+    if ($user->isTeacherSchoolAdmin()) {
 
+        $studentEvents->whereNull('invoice_items.event_id');
+
+    } else {
+
+        $studentEvents->where(function ($query) {
+            $query->where(function ($subQuery) {
+                $subQuery->whereNull('invoice_items.event_id')
+                        ->where('invoice_items.item_type', 'student');
+            })
+            ->orWhere(function ($subQuery) {
+                $subQuery->where('invoice_items.item_type', '!=', 'student')
+                        ->orWhereNull('invoice_items.item_type'); // Inclure aussi les éléments avec item_type NULL
+            });
+        });
+
+    }
+
+    $studentEvents->whereRaw("IF(events.event_type != 100, event_categories.s_std_pay_type, 1) != 2");
+    
     // Filtre par date
     $dateActuelle = Carbon::now()->format('Y-m-d H:i:s');
     $studentEvents->where('events.date_start', '<=', $dateActuelle);
@@ -514,17 +523,25 @@ class Invoice extends BaseModel
             $qq = "events.date_start BETWEEN '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $p_billing_period_end_date))) ."'";
             $studentEvents->whereRaw($qq);
 
-            //$studentEvents->whereNull('invoice_items.event_id');
-            $studentEvents->where(function ($query) {
-                $query->where(function ($subQuery) {
-                    $subQuery->whereNull('invoice_items.event_id')
-                             ->where('invoice_items.item_type', 'student');
-                })
-                ->orWhere(function ($subQuery) {
-                    $subQuery->where('invoice_items.item_type', '!=', 'student')
-                              ->orWhereNull('invoice_items.item_type'); // Inclure aussi les éléments avec item_type NULL
+            if ($user->isTeacherSchoolAdmin()) {
+
+                $studentEvents->whereNull('invoice_items.event_id');
+
+            } else {
+
+                $studentEvents->where(function ($query) {
+                    $query->where(function ($subQuery) {
+                        $subQuery->whereNull('invoice_items.event_id')
+                                ->where('invoice_items.item_type', 'student');
+                    })
+                    ->orWhere(function ($subQuery) {
+                        $subQuery->where('invoice_items.item_type', '!=', 'student')
+                                ->orWhereNull('invoice_items.item_type'); // Inclure aussi les éléments avec item_type NULL
+                    });
                 });
-            });
+
+            }
+
             //$studentEvents->where('events.date_start', '>=', $dateS);
 
             $studentEvents->whereNull('events.deleted_at');
