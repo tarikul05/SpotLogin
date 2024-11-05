@@ -214,7 +214,6 @@
             margin-bottom:70px;
         }
         footer {
-            position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
@@ -424,8 +423,12 @@
                             </tr>
                             <tr class="extra_col_sub">
                                 <td colspan="2" style="text-align:right">Sub-total Lessons</td>
-                                <td style="text-align:right">{{$sub_total_min_lesson}} minutes</td>
+                                <td style="text-align:left">{{$sub_total_min_lesson}} minutes</td>
                                 <td style="text-align:right">{{ number_format($sub_total_lesson,'2') }}</td>
+                                <td></td>
+                            </tr>
+                            <tr class="extra_col_sub extra_col_h">
+                                <td colspan="4"></td>
                                 <td></td>
                             </tr>
                             <?php if($invoice_data->lesson_discount_description || $invoice_data->event_discount_description){ ?>
@@ -462,7 +465,8 @@
                                 <?php } else { $totalDiscount = 0; }?>
 
                             <tr class="extra_col_sub">
-                                <td colspan="3" style="text-align:right">Total Lesson:</td>
+                                <td colspan="2"></td>
+                                <td style="text-align:left">Total Lesson:</td>
                                 <td style="text-align:right">
                         <?php
                             $total_lesson = number_format($sub_total_lesson - $totalDiscount,'2');
@@ -482,8 +486,8 @@
                             </tr>
                             <?php }else{ ?>
                                 <tr class="extra_col_sub extra_col_h">
-                                    <td colspan="4"></td>
-                                    <td></td>
+                                    <td colspan="4"><br></td>
+                                    <td><br></td>
                                 </tr>
                                 <tr class="extra_col_sub">
                                     <td colspan="2" style="text-align:right"><!--{{ __('invoice_sub_total') }}--></td>
@@ -502,6 +506,10 @@
                                 <td style="text-align:right"></td>
                                 <td style="text-align:right; font-size:12px;">{{ number_format($sub_total_event-$invoice_data->extra_expenses,'2') }}</td>
                                 <td style="text-align:right; font-size:12px;">@if($invoice_data->extra_expenses > 0)+{{ number_format(($invoice_data->extra_expenses),'2')}}@endif</td>
+                        </tr>
+                        <tr class="extra_col_sub extra_col_h">
+                            <td colspan="4"><br></td>
+                            <td><br></td>
                         </tr>
                     <?php } ?>
 
