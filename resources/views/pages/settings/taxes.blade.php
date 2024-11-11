@@ -60,9 +60,9 @@
 
 
                     <div class="d-flex justify-content-end">
-                        <button id="add_more_tax_btn" type="button" class="btn btn-outline-primary">
+                        <!--<button id="add_more_tax_btn" type="button" class="btn btn-outline-primary">
                           <i class="fa fa-plus" aria-hidden="true"></i> {{ __('Add taxe') }}
-                        </button>
+                        </button>-->
                       </div>
 
                    
@@ -72,13 +72,16 @@
     </div>
 
 
-    <div class="row justify-content-center" style="position:fixed; bottom:0; z-index=99999!important;opacity:1!important; width:100%;">
-        <div class="col-md-12 mt-3 pt-3 pb-3 card-header text-center" style="opacity:0.8!important; background-color:#DDDD!important;">
+    <div class="row justify-content-center" style="position:fixed; bottom:0; z-index=99999!important;width:100%;">
+        <div class="col-md-12 mt-3 pt-3 pb-3 card-header text-center" style="background-color:#fbfbfb!important; border:1px solid #DDD;">
             @if($InvoicesTaxData->count() > 0)
             <button type="submit" class="btn btn-success" id="btnSaveTaxes">{{ __('Save Taxes') }}</button>
             @else
             <button type="submit" class="btn btn-success" id="btnSaveTaxes" style="display:none;">{{ __('Save Taxes') }}</button>
             @endif
+            <button id="add_more_tax_btn" type="button" class="btn btn-outline-primary">
+                <i class="fa fa-plus" aria-hidden="true"></i> {{ __('Add taxe') }}
+            </button>
         </div>
     </div>
 

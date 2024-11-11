@@ -724,7 +724,7 @@ class LessonsController extends Controller
 
                 $eventInit = new Event();
 
-                if($user->isSchoolAdmin() || $user->isTeacherSchoolAdmin()) {
+                if($user->isSchoolAdmin()) {
                     $eventPrice = $eventInit->priceCalculationsSchool(['event_category_id'=>$lessonData['category_select'],'teacher_id'=>$teacher_id,'student_count'=>$studentCount]);
                 } else {
                     $eventPrice = $eventInit->priceCalculations(['event_category_id'=>$lessonData['category_select'],'teacher_id'=>$teacher_id,'student_count'=>$studentCount]);
@@ -772,7 +772,7 @@ class LessonsController extends Controller
                 $attendSellPrice = round($attendSellPrice,2);
                 $attendBuyPrice = round($attendBuyPrice,2);
 
-// dd($attendSellPrice, $attendBuyPrice);
+//dd($sellPriceCal, $buyPriceCal);
 
                 if($user->isSchoolAdmin() || $user->isTeacherSchoolAdmin()) {
                     $attendSellPrice = $eventPrice['price_buy']*($lessonData['duration']/60)/$studentCount;
@@ -1487,6 +1487,7 @@ class LessonsController extends Controller
                     'status' => 0,
                     'message' =>  __('No price for this teacher'),
                     'eventPrice' => $eventPrice,
+                    'categoryPrice' => $evtCategory,
                     'lessonPriceTeacher' => $lessonPriceTeacher,
                     'code' => $categoryPrice,
                     'newPrice' => $categoryPrice->price_buy,

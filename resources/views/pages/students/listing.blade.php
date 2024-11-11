@@ -1,6 +1,6 @@
 
 
-  <div class="container-fluid body students_list mb-3">
+  <div class="students_list mb-3">
 
     <header class="panel-heading" style="border: none;">
         <div class="row panel-row" style="margin:0;">

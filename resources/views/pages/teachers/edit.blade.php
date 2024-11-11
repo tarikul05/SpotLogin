@@ -1348,9 +1348,9 @@ function populate_teacher_lesson() {
 					all_ready = 0;
 					//resultHtml+="<td></td>";
 					if (value.event_type == 100) {
-						resultHtml += "<td colspan='2' style='text-align:right'><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-event/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' class='btn btn-xs btn-info'> <i class='fa-regular fa-bell fa-bounce'></i> Validate</a>";
+						resultHtml += "<td colspan='2' style='text-align:right'><a id='correct_btn' href='/"+school_id+"/edit-event/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' class='button_lock_and_save btn btn-xs btn-info'> <i class='fa-regular fa-bell fa-bounce'></i> Validate</a>";
 					} else {
-						resultHtml += "<td colspan='2' style='text-align:right'><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-lesson/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' class='btn btn-xs btn-info'> <i class='fa-regular fa-bell fa-bounce'></i> Validate</a>";
+						resultHtml += "<td colspan='2' style='text-align:right'><a id='correct_btn' href='/"+school_id+"/edit-lesson/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' class='button_lock_and_save btn btn-xs btn-info'> <i class='fa-regular fa-bell fa-bounce'></i> Validate</a>";
 					}
 				} else {
 					if (value.event_type == 10) {

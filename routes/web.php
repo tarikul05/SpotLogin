@@ -395,6 +395,10 @@ Route::group(['middleware' => ['auth']], function () {
   Route::get('/{school}/invoices/{type?}', [App\Http\Controllers\InvoiceController::class, 'index'])->name('adminInvoiceList');
   Route::get('/{school}/student-invoices/{type?}', [App\Http\Controllers\InvoiceController::class, 'student_invoice_list'])->name('studentInvoiceList.id')->middleware('checkStripeSubscription');
   Route::get('/{school}/teacher-invoices/{type?}', [App\Http\Controllers\InvoiceController::class, 'teacher_invoice_list'])->name('teacherInvoiceList.id')->middleware('checkStripeSubscription');
+
+  Route::get('/{school}/student-invoices/{type?}/access', [App\Http\Controllers\InvoiceController::class, 'student_invoice_list'])->name('studentInvoiceListAccess.id')->middleware('checkStripeAccessSubscription');
+  Route::get('/{school}/teacher-invoices/{type?}/access', [App\Http\Controllers\InvoiceController::class, 'teacher_invoice_list'])->name('teacherInvoiceListAccess.id')->middleware('checkStripeAccessSubscription');
+
   Route::get('/invoice/{invoice}', [App\Http\Controllers\InvoiceController::class, 'view'])->name('invoice.view');
   Route::get('/{school}/modification-invoice/{id}', [App\Http\Controllers\InvoiceController::class, 'modificationInvoice'])->name('adminmodificationInvoice');
   Route::get('/modification-invoice/{id}', [App\Http\Controllers\InvoiceController::class, 'modificationInvoice'])->name('modificationInvoice');

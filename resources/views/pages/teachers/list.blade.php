@@ -40,7 +40,7 @@
 
 
 <div class="row justify-content-center pt-3">
-    <div class="col-md-10">
+    <div class="col-md-12">
 
     <div class="page_header_class pt-1" style="position: static;">
         <h5 class="titlePage">{{ __("Teachers of the school") }}</h5>
@@ -180,8 +180,8 @@
 </div></div>
   </div>
 
-  <div class="row justify-content-center" style="position:fixed; bottom:0; z-index=99999!important;opacity:1!important; width:100%;">
-    <div class="col-md-12 mt-3 pt-3 pb-3 card-header text-center" style="opacity:0.99!important; background-color:#fbfbfb!important; border:1px solid #fcfcfc;">
+  <div class="row justify-content-center" style="position:fixed; bottom:0; z-index=99999!important;width:100%;">
+    <div class="col-md-12 mt-3 pt-3 pb-3 card-header text-center" style="background-color:#fbfbfb!important; border:1px solid #DDD;">
         <a class="btn btn-outline-primary" href="{{ auth()->user()->isSuperAdmin() ? route('admin.teachers.create',['school'=> $schoolId]) : route('teachers.create') }}">
             <i class="fa fa-plus"></i> {{ __('Add new teacher') }} ({{ $teachers->where('pivot.role_type', '!=', 'school_admin')->count() }}/{{ $number_of_coaches > 0 ? $number_of_coaches : 1 }})
         </a>

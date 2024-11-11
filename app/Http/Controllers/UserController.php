@@ -88,7 +88,7 @@ class UserController extends Controller
                 'discipline'=>$discipline,
                 'school_type'=>$scType,
                 'max_students'=>0,
-                'max_teachers'=>0,
+                'max_teachers'=>3,
                 'is_active'=>1,
                 'timezone'=>$data['timezone'],
                 'number_of_coaches'=>3,

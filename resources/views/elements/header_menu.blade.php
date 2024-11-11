@@ -99,13 +99,6 @@
                         <a href="{{ route('calendar.settings') }}" class="nav-item nav-link text-center mr-2"><i class="fa-solid fa-gear"></i> <span class="d-none d-sm-block"></span> {{ __('School Settings') }}</a>
                     @endif
 
-                    @if($AppUI->isSuperAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAll())
-                        @can('teachers-list')
-                            @if($AppUI['person_type'] != 'SUPER_ADMIN')
-                               <a href="{{ route('teacherHome') }}" class="nav-item nav-link text-center mr-2"><i class="fa-solid fa-users-gear"></i> <span class="d-none d-sm-block"></span> {{ __('Teachers') }}</a>
-                            @endif
-                        @endcan
-                    @endif
 
                     @if($AppUI->isStudent())
                         <a href="{{ route('updateStudent') }}" class="nav-item nav-link text-center mr-2"><i class="fa-solid fa-user"></i> <span class="d-none d-sm-block"></span> {{ __('My Account') }}</a>
@@ -120,10 +113,19 @@
                            <a href="{{ route('studentHome') }}" class="nav-item nav-link text-center mr-2"><i class="fa-solid fa-users-gear"></i> <span class="d-none d-sm-block"></span> {{ __('Students') }}</a>
                         @endif
                     @endcan
+
+                    @if($AppUI->isSuperAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin())
+                        @can('teachers-list')
+                            @if($AppUI['person_type'] != 'SUPER_ADMIN')
+                               <a href="{{ route('teacherHome') }}" class="nav-item nav-link text-center mr-2"><i class="fa-solid fa-users-gear"></i> <span class="d-none d-sm-block"></span> {{ __('Teachers') }}</a>
+                            @endif
+                        @endcan
+                    @endif
+                    
                     @if($AppUI['person_type'] != 'SUPER_ADMIN')
                     <div class="nav-item dropdown">
                          <a href="#" class="nav-link dropdown-toggle text-center mr-2" data-bs-toggle="dropdown"><i class="fa-solid fa-file-invoice-dollar"></i> <span class="d-none d-sm-block"></span> {{ __('Invoicing') }} <i class="fa fa-caret-down"></i></a>
-                        <div class="dropdown-menu header">
+                        <div class="dropdown-menu header text-left" style="text-align: left!important;">
                         @if(!$AppUI->isStudent() && !$AppUI->isParent())
 
                         @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAll())
@@ -133,29 +135,35 @@
                         @endif
 
 
-                            <?php if(($is_subscribed && ($plan->stripe_status == 'active' || $plan->stripe_status == 'trialing')) || (!empty($user->trial_ends_at) && ($today_date <= $ends_at))){   ?>
+
+
+
+                            <?php if(($is_subscribed && ($plan->stripe_status == 'active' || $plan->stripe_status == 'trialing')) || (!empty($user->trial_ends_at) && ($today_date <= $ends_at))){ ?>
                                 @if(!$AppUI->isTeacherReadOnly())
-                                    @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin())
-                                    <a href="{{ $urlStudentInvoice.'/school' }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("Student's invoice") }}</a>
+                                    @if($AppUI->isSchoolAdmin())
+                                        <a href="{{ $urlStudentInvoice.'/school' }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("Student's invoice") }}</a>
+                                        @if($AppUI->isTeacherAll() || $AppUI->isTeacherSchoolAdmin())
+                                        <a href="{{ $urlStudentInvoice }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("To be invoiced") }}</a>
+                                        @endif
                                     @else
                                         <a href="{{ $urlStudentInvoice }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("To be invoiced") }}</a>
                                     @endif
                                 @endif
-                                @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAll())
+                                @if($AppUI->isSchoolAdmin())
                                     <a href="{{ $urlTeacherInvoice.'/school' }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("Teacher's Invoice") }}</a>
                                 @endif
                             <?php } else { ?>
                                 <!--<span class="badge bg-danger w-90 text-center" style="font-size:10px; width:90% margin:0 auto; padding:5px; margin-left:20px; margin-right:3px;">Only with Premium Access</span>-->
                                 <a href="{{ $urlStudentInvoice }}" class="dropdown-item text-danger"><i class="fa-solid fa-file-invoice"></i> {{ __("To be invoiced") }}</a>
-                                @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAll())
-                                    <a href="{{ $urlTeacherInvoice.'/school' }}" class="dropdown-item text-danger"><i class="fa-solid fa-file-invoice"></i> {{ __("Teacher's Invoice") }}</a>
+                                @if($AppUI->isSchoolAdmin())
+                                <a href="{{ $urlStudentInvoice.'/school' }}" class="dropdown-item text-danger"><i class="fa-solid fa-file-invoice"></i> {{ __("Student's invoice") }}</a>
+                                <a href="{{ $urlTeacherInvoice.'/school' }}" class="dropdown-item text-danger"><i class="fa-solid fa-file-invoice"></i> {{ __("Teacher's Invoice") }}</a>
                                 @endif
                                 <a href="{{ $manualInvoice }}" class="dropdown-item text-danger"><i class="fa-solid fa-file-invoice"></i> {{ __('Manual Invoice') }}</a>
                                 <a href="{{ route('invoiceReport', $schoolId) }}" class="dropdown-item text-danger"><i class="fa-solid fa-file-invoice"></i> {{ __('Report') }} <span class="badge bg-primary">beta</span></a>
                             <?php } ?>
 
 
-                            
 
                             @if(!$AppUI->isTeacherReadOnly())
                             <?php if(($is_subscribed && ($plan->stripe_status == 'active' || $plan->stripe_status == 'trialing')) || (!empty($user->trial_ends_at) && ($today_date <= $ends_at))){  ?>
@@ -163,6 +171,33 @@
                                     <a href="{{ route('invoiceReport', $schoolId) }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __('Report') }} <span class="badge bg-primary">beta</span></a>
                              <?php } ?>
                             @endif
+
+
+
+                            <!--TEACHERS ALL AND ADMIN-->
+                            @if($AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAll())
+                                @if($AppUI->related_school->isPremium())
+                                <!--School is Premium-->
+                                <span class="badge bg-primary w-90 text-center" style="font-size:10px; width:90% margin:0 auto; padding:5px; margin-left:20px; margin-right:3px;">{{ __('School Premium Access') }}</span>
+                                <a href="{{ $urlStudentInvoice.'/school/access' }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("Student's invoice") }}</a>
+                                <a href="{{ $urlTeacherInvoice.'/school/access' }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("Teacher's Invoice") }}</a>
+                                @else
+                                <!--School is not Premium-->
+                                <span class="badge bg-warning w-90 text-center" style="font-size:10px; width:90% margin:0 auto; padding:5px; margin-left:20px; margin-right:3px;">{{ __('School not Premium Access') }}</span>
+                                <a href="{{ $urlStudentInvoice.'/school/access' }}" class="dropdown-item text-danger"><i class="fa-solid fa-file-invoice"></i> {{ __("Student's invoice") }}</a>
+                                <a href="{{ $urlTeacherInvoice.'/school/access' }}" class="dropdown-item text-danger"><i class="fa-solid fa-file-invoice"></i> {{ __("Teacher's Invoice") }}</a>
+                                @endif
+                            @endif
+                            <!--END TEACHERS ALL AND ADMIN-->
+
+
+
+
+
+
+                            
+
+                           
                         @else
                             <a href="{{ $urlInvoice }}" class="dropdown-item">{{ __('My Invoice') }}</a>
                         @endif
@@ -204,6 +239,8 @@
                         </div>
                     </div>-->
                     @endif
+
+                    
 
                     <!--Premium Reminded-->
                     @if(!$AppUI->isStudent() && !$AppUI->isParent())
@@ -371,6 +408,8 @@
         </div>
     </nav>
 </div>
+
+
 
 
 @if ($message = Session::get('maintenance'))

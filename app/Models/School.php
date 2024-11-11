@@ -11,7 +11,7 @@ use App\Models\Invoice;
 use App\Models\Student;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\CreatedUpdatedBy;
-
+use Illuminate\Support\Facades\Auth;
 
 class School extends BaseModel
 {
@@ -168,6 +168,62 @@ class School extends BaseModel
             $query->orderBy('id', 'desc');
         }
         return $query;
+    }
+
+
+    /**
+     * Vérifie si l'école est abonnée au plan premium.
+     *
+     * @return bool
+     */
+    public function isPremium()
+{
+    // 1. Récupérer le SchoolTeacher avec le school_id correspondant et le role_type "school_admin"
+    $schoolTeacher = SchoolTeacher::where('school_id', $this->id)
+                                  ->where('role_type', 'school_admin')
+                                  ->first();
+
+    if (!$schoolTeacher) {
+        // Aucun administrateur pour cette école trouvé, donc pas d'abonnement premium
+        return false;
+    }
+
+    // 2. Récupérer le teacher_id
+    $teacherId = $schoolTeacher->teacher_id;
+
+    // 3. Utiliser le teacher_id pour trouver le User correspondant
+    $user = User::where('person_type', 'App\Models\Teacher')
+                ->where('person_id', $teacherId)
+                ->first();
+
+    if (!$user) {
+        // Aucun utilisateur trouvé pour cet enseignant, donc pas d'abonnement premium
+        return false;
+    }
+
+    // 4. Vérifier si l'utilisateur est abonné (vérification de l'abonnement et de la période d'essai)
+    $subscription = $user->subscriptions()->where('name', 'default')->first();
+
+    if ($subscription) {
+        return in_array($subscription->stripe_status, ['active', 'trialing', 'succeeded']);
+    }
+
+    // Vérifie si la période d'essai est encore valide
+    if ($user->trial_ends_at) {
+        return Carbon::parse($user->trial_ends_at)->isFuture();
+    }
+
+    // Pas d'abonnement valide trouvé
+    return false;
+}
+
+    /**
+     * Définition de la relation avec les abonnements (subscriptions).
+     * Assurez-vous que cette relation est correctement configurée avec votre modèle Subscription.
+     */
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class, 'user_id'); // Remplacez 'user_id' par le nom de la colonne dans `subscriptions`
     }
 
 

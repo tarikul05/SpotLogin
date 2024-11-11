@@ -222,7 +222,7 @@ class SubscriptionController extends Controller
             // $get_plans = $this->stripe->plans->all(); // get plan form stripe
             if ($user_per->isSchoolAdmin()) {
                 $prod_id = env('stripe_school_product_id');
-            }else if($user_per->isTeacherAll() || $user_per->isTeacherMedium() || $user_per->isTeacherMinimum()){
+            }else if($user_per->isTeacherAll() || $user_per->isTeacherMedium() || $user_per->isTeacherMinimum() || $user_per->isTeacherSchoolAdmin()){
                 $prod_id = env('stripe_teacher_product_id');
             }else if($user_per->isTeacherAdmin()){
                 $prod_id = env('stripe_single_coach_product_id');
@@ -446,6 +446,7 @@ class SubscriptionController extends Controller
 
             if ($user->isSchoolAdmin()) {
                 $school->number_of_coaches = $number_of_coaches;
+                $school->max_teachers = $number_of_coaches;
                 $school->save();
             }
 

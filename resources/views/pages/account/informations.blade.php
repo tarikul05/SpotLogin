@@ -410,8 +410,8 @@
         </div>
     </div>
 
-    <div class="row justify-content-center" style="position:fixed; bottom:0; z-index=99999!important;opacity:1!important;">
-        <div class="col-md-12 mt-3 pt-3 pb-3 card-header text-center" style="opacity:0.8!important; background-color:#DDDD!important;">
+    <div class="row justify-content-center footer2" style="position:fixed; bottom:0; z-index=99999!important;">
+        <div class="col-md-12 mt-3 pt-3 pb-3 card-header text-center" style="background-color:#fbfbfb!important; border:1px solid #DDD;">
         <button type="submit" class="btn btn-success">{{ __('Update coach informations') }}</button>
         </div>
     </div>

@@ -207,22 +207,24 @@ class SchoolsController extends Controller
         } else {
             $role_type = $authUser->person_type;
 
-            // try{
-            //     $teacher = SchoolTeacher::where([
-            //         ['school_id', $school->id],
-            //         ['is_active', 1],
-            //         ['role_type', 'school_admin'],
-            //         ['has_user_account', 1]
-            //     ])->first();
-            //     $school_admin = User::where([
-            //         ['person_id', $teacher->id],
-            //         ['is_active', 1],
-            //         ['person_type', 'App\Models\Teacher']
-            //     ])->first();
-            // } catch (\Exception $e) {
-            //     //return error message
-            //     return redirect()->route('schools')->with('error', __('School admin not exist'));
-            // }
+            $europeanTimezones = DateTimeZone::listIdentifiers(DateTimeZone::EUROPE);
+            $isInEurope = in_array('UTC', $europeanTimezones);
+             //try{
+             //   $teacher = SchoolTeacher::where([
+             //       ['school_id', $school->id],
+             //       ['is_active', 1],
+             //       ['role_type', 'school_admin'],
+             //       ['has_user_account', 1]
+             //   ])->first();
+             //   $school_admin = User::where([
+             //       ['person_id', $teacher->id],
+             //       ['is_active', 1],
+             //       ['person_type', 'App\Models\Teacher']
+             //   ])->first();
+             // catch (\Exception $e) {
+             //   //return error message
+             //   return redirect()->route('schools')->with('error', __('School admin not exist'));
+             //
 
             $school_admin = null;
         }
@@ -341,6 +343,32 @@ class SchoolsController extends Controller
     public function update(SchoolUpdateRequest $request, School $school)
     {
         $params = $request->all();
+        $params['number_of_coaches'] = $request->max_teachers;
+
+        try {
+            // Utilisez $params au lieu de $request->except(['_token']) pour inclure number_of_coaches
+            $school->update($params);
+
+            if (!empty($params['monthly_job_day'])) {
+                MonthlyInvoiceRun::updateOrCreate([
+                    'school_id' => $school->id,
+                    'active_flag' => 1
+                ],[
+                    'day_no' => $params['monthly_job_day']
+                ]);
+            }
+
+            return back()->withInput($request->all())->with('success', __('School updated successfully!'));
+        } catch (\Exception $e) {
+            // Retourner un message d'erreur
+            return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+        }
+    }
+    /*public function update(SchoolUpdateRequest $request, School $school)
+    {
+        $params = $request->all();
+        $params['number_of_coaches'] = $request->max_teachers;
+ 
         try{
             $school->update($request->except(['_token']));
             if (!empty($params['monthly_job_day'])) {
@@ -357,7 +385,7 @@ class SchoolsController extends Controller
             //return error message
             return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
         }
-    }
+    }*/
 
      /**
      * Update the school admin account.

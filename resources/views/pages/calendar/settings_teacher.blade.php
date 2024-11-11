@@ -45,7 +45,7 @@
             </div>
 
             <div class="tab-pane fade" id="tab_2" role="tabpanel" aria-labelledby="tab_2">
-                @include('pages.settings.prices')
+                @include('pages.settings.prices_teacher')
             </div>
 
         </div>

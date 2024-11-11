@@ -14,7 +14,7 @@
 	<div class="container">
 
         <div class="row justify-content-center pt-3 pb-3">
-            <div class="col-md-10">
+            <div class="col-md-12">
 
 		<div class="page_header_class pt-1" style="position: static;">
 			<h5 class="titlePage">{{ __('School Account') }}</h5>
@@ -79,31 +79,66 @@
 					 action="{{!empty($school) ? route('school.update',[$school->id]): '/'}}" method="POST" enctype="multipart/form-data">
 						@csrf
 						  <div class="row justify-content-center pt-3">
+
+
+							@role('superadmin')
+
+							<div class="card p-3 mb-3" style="background-color: #EEE;">
+
+								<b>Super Admin</b>
+
+								<div class="form-group">
+									<label class="col-lg-12 col-sm-12 text-left" for="availability_select" id="visibility_label_id">{{ __('Status')}}: </label>
+									<div class="col-sm-10">
+										<div class="selectdiv">
+											<select class="form-control" name="is_active" id="is_active">
+												<option value="">Select</option>
+												<option value="1" {{!empty($school) ? (old('is_active', $school->is_active) == 1 ? 'selected' : '') : (old('is_active') == 1 ? 'selected' : '')}}>{{ __('Active')}}</option>
+												<option value="0" {{!empty($school) ? (old('is_active', $school->is_active) == 0 ? 'selected' : '') : (old('is_active') == 0 ? 'selected' : '')}}>{{ __('Inactive')}}</option>
+											</select>
+											@if ($errors->has('is_active'))
+												<span id="is_active_error" class="error">
+														<strong>{{ $errors->first('is_active') }}.</strong>
+												</span>
+											@endif
+										</div>
+									</div>
+								</div>
+
+								<label id="address_caption">{{ __('Subscription (Zero means unlimited)')}}</label>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group row">
+										<label class="col-lg-6 col-sm-6 text-left titleFieldPage" for="sstreet" id="street_caption">{{ __('Maximum Number of Students')}}:</label>
+										<div class="col-sm-4">
+											<input type="number" min="0" max="5000" class="form-control right" id="max_students" name="max_students"
+											value="{{!empty($school->max_students) ? old('max_students', $school->max_students) : 0}}">
+
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group row">
+										<label class="col-lg-6 col-sm-6 text-left titleFieldPage" for="sstreet" id="street_caption">{{ __('Maximum number of teachers')}}:</label>
+										<div class="col-sm-4">
+										<input type="number" min="0" max="5000" class="form-control" id="max_teachers" name="max_teachers"
+										value="{{!empty($school->max_teachers) ? old('max_teachers', $school->max_teachers) : old('max_teachers')}}">
+										</div>
+									</div>
+								</div>
+							</div>
+							</div>
+							@endrole
+
+
+
 					<div class="col-md-12">
 						<div class="card2">
 							<div class="card-header titleCardPage">{{ __('Information') }}</div>
 							<div class="card-body">
 								<div class="row">
 									<div class="col-md-6 col-xs-12">
-									@if($AppUI->isSuperAdmin())
-									<div class="form-group">
-										<label class="col-lg-12 col-sm-12 text-left" for="availability_select" id="visibility_label_id">{{ __('Status')}}: </label>
-										<div class="col-sm-10">
-											<div class="selectdiv">
-												<select class="form-control" name="is_active" id="is_active">
-													<option value="">Select</option>
-													<option value="1" {{!empty($school) ? (old('is_active', $school->is_active) == 1 ? 'selected' : '') : (old('is_active') == 1 ? 'selected' : '')}}>{{ __('Active')}}</option>
-													<option value="0" {{!empty($school) ? (old('is_active', $school->is_active) == 0 ? 'selected' : '') : (old('is_active') == 0 ? 'selected' : '')}}>{{ __('Inactive')}}</option>
-												</select>
-												@if ($errors->has('is_active'))
-													<span id="is_active_error" class="error">
-															<strong>{{ $errors->first('is_active') }}.</strong>
-													</span>
-												@endif
-											</div>
-										</div>
-									</div>
-									@endif
+					
 									<!-- <div class="form-group row">
 											<label id="school_code_caption" name="school_code_caption" class="col-lg-3 col-sm-3 text-left">School Code
 													*:</label>
@@ -114,6 +149,8 @@
 
 											</div>
 									</div> -->
+
+									
 									<div class="form-group mb-3">
 										<label class="mb-1 titleFieldPage" id="row_hdr_school_name">{{ __('Name of the School')}}</label>
 										<div class="col-sm-10">
@@ -136,24 +173,58 @@
 										<label id="organization_type_caption"
 										class="mb-1 titleFieldPage">{{ __('Timezone')}}</label>
 										<div class="col-sm-10">
-
+											<div class="input-group">
+												<span class="input-group-addon"><i class="fa-solid fa-globe"></i></span>
 												<select class="form-control selectpicker" name="timezone" data-live-search="true" id="timezone">
-													<option value="">Select</option>
+													<option value="">Select a timezone</option>
 													@foreach ($timezones as $key => $value)
 														<option value="{{ $key }}" {{!empty($school->timezone) ? (old('timezone', $school->timezone) == $key ? 'selected' : '') : (old('timezone') == $key ? 'selected' : '')}}>
-
 														{{ $value }}
 														</option>
 													@endforeach
 												</select>
+											</div>
 
 										</div>
 									</div>
 
-									@if($AppUI->isSuperAdmin())
-									<div class="form-group mb-3">
+									<div class="form-group">
+										<label name="default_currency_lbl"	class="mb-1 titleFieldPage">{{ __('Base currency')}}</label>
+												<div class="col-sm-10">
+													<div class="input-group mb-1">
+														<span class="input-group-addon"><i class="fa-solid fas fa-coins"></i></span>
+														<select class="form-control selectpicker" name="default_currency_code" data-live-search="true" id="default_currency_code">
+														<option value="">Select a currency</option>
+															@foreach ($currency as $key => $value)
+															<option value="{{ $value->currency_code }}" {{!empty($school->default_currency_code) ? (old('default_currency_code', $school->default_currency_code) == $value->currency_code ? 'selected' : '') : (old('default_currency_code') == $value->currency_code ? 'selected' : '')}}>
+																{{ $value->name }} ({{ $value->description }})
+																</option>
+															@endforeach
+														</select>
+													</div>
+													<label name="currency_alert_text" style="font-size:12px; color:#333!important;" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ __('Warning: Generate all pending invoices before change base currency')}}. {{ __('(Lessons already scheduled will be invoiced)')}}.">
+														<i class="fa fa-info-circle"></i> {{ __('Warning: Generate all pending invoices before change base currency')}}.
+													</label>
+												</div>
+									</div>
+
+						
+								</div>
+
+									<div class="col-md-6 col-xs-12">
+									<!-- <div class="form-group row">
+
+										<label id="school_type_lbl" class="col-lg-3 col-sm-3 text-left">
+											{{ __('Account Type')}}:
+										</label>
+										<label id="school_type" class="col-lg-3 col-sm-3 text-left">
+											School
+										</label>
+									</div> -->
+
+									<div class="form-group mb-5">
 										<label id="organization_type_caption"
-										class="mb-1">{{ __('Organization Type')}}</label>
+										class="mb-1 titleFieldPage">{{ __('Organization Type')}}</label>
 										<div class="col-sm-10">
 											<div class="selectdiv">
 												<select class="form-control" name="legal_status" id="legal_status">
@@ -168,19 +239,7 @@
 											</div>
 										</div>
 									</div>
-									@endif
-								</div>
 
-									<div class="col-md-6 col-xs-12">
-									<!-- <div class="form-group row">
-
-										<label id="school_type_lbl" class="col-lg-3 col-sm-3 text-left">
-											{{ __('Account Type')}}:
-										</label>
-										<label id="school_type" class="col-lg-3 col-sm-3 text-left">
-											School
-										</label>
-									</div> -->
 									<div class="form-group mb-3">
 										<label id="sender_email_label" name="sender_email_label"
 										class="mb-1 titleFieldPage">{{ __('Sender email address')}}</label>
@@ -190,7 +249,7 @@
 												value="{{!empty($school->sender_email) ? old('sender_email', $school->sender_email) : old('sender_email')}}">
 										</div>
 									</div>
-									<div class="form-group mb-3">
+									<div class="form-group mb-1">
 										<label class="mb-1 titleFieldPage" id="birth_date_label_id">{{ __('Incorporation Date')}}</label>
 										<div class="col-sm-10">
 											<div class="input-group" id="sbirth_date_div">
@@ -212,62 +271,13 @@
 					</div>
 
 					
-							<div class="card-body">
-							<div class="row">
-								<div class="col-lg-10 col-sm-10 col-xs-12">
-											<div class="form-group2 titleFieldPage">
-												<label 	name="default_currency_lbl"
-												class="mb-1 titleFieldPage">{{ __('Base currency')}}</label>
-														<div class="col-sm-10">
-														
-															<select class="form-control" name="default_currency_code" id="default_currency_code">
-															<option value="">Select</option>
-																@foreach ($currency as $key => $value)
-																		<option
-																		value="{{ $value->currency_code }}" {{!empty($school->default_currency_code) ? (old('default_currency_code', $school->default_currency_code) == $value->currency_code ? 'selected' : '') : (old('default_currency_code') == $value->currency_code ? 'selected' : '')}}
-																		>  {{ $value->currency_code }}</option>
-																@endforeach
-															</select>
-													
-														</div>
-												<div class="col-sm-10 mt-2">
-														<label id="currency_alert_text"
-																name="currency_alert_text">{{ __('Wanring: Generate all pending invoices before change base currency')}}. <br>{{ __('(Lessons already scheduled will be invoiced)')}}</label>
-												</div>
-										</div>
-								</div>
-							</div>
-							</div>
+
+							
 
 
 							
 							<div class="clearfix"></div>
-							@role('superadmin')
-							<div class="section_header_class">
-								<label id="address_caption">{{ __('Subscription (Zero means unlimited)')}}</label>
-							</div>
-							<div class="row">
-								<div class="col-md-6">
-									<div class="form-group row">
-										<label class="col-lg-6 col-sm-6 text-left titleFieldPage" for="sstreet" id="street_caption">{{ __('Maximum Number of Students')}}:</label>
-										<div class="col-sm-4">
-											<input type="number" min="0" max="5000" class="form-control right" id="max_students" name="max_students"
-											value="{{!empty($school->max_students) ? old('max_students', $school->max_students) : old('max_students')}}">
-
-										</div>
-									</div>
-								</div>
-								<div class="col-md-6">
-									<div class="form-group row">
-										<label class="col-lg-6 col-sm-6 text-left titleFieldPage" for="sstreet" id="street_caption">{{ __('Maximum number of teachers')}}:</label>
-										<div class="col-sm-4">
-										<input type="number" min="0" max="5000" class="form-control" id="max_teachers" name="max_teachers"
-										value="{{!empty($school->max_teachers) ? old('max_teachers', $school->max_teachers) : old('max_teachers')}}">
-										</div>
-									</div>
-								</div>
-							</div>
-							@endrole
+							
 							@unlessrole('superadmin')
 						<!-- 	<div class="clearfix"></div>
 							<div class="section_header_class">
@@ -386,7 +396,6 @@
 								<div class="card-body">
 							<div class="row">
 								<div class="col-md-6">
-									@if($AppUI->isSuperAdmin())
 									<div class="form-group row">
 										<label class="mb-1 titleFieldPage" for="sstreet" id="street_caption">{{ __('Genre')}}:</label>
 										<div class="col-sm-10">
@@ -399,7 +408,6 @@
 											</div>
 										</div>
 									</div>
-									@endif
 									<div class="form-group row">
 										<label class="mb-1 titleFieldPage" for="sstreet" id="street_caption">{{ __('First Name')}}</label>
 										<div class="col-sm-10">
@@ -488,7 +496,7 @@
 									</div>
 
 									<div class="form-group row">
-										<label class="mb-1" for="country_code" id="country_code_caption">{{ __('Country')}}</label>
+										<label class="mb-2" for="country_code" id="country_code_caption">{{ __('Country')}}</label>
 										<div class="col-sm-10">
 											<div class="selectdiv">
 												<select class="form-control select_two_defult_class" name="country_code" id="country_code">
@@ -503,8 +511,8 @@
 										</div>
 									</div>
 									<div id="province_id_div" class="form-group row" style="display:none;">
-										<label id="province_caption" for="province_id" class="col-lg-3 col-sm-3 text-left">Province: </label>
-										<div class="col-sm-7">
+										<label class="mb-1" id="province_caption" for="province_id" class="col-lg-3 text-left">{{ __('Province')}}</label>
+										<div class="col-sm-10">
 											<div class="selectdiv">
 												<select class="form-control select_two_defult_class" id="province_id" name="province_id">
 												</select>
@@ -809,8 +817,8 @@
 			</div></div>
         </div></div>
 
-		<div class="row justify-content-center" style="position:fixed; bottom:0; z-index=99999!important;opacity:1!important; width:100%;" id="main_valid">
-			<div class="col-md-12 mt-3 pt-3 pb-3 card-header text-center" style="opacity:0.91!important; background-color:#DDDD!important; margin:0 auto;">
+		<div class="row justify-content-center" style="position:fixed; bottom:0; z-index=99999!important;width:100%;" id="main_valid">
+			<div class="col-md-12 mt-3 pt-3 pb-3 card-header text-center" style="background-color:#fbfbfb!important; border:1px solid #DDD; margin:0 auto;">
 	
 				<a class="btn btn-success" style="width: auto;" id="update_btn">
 					{{ __('Update School Account')}}
@@ -839,7 +847,10 @@
 
 @section('footer_js')
 <script type="text/javascript">
+    
 
+
+		
 
 $(document).ready(function(){
 	$(".date_picker").datetimepicker({

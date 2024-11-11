@@ -800,8 +800,8 @@ $(".add-row").click(function(){
 
     var markup = '<tr id="tr_row_id" class="detail_row"><td style="display: none;">'+i+'</td>';
     markup+='<td><div class="input-group" id="date_div"><span class="input-group-addon"><i class="fa fa-calendar"></i></span><input name="date[]" type="text" class="form-control date_picker datetimepicker" value=""/></div></td>';
-    markup+='<td><input type="text" id="caption" name="caption[]" placeholder="" class="form-control"></td>';
-    markup+='<td class="row_item_value"><input type="text" pattern="[0-9.]" id="total_item'+i+'" name="total_item[]" placeholder="" style="text-align: right;" pattern="^[0-9]\d{0,9}(\.\d{1,3})?%?$" class="form-control numeric float item_value"></td>';
+    markup+='<td><div class="input-group"><span class="input-group-addon"><i class="fa fa-edit"></i></span><input type="text" id="caption" name="caption[]" placeholder="" class="form-control"></div></td>';
+    markup+='<td class="row_item_value"><div class="input-group"><span class="input-group-addon"><i class="fa fa-arrow-right"></i></span><input type="text" pattern="[0-9.]" id="total_item'+i+'" name="total_item[]" placeholder="" style="text-align: right;" pattern="^[0-9]\d{0,9}(\.\d{1,3})?%?$" class="form-control numeric float item_value"></div></td>';
     markup+='<td><button tabIndex="-1" onclick="remove_rows(this)" type="button" id="del" class="btn btn-danger delete_row"><i class="fa fa-remove"></i></button></td>';
     //markup+='<td><button tabIndex="-1" onclick="remove_rows(this)" type="button" id="del" class="delete_row">X</button></td>';
     markup+='</tr>';

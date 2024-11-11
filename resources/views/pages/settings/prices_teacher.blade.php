@@ -33,15 +33,15 @@ use App\Models\LessonPriceTeacher;
                           <div id="collapse-{{ $key }}" class="accordion-collapse collapse" aria-labelledby="heading-{{ $key }}" data-bs-parent="#accordionExample" data-category-id="{{ $category->title }}" style="background-color: rgba(202, 197, 197, 0.03);">
                             <div class="accordion-body">
 
-                                @if(!$AppUI->isSchoolAdmin() && !$AppUI->isTeacherSchoolAdmin())
+                                @if(!$AppUI->isSchoolAdmin())
                                 <table id="tariff_table_rate" class="table table-bordered table-hover">
                                     <thead>
                                         <tr>
                                             <th class="titleFieldPage"><b>{{__('Type of course')}}</b></th>
-                                            @if(!$AppUI->isSchoolAdmin() && !$AppUI->isTeacherSchoolAdmin())
+                                            @if(!$AppUI->isSchoolAdmin())
                                             <th class="titleFieldPage">{{__('Type of billing')}}</th>
                                             @endif
-                                            @if(($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin()) && $category->s_std_pay_type == 2)
+                                            @if(($AppUI->isSchoolAdmin()) && $category->s_std_pay_type == 2)
                                             <th class="sell titleFieldPage" style="text-align: right; font-size:12px;"><b>({{__('price for teacher /hour')}})</b></th>
                                             @else
                                             <th class="sell titleFieldPage" style="text-align: right; font-size:12px;"><b>({{__('per student /hour')}})</b></th>
@@ -82,14 +82,14 @@ use App\Models\LessonPriceTeacher;
                                         } else {
                                         }
                                         ?>
-                                        <?php if(($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin()) && $category->invoiced_type == "S") { ?>
+                                        <?php if(($AppUI->isSchoolAdmin()) && $category->invoiced_type == "S") { ?>
                                             <?php if($lessionPrice->divider == -1) { ?>
                                             <tr class="{{$class}}">
                                                 <input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][id]" value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['id'] : '' }}">
                                                 <input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_student]" value="{{$lessionPrice->lesson_price_student}}">
                                                 <input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_id]" value="{{$lessionPrice->id}}">
                                                 <td class="align-middle">{{__('Lesson')}}</td>
-                                                @if(!$AppUI->isSchoolAdmin() && !$AppUI->isTeacherSchoolAdmin())
+                                                @if(!$AppUI->isSchoolAdmin())
                                                 <td class="align-middle">{{ __($textForTypeBilling) }}</td>
                                                 @endif
                                                 <td class="align-middle">
@@ -103,7 +103,7 @@ use App\Models\LessonPriceTeacher;
                                                 <input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_student]" value="{{$lessionPrice->lesson_price_student}}">
                                                 <input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_id]" value="{{$lessionPrice->id}}">
                                                 <td class="align-middle">{{__('Lesson')}}</td>
-                                                @if(!$AppUI->isSchoolAdmin() && !$AppUI->isTeacherSchoolAdmin())
+                                                @if(!$AppUI->isSchoolAdmin())
                                                 <td class="align-middle">{{ __($textForTypeBilling) }}</td>
                                                 @endif
                                                 <td class="align-middle">
@@ -116,7 +116,7 @@ use App\Models\LessonPriceTeacher;
                                 </table>
                             @endif
 
-                                <?php if($number_of_coaches > 0 && ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin())) { ?>
+                                <?php if($number_of_coaches > 0 && ($AppUI->isSchoolAdmin())) { ?>
 
 
 
@@ -130,10 +130,10 @@ use App\Models\LessonPriceTeacher;
                                         <thead>
                                             <tr>
                                                 <th width="60%" style="font-size:16px;color:#0075bf;"><b><i class="fa fa-user mr-1"></i> {{ $teacher->firstname }} {{ $teacher->lastname }}</b></th>
-                                                @if(($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin()) && $category->s_std_pay_type == 2)
+                                                @if(($AppUI->isSchoolAdmin()) && $category->s_std_pay_type == 2)
                                                 <th class="sell" style="text-align: right; font-size:12px; color:#0075bf;"><span>({{__('price for teacher /hour')}})</span></th>
                                                 @else
-                                                    @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin())
+                                                    @if($AppUI->isSchoolAdmin())
                                                         <th class="sell" style="text-align: right; font-size:12px; color:#0075bf;"><span>({{__('per teacher /hour')}})</span></th>
                                                     @endif
                                                 <th class="sell" style="text-align: right; font-size:12px; color:#0075bf;"><span>({{__('per student /hour')}})</span></th>
@@ -190,7 +190,7 @@ use App\Models\LessonPriceTeacher;
                                                 }
                                                 ?>
                                         
-                                                <?php if(($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin()) && $category->invoiced_type == "S") { ?>
+                                                <?php if(($AppUI->isSchoolAdmin()) && $category->invoiced_type == "S") { ?>
                                                     <?php if($lessionPrice->divider == -1) { ?>
                                                     <tr class="{{$class}}">
                                                         <input type="hidden" name="data2[{{$category->id}}][{{$teacher->id}}][{{$lessionPrice->lesson_price_student}}][teacher_id]" value="{{ $teacher->id }}">
@@ -250,10 +250,10 @@ use App\Models\LessonPriceTeacher;
                                                             <thead>
                                                                 <tr>
                                                                     <th>{{__('Type of course')}}</th>
-                                                                    @if(($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin()) && $category->s_std_pay_type == 2)
+                                                                    @if(($AppUI->isSchoolAdmin()) && $category->s_std_pay_type == 2)
                                                                     <th class="sell" style="text-align: right; font-size:12px;"><span>({{__('price for teacher /hour')}})</span></th>
                                                                     @else
-                                                                        @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin())
+                                                                        @if($AppUI->isSchoolAdmin())
                                                                             <th class="sell" style="text-align: right; font-size:12px;"><span>({{__('per teacher /hour')}})</span></th>
                                                                         @endif
                                                                     <th class="sell" style="text-align: right; font-size:12px;"><span>({{__('per student /hour')}})</span></th>
@@ -310,7 +310,7 @@ use App\Models\LessonPriceTeacher;
                                                                     }
                                                                     ?>
                                                             
-                                                                    <?php if(($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin()) && $category->invoiced_type == "S") { ?>
+                                                                    <?php if(($AppUI->isSchoolAdmin()) && $category->invoiced_type == "S") { ?>
                                                                         <?php if($lessionPrice->divider == -1) { ?>
                                                                         <tr class="{{$class}}">
                                                                             <input type="hidden" name="data2[{{$category->id}}][{{$teacher->id}}][{{$lessionPrice->lesson_price_student}}][teacher_id]" value="{{ $teacher->id }}">
@@ -394,8 +394,8 @@ use App\Models\LessonPriceTeacher;
         </div>
     </div>
 
-    <div class="row justify-content-center" style="position:fixed; bottom:0; z-index=99999!important;">
-        <div class="col-md-12 mt-3 pt-3 pb-3 card-header text-center" style="background-color:#fbfbfb!important; border:1px solid #DDD;">
+    <div class="row justify-content-center" style="position:fixed; bottom:0; z-index=99999!important;opacity:1!important;">
+        <div class="col-md-12 mt-3 pt-3 pb-3 card-header text-center" style="opacity:0.8!important; background-color:#DDDD!important;">
             <button type="submit" class="btn btn-success">{{ __('Save Prices by category') }}</button>
         </div>
     </div>

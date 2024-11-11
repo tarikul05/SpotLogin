@@ -75,6 +75,7 @@ class Kernel extends HttpKernel
 
         'select_role' => \App\Http\Middleware\SelectRole::class,
         'checkStripeSubscription' => \App\Http\Middleware\CheckStripeSubscription::class,
+        'checkStripeAccessSubscription' => \App\Http\Middleware\CheckStripeAccessSubscription::class,
         'select_role' => \App\Http\Middleware\SelectRole::class,
     ];
 };

@@ -119,7 +119,7 @@
     <div class="container">
 
         <div class="row justify-content-center pt-3">
-            <div class="col-md-10">
+            <div class="col-md-12">
 
         <div class="page_header_class pt-1" style="position: static;">
             <h5 class="titlePage">{{ __('Coach Account') }}</h5>

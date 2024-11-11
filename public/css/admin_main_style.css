@@ -328,9 +328,10 @@ header.panel-heading {
   padding:.75rem;*/
     background: #fff !important;
     border: 1px solid #b3d6ec;
-    color: #152245;
+    color: #444!important;
     box-shadow: none !important;
 }
+
 label {
     font-family: "Gilroy-Medium";
     font-weight: normal;

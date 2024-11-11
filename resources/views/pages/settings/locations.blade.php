@@ -53,22 +53,25 @@
                             <tbody>
                         </table>
                     <div class="d-flex justify-content-end">
-                        <button id="add_more_location_btn" data-last_location_id="{{$countLocation}}" type="button" class="btn btn-outline-primary">
+                        <!--<button id="add_more_location_btn" data-last_location_id="{{$countLocation}}" type="button" class="btn btn-outline-primary">
                           <i class="fa fa-plus" aria-hidden="true"></i> {{ __('Add location') }}
-                        </button>
+                        </button>-->
                     </div>
             </div>
         </div>
   
     </div>
 
-    <div class="row justify-content-center" style="position:fixed; bottom:0; z-index=99999!important;opacity:1!important; width:100%;">
-        <div class="col-md-12 mt-3 pt-3 pb-3 card-header text-center" style="opacity:0.8!important; background-color:#DDDD!important;">
+    <div class="row justify-content-center" style="position:fixed; bottom:0; z-index=99999!important;width:100%;">
+        <div class="col-md-12 mt-3 pt-3 pb-3 card-header text-center" style="background-color:#fbfbfb!important; border:1px solid #DDD;">
             @if($locations->count() > 0)
             <button type="submit" class="btn btn-success" id="btnSaveLocations">{{ __('Save Locations') }}</button>
             @else
             <button type="submit" class="btn btn-success" id="btnSaveLocations" style="display:none;">{{ __('Save Locations') }}</button>
             @endif
+            <button id="add_more_location_btn" data-last_location_id="{{$countLocation}}" type="button" class="btn btn-outline-primary">
+                <i class="fa fa-plus" aria-hidden="true"></i> {{ __('Add location') }}
+            </button>
         </div>
     </div>
 

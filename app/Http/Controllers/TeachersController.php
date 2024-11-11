@@ -70,6 +70,10 @@ class TeachersController extends Controller
         $user = Auth::user();
         $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId();
 
+        if (!$user->isTeacherSchoolAdmin() && !$user->isSchoolAdmin()) {
+            return redirect()->route('agenda')->with('error', __('You are not authorized to access this page'));
+        }
+
         $school = School::active()->find($schoolId);
         if (empty($school)) {
             return redirect()->route('schools')->with('error', __('School is not selected'));
