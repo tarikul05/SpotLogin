@@ -523,6 +523,45 @@ $(document).ready(function() {
 });
     </script>
 
+<script>
+    $(document).ready(function() {
+        $(document).on('click', '.send-password-btn-family', function(event) {
+            event.preventDefault();
+            $("#pageloader").fadeIn("fast");
+
+  
+            var schoolId = $(this).attr('data-school');
+            var studentId = $(this).attr('data-student');
+    
+            //if (confirm('Are you sure want to send an invitation to reset the password of this student ?')) {
+                var redirectUrl = '{{ route('familyPasswordGet', ['school' => ':school', 'student' => ':student']) }}';
+                redirectUrl = redirectUrl.replace(':school', schoolId).replace(':student', studentId);
+    
+                // Sending an AJAX request
+                $.ajax({
+                    url: redirectUrl,
+                    method: 'GET',
+                    success: function(response) {
+                        $("#pageloader").fadeOut("fast");
+                        //$('#sendMailOk').modal('show');
+                        Swal.fire(
+                                'Successfully sended',
+                                '{{__('Your contact will receive an email with instructions.') }}',
+                                'success'
+                            )
+                    },
+                    error: function(error) {
+                        $("#pageloader").fadeOut("fast");
+                        alert('Error occurred while sending the password reset invitation. Please try again.');
+                    }
+                });
+            //} else {
+            //    $("#pageloader").fadeOut("fast");
+            //}
+        });
+    });
+        </script>
+
 
 <script>
     $(document).ready(function() {

@@ -519,6 +519,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/{school}/student_email_send/{student}', [App\Http\Controllers\StudentsController::class, 'studentInvitation'])->name('studentInvitation');
     Route::get('/{school}/student_email_send/{student}', [App\Http\Controllers\StudentsController::class, 'studentInvitationGet'])->name('studentInvitationGet');
     Route::get('/{school}/student_password_send/{student}', [App\Http\Controllers\StudentsController::class, 'studentPasswordGet'])->name('studentPasswordGet');
+    Route::get('/{school}/family_password_send/{student}', [App\Http\Controllers\StudentsController::class, 'familyPasswordGet'])->name('familyPasswordGet');
 
     // Route::post('update-student-photo', ['as' =>'student.update_photo','uses' =>'StudentsController@profilePhotoUpdate' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     // Route::post('delete-student-photo', ['as' =>'student.delete_photo','uses' =>'StudentsController@profilePhotoDelete' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);

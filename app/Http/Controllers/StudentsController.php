@@ -1024,6 +1024,34 @@ public function index(Request $request, $schoolId = null)
         }
     }
 
+    /**
+     * send invitation.
+     *
+     * @param
+     * @return \Illuminate\Http\Response
+     */
+    public function familyPasswordGet(Request $request)
+    {
+        $schoolId = $request->route('school');
+        $studentId = $request->route('student');
+        try {
+            $schoolStudent = ParentStudent::where(['parent_id'=>$studentId])->first();
+            //->update(['is_sent_invite'=>$is_sent_invite]);
+
+            $school = School::find($schoolId);
+            $student = Parents::find($studentId);
+            if ($student && !empty($student->email)) {
+                $this->passwordSet($school, $schoolStudent, $student, 'App\Models\Parents');
+                return response()->json(['success' => true, 'message' => 'Invitation sent successfully']);
+            }else{
+                return response()->json(['success' => false, 'message' => 'Email not found']);
+            }
+
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
+        }
+    }
+
 
 
     public function emailSet($school, $alldata, $person, $type = 'App\Models\Student')
@@ -1073,7 +1101,7 @@ public function index(Request $request, $schoolId = null)
             $schoolId = $school->id;
             if (config('global.email_send') == 1) {
                 $data = [];
-                $user = User::where('person_id', $person->id)->first(); 
+                $user = User::where('person_id', $person->id)->where('person_type', $type)->first(); 
                 $data['email'] = $person->email;
                 $data['username'] = $user->firstname . ' ' . $user->lastname;
                 $data['school_name'] = $school->school_name;
