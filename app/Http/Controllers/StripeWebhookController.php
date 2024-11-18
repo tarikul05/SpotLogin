@@ -8,7 +8,9 @@ use App\Models\Invoice;
 use Illuminate\Support\Carbon;
 use Stripe\Stripe;
 use Stripe\Webhook;
-
+use Illuminate\Support\Facades\Mail;
+use App\Models\EmailTemplate;
+use App\Mail\PaymentConfirmation;
 
 /**
  * Handle the webhook request.
@@ -103,10 +105,39 @@ class StripeWebhookController extends Controller
 
 
         elseif ($event->type == 'payment_intent.succeeded') {
+
+            //Validate invoice and send emails after 3D Secure Payment succeeded
             $paymentObject = $event->data->object;
             $invoice = Invoice::find($paymentObject->metadata->invoice_id);
-            $invoice->payment_status = 1;
-            $invoice->save();
+
+            if($invoice->payment_status === 0) {
+
+                $invoice->payment_status = 1;
+                $invoice->save();
+
+                $type = $paymentObject->metadata->type;
+
+                if($type === "coach") {
+
+                    $student = User::find($paymentObject->metadata->user_id);
+
+                    $paymentData = [
+                        'student_name' => $invoice->client_name,
+                        'amount' => $invoice->total_amount,
+                        'currency' => $invoice->invoice_currency,
+                        'invoice_id' => $invoice->id,
+                        'coach_name' => $invoice->seller_name,
+                        'date' => now()->format('Y-m-d H:i:s')
+                    ];
+
+                    // Email to student
+                    Mail::to($student->email)->send(new PaymentConfirmation($paymentData));
+                    
+                    // Email to coach
+                    Mail::to($invoice->seller_email)->send(new PaymentConfirmation($paymentData, true));
+                }
+
+            }
         }
 
 

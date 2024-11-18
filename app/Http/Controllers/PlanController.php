@@ -8,6 +8,9 @@ use App\Models\PaymentMethod;
 use App\Models\Invoice;
 use App\Models\School;
 use App\Models\User;
+use Illuminate\Support\Facades\Mail;
+use App\Models\EmailTemplate;
+use App\Mail\PaymentConfirmation;
 
 class PlanController extends Controller
 {
@@ -183,15 +186,33 @@ class PlanController extends Controller
                 'school_id' => $schoolId,
                 'invoice_id' => $invoice->id,
                 'type' => 'coach',
+                'coach_name' => $coachOfInvoice->firstname . ' ' . $coachOfInvoice->lastname,
             ],
             'transfer_data' => [
                 'destination' => $coachOfInvoice->stripe_account_id, 
             ],
+            'on_behalf_of' => $coachOfInvoice->stripe_account_id, // Envoi au nom du coach
+            'description' => "Payment for {$coachOfInvoice->firstname} {$coachOfInvoice->lastname}",
         ]);
 
         if($paymentIntent->status === 'succeeded') {
             $invoice->payment_status = 1;
             $invoice->save();
+
+            $paymentData = [
+                'student_name' => $user->firstname . ' ' . $user->lastname,
+                'amount' => $invoice->total_amount,
+                'currency' => $invoice->invoice_currency,
+                'invoice_id' => $invoice->id,
+                'coach_name' => $coachOfInvoice->firstname . ' ' . $coachOfInvoice->lastname,
+                'date' => now()->format('Y-m-d H:i:s')
+            ];
+        
+            // Email to student
+            Mail::to($user->email)->send(new PaymentConfirmation($paymentData));
+            
+            // Email to coach
+            Mail::to($coachOfInvoice->email)->send(new PaymentConfirmation($paymentData, true));
         }
 
         return response()->json(['clientSecret' => $paymentIntent->client_secret, 'status' => $paymentIntent->status]);
