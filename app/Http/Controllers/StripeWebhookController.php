@@ -10,7 +10,10 @@ use Stripe\Stripe;
 use Stripe\Webhook;
 use Illuminate\Support\Facades\Mail;
 use App\Models\EmailTemplate;
+use App\Models\School;
 use App\Mail\PaymentConfirmation;
+use App\Mail\SubscriptionConfirmation;
+use App\Mail\SubscriptionUpdate;
 
 /**
  * Handle the webhook request.
@@ -63,6 +66,76 @@ class StripeWebhookController extends Controller
 
                 $user->last_stripe_check = Carbon::now();
                 $user->save();
+
+                if ($event->type == 'customer.subscription.created') {
+
+                    $customer = \Stripe\Customer::retrieve($subscription->customer);
+                    $defaultPaymentMethodId = $customer->invoice_settings->default_payment_method;
+
+
+                        if ($defaultPaymentMethodId) {
+                            $paymentMethod = \Stripe\PaymentMethod::retrieve($defaultPaymentMethodId);
+
+                            // Récupérer les 4 derniers chiffres de la carte
+                            $brand = $paymentMethod->card->brand;
+                            $last4 = $paymentMethod->card->last4;
+
+                        } else {
+                            $brand = 'Unknown';
+                            $last4 = 'Unknown';
+                        }
+              
+
+                    $school = School::find($subscription['metadata']['schoolID']);
+                    $schoolName = $school->school_name;
+
+                    $subscriptionDetails = [
+                        'plan_name' => $subscription['items']['data'][0]['price']['nickname'] ?? 'Unknown Plan',
+                        'amount' => $subscription['items']['data'][0]['price']['unit_amount'] / 100,
+                        'currency' => strtoupper($subscription['currency']),
+                        'billing_period' => $subscription['items']['data'][0]['price']['recurring']['interval'],
+                        'start_date' => date('d-m-Y H:i:s', $subscription['current_period_start']),
+                        'next_billing_date' => date('d-m-Y H:i:s', $subscription['current_period_end']),
+                        'payment_method' => $brand . ' **** ' . $last4,
+                        'customer_email' => $subscription['metadata']['email'] ?? 'Unknown Email',
+                        'customer_name' => $subscription['metadata']['name'] ?? 'Unknown Name',
+                        'school_name' => $schoolName ?? 'Unknown School',
+                        'number_of_coaches' => $subscription['metadata']['number_of_coaches'] ?? 1,
+                        'status' => $subscription['status'],
+                        'trial_end' => $subscription['trial_end'] ?? null,
+                    ];
+                    
+                    // Send confirmation email
+                    Mail::to($user->email)->send(new SubscriptionConfirmation($subscriptionDetails));
+                }
+
+                if ($event->type == 'customer.subscription.updated') {
+
+                    $school = School::find($subscription['metadata']['schoolID']);
+                    $schoolName = $school->school_name;
+
+                    $subscriptionDetails = [
+                        'plan_name' => $subscription['items']['data'][0]['price']['nickname'] ?? 'Unknown Plan',
+                        'amount' => $subscription['items']['data'][0]['price']['unit_amount'] / 100,
+                        'currency' => strtoupper($subscription['currency']),
+                        'billing_period' => $subscription['items']['data'][0]['price']['recurring']['interval'],
+                        'start_date' => date('d-m-Y H:i:s', $subscription['current_period_start']),
+                        'next_billing_date' => date('d-m-Y H:i:s', $subscription['current_period_end']),
+                        'payment_method' => $subscription['metadata']['note'] ?? 'N/A', // Remplacer par le champ exact si besoin
+                        'customer_email' => $subscription['metadata']['email'] ?? 'Unknown Email',
+                        'customer_name' => $subscription['metadata']['name'] ?? 'Unknown Name',
+                        'school_name' => $schoolName ?? 'Unknown School',
+                        'number_of_coaches' => $subscription['metadata']['number_of_coaches'] ?? 1,
+                        'status' => $subscription['status'],
+                        'cancel_at_period_end' => $subscription['cancel_at_period_end']
+                    ];
+                    
+                    // Send update subscription email
+                    if($subscription['cancel_at_period_end']) {
+                        Mail::to($user->email)->send(new SubscriptionUpdate($subscriptionDetails));
+                    }
+                }
+
             }
         } elseif ($event->type == 'customer.subscription.deleted') {
             $subscription = $event->data->object;

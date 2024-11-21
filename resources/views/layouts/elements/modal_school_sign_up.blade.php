@@ -312,6 +312,11 @@ document.getElementById('email_confirm').onpaste = function(){
 
 
 $(document).ready(function () {
+
+    if(window.location.href.indexOf('#inscription') != -1) {
+        $('#schoolsignupModal').modal('show');
+    }
+
     $.validator.addMethod("pwLowercase", function (value) {
         return /[a-z]/.test(value);
     }, "{{ __('Your password must contain at least one lowercase letter')}}");

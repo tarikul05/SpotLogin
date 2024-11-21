@@ -38,7 +38,7 @@
                     <span class="text-danger">{{ __('Your subscription is canceled and will stop the') }} <?php echo date('M j, Y', $subscription['current_period_end']); ?>.</span><br>
                     <?php } ?>
                 @endif
-
+                  <br>
                 @if($subscriber->status === 'trialing')
                   {{ __('Your trial period is valid until') }} <?= date('M j, Y', $subscriber->trial_end) ?>.
                   <?php if($product_object && !$subscriber->cancel_at_period_end){ ?>

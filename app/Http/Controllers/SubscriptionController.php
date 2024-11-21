@@ -8,6 +8,7 @@ use Laravel\Cashier\Cashier;
 use Laravel\Cashier\Subscription as CashierSubscription;
 use Laravel\Cashier\Exceptions\IncompletePayment;
 use Laravel\Cashier\PaymentMethod;
+use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use Exception;
 use DateTime;
@@ -437,7 +438,14 @@ class SubscriptionController extends Controller
                     'name' => $request->card_holder_name,
                     'currency' => strtolower($school->default_currency_code),
                 ], [
-                    'metadata' => ['note' => $user->email . ', ' . $request->card_holder_name, 'email' => $user->email, 'name' => $request->card_holder_name, 'userID' => $user->id, 'schoolID' => $school->id],
+                    'metadata' => [
+                        'note' => $user->email . ', ' . $request->card_holder_name, 
+                        'email' => $user->email, 
+                        'name' => $request->card_holder_name, 
+                        'userID' => $user->id, 
+                        'schoolID' => $school->id, 
+                        'number_of_coaches' => $number_of_coaches
+                    ],
                 ]);
             }
 
@@ -449,6 +457,7 @@ class SubscriptionController extends Controller
                 $school->max_teachers = $number_of_coaches;
                 $school->save();
             }
+
 
             //return redirect()->route('profile.plan')->with('success', 'Congratulations, you have successfully subscribed to our ' . $plan_name);
             return redirect()->route('mySubscription.congratulations');

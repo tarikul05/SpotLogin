@@ -5,7 +5,11 @@
   background-color: #f6f9fc;
 }
 
-
+.example.example4 * {
+  font-family: Inter, Open Sans, Segoe UI, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+}
 
 .example.example4 form {
   max-width: 496px !important;
@@ -270,9 +274,9 @@
                                 $today_date = new DateTime();
                                 $trial_ends_at = new DateTime($user->trial_ends_at);
                                 if (!empty($user->trial_ends_at) && $today_date <= $trial_ends_at) {
-                              echo '<h6 class="pt-5"><small>' . __('Get your Premium Plan before the end of your trial period') . '</small></h6>';
+                              echo '<h5 class="pt-5"><small>' . __('Get your Premium Plan before the end of your trial period') . '</small></h5>';
                                 } else {
-                                    echo '<h6 class="pt-5">Get your Premium since your trial period is ended.</h6><small>Continue to access all features now !</small>';
+                                    echo '<h5>Get your Premium since your trial period is ended.</h5>Continue to access all features now !</h5>';
                                 }
                           }
                       ?>
@@ -331,7 +335,7 @@
                              </select>
                             </div>
                             @endif
-                            <div class="plan_interval mb-2 text-center">
+                            <div class="plan_interval mb-2">
                                 @if ($plan['currency'] === 'usd' || $plan['currency'] === 'cad')
                                     {{ $symbole }} <span id="amount">{{ number_format($plan['amount'], 2) }}</span>
                                 @else
@@ -495,7 +499,7 @@
                                 {{ __('Enter your payment details below to subscribe your Coach Premium Plan') }}
                             </div>
 
-                            <form action="{{ route('subscribe.store') }}" method="post" id="payment-form-sub" class="p-3">
+                            <form action="{{ route('subscribe.store') }}" method="post" id="payment-form-sub" class="card p-3">
                                 @csrf
                                 <input type="hidden" name="plan" value="{{ $plans[0]['id'] }}" />
                                 <input type="hidden" name="plan_name" value="{{ $plans[0]['plan_name']->name }}" />
@@ -504,13 +508,13 @@
                                 <input type="hidden" name="number_of_coaches" id="number_of_coaches" value="1" />
 
                                 <div class="form-group">
-                                    <label style="color:#3b75bf;" for="coupon_code" class="titleFieldPage"><b>{{ __('Coupon code') }}</b></label>
+                                    <label style="font-size:11px; color:#333;" for="coupon_code">{{ __('Coupon code') }}</label>
                                     <input type="text" class="form-control" id="coupon_code" name="coupon_code" placeholder="{{ __('Enter Coupon Code') }}">
                                     <div id="couponResult" class="coupon_result p-1"></div>
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label style="color:#3b75bf;" for="cardholder_name" class="titleFieldPage"><b>{{ __('Cardholder full name') }}</b></label>
+                                    <label style="font-size:11px; color:#333;" for="cardholder_name">{{ __('Cardholder full name') }}</label>
                                     <input type="text" style="font-size:15px; color:#333;" class="form-control" id="card_holder_name" name="card_holder_name" placeholder="{{ __('Enter Cardholder full name') }}" value="{{ Auth::user()->firstname .' ' . Auth::user()->lastname }}" required>
                                 </div>
                                 
@@ -520,8 +524,8 @@
                                     <!--Stripe paymentRequestButton Element inserted here-->
                                 </div>
 
-                                <div class="form-group pt-2">
-                                  <label style="color:#3b75bf;" for="coupon_code" class="titleFieldPage"><b>{{ __('Card informations') }}</b></label>
+                                <div class="form-group">
+                                  <label style="font-size:11px; color:#333;" for="coupon_code">{{ __('Card informations') }}</label>
                                     <div class="container" style="border:1px solid #b3d6ec; border-radius:7px; padding:9px;">
                                     <div id="example4-card"></div>
                                     </div>
@@ -552,12 +556,12 @@
                                             <span id="buttonPaymentAmount">{{ number_format($plans[0]['amount'], 2) }}</span> {{ $symbole }}
                                             @endif
                                         </a>
-                                        
+                                        <br>
                                     </div>
-                                    
+                                    <br>
                                 </form>
-                                <div class="text-center">
-                                <img src="{{asset('img/powered_by_stripe.png')}}" width="100">
+                                <div class="text-center pt-3">
+                                <img src="{{asset('img/powered_by_stripe.png')}}" width="120">
                                 </div>
                         </div>
             </div>
@@ -662,7 +666,8 @@ $("#choose-plan").click(function(){
       base: {
         color: "#32325D",
         fontWeight: 500,
-        fontSize: "14px",
+        fontFamily: "Inter, Open Sans, Segoe UI, sans-serif",
+        fontSize: "16px",
         fontSmoothing: "antialiased",
 
         "::placeholder": {
