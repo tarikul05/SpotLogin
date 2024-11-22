@@ -10,9 +10,9 @@
     border-radius: 50%;
     display: block;
     stroke-width: 2;
-    stroke: #4bb71b;
+    stroke: #1ca98a;
     stroke-miterlimit: 10;
-    box-shadow: inset 0px 0px 0px #4bb71b;
+    box-shadow: inset 0px 0px 0px #24af91;
     animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
     position:relative;
     top: 5px;
@@ -24,7 +24,7 @@
     stroke-dashoffset: 166;
     stroke-width: 2;
     stroke-miterlimit: 10;
-    stroke: #4bb71b;
+    stroke: #1ca98a;
     fill: #fff;
     animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
 
@@ -129,7 +129,7 @@
                             ?>
                         </p>
 
-                        <a class="btn btn-success" href="{{ route('agenda') }}">
+                        <a class="btn btn-success" href="{{ route('updateTeacher') }}#myplan">
                             <span class="action_icon">OK</span>
                         </a>
 

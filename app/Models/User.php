@@ -19,6 +19,7 @@ use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use App\Traits\CreatedUpdatedBy;
 use Laravel\Cashier\Billable;
+use Stripe\Stripe;
 
 class User extends Authenticatable
 {
@@ -481,6 +482,34 @@ class User extends Authenticatable
 
 
     }
+
+    /**
+     * Get default stripe user method payment from stripe api customer account
+     */
+    public function getStripeUserMethod()
+    {
+        Stripe::setApiKey(config('services.stripe.secret'));
+
+        $customer = \Stripe\Customer::retrieve($this->stripe_id);
+        $defaultPaymentMethodId = $customer->invoice_settings->default_payment_method;
+
+        if ($defaultPaymentMethodId) {
+            $paymentMethod = \Stripe\PaymentMethod::retrieve($defaultPaymentMethodId);
+
+            // Récupérer les 4 derniers chiffres de la carte
+            $card = ucfirst($paymentMethod->card->brand) . ' **** ' . $paymentMethod->card->last4;
+
+
+        } else {
+            $brand = 'Unknown';
+            $last4 = 'Unknown';
+        }
+
+        return $card;
+
+    }
+
+   
 
 
 }

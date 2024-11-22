@@ -566,9 +566,28 @@ class SubscriptionController extends Controller
             }
             return redirect()->route('agenda')->with('success', 'Your subscription is cancelled !');
         }catch(Exception $exception){
-            //test
         }
     }
+
+    public function reactivatePlan(Request $request){
+        try{
+            $user = auth()->user();
+            $subscription = null;
+            if($user->stripe_id){
+                $subscription_info = $this->stripe->subscriptions->all(['customer' => $user->stripe_id])->toArray();
+                if(!empty($subscription_info['data'])){
+                    $subscription = $subscription_info['data'][0];
+                    $this->stripe->subscriptions->update(
+                    $subscription['id'],
+                    ['cancel_at_period_end' => false]
+                    );
+                }
+            }
+            return redirect()->route('agenda')->with('success', 'Your subscription is reactivated !');
+        }catch(Exception $exception){
+        }  
+    }
+
 
 
 

@@ -110,11 +110,11 @@
                 <div class="d-none d-sm-block"><br><br></div>
                 <!--<h6 class="d-none d-sm-block">{{ __('Free Trial') }}</h6>-->
                 <div class="text-center">
-                    <h6 class="d-none d-sm-block light-blue-txt">{{ __('Sign up now and take advantage of a 30-free-day trial period') }}</h6>
+                    <h6 class="d-none d-sm-block light-blue-txt">{{ __('Sign up now and take advantage of a 14-free-day trial period') }}</h6>
                 </div>
                 <div class="d-none d-sm-block"><br><br></div>
 
-                 <div class="card bg-tertiary p-2 mb-4" style="border:1px solid #0075bf;">
+                 <div class="card bg-tertiary p-2 mb-4" style="border:1px solid rgb(68, 96, 176);">
                         <small class="pb-2 light-blue-txt"><b>{{ __('Login credentials') }}</b></small>
                         <div class="form-group">
                             <small>{{ __('Choose an username as your login ID') }}</small>

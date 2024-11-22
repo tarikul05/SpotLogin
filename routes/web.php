@@ -10,6 +10,12 @@ use App\Http\Controllers\AvailabilityController;
 use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\StripeTransactionController;
 
+use Illuminate\Http\Request;
+use Stripe\Stripe;
+use Stripe\SetupIntent;
+
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -265,6 +271,7 @@ Route::group(['middleware' => ['auth']], function () {
   Route::get('/transactions/{userId}', [StripeTransactionController::class, 'index'])->name('transactions.index');
   
   Route::get('/subscription/cancel-plan', [App\Http\Controllers\SubscriptionController::class, 'cancelPlan'])->name('subscription.cancelPlan');
+  Route::get('/subscription/reactivate-plan', [App\Http\Controllers\SubscriptionController::class, 'reactivatePlan'])->name('subscription.reactivatePlan');
 
     Route::get('/user/disable', [App\Http\Controllers\UserController::class, 'disable_user'])->name('user.disable_user');
     Route::post('/deactivate_user', [App\Http\Controllers\UserController::class, 'deactivate'])->name('user.deactivate');
@@ -388,6 +395,38 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/getAbsentStudent', [App\Http\Controllers\AgendaController::class, 'getAbsentStudent'])->name('agenda.getAbsentStudent')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
   }); //Admin scope end
+
+
+  Route::post('/create-setup-intent', function (Request $request) {
+    Stripe::setApiKey(env('STRIPE_SECRET'));
+
+    $customerId = $request->input('customer_id');
+    $setupIntent = SetupIntent::create([
+        'customer' => $customerId,
+    ]);
+
+    return response()->json(['client_secret' => $setupIntent->client_secret]);
+});
+
+Route::post('/save-payment-method', function (Request $request) {
+  Stripe::setApiKey(env('STRIPE_SECRET'));
+
+  $customerId = $request->input('customer_id');
+  $paymentMethodId = $request->input('payment_method');
+
+  // Attachez le Payment Method au client
+  $paymentMethod = \Stripe\PaymentMethod::retrieve($paymentMethodId);
+  $paymentMethod->attach(['customer' => $customerId]);
+
+  // Mettez à jour la méthode par défaut du client
+  \Stripe\Customer::update($customerId, [
+      'invoice_settings' => [
+          'default_payment_method' => $paymentMethodId,
+      ],
+  ]);
+
+  return response()->json(['success' => true]);
+});
 
 
   Route::get('/invoices', [App\Http\Controllers\InvoiceController::class, 'index'])->name('invoiceList');

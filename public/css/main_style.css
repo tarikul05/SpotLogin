@@ -651,6 +651,24 @@ div#navbarSupportedContent {
     }
 }
 
+.btn-primary {
+    background-color: #2a3e76!important;
+    border: 1px solid #4460b0!important;
+}
+.btn-primary:hover {
+    background-color: #4460b0!important;
+    border: 1px solid #2a3e76!important;
+}
+.btn-outline-primary {
+    border: 1px solid #4460b0!important;
+    color: #4460b0!important;
+}
+.btn-outline-primary:hover {
+    background-color: #4460b0!important;
+    border: 1px solid #2a3e76!important;
+    color:#FFF!important;
+}
+
 .digit {
     text-align: center;
     width: 35px;

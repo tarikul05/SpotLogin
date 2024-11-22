@@ -705,6 +705,11 @@
       $('#cancel_subscription').modal("show")
     })
 	}); //ready
+  $(document).ready(function(){
+    $('#buttonReactivateSubscription').on('click', function() {
+      $('#reactivate_subscription').modal("show")
+    })
+	}); //ready
 
   function UploadImage() {
     document.getElementById("profile_image_file").value = "";

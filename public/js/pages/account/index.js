@@ -8,3 +8,20 @@ $(document).ready(function(){
       $('#cancel_subscription').modal("show")
     })
 });
+
+$(document).ready(function(){
+  $('#buttonReactivateSubscription').on('click', function() {
+    $('#reactivate_subscription').modal("show")
+  })
+});
+
+$(document).ready(function(){
+  $('#openNewPaymentMethod').on('click', function() {
+    $('#newPaymentMethod').modal("show")
+  })
+});
+
+
+
+
+

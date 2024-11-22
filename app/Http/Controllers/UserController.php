@@ -122,7 +122,7 @@ class UserController extends Controller
             $teacher->save();
             $teacher->schools()->attach($school->id, ['nickname' => $data['fullname'],'role_type'=>$roleType, 'has_user_account'=> 1, 'is_sent_invite'=>1 ]);
 
-            $trialDays = 30;
+            $trialDays = 14;
             $trialEndsAt = now()->addDays($trialDays);
 
             //6 digits random number
@@ -275,7 +275,7 @@ class UserController extends Controller
         $data = $request->all();
         try{
             // create trail user
-            $trialDays = 30;
+            $trialDays = 14;
             $trialEndsAt = now()->addDays($trialDays);
             $full_name = $data['firstname'].''.$data['lastname'];
             $strip_userdata = [
