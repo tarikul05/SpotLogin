@@ -657,13 +657,19 @@ $("#choose-plan").click(function(){
     locale: window.__exampleLocale,
   });
 
+  var amountApplePay = document.getElementById("renewInformationAmount");
+  var currencyApplePay = "{{$plans[0]['currency']}}"
+  var planNameApplePay = "{{$plans[0]['plan_name']->name}}"
+  var schoolNameApplePay = "{{$user->related_school->name}}"
+
+  return console.log(amountApplePay, currencyApplePay, planNameApplePay, schoolNameApplePay);
 
   var paymentRequest = stripe.paymentRequest({
-        country: "US",
-        currency: "usd",
+        currency: currencyApplePay,
         total: {
-          label: "Demo Sportlogin",
-          amount: 1099,
+          country: "{{$user->related_school->country_code}}",
+          label: planNameApplePay,
+          amount: amountApplePay * 100,
         },
         requestPayerName: true,
         requestPayerEmail: true,
@@ -681,8 +687,6 @@ $("#choose-plan").click(function(){
           document.getElementById("payment-request-divider").style.display = "block";
           prButton.mount("#payment-request-button");
 
-          
-          
           var csrfToken = "{{ csrf_token() }}";
 
           // Ecoutez les événements de paiement
@@ -726,18 +730,12 @@ $("#choose-plan").click(function(){
           });
 
 
-
-
-    
-
-
         } else {
           //prButton.mount('#payment-request-button');
           document.getElementById("payment-request-divider").style.display = "none";
           document.getElementById("payment-request-button").style.display = "none";
         }
       });
-
       
 
   /**
