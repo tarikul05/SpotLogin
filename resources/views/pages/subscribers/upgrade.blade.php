@@ -518,7 +518,7 @@
                                 
 
                                 <div id="payment-request-button" class="applePayBtn"></div>
-                                <div id="payment-request-divider" class="text-center"><br>-- {{ __('or pay with card') }} --<br><br></div>
+                                <div id="payment-request-divider" style="display:none;" class="text-center"><br>-- {{ __('or pay with card') }} --<br><br></div>
 
                                 <div class="example4"></div>
                                 <div id="example4-paymentRequest">
@@ -682,6 +682,7 @@ $("#choose-plan").click(function(){
           prButton.mount("#payment-request-button");
         } else {
           //prButton.mount('#payment-request-button');
+          document.getElementById("payment-request-divider").style.display = "none";
           document.getElementById("payment-request-button").style.display = "none";
         }
       });
