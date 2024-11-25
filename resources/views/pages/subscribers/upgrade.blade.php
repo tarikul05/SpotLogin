@@ -514,6 +514,7 @@
                                     <input type="text" style="font-size:15px; color:#333;" class="form-control" id="card_holder_name" name="card_holder_name" placeholder="{{ __('Enter Cardholder full name') }}" value="{{ Auth::user()->firstname .' ' . Auth::user()->lastname }}" required>
                                 </div>
                                 
+                                <div id="payment-request-button"></div>
 
                                 <div class="example4"></div>
                                 <div id="example4-paymentRequest">
@@ -641,7 +642,6 @@ $("#choose-plan").click(function(){
   let cardSaved = "";
   const stripe = Stripe('<?= env('STRIPE_KEY') ?>', { locale: 'en' });
   var elements = stripe.elements({
-    disableLink:true,
     fonts: [
       {
         cssSrc: "https://rsms.me/inter/inter.css"
@@ -653,11 +653,40 @@ $("#choose-plan").click(function(){
     locale: window.__exampleLocale,
   });
 
+
+  var paymentRequest = stripe.paymentRequest({
+        country: "US",
+        currency: "usd",
+        total: {
+          label: "Demo total",
+          amount: 1099,
+        },
+        requestPayerName: true,
+        requestPayerEmail: true,
+      });
+
+      // STEP 3 FROM GUIDE
+      var elements = stripe.elements();
+      var prButton = elements.create("paymentRequestButton", {
+        paymentRequest: paymentRequest,
+      });
+      // console.log("before api call", paymentRequest);
+      paymentRequest.canMakePayment().then(function (result) {
+        // console.log("after api called" + result);
+        if (result) {
+          prButton.mount("#payment-request-button");
+        } else {
+          //prButton.mount('#payment-request-button');
+          document.getElementById("payment-request-button").style.display = "none";
+        }
+      });
+
   /**
    * Card Element
    */
   var card = elements.create("card", {
     hidePostalCode: true,
+    disableLink:true,
     style: {
       base: {
         color: "#32325D",
