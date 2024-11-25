@@ -657,7 +657,7 @@ $("#choose-plan").click(function(){
     locale: window.__exampleLocale,
   });
 
-  var amountApplePay = document.getElementById("renewInformationAmount").value;
+  var amountApplePay = document.getElementById("renewInformationAmount").val();
   var currencyApplePay = "{{$plans[0]['currency']}}"
   var planNameApplePay = "{{$plans[0]['plan_name']->name}}"
   var schoolNameApplePay = "{{$user->selectedSchoolName()}}"
