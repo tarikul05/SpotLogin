@@ -666,12 +666,12 @@ $("#choose-plan").click(function(){
 
   //return console.log(amountApplePay, currencyApplePay, planNameApplePay, schoolNameApplePay, countryCodeApplePay);
 
-  var paymentRequest = stripe.paymentRequest({
+      var paymentRequest = stripe.paymentRequest({
         currency: currencyApplePay,
         country: countryCodeApplePay,
         total: {
           label: planNameApplePay,
-          amount: parseFloat(document.getElementById("renewInformationAmount").textContent)*100,
+          amount: amountApplePay*100,
         },
         requestPayerName: true,
         requestPayerEmail: true,
@@ -690,6 +690,21 @@ $("#choose-plan").click(function(){
           prButton.mount("#payment-request-button");
 
           var csrfToken = "{{ csrf_token() }}";
+
+
+          amountApplePay = document.getElementById("renewInformationAmount").textContent;
+          amountApplePay = parseFloat(amountApplePay);
+
+          var paymentRequest = stripe.paymentRequest({
+            currency: currencyApplePay,
+            country: countryCodeApplePay,
+            total: {
+              label: planNameApplePay,
+              amount: amountApplePay*100,
+            },
+            requestPayerName: true,
+            requestPayerEmail: true,
+          });
 
           // Ecoutez les événements de paiement
           paymentRequest.on('paymentmethod', async (event) => {
