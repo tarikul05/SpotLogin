@@ -7,7 +7,7 @@
 
         <h3 class="modal-title light-blue-txt gilroy-bold" id="loginModalLabel">{{ __('Sign in') }}</h3>
         <a href="#" class="close" id="modalClose" data-bs-dismiss="modal" style="position: absolute; right: 10px; top: 10px; border-radius:50%!important; padding:3px; font-size:23px;">
-            <i class="fa-solid fa-circle-xmark fa-lg" style="color:#0075bf;"></i>
+            <i class="fa-solid fa-circle-xmark fa-lg" style="color:#4460b0;"></i>
         </a>
 
         <p class="mb-0">{{ __('Welcome to SportLogin!') }}</p>
