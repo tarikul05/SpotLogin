@@ -307,6 +307,16 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the schools Country Code
+     */
+    public function selectedSchoolCountryCode()
+    {
+        $selectedSchool = self::getSelectedSchoolAttribute();
+        return !empty($selectedSchool)? $selectedSchool->country_code : 'US';
+
+    }
+
+    /**
      * Get the schools for the user.
      */
     public function getRoleTypeAttribute()

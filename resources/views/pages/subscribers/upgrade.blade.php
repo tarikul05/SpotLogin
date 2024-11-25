@@ -660,14 +660,14 @@ $("#choose-plan").click(function(){
   var amountApplePay = document.getElementById("renewInformationAmount");
   var currencyApplePay = "{{$plans[0]['currency']}}"
   var planNameApplePay = "{{$plans[0]['plan_name']->name}}"
-  var schoolNameApplePay = "{{$user->related_school->name}}"
+  var schoolNameApplePay = "{{$user->selectedSchoolName()}}"
 
   return console.log(amountApplePay, currencyApplePay, planNameApplePay, schoolNameApplePay);
 
   var paymentRequest = stripe.paymentRequest({
         currency: currencyApplePay,
         total: {
-          country: "{{$user->related_school->country_code}}",
+          country: "{{$user->selectedSchoolCountryCode()}}",
           label: planNameApplePay,
           amount: amountApplePay * 100,
         },
