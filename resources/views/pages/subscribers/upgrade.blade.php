@@ -662,12 +662,13 @@ $("#choose-plan").click(function(){
   var currencyApplePay = "{{$plans[0]['currency']}}";
   var planNameApplePay = "{{$plans[0]['plan_name']->name}}";
   var schoolNameApplePay = "{{$user->selectedSchoolName()}}";
+  var countryCodeApplePay = "{{$user->selectedSchoolCountryCode()}}";
 
-  return console.log(amountApplePay, currencyApplePay, planNameApplePay, schoolNameApplePay);
+  return console.log(amountApplePay, currencyApplePay, planNameApplePay, schoolNameApplePay, countryCodeApplePay);
 
   var paymentRequest = stripe.paymentRequest({
         currency: currencyApplePay,
-        country: "{{$user->selectedSchoolCountryCode()}}",
+        country: countryCodeApplePay,
         total: {
           label: planNameApplePay,
           amount: amountApplePay * 100,
