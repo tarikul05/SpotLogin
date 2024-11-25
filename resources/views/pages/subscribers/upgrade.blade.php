@@ -662,7 +662,7 @@ $("#choose-plan").click(function(){
         country: "US",
         currency: "usd",
         total: {
-          label: "Demo total",
+          label: "Demo Sportlogin",
           amount: 1099,
         },
         requestPayerName: true,
@@ -680,12 +680,49 @@ $("#choose-plan").click(function(){
         if (result) {
           document.getElementById("payment-request-divider").style.display = "block";
           prButton.mount("#payment-request-button");
+
+          
+          
+
+
+          // Ecoutez les événements de paiement
+          paymentRequest.on('paymentmethod', async (event) => {
+            // Envoyez le PaymentMethod au serveur
+            const { error } = await fetch(BASE_URL + '/subscribe/store', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                paymentMethod: event.paymentMethod.id,
+                plan: document.querySelector('input[name="plan"]').value,
+                plan_name: document.querySelector('input[name="plan_name"]').value,
+                quantity: document.querySelector('input[name="quantity"]').value,
+                number_of_coaches: document.querySelector('input[name="number_of_coaches"]').value,
+                coupon_code: document.querySelector('input[name="coupon_code"]').value,
+              }),
+            });
+
+            if (error) {
+              event.complete('fail');
+            } else {
+              event.complete('success');
+              window.location.href = BASE_URL + '/congratulations';
+            }
+          });
+
+
+
+
+    
+
+
         } else {
           //prButton.mount('#payment-request-button');
           document.getElementById("payment-request-divider").style.display = "none";
           document.getElementById("payment-request-button").style.display = "none";
         }
       });
+
+      
 
   /**
    * Card Element
