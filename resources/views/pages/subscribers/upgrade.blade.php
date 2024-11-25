@@ -516,8 +516,9 @@
                                     <input type="text" style="font-size:15px; color:#333;" class="form-control" id="card_holder_name" name="card_holder_name" placeholder="{{ __('Enter Cardholder full name') }}" value="{{ Auth::user()->firstname .' ' . Auth::user()->lastname }}" required>
                                 </div>
                                 
+
                                 <div id="payment-request-button" class="applePayBtn"></div>
-                                <div id="payment-request-divider"><br>-- or --<br></div>
+                                <div class="payment-request-divider text-center"><br>-- or pay with card --<br></div>
 
                                 <div class="example4"></div>
                                 <div id="example4-paymentRequest">
@@ -677,6 +678,7 @@ $("#choose-plan").click(function(){
       paymentRequest.canMakePayment().then(function (result) {
         // console.log("after api called" + result);
         if (result) {
+          $('.payment-request-divider').style.display = "block";
           prButton.mount("#payment-request-button");
         } else {
           //prButton.mount('#payment-request-button');
