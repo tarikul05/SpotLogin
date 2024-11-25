@@ -518,7 +518,7 @@
                                 
 
                                 <div id="payment-request-button" class="applePayBtn"></div>
-                                <div class="payment-request-divider text-center"><br>-- or pay with card --<br></div>
+                                <div id="payment-request-divider" class="text-center"><br>-- or pay with card --<br></div>
 
                                 <div class="example4"></div>
                                 <div id="example4-paymentRequest">
@@ -678,7 +678,7 @@ $("#choose-plan").click(function(){
       paymentRequest.canMakePayment().then(function (result) {
         // console.log("after api called" + result);
         if (result) {
-          $('.payment-request-divider').style.display = "block";
+          document.getElementById("payment-request-divider").style.display = "block";
           prButton.mount("#payment-request-button");
         } else {
           //prButton.mount('#payment-request-button');
