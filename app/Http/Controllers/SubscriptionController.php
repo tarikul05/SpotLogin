@@ -422,7 +422,14 @@ class SubscriptionController extends Controller
                     'name' => $request->card_holder_name,
                     'currency' => strtolower($school->default_currency_code),
                 ], [
-                'metadata' => ['note' => $user->email . ', ' . $request->card_holder_name, 'email' => $user->email, 'name' => $request->card_holder_name, 'userID' => $user->id, 'schoolID' => $school->id],
+                'metadata' => [
+                    'note' => 'Subscription', 
+                    'email' => $user->email,
+                    'name' => $user->firstname . ' ' . $user->lastname, 
+                    'userID' => $user->id, 
+                    'schoolID' => $school->id,
+                    'number_of_coaches' => $number_of_coaches
+                ],
                 ]);
             } else {
                 // Sinon, on utilise la période d'essai jusqu'à la date de fin du trial
@@ -440,9 +447,9 @@ class SubscriptionController extends Controller
                     'currency' => strtolower($school->default_currency_code),
                 ], [
                     'metadata' => [
-                        'note' => $user->email . ', ' . $request->card_holder_name, 
+                        'note' => 'Subscription' ,
                         'email' => $user->email, 
-                        'name' => $request->card_holder_name, 
+                        'name' => $user->firstname . ' ' . $user->lastname,
                         'userID' => $user->id, 
                         'schoolID' => $school->id, 
                         'number_of_coaches' => $number_of_coaches

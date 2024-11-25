@@ -903,6 +903,7 @@ function reloadApplePay() {
                 number_of_coaches: document.querySelector('input[name="number_of_coaches"]').value,
                 coupon_code: document.querySelector('input[name="coupon_code"]').value,
                 is_apple_pay:true,
+                card_holder_name: document.querySelector('input[name="card_holder_name"]').value,
               }),
             });
 
