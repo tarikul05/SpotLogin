@@ -683,7 +683,7 @@ $("#choose-plan").click(function(){
 
           
           
-
+          var csrfToken = "{{ csrf_token() }}";
 
           // Ecoutez les événements de paiement
           paymentRequest.on('paymentmethod', async (event) => {
@@ -691,7 +691,10 @@ $("#choose-plan").click(function(){
             // Envoyez le PaymentMethod au serveur
             const response = await fetch(BASE_URL + '/subscribe/store', {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') },
+              headers: { 
+                'Content-Type': 'application/json', 
+                'X-CSRF-TOKEN': csrfToken 
+              },
               body: JSON.stringify({
                 paymentMethod: event.paymentMethod.id,
                 plan: document.querySelector('input[name="plan"]').value,
