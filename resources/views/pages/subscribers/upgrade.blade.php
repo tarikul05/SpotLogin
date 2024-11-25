@@ -716,7 +716,6 @@ $("#choose-plan").click(function(){
 
             if (data.success) {
               event.complete('success');
-              //go to /congratulations/
               window.location.href = BASE_URL + '/congratulations';
             } else {
               event.complete('fail');
@@ -729,6 +728,14 @@ $("#choose-plan").click(function(){
             alert('Erreur lors du paiement.');
           }
 
+          });
+
+          paymentRequest.on('cancel', function(event) {
+            Swal.fire({
+              title: "{{ __('Payment cancelled') }}",
+              text: "{{ __('You have cancelled the payment') }}",
+              icon: "warning",
+            });
           });
 
 
