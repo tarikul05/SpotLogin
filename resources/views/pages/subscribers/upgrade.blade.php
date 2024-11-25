@@ -671,7 +671,7 @@ $("#choose-plan").click(function(){
         country: countryCodeApplePay,
         total: {
           label: planNameApplePay,
-          amount: amountApplePay * 100,
+          amount: amountApplePay,
         },
         requestPayerName: true,
         requestPayerEmail: true,
