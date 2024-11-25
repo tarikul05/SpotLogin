@@ -6,7 +6,7 @@
               <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> -->
               <h3 class="modal-title light-blue-txt gilroy-bold" id="signupModalLabel">{{ __('Sign up') }}</h3>
               <p class="mb-0">{{ __('Please fill in this form to create an account!') }}</p>
-                <a href="#" class="close" id="modalClose" data-bs-dismiss="modal" style="position: absolute; right: 10px; top: 10px; border-radius:50%!important; padding:3px; font-size:23px;">
+                <a href="#" class="close" id="modalClose" data-bs-dismiss="modal" style="position: absolute; right: 8px; top: 8px; border-radius:50%!important; padding:3px; font-size:30px;">
                     <i class="fa-solid fa-circle-xmark fa-lg" style="color:#4460b0;"></i>
                 </a>
           </div>
