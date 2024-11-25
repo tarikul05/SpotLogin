@@ -518,7 +518,7 @@
                                 
 
                                 <div id="payment-request-button" class="applePayBtn"></div>
-                                <div id="payment-request-divider" class="text-center"><br>-- or pay with card --<br></div>
+                                <div id="payment-request-divider" class="text-center">-- {{ __('or pay with card') }} --<br><br></div>
 
                                 <div class="example4"></div>
                                 <div id="example4-paymentRequest">
