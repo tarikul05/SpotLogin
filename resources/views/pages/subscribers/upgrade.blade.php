@@ -706,16 +706,16 @@ $("#choose-plan").click(function(){
             const data = await response.json();
 
             if (data.success) {
-              ev.complete('success');
+              event.complete('success');
               //go to /congratulations/
               window.location.href = BASE_URL + '/congratulations';
             } else {
-              ev.complete('fail');
+              event.complete('fail');
               alert('Erreur de paiement');
             }
 
           } catch (error) {
-            ev.complete('fail');
+            event.complete('fail');
             console.error(error);
             alert('Erreur lors du paiement.');
           }
