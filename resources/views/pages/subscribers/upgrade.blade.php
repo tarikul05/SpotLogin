@@ -657,12 +657,12 @@ $("#choose-plan").click(function(){
     locale: window.__exampleLocale,
   });
 
-  var amountApplePay = document.getElementById("renewInformationAmount");
+  var amountApplePay = document.getElementById("renewInformationAmount").value;
   var currencyApplePay = "{{$plans[0]['currency']}}"
   var planNameApplePay = "{{$plans[0]['plan_name']->name}}"
   var schoolNameApplePay = "{{$user->selectedSchoolName()}}"
 
-  return console.log(amountApplePay, currencyApplePay, planNameApplePay, schoolNameApplePay);
+  //return console.log(amountApplePay, currencyApplePay, planNameApplePay, schoolNameApplePay);
 
   var paymentRequest = stripe.paymentRequest({
         currency: currencyApplePay,
