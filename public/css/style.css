@@ -331,6 +331,24 @@ button#add_more_expense_btn {
 	color: #657e8e;
 }
 
+.btn-primary {
+    background-color: #2a3e76!important;
+    border: 1px solid #4460b0!important;
+}
+.btn-primary:hover {
+    background-color: #4460b0!important;
+    border: 1px solid #2a3e76!important;
+}
+.btn-outline-primary {
+    border: 1px solid #4460b0!important;
+    color: #4460b0!important;
+}
+.btn-outline-primary:hover {
+    background-color: #4460b0!important;
+    border: 1px solid #2a3e76!important;
+    color:#FFF!important;
+}
+
 .error {
 	border: 2px solid red;
 	border-radius: 6px;
