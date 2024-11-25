@@ -8,6 +8,22 @@
   <link rel="icon" href="{{ asset('img/favicon.ico') }}" type="image/x-icon" />
   <title>@yield('title')</title>
 
+
+  <meta property="og:title" content="SportLogin - Let sportlogin do your off-ice" />
+  <meta property="og:description" content="Join SportLogin and get your off-ice management done in a few clicks." />
+  <meta property="og:image" content="https://sportlogin.app/img/logo-blue.png" />
+  <meta property="og:url" content="https://sportlogin.app" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="SportLogin" />
+
+   <!-- Twitter Card -->
+   <meta name="twitter:card" content="summary_large_image" />
+   <meta name="twitter:title" content="SportLogin - Let sportlogin do your off-ice" />
+   <meta name="twitter:description" content="Join SportLogin and get your off-ice management done in a few clicks." />
+   <meta name="twitter:image" content="{{ asset('img/logo-blue.png') }}" />
+   <meta name="twitter:url" content="https://sportlogin.app" />
+
+
   <!-- Bootstrap -->
   <!-- CSS only -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
