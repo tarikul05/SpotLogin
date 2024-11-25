@@ -944,6 +944,7 @@ function reloadApplePay() {
 
 <script>
   $(document).ready(function() {
+    let amountInit = {{ number_format($plans[0]['amount'], 2) }};
     $('#coupon_code').on('keyup', function() {
 
           let couponId = $('#coupon_code').val();
@@ -972,10 +973,14 @@ function reloadApplePay() {
 
                   } else {
                       $('#couponResult').text(response.message);
+                      $('#renewInformationAmount').text(amountInit.toFixed(2)); // Add .toFixed(2) to format as currency
+                      $('#buttonPaymentAmount').text(amountInit.toFixed(2));
                   }
               },
               error: function() {
                   $('#couponResult').text('An error occurred.');
+                  $('#renewInformationAmount').text(amountInit.toFixed(2)); // Add .toFixed(2) to format as currency
+                  $('#buttonPaymentAmount').text(amountInit.toFixed(2));
               }
           });
       });
