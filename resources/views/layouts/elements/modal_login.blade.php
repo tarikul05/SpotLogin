@@ -5,7 +5,7 @@
       <div class="modal-header d-block text-center border-0">
         <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> -->
 
-        <h3 class="modal-title gilroy-bold" id="loginModalLabel" style="color:#4460b0!important">{{ __('Sign in') }}</h3>
+        <h3 class="modal-title light-blue-txt gilroy-bold" id="loginModalLabel" style="color:#4460b0!important">{{ __('Sign in') }}</h3>
         <a href="#" class="close" id="modalClose" data-bs-dismiss="modal" style="position: absolute; right: 8px; top: 8px; border-radius:50%!important; padding:3px; font-size:30px;">
             <i class="fa-solid fa-circle-xmark fa-lg" style="color:#4460b0;"></i>
         </a>
@@ -30,7 +30,7 @@
             <button type="submit" class="btn btn-success" id="validate_code">{{ __('Validate my account') }}</button>
           </div>
           </form>
-          <p><a href="#" style="color: #0075bf;" id="resend_code_form">{{ __('Re-send the code') }}</a></p>
+          <p><a href="#" style="color: #4460b0;" id="resend_code_form">{{ __('Re-send the code') }}</a></p>
         </div>
 
       </div>
