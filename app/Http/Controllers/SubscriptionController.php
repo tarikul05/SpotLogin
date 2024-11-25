@@ -379,6 +379,7 @@ class SubscriptionController extends Controller
             $plan_name = $request->plan_name;
             $quantity = $quantity = $request->filled('quantity') ? $request->input('quantity') : 1;
             $number_of_coaches = $request->filled('number_of_coaches') ? $request->input('number_of_coaches') : 1;
+            $is_apple_pay = $request->filled('is_apple_pay') ? $request->input('is_apple_pay') : 0;
 
 
             /*if ($user->subscribed('default')) {
@@ -458,6 +459,11 @@ class SubscriptionController extends Controller
                 $school->save();
             }
 
+
+            //if payment method is apple pay
+            if ($is_apple_pay) {
+                return response()->json(['success' => true, 'message' => 'Souscription réussie']);
+            }
 
             //return redirect()->route('profile.plan')->with('success', 'Congratulations, you have successfully subscribed to our ' . $plan_name);
             return redirect()->route('mySubscription.congratulations');

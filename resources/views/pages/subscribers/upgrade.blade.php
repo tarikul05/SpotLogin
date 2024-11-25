@@ -687,8 +687,9 @@ $("#choose-plan").click(function(){
 
           // Ecoutez les événements de paiement
           paymentRequest.on('paymentmethod', async (event) => {
+            try {
             // Envoyez le PaymentMethod au serveur
-            const { error } = await fetch(BASE_URL + '/subscribe/store', {
+            const response = await fetch(BASE_URL + '/subscribe/store', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') },
               body: JSON.stringify({
@@ -698,15 +699,27 @@ $("#choose-plan").click(function(){
                 quantity: document.querySelector('input[name="quantity"]').value,
                 number_of_coaches: document.querySelector('input[name="number_of_coaches"]').value,
                 coupon_code: document.querySelector('input[name="coupon_code"]').value,
+                is_apple_pay:true,
               }),
             });
 
-            if (error) {
-              event.complete('fail');
-            } else {
-              event.complete('success');
+            const data = await response.json();
+
+            if (data.success) {
+              ev.complete('success');
+              //go to /congratulations/
               window.location.href = BASE_URL + '/congratulations';
+            } else {
+              ev.complete('fail');
+              alert('Erreur de paiement');
             }
+
+          } catch (error) {
+            ev.complete('fail');
+            console.error(error);
+            alert('Erreur lors du paiement.');
+          }
+
           });
 
 
