@@ -691,21 +691,6 @@ $("#choose-plan").click(function(){
 
           var csrfToken = "{{ csrf_token() }}";
 
-
-          amountApplePay = document.getElementById("renewInformationAmount").textContent;
-          amountApplePay = parseFloat(amountApplePay);
-
-          var paymentRequest = stripe.paymentRequest({
-            currency: currencyApplePay,
-            country: countryCodeApplePay,
-            total: {
-              label: planNameApplePay,
-              amount: amountApplePay*100,
-            },
-            requestPayerName: true,
-            requestPayerEmail: true,
-          });
-
           // Ecoutez les événements de paiement
           paymentRequest.on('paymentmethod', async (event) => {
             try {
@@ -852,6 +837,112 @@ const paymentButton = document.getElementById('payment-button');
 </script>
 
 <script>
+function reloadApplePay() {
+  const stripe = Stripe('<?= env('STRIPE_KEY') ?>', { locale: 'en' });
+  var elements = stripe.elements({
+    fonts: [
+      {
+        cssSrc: "https://rsms.me/inter/inter.css"
+      }
+    ],
+    // Stripe's examples are localized to specific languages, but if
+    // you wish to have Elements automatically detect your user's locale,
+    // use `locale: 'auto'` instead.
+    locale: window.__exampleLocale,
+  });
+
+  let amountApplePay = document.getElementById("renewInformationAmount").textContent;
+  amountApplePay = parseFloat(amountApplePay);
+  var currencyApplePay = "{{$plans[0]['currency']}}";
+  var planNameApplePay = "{{$plans[0]['plan_name']->name}}";
+  var schoolNameApplePay = "{{$user->selectedSchoolName()}}";
+  var countryCodeApplePay = "{{$user->selectedSchoolCountryCode()}}";
+
+  //return console.log(amountApplePay, currencyApplePay, planNameApplePay, schoolNameApplePay, countryCodeApplePay);
+
+      var paymentRequest = stripe.paymentRequest({
+        currency: currencyApplePay,
+        country: countryCodeApplePay,
+        total: {
+          label: planNameApplePay,
+          amount: amountApplePay*100,
+        },
+        requestPayerName: true,
+        requestPayerEmail: true,
+      });
+
+      // STEP 3 FROM GUIDE
+      var elements = stripe.elements();
+      var prButton = elements.create("paymentRequestButton", {
+        paymentRequest: paymentRequest,
+      });
+      // console.log("before api call", paymentRequest);
+      paymentRequest.canMakePayment().then(function (result) {
+        // console.log("after api called" + result);
+        if (result) {
+          document.getElementById("payment-request-divider").style.display = "block";
+          prButton.mount("#payment-request-button");
+
+          var csrfToken = "{{ csrf_token() }}";
+
+          // Ecoutez les événements de paiement
+          paymentRequest.on('paymentmethod', async (event) => {
+            try {
+            // Envoyez le PaymentMethod au serveur
+            const response = await fetch(BASE_URL + '/subscribe/store', {
+              method: 'POST',
+              headers: { 
+                'Content-Type': 'application/json', 
+                'X-CSRF-TOKEN': csrfToken 
+              },
+              body: JSON.stringify({
+                paymentMethod: event.paymentMethod.id,
+                plan: document.querySelector('input[name="plan"]').value,
+                plan_name: document.querySelector('input[name="plan_name"]').value,
+                quantity: document.querySelector('input[name="quantity"]').value,
+                number_of_coaches: document.querySelector('input[name="number_of_coaches"]').value,
+                coupon_code: document.querySelector('input[name="coupon_code"]').value,
+                is_apple_pay:true,
+              }),
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+              event.complete('success');
+              window.location.href = BASE_URL + '/congratulations';
+            } else {
+              event.complete('fail');
+              alert('Erreur de paiement');
+            }
+
+          } catch (error) {
+            event.complete('fail');
+            console.error(error);
+            alert('Erreur lors du paiement.');
+          }
+
+          });
+
+          paymentRequest.on('cancel', function(event) {
+            Swal.fire({
+              title: "{{ __('Payment cancelled') }}",
+              text: "{{ __('You have cancelled the payment') }}",
+              icon: "warning",
+            });
+          });
+
+
+        } else {
+          //prButton.mount('#payment-request-button');
+          document.getElementById("payment-request-divider").style.display = "none";
+          document.getElementById("payment-request-button").style.display = "none";
+        }
+      });
+}
+</script>
+
+<script>
   $(document).ready(function() {
     $('#coupon_code').on('keyup', function() {
 
@@ -877,6 +968,7 @@ const paymentButton = document.getElementById('payment-button');
 
                       $('#renewInformationAmount').text(finalPrice.toFixed(2)); // Add .toFixed(2) to format as currency
                       $('#buttonPaymentAmount').text(finalPrice.toFixed(2));
+                      reloadApplePay();
 
                   } else {
                       $('#couponResult').text(response.message);
