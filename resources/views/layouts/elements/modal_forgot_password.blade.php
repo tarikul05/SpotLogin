@@ -2,10 +2,11 @@
 <div class="modal fade login-signup-modal" id="forgotPasswordModal" tabindex="-1" aria-hidden="true" aria-labelledby="forgotPasswordModalLabel">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <div class="modal-header d-block text-center border-0 pt-4">
+            <div class="modal-header d-block text-center border-0 pt-5">
+                <br>
                 <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> -->
                 <h3 class="modal-title gilroy-bold" id="forgotPasswordModalLabel" style="color:#4460b0!important;">{{ __('Forgot Password?') }}</h3>
-                <a href="#" class="close" id="modalClose" data-bs-dismiss="modal" style="position: absolute; right: 10px; top: 10px; border-radius:50%!important; padding:3px; font-size:23px;">
+                <a href="#" class="close" id="modalClose" data-bs-dismiss="modal" style="position: absolute; right: 8px; top: 8px; border-radius:50%!important; padding:3px; font-size:30px;">
                     <i class="fa-solid fa-circle-xmark fa-lg" style="color:#4460b0;"></i>
                 </a>
             </div>
