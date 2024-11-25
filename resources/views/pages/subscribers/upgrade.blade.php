@@ -657,11 +657,11 @@ $("#choose-plan").click(function(){
     locale: window.__exampleLocale,
   });
 
-  const amountApplePay = document.getElementById("renewInformationAmount").Content;
+  let amountApplePay = document.getElementById("renewInformationAmount").textContent;
   amountApplePay = parseFloat(amountApplePay);
-  var currencyApplePay = "{{$plans[0]['currency']}}"
-  var planNameApplePay = "{{$plans[0]['plan_name']->name}}"
-  var schoolNameApplePay = "{{$user->selectedSchoolName()}}"
+  var currencyApplePay = "{{$plans[0]['currency']}}";
+  var planNameApplePay = "{{$plans[0]['plan_name']->name}}";
+  var schoolNameApplePay = "{{$user->selectedSchoolName()}}";
 
   return console.log(amountApplePay, currencyApplePay, planNameApplePay, schoolNameApplePay);
 
