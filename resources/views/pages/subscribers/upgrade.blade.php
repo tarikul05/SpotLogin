@@ -690,7 +690,7 @@ $("#choose-plan").click(function(){
             // Envoyez le PaymentMethod au serveur
             const { error } = await fetch(BASE_URL + '/subscribe/store', {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
+              headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') },
               body: JSON.stringify({
                 paymentMethod: event.paymentMethod.id,
                 plan: document.querySelector('input[name="plan"]').value,
