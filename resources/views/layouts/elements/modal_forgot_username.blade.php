@@ -4,9 +4,9 @@
         <div class="modal-content">
             <div class="modal-header d-block text-center border-0">
                 <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> -->
-                <h3 class="modal-title light-blue-txt gilroy-bold" id="forgotUsernameModalLabel">{{ __('Forgot Username?') }}</h3>
-                <a href="#" class="close" id="modalClose" data-bs-dismiss="modal" style="position: absolute; right: 10px; top: 10px; border-radius:50%!important; padding:3px; font-size:23px;">
-                    <i class="fa-solid fa-circle-xmark fa-lg" style="color:#0075bf;"></i>
+                <h3 class="modal-title gilroy-bold" id="forgotUsernameModalLabel" style="color:#4460b0!important;">{{ __('Forgot Username?') }}</h3>
+                <a href="#" class="close" id="modalClose" data-bs-dismiss="modal" style="position: absolute; right: 8px; top: 8px; border-radius:50%!important; padding:3px; font-size:30px;">
+                    <i class="fa-solid fa-circle-xmark fa-lg" style="color:#4460b0;"></i>
                 </a>
             </div>
             <div class="modal-body text-center" style="max-width: 375px; margin: 0 auto;padding-top: 0;">
