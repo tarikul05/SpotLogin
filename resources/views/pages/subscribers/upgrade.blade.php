@@ -510,15 +510,15 @@
                                     <input type="text" class="form-control" id="coupon_code" name="coupon_code" placeholder="{{ __('Enter Coupon Code') }}">
                                     <div id="couponResult" class="coupon_result p-1"></div>
                                 </div>
+
+                                <div id="payment-request-button" class="applePayBtn"></div>
+                                <div id="payment-request-divider" style="display:none;" class="text-center"><br>-- {{ __('or pay with card') }} --<br><br></div>
                                 
                                 <div class="form-group">
                                     <label style="color:#3b75bf;" for="cardholder_name" class="titleFieldPage"><b>{{ __('Cardholder full name') }}</b></label>
                                     <input type="text" style="font-size:15px; color:#333;" class="form-control" id="card_holder_name" name="card_holder_name" placeholder="{{ __('Enter Cardholder full name') }}" value="{{ Auth::user()->firstname .' ' . Auth::user()->lastname }}" required>
                                 </div>
-                                
-
-                                <div id="payment-request-button" class="applePayBtn"></div>
-                                <div id="payment-request-divider" style="display:none;" class="text-center"><br>-- {{ __('or pay with card') }} --<br><br></div>
+                                              
 
                                 <div class="example4"></div>
                                 <div id="example4-paymentRequest">
