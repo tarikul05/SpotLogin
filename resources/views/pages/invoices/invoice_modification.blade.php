@@ -1143,6 +1143,12 @@
             </div>
 
             @if($is_conneced_account_charges_enabled)
+
+
+            <div id="payment-request-button" class="applePayBtn"></div>
+            <div id="payment-request-divider" style="display:none;" class="text-center"><br>-- {{ __('or pay with card') }} --<br><br></div>
+
+            
                     <div style="width:100%; max-width:500px; padding:10px;  margin-bottom:1px;">
                         <b class="text-primary">{{__('pay_by_card')}}</b>
                         <div id="example4-card"></div>
@@ -2120,7 +2126,6 @@ function extractExtraCharges($inputString) {
       let cardSaved = "";
       const stripe = Stripe('<?= env('STRIPE_KEY') ?>', { locale: 'en' });
       var elements = stripe.elements({
-        disableLink:true,
         fonts: [
           {
             cssSrc: "https://rsms.me/inter/inter.css"
@@ -2128,12 +2133,91 @@ function extractExtraCharges($inputString) {
         ],
         locale: window.__exampleLocale,
       });
+
+      var paymentRequest = stripe.paymentRequest({
+        currency: currencyApplePay,
+        country: countryCodeApplePay,
+        total: {
+          label: planNameApplePay,
+          amount: amountApplePay*100,
+        },
+        requestPayerName: true,
+        requestPayerEmail: true,
+      });
+
+      var elements = stripe.elements();
+      var prButton = elements.create("paymentRequestButton", {
+        paymentRequest: paymentRequest,
+      });
+
+      paymentRequest.canMakePayment().then(function (result) {
+        // console.log("after api called" + result);
+        if (result) {
+          document.getElementById("payment-request-divider").style.display = "block";
+          prButton.mount("#payment-request-button");
+
+          var csrfToken = "{{ csrf_token() }}";
+
+          // Ecoutez les événements de paiement
+          paymentRequest.on('paymentmethod', async (event) => {
+            try {
+            // Envoyez le PaymentMethod au serveur
+            const response = await fetch(BASE_URL + '/subscribe/store', {
+              method: 'POST',
+              headers: { 
+                'Content-Type': 'application/json', 
+                'X-CSRF-TOKEN': csrfToken 
+              },
+              body: JSON.stringify({
+                paymentMethod: event.paymentMethod.id,
+                plan: document.querySelector('input[name="plan"]').value,
+                plan_name: document.querySelector('input[name="plan_name"]').value,
+                quantity: document.querySelector('input[name="quantity"]').value,
+                number_of_coaches: document.querySelector('input[name="number_of_coaches"]').value,
+                coupon_code: document.querySelector('input[name="coupon_code"]').value,
+                is_apple_pay:true,
+              }),
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+              event.complete('success');
+              window.location.href = BASE_URL + '/congratulations';
+            } else {
+              event.complete('fail');
+              alert('Erreur de paiement');
+            }
+
+          } catch (error) {
+            event.complete('fail');
+            console.error(error);
+            alert('Erreur lors du paiement.');
+          }
+
+          });
+
+          paymentRequest.on('cancel', function(event) {
+            Swal.fire({
+              title: "{{ __('Payment cancelled') }}",
+              text: "{{ __('You have cancelled the payment') }}",
+              icon: "warning",
+            });
+          });
+        } else {
+          //prButton.mount('#payment-request-button');
+          document.getElementById("payment-request-divider").style.display = "none";
+          document.getElementById("payment-request-button").style.display = "none";
+        }
+      });
+          
     
       /**
        * Card Element
       */
       var card = elements.create("card", {
         hidePostalCode: true,
+        disableLink:true,
         style: {
           base: {
             color: "#32325D",
