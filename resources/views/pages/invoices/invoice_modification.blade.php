@@ -2134,11 +2134,15 @@ function extractExtraCharges($inputString) {
         locale: window.__exampleLocale,
       });
 
+      var amountApplePay = "{{total_amount}}";
+      var countryCodeApplePay = "{{$user->selectedSchoolCountryCode()}}";
+      var InvoiceIdLabel = "{{$invoice->id}}";
+
       var paymentRequest = stripe.paymentRequest({
         currency: currencyApplePay,
         country: countryCodeApplePay,
         total: {
-          label: planNameApplePay,
+          label: 'Invoice #' + InvoiceIdLabel,
           amount: amountApplePay*100,
         },
         requestPayerName: true,
