@@ -277,7 +277,7 @@ class UserController extends Controller
             // create trail user
             $trialDays = 14;
             $trialEndsAt = now()->addDays($trialDays);
-            $full_name = $data['firstname'].''.$data['lastname'];
+            $full_name = $data['firstname'].' '.$data['lastname'];
             $strip_userdata = [
                 'email'=> $data['email'],
                 'name' => $full_name,
