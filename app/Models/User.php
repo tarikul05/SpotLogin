@@ -506,8 +506,16 @@ class User extends Authenticatable
         if ($defaultPaymentMethodId) {
             $paymentMethod = \Stripe\PaymentMethod::retrieve($defaultPaymentMethodId);
 
+            $plus='';
+            if (!empty($paymentMethod->card->wallet) && $paymentMethod->card->wallet->type === 'apple_pay') {
+                $plus = " (Apple Pay)";
+            } 
+            if (!empty($paymentMethod->card->wallet) && $paymentMethod->card->wallet->type === 'google_pay') {
+                $plus = " (Google Pay)";
+            } 
+
             // Récupérer les 4 derniers chiffres de la carte
-            $card = ucfirst($paymentMethod->card->brand) . ' **** ' . $paymentMethod->card->last4;
+            $card = ucfirst($paymentMethod->card->brand) . ' **** ' . $paymentMethod->card->last4 . ' ' . $plus;
 
 
         } else {
