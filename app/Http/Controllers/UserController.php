@@ -132,7 +132,7 @@ class UserController extends Controller
                 'person_id' => $teacher->id,
                 'person_type' =>'App\Models\Teacher',
                 'school_id' => $school->id,
-                'username' =>trim($data['username']),
+                'username' => trim($data['username']),
                 'lastname' => trim($data['lastname']),
                 'middlename'=> trim($data['firstname']) . ' ' . trim(strtoupper(ucfirst($data['lastname']))),
                 'firstname'=> trim($data['firstname']),
@@ -146,7 +146,7 @@ class UserController extends Controller
             ];
             $strip_userdata = [
                 'email'=> trim($data['email']),
-                'name' => trim($data['fullname']),
+                'name' => trim(ucfirst($data['firstname'])) . ' ' . trim(ucfirst($data['lastname'])), //trim($data['fullname']),
             ];
             $user = User::create($usersData);
             $user->save();

@@ -182,6 +182,7 @@ class PlanController extends Controller
             'payment_method_types' => ['card'],
             'confirm' => true, 
             'metadata' => [
+                'note' => 'Invoice',
                 'user_id' => $user->id,
                 'school_id' => $schoolId,
                 'invoice_id' => $invoice->id,
