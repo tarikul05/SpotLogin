@@ -1148,7 +1148,7 @@
             <div id="payment-request-button" class="applePayBtn"></div>
             <div id="payment-request-divider" style="display:none;" class="text-center"><br>-- {{ __('or pay with card') }} --<br><br></div>
 
-            
+
                     <div style="width:100%; max-width:500px; padding:10px;  margin-bottom:1px;">
                         <b class="text-primary">{{__('pay_by_card')}}</b>
                         <div id="example4-card"></div>
@@ -2157,33 +2157,27 @@ function extractExtraCharges($inputString) {
           prButton.mount("#payment-request-button");
 
           var csrfToken = "{{ csrf_token() }}";
+          var theInvoiceIdApplePay = "{{$invoice->id}}";
 
           // Ecoutez les événements de paiement
           paymentRequest.on('paymentmethod', async (event) => {
             try {
             // Envoyez le PaymentMethod au serveur
-            const response = await fetch(BASE_URL + '/subscribe/store', {
+            const response = await fetch(BASE_URL + '/payment/invoice', {
               method: 'POST',
               headers: { 
                 'Content-Type': 'application/json', 
                 'X-CSRF-TOKEN': csrfToken 
               },
-              body: JSON.stringify({
-                paymentMethod: event.paymentMethod.id,
-                plan: document.querySelector('input[name="plan"]').value,
-                plan_name: document.querySelector('input[name="plan_name"]').value,
-                quantity: document.querySelector('input[name="quantity"]').value,
-                number_of_coaches: document.querySelector('input[name="number_of_coaches"]').value,
-                coupon_code: document.querySelector('input[name="coupon_code"]').value,
-                is_apple_pay:true,
-              }),
+              dataType: 'json',
+              data: {stripe_payment_method_id:result.paymentMethod.id,invoice_id:theInvoiceIdApplePay},
             });
 
             const data = await response.json();
 
             if (data.success) {
               event.complete('success');
-              window.location.href = BASE_URL + '/congratulations';
+              window.location.href = "{{ route('transactions.index', ['userId' => $AppUI->id]) }}";
             } else {
               event.complete('fail');
               alert('Erreur de paiement');
