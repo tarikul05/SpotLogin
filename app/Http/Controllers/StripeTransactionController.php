@@ -26,6 +26,11 @@ class StripeTransactionController extends Controller
         $transactions = collect($paymentIntents)->map(function ($transaction) {
             if (isset($transaction->payment_method)) {
                 $paymentMethod = PaymentMethod::retrieve($transaction->payment_method);
+                if (!empty($paymentMethod->card->wallet) && $paymentMethod->card->wallet->type === 'apple_pay') {
+                    $transaction->is_apple_pay = true;
+                } else {
+                    $transaction->is_apple_pay = false;
+                }
                 if (isset($transaction->invoice)) {
                     $invoice = Invoice::retrieve($transaction->invoice);
                     $transaction->invoice_pdf = $invoice->invoice_pdf;

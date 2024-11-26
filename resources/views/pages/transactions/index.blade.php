@@ -54,7 +54,7 @@
                 @foreach ($transactions as $transaction)
                     <tr>
                         <td>{{ !empty($transaction->description) ? $transaction->description : 'Payment invoice ID: '.$transaction->metadata->invoice_id }}</td>
-                        <td>{{$transaction->card_brand}} **** {{$transaction->card_last4}}</td>
+                        <td>{{$transaction->card_brand}} **** {{$transaction->card_last4}} {{ $transaction->is_apple_pay ?? '(Apple Pay)' : '' }}</td>
                         <td>{{ number_format($transaction->amount / 100, 2) }} {{ strtoupper($transaction->currency) }}</td>
                         <td>
                             @if ($transaction->status === 'succeeded')
