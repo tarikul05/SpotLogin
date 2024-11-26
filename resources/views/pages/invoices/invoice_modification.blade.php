@@ -2134,7 +2134,7 @@ function extractExtraCharges($inputString) {
         locale: window.__exampleLocale,
       });
 
-      var amountApplePay = "{{total_amount}}";
+      var amountApplePay = "{{$invoice->total_amount}}";
       var countryCodeApplePay = "{{$user->selectedSchoolCountryCode()}}";
       var InvoiceIdLabel = "{{$invoice->id}}";
 
