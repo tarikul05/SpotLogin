@@ -32,10 +32,10 @@
 	<div class="container">
 
         <div class="row justify-content-center pt-3 pb-5">
-			<div class="col-md-10">
+			<div class="col-md-12">
 
 		<div class="page_header_class pt-1" style="position: static;">
-            <h5 class="titlePage">{{ __('Transactions récentes') }}</h5>
+            <h5 class="titlePage">{{ __('Transactions') }}</h5>
         </div>
 
     @if(count($transactions) > 0)
@@ -43,7 +43,7 @@
             <thead>
                 <tr>
                     <th>Description</th>
-                    <th>Type</th>
+                    <th>Method</th>
                     <th>Montant</th>
                     <th>Status</th>
                     <th>Date</th>
@@ -54,7 +54,7 @@
                 @foreach ($transactions as $transaction)
                     <tr>
                         <td>{{ !empty($transaction->description) ? $transaction->description : 'Payment invoice ID: '.$transaction->metadata->invoice_id }}</td>
-                        <td>{{ !empty($transaction->metadata->note) ? $transaction->metadata->note : '-'  }}</td>
+                        <td>{{$transaction->card_brand}} **** {{$transaction->card_last4}}</td>
                         <td>{{ number_format($transaction->amount / 100, 2) }} {{ strtoupper($transaction->currency) }}</td>
                         <td>
                             @if ($transaction->status === 'succeeded')
@@ -72,11 +72,14 @@
                         <td>{{ \Carbon\Carbon::createFromTimestamp($transaction->created)->format('d/m/Y H:i') }}</td>
                         <td>
                             @if ($transaction->status !== 'succeeded')
-                                <button class="btn btn-sm btn-primary" onclick="reloadPage()">
+                                <button class="btn btn-sm btn-outline-primary" onclick="reloadPage()">
                                     <i class="fas fa-sync-alt"></i> Vérifier statut
                                 </button>
                             @else
-                                -
+                                <a href="{{ $transaction->invoice_pdf }}" target="blank" class="btn btn-outline-primary">
+                                    <i class="fas fa-file-pdf"></i> Invoice PDF
+                                </a>
+        
                             @endif
                         </td>
                     </tr>
@@ -84,7 +87,7 @@
             </tbody>
         </table>
     @else
-        <p>Aucune transaction trouvée pour cet utilisateur.</p>
+        <p>No transactions found.</p>
     @endif
     </div>
 </div>

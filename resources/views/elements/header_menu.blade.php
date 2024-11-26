@@ -200,6 +200,7 @@
                            
                         @else
                             <a href="{{ $urlInvoice }}" class="dropdown-item">{{ __('My Invoice') }}</a>
+                            <a href="{{ route('transactions.index') }}" class="dropdown-item">{{ __('Transactions') }}</a>
                         @endif
                         </div>
                     </div>

@@ -238,7 +238,10 @@ header.panel-heading {
 }
 /* Optionally, make sure table-bordered is not affecting your table */
 
-
+.link-text {
+    color:#3b75bf!important;
+    border-bottom:1px dashed #AAA!important;
+}
 
 @media (max-width: 576px) {
     .titlePage{

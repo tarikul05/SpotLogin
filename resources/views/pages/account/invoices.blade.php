@@ -30,6 +30,10 @@
 @if(!empty($invoices) && count($invoices) > 0)
      <div class="table-invoices mb-3">
 
+      <div class="mb-3">
+        {{__('Find all your SportLogin invoices and list Stripe transactions')}}: <a href="{{route('transactions.index')}}" class="link-text"><b>{{__('show all transactions')}}</b></a>
+      </div>
+
                <div class="table-responsive">
                  <table class="table table-stripped table-hover">
                    <thead>

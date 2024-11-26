@@ -2180,7 +2180,7 @@ function extractExtraCharges($inputString) {
 
             if(data.status === "succeeded") {
               event.complete('success');
-              window.location.href = "{{ route('transactions.index', ['userId' => $AppUI->id]) }}";
+              window.location.href = "{{ route('transactions.index') }}";
             } else {
               event.complete('fail');
                 Swal.fire({
