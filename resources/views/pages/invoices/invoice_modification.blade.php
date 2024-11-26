@@ -1575,7 +1575,6 @@ function extractExtraCharges($inputString) {
                 dataType: 'json',
                 async: false,
                 success: function (result) {
-                    console.log('alors?', result);
                     status = result.status;
                     if (status == 'success') {
 				        successModalCall(payment_success_modal);
