@@ -30,7 +30,7 @@ class StripeTransactionController extends Controller
                     $invoice = Invoice::retrieve($transaction->invoice);
                     $transaction->invoice_pdf = $invoice->invoice_pdf;
                 } else {
-                    $charge = Invoice::retrieve($transaction->latest_charge);
+                    $charge = Charge::retrieve($transaction->latest_charge);
                     $transaction->invoice_pdf = $charge->receipt_url;
                 }
                 $transaction->card_last4 = $paymentMethod->card->last4 ?? null;
