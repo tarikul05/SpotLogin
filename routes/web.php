@@ -268,7 +268,8 @@ Route::group(['middleware' => ['auth']], function () {
 
   Route::get('/congratulations', [App\Http\Controllers\SubscriptionController::class, 'mySubscription'])->name('mySubscription.congratulations');
 
-  Route::get('/transactions/{userId}', [StripeTransactionController::class, 'index'])->name('transactions.index');
+  Route::get('/transactions/{userId}', [StripeTransactionController::class, 'adminIndex'])->name('transactions.admin.index');
+  Route::get('/transactions', [StripeTransactionController::class, 'index'])->name('transactions.index');
   
   Route::get('/subscription/cancel-plan', [App\Http\Controllers\SubscriptionController::class, 'cancelPlan'])->name('subscription.cancelPlan');
   Route::get('/subscription/reactivate-plan', [App\Http\Controllers\SubscriptionController::class, 'reactivatePlan'])->name('subscription.reactivatePlan');
