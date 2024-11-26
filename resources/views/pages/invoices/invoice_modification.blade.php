@@ -2179,18 +2179,26 @@ function extractExtraCharges($inputString) {
 
             const data = await response.json();
 
-            if (data.success) {
+            if(data.status === "succeeded") {
               event.complete('success');
               window.location.href = "{{ route('transactions.index', ['userId' => $AppUI->id]) }}";
             } else {
               event.complete('fail');
-              alert('Erreur de paiement');
+                Swal.fire({
+                title: "{{ __('Payment error') }}",
+                text: "{{ __('Please retry or contact administrators') }}",
+                icon: "warning",
+                });
             }
 
           } catch (error) {
             event.complete('fail');
             console.error(error);
-            alert('Erreur lors du paiement.');
+            Swal.fire({
+              title: "{{ __('Payment error') }}",
+              text: "{{ __('Please retry or contact administrators') }}",
+              icon: "warning",
+            });
           }
 
           });
