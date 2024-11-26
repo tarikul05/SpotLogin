@@ -43,6 +43,7 @@
             <thead>
                 <tr>
                     <th>Description</th>
+                    <th>Type</th>
                     <th>Montant</th>
                     <th>Status</th>
                     <th>Date</th>
@@ -53,6 +54,7 @@
                 @foreach ($transactions as $transaction)
                     <tr>
                         <td>{{ !empty($transaction->description) ? $transaction->description : 'Payment invoice ID: '.$transaction->metadata->invoice_id }}</td>
+                        <td>{{ !empty($transaction->metadata->note) ? $transaction->metadata->note : '-'  }}</td>
                         <td>{{ number_format($transaction->amount / 100, 2) }} {{ strtoupper($transaction->currency) }}</td>
                         <td>
                             @if ($transaction->status === 'succeeded')
@@ -73,6 +75,8 @@
                                 <button class="btn btn-sm btn-primary" onclick="reloadPage()">
                                     <i class="fas fa-sync-alt"></i> Vérifier statut
                                 </button>
+                            @else
+                                -
                             @endif
                         </td>
                     </tr>
