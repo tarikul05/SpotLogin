@@ -2174,8 +2174,7 @@ function extractExtraCharges($inputString) {
                 'Content-Type': 'application/json', 
                 'X-CSRF-TOKEN': csrfToken 
               },
-              dataType: 'json',
-              data: {stripe_payment_method_id:event.paymentMethod.id,invoice_id:theInvoiceIdApplePay},
+              body: JSON.stringify({stripe_payment_method_id:event.paymentMethod.id,invoice_id:theInvoiceIdApplePay}),
             });
 
             const data = await response.json();
