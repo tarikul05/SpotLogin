@@ -31,6 +31,11 @@ class StripeTransactionController extends Controller
                 } else {
                     $transaction->is_apple_pay = false;
                 }
+                if (!empty($paymentMethod->card->wallet) && $paymentMethod->card->wallet->type === 'google_pay') {
+                    $transaction->is_google_pay = true;
+                } else {
+                    $transaction->is_google_pay = false;
+                }
                 if (isset($transaction->invoice)) {
                     $invoice = Invoice::retrieve($transaction->invoice);
                     $transaction->invoice_pdf = $invoice->invoice_pdf;

@@ -57,6 +57,7 @@
                         <td>
                             {{$transaction->card_brand}} **** {{$transaction->card_last4}} 
                             @if($transaction->is_apple_pay)(Apple Pay)@endif
+                            @if($transaction->is_google_pay)(Google Pay)@endif
                         </td>
                         <td>{{ number_format($transaction->amount / 100, 2) }} {{ strtoupper($transaction->currency) }}</td>
                         <td>
