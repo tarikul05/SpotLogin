@@ -2137,6 +2137,7 @@ function extractExtraCharges($inputString) {
       var amountApplePay = "{{$invoice->total_amount}}";
       var countryCodeApplePay = "{{$AppUI->selectedSchoolCountryCode()}}";
       var InvoiceIdLabel = "{{$invoice->id}}";
+      var currencyApplePay = "{{$invoice->invoice_currency}}";
 
       var paymentRequest = stripe.paymentRequest({
         currency: currencyApplePay,
