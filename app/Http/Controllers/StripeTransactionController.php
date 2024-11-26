@@ -30,10 +30,12 @@ class StripeTransactionController extends Controller
             if (isset($transaction->payment_method)) {
                 // Récupère les détails de la méthode de paiement
                 $paymentMethod = PaymentMethod::retrieve($transaction->payment_method);
-                $invoice = Invoice::retrieve($transaction->invoice);
 
+                if (isset($transaction->invoice)) {
+                $invoice = Invoice::retrieve($transaction->invoice);
                 // Ajoute les détails à l'Invoice
                 $transaction->invoice_pdf = $invoice->invoice_pdf;
+                }
 
                 // Ajoute les détails au Payment Intent
                 $transaction->card_last4 = $paymentMethod->card->last4 ?? null;
