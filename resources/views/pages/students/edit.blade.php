@@ -3319,19 +3319,17 @@ $('#save_btn').click(function (e) {
 		var spanElement = document.getElementById('extras');
 		if (spanElement) {
 		var contenuValeurNumerique = parseFloat(spanElement.dataset.amount);
-		totalExtraSupp = contenuValeurNumerique
-		console.log(contenuValeurNumerique);
+		totalExtraSupp = contenuValeurNumerique;
 		} else {
 			totalExtraSupp = 0;
 		}
 
-        if(subtotal_amount_all > 0) {
+        //if(subtotal_amount_all > 0) {
         var extra_1_add_total = $("#extra_1").val();
-        console.log(parseFloat(extra_1_add_total).toFixed(2));
             var extra_1_add_total2 = parseFloat(extra_1_add_total).toFixed(2);
-        } else {
-            extra_1_add_total2 = 0;
-        }
+        //} else {
+        //    extra_1_add_total2 = 0;
+        //}
 
         if(subtotal_amount_with_discount_event > 0) {
         var extra_2_add_total = $("#extra_2").val();
